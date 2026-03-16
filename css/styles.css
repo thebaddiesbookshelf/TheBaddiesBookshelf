@@ -1,0 +1,47 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: #FFF6F9;
+    color: #3B2E35;
+}
+
+h1, h2, h3{
+    font-family: 'Playfair Display', serif;
+}
+
+.navbar{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 60px;
+    background-color: white;
+    border-bottom:2px solid #F45AA5;
+}
+
+.nav-links{
+    display: flex;
+    list-style: none;
+    gap: 30px;
+}
+
+.nav-links a{
+    text-decoration: none;
+    color: #3B2E35;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.subscribe-btn{
+    padding: 10px 20px;
+    background-color: #F45AA5;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
