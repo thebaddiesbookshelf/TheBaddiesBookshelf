@@ -1,0 +1,406 @@
+/* =========================
+   EVENTS PAGE
+========================= */
+
+.events-hero {
+    min-height: 460px;
+    padding: 80px 20px 70px;
+    background: linear-gradient(135deg, #f8d8e8 0%, #f3b9d3 45%, #eaa7c8 100%);
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+}
+
+.events-hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle at 10% 20%, rgba(255,255,255,0.38) 0 2px, transparent 3px),
+        radial-gradient(circle at 85% 25%, rgba(255,255,255,0.3) 0 2px, transparent 3px),
+        radial-gradient(circle at 45% 70%, rgba(255,255,255,0.22) 0 2px, transparent 3px);
+    background-size: 160px 160px;
+    opacity: 0.75;
+    pointer-events: none;
+}
+
+.events-hero .hero-content {
+    max-width: 1100px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+}
+
+.events-hero h1 {
+    font-size: 4.3rem;
+    color: #fff7fb;
+    margin-bottom: 14px;
+    text-shadow: 0 4px 14px rgba(115, 58, 84, 0.28);
+}
+
+.events-hero p {
+    max-width: 860px;
+    margin: 0 auto 34px;
+    font-size: 1.65rem;
+    color: #fff8fb;
+    text-shadow: 0 3px 8px rgba(115, 58, 84, 0.18);
+}
+
+.hero-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 18px;
+    flex-wrap: wrap;
+}
+
+.btn {
+    display: inline-block;
+    padding: 14px 28px;
+    border-radius: 8px;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 14px rgba(121, 65, 92, 0.18);
+}
+
+.btn-primary {
+    background: linear-gradient(to bottom, #cb5f93, #b94f84);
+    color: #ffffff;
+    border: 2px solid #b94f84;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    background: linear-gradient(to bottom, #d56a9e, #c3578d);
+}
+
+.btn-secondary {
+    background: rgba(255, 245, 249, 0.95);
+    color: #7a4561;
+    border: 2px solid #ecc4d6;
+}
+
+.btn-secondary:hover {
+    transform: translateY(-2px);
+    background: #ffffff;
+}
+
+/* =========================
+   SHARED SECTION TITLE
+========================= */
+
+.section-heading {
+    position: relative;
+    max-width: 1200px;
+    margin: 0 auto 42px;
+    text-align: center;
+}
+
+.section-heading::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: rgba(186, 139, 161, 0.35);
+}
+
+.section-heading h2 {
+    position: relative;
+    z-index: 1;
+    display: inline-block;
+    padding: 0 24px;
+    background: #fbeef5;
+    font-size: 2.8rem;
+    color: #7a435f;
+}
+
+/* =========================
+   FEATURED EVENTS
+========================= */
+
+.featured-events {
+    background: #fbeef5;
+    padding: 70px 60px 80px;
+}
+
+.events-grid {
+    max-width: 1260px;
+    margin: 0 auto;
+}
+
+.featured-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+}
+
+.event-card {
+    background: rgba(255, 247, 251, 0.48);
+    border: 1px solid rgba(214, 175, 194, 0.4);
+    box-shadow: 0 8px 22px rgba(121, 65, 92, 0.08);
+    overflow: hidden;
+}
+
+.event-card-large {
+    grid-column: span 2;
+}
+
+.event-card-wide {
+    grid-column: span 2;
+}
+
+.event-card-small {
+    grid-column: span 1;
+}
+
+.event-image-wrap {
+    position: relative;
+    min-height: 210px;
+    background: linear-gradient(135deg, #efc4d9, #eab1cd);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.event-card-small .event-image-wrap {
+    min-height: 150px;
+}
+
+.event-image-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.event-image-wrap.placeholder-box p {
+    font-family: 'Playfair Display', serif;
+    color: #7a4561;
+    font-size: 1.5rem;
+    text-align: center;
+    padding: 20px;
+}
+
+.event-badge {
+    position: absolute;
+    top: 14px;
+    left: 0;
+    background: linear-gradient(to bottom, #cb5f93, #b94f84);
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: 0 6px 6px 0;
+    z-index: 2;
+    letter-spacing: 0.03em;
+}
+
+.event-card-content {
+    padding: 18px 18px 20px;
+}
+
+.event-card-content h3 {
+    font-size: 2rem;
+    line-height: 1.15;
+    color: #7a435f;
+    margin-bottom: 8px;
+}
+
+.event-date {
+    font-size: 1.3rem;
+    color: #8c5470;
+    margin-bottom: 8px;
+}
+
+.event-description {
+    font-size: 1.2rem;
+    color: #6d4759;
+    line-height: 1.55;
+    margin-bottom: 14px;
+}
+
+.event-btn {
+    display: inline-block;
+    padding: 10px 18px;
+    border-radius: 6px;
+    background: linear-gradient(to bottom, #cb5f93, #b94f84);
+    color: #ffffff;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    box-shadow: 0 6px 14px rgba(121, 65, 92, 0.15);
+    transition: all 0.3s ease;
+}
+
+.event-btn:hover {
+    transform: translateY(-2px);
+    background: linear-gradient(to bottom, #d56a9e, #c3578d);
+}
+
+/* =========================
+   BANNER
+========================= */
+
+.events-banner {
+    background: linear-gradient(to right, #a84b76, #c55f90, #a84b76);
+    padding: 26px 20px;
+    text-align: center;
+    border-top: 2px solid #deb3c6;
+    border-bottom: 2px solid #deb3c6;
+}
+
+.banner-content h2 {
+    font-size: 2.4rem;
+    color: #fff8fb;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    text-shadow: 0 2px 6px rgba(81, 29, 53, 0.2);
+}
+
+.banner-content p {
+    font-size: 1.35rem;
+    color: #fff3f8;
+}
+
+/* =========================
+   PAST HIGHLIGHTS
+========================= */
+
+.past-highlights {
+    background: #fbeef5;
+    padding: 65px 60px 80px;
+}
+
+.highlights-top-list {
+    max-width: 1200px;
+    margin: 0 auto 28px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+.highlights-top-list p {
+    font-size: 1.25rem;
+    color: #7a435f;
+    text-align: center;
+}
+
+.highlights-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+}
+
+.highlight-card .event-image-wrap {
+    min-height: 170px;
+}
+
+/* =========================
+   PLACEHOLDER
+========================= */
+
+.placeholder-box {
+    background: linear-gradient(135deg, #efc4d9, #eab1cd);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+.site-footer {
+    background: linear-gradient(to bottom, #9d4b73, #8c4066);
+    color: #fff4f9;
+    padding: 22px 20px;
+    text-align: center;
+}
+
+.site-footer p {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.15rem;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 1000px) {
+    .events-hero h1 {
+        font-size: 3.2rem;
+    }
+
+    .events-hero p {
+        font-size: 1.25rem;
+    }
+
+    .section-heading h2 {
+        font-size: 2.2rem;
+    }
+
+    .event-card-content h3 {
+        font-size: 1.55rem;
+    }
+
+    .event-description,
+    .event-date,
+    .highlights-top-list p {
+        font-size: 1.05rem;
+    }
+}
+
+@media (max-width: 900px) {
+    .featured-grid,
+    .highlights-grid,
+    .highlights-top-list {
+        grid-template-columns: 1fr;
+    }
+
+    .event-card-large,
+    .event-card-wide,
+    .event-card-small {
+        grid-column: span 1;
+    }
+
+    .featured-events,
+    .past-highlights {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+}
+
+@media (max-width: 600px) {
+    .events-hero {
+        padding: 70px 20px 50px;
+        min-height: auto;
+    }
+
+    .events-hero h1 {
+        font-size: 2.5rem;
+    }
+
+    .events-hero p {
+        font-size: 1.05rem;
+    }
+
+    .btn {
+        width: 100%;
+        max-width: 100%;
+        text-align: center;
+    }
+
+    .section-heading h2 {
+        font-size: 1.9rem;
+    }
+
+    .banner-content h2 {
+        font-size: 1.7rem;
+    }
+
+    .banner-content p {
+        font-size: 1rem;
+    }
+}
