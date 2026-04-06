@@ -1,14 +1,204 @@
 <!DOCTYPE html>
 <html lang="en">
-
+    
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Baddies Bookshelf</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <link rel="stylesheet" href="/css/styles.css">
+  <title>Events | The Baddies Bookshelf</title>
+  <meta
+    name="description"
+    content="Explore upcoming and featured events from The Baddies Bookshelf, including readathons, book chats, seasonal programming, and community highlights."
+  />
 
-    <link rel="icon" type="image/x-icon" href="favicon.ico"> 
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="icon" href="images/favicon.png" />
+  <link rel="stylesheet" href="styles.css" />
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap"
+    rel="stylesheet"
+  />
+
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+  />
 </head>
 
+<body>
+  <header class="site-header">
+    <nav class="navbar">
+      <div class="nav-left">
+        <a href="#" aria-label="Discord"><i class="fa-brands fa-discord"></i></a>
+        <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+        <a href="#" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+      </div>
+
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="events.html" class="active">Events</a></li>
+        <li class="logo"><a href="index.html">The Baddies Bookshelf</a></li>
+        <li><a href="partners.html">Partners</a></li>
+        <li><a href="join.html">Join Us</a></li>
+      </ul>
+
+      <div class="nav-right">
+        <a href="#" class="subscribe-btn">Subscribe</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="events-hero">
+      <div class="hero-content">
+        <h1>Events</h1>
+        <p>Monthly programming, seasonal events, and community experiences.</p>
+
+        <div class="hero-buttons">
+          <a href="#" class="btn btn-primary">Join the Community on Discord</a>
+          <a href="#" class="btn btn-secondary">Subscribe to the Newsletter</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="featured-events">
+      <div class="section-heading">
+        <h2>Upcoming &amp; Featured Events ✧</h2>
+      </div>
+
+      <div class="events-grid featured-grid">
+        <article class="event-card event-card-large">
+          <div class="event-image-wrap">
+            <span class="event-badge">TBB Event</span>
+            <img src="images/event-summer-camp.jpg" alt="Open book, candle, and glasses" />
+          </div>
+
+          <div class="event-card-content">
+            <h3>Virtual Summer Camp</h3>
+            <p class="event-date">July 20th – July 27th</p>
+            <p class="event-description">Get ready for a week of fun and workshops!</p>
+            <a href="#" class="event-btn">View Details</a>
+          </div>
+        </article>
+
+        <article class="event-card event-card-large">
+          <div class="event-image-wrap">
+            <img src="images/event-readathon.jpg" alt="Open book and candles on a pink surface" />
+          </div>
+
+          <div class="event-card-content">
+            <h3>Monthly Readathon</h3>
+            <p class="event-description">Join our next binge-read session!</p>
+            <a href="#" class="event-btn">View Details</a>
+          </div>
+        </article>
+
+        <article class="event-card event-card-wide">
+          <div class="event-image-wrap">
+            <img src="images/event-book-chats.jpg" alt="Books, candle, and floral decor" />
+          </div>
+
+          <div class="event-card-content">
+            <h3>Seasonal Book Chats</h3>
+            <p class="event-description">
+              Engaging discussions on your favorite reads.
+            </p>
+            <a href="#" class="event-btn">View Details</a>
+          </div>
+        </article>
+
+        <article class="event-card event-card-small">
+          <div class="event-image-wrap">
+            <img src="images/event-buddy-reads.jpg" alt="Books, flowers, and candle" />
+          </div>
+
+          <div class="event-card-content">
+            <h3>Weekly Buddy Reads</h3>
+            <p class="event-description">
+              Reading sprints to help you hit your goals.
+            </p>
+          </div>
+        </article>
+
+        <article class="event-card event-card-small">
+          <div class="event-image-wrap">
+            <img src="images/event-awards.jpg" alt="Open book, glasses, and candle" />
+          </div>
+
+          <div class="event-card-content">
+            <h3>TBB Awards</h3>
+            <p class="event-date">December 2024</p>
+            <p class="event-description">
+              Rewarding your reading achievements.
+            </p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="events-banner">
+      <div class="banner-content">
+        <h2>REAL READERS MAKE TIME TO READ.</h2>
+        <p>
+          Because prioritizing your reading journey isn’t selfish—it’s self-care.
+        </p>
+      </div>
+    </section>
+
+    <section class="past-highlights">
+      <div class="section-heading">
+        <h2>✧ Past Highlights ✧</h2>
+      </div>
+
+      <div class="highlights-top-list">
+        <p>✓ Spring Into Stories Readathon</p>
+        <p>✓ Couture Coven</p>
+        <p>✓ Community Games &amp; Prompts</p>
+      </div>
+
+      <div class="events-grid highlights-grid">
+        <article class="event-card highlight-card">
+          <div class="event-image-wrap">
+            <img src="images/highlight-spring.jpg" alt="Books and a candle on a pink background" />
+          </div>
+
+          <div class="event-card-content">
+            <h3>Spring Into Stories Readathon</h3>
+            <p class="event-date">May 2026</p>
+            <a href="#" class="event-btn">View Details</a>
+          </div>
+        </article>
+
+        <article class="event-card highlight-card">
+          <div class="event-image-wrap">
+            <img src="images/highlight-couture-coven.jpg" alt="Candles and pink floral decor" />
+          </div>
+
+          <div class="event-card-content">
+            <h3>Couture Coven</h3>
+            <p class="event-date">October 2025</p>
+            <a href="#" class="event-btn">View Details</a>
+          </div>
+        </article>
+
+        <article class="event-card highlight-card">
+          <div class="event-image-wrap">
+            <img src="images/highlight-awards.jpg" alt="Decorative lights and candle display" />
+          </div>
+
+          <div class="event-card-content">
+            <h3>TBB Awards</h3>
+            <p class="event-date">December 2024</p>
+            <a href="#" class="event-btn">View Details</a>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>© The Baddies Bookshelf</p>
+  </footer>
+</body>
+</html>
