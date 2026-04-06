@@ -61,6 +61,27 @@
     flex-wrap: wrap;
 }
 
+.logo img {
+    height: 50px;
+    width: auto;
+    object-fit: contain;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+.logo img {
+    height: 55px;
+    filter: drop-shadow(0 2px 6px rgba(244, 90, 165, 0.25));
+    transition: transform 0.3s ease;
+}
+
+.logo:hover img {
+    transform: scale(1.05);
+}
+
 .btn {
     display: inline-block;
     padding: 14px 28px;
@@ -433,4 +454,50 @@
 
 body {
     cursor: url('../assets/icons/star-cursor.png'), auto;
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    min-width: 120px; /* keeps spacing consistent */
+}
+
+.logo img {
+    height: 45px;   /* key fix */
+    width: auto;
+    display: block;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 60px;
+    background-color: #ffffff;
+    border-bottom: 2px solid #F45AA5;
+}
+
+/* THIS centers your nav properly */
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 30px;
+    margin: 0 auto; /* 🔥 centers it perfectly */
+}
+
+.logo img {
+    height: 75px; 
+    width: auto;
+    display: block;
+}
+
+.nav-join-icon img {
+    height: 42px;
+    filter: drop-shadow(0 4px 8px rgba(244, 90, 165, 0.3));
 }
