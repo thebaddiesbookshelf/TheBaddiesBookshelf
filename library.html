@@ -48,18 +48,31 @@
 
         <!-- 2. Interactive Genre Filter Control Panel (Full-Width Row background style) -->
         <section class="filter-section">
-            <div class="filter-container">
-                <span class="filter-title"><i class="fa-solid fa-sliders"></i> Filter by Genre:</span>
-                <div class="filter-buttons">
-                    <button class="filter-btn active" data-filter="all">All Books</button>
-                    <button class="filter-btn" data-filter="romance">💖 Romance</button>
-                    <button class="filter-btn" data-filter="dark-romance">❤️‍🔥 Dark Romance</button>
-                    <button class="filter-btn" data-filter="thriller">🔪 Thriller / Horror</button>
-                    <button class="filter-btn" data-filter="fantasy">✨ Fantasy &amp; Sci-Fi</button>
-                    <button class="filter-btn" data-filter="nonfiction">📖 Nonfiction</button>
-                </div>
+        <div class="filter-container">
+            <div class="search-row">
+            <div class="search-wrapper">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input type="text" id="book-search" placeholder="Search by title or author..." autocomplete="off">
             </div>
-        </section>
+        </div>
+
+        <div class="filter-row">
+            <span class="filter-title"><i class="fa-solid fa-sliders"></i> Filter by Genre:</span>
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">All Books</button>
+                <button class="filter-btn" data-filter="romance">💖 Romance</button>
+                <button class="filter-btn" data-filter="dark-romance">❤️‍🔥 Dark Romance</button>
+                <button class="filter-btn" data-filter="thriller">🔪 Thriller / Mystery</button>
+                <button class="filter-btn" data-filter="fantasy">✨ Fantasy &amp; Sci-Fi</button>
+                <button class="filter-btn" data-filter="nonfiction">📖 Nonfiction</button>
+                <button class="filter-btn" data-filter="erotica">🌶️ Erotica</button>
+                <button class="filter-btn" data-filter="urban">🤎 Urban</button>
+                <button class="filter-btn" data-filter="ya">🎒 YA/Middle Grade</button>
+                <button class="filter-btn" data-filter="18plus">🔞 18+</button>
+            </div>
+        </div>
+    </div>
+</section>
 
         <!-- 3. Expansive Digital Library Book Grid (15 Placeholders) -->
         <section class="library-grid-section">
@@ -85,8 +98,9 @@
                 <!-- Tile 2: Dark Romance Example -->
                 <article class="book-card" data-genre="dark-romance">
                     <a href="#" download class="book-download-wrapper">
-                        <div class="book-cover placeholder-cover">
-                            <div class="cover-text">Book Cover Coming Soon ✨</div>
+
+                        <div class="book-cover">
+                            <img src="/assets/bookcovers/embrace-the-darkness.jpg" alt="Embrace the Darkness">
                         </div>
                         <div class="book-info">
                             <h3>Embrace the Darkness</h3>
@@ -146,7 +160,6 @@
                     </a>
                 </article>
 
-                <!-- Placeholders 6 through 15 (Repeating structure so you see the complete clean row layout) -->
                 <article class="book-card" data-genre="dark-romance">
                     <a href="#" class="book-download-wrapper">
                         <div class="book-cover placeholder-cover"><div class="cover-text">Placeholder Cover ✧</div></div>
@@ -249,27 +262,47 @@
         </div>
     </footer>
 
-    <!-- INTERACTIVE ENGINE JS: Handles seamless click filtering across genres instantly -->
     <script>
+        const searchInput = document.getElementById('book-search');
         const filterButtons = document.querySelectorAll('.filter-btn');
         const bookCards = document.querySelectorAll('.book-card');
 
+        function filterBooks() {
+            const query = searchInput.value.toLowerCase().trim();
+            const activeGenre = document.querySelector('.filter-btn.active').getAttribute('data-filter');
+
+            bookCards.forEach(card => {
+                const title = card.querySelector('.book-info h3').textContent.toLowerCase();
+                const author = card.querySelector('.book-author').textContent.toLowerCase();
+                
+                const matchesGenre = (activeGenre === 'all' || card.getAttribute('data-genre') === activeGenre);
+                const matchesSearch = (title.includes(query) || author.includes(query));
+
+                if (matchesGenre && matchesSearch) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Live filtering as they type
+        searchInput.addEventListener('input', filterBooks);
+
+        // Prevents page reloads when hitting Enter, runs search execution instantly
+        searchInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                event.preventDefault(); 
+                filterBooks();          
+            }
+        });
+
+        // Genre filter button toggles
         filterButtons.forEach(button => {
             button.addEventListener('click', () => {
-                // Change highlighted filter button aesthetic look
                 document.querySelector('.filter-btn.active').classList.remove('active');
                 button.classList.add('active');
-
-                const filterTarget = button.getAttribute('data-filter');
-
-                // Filter cards visibility
-                bookCards.forEach(card => {
-                    if (filterTarget === 'all' || card.getAttribute('data-genre') === filterTarget) {
-                        card.style.display = 'block';
-                    } else {
-                        card.style.display = 'none';
-                    }
-                });
+                filterBooks();
             });
         });
     </script>
