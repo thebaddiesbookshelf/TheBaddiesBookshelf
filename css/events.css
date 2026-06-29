@@ -1,94 +1,111 @@
-/* =========================
-   EVENTS PAGE
-========================= */
-
-.events-hero {
-    min-height: 460px;
-    padding: 80px 20px 70px;
-    background: linear-gradient(135deg, #f8d8e8 0%, #f3b9d3 45%, #eaa7c8 100%);
-    position: relative;
-    overflow: hidden;
-    text-align: center;
+/* ==========================================================================
+   1. Global Resets, Theme Colors & Variables (Inspired by your Events Page)
+   ========================================================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-.events-hero::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background:
-        radial-gradient(circle at 10% 20%, rgba(255,255,255,0.38) 0 2px, transparent 3px),
-        radial-gradient(circle at 85% 25%, rgba(255,255,255,0.3) 0 2px, transparent 3px),
-        radial-gradient(circle at 45% 70%, rgba(255,255,255,0.22) 0 2px, transparent 3px);
-    background-size: 160px 160px;
-    opacity: 0.75;
-    pointer-events: none;
+body {
+    font-family: 'Poppins', sans-serif;
+    background: #fbeef5; /* The exact soft pink background from your events section */
+    color: #6d4759;      /* Smooth slate-plum description text color */
+    line-height: 1.6;
 }
 
-.events-hero .hero-content {
-    max-width: 1100px;
-    margin: 0 auto;
-    position: relative;
-    z-index: 1;
-}
-
-.events-hero h1 {
-    font-size: 4.3rem;
-    color: #fff7fb;
-    margin-bottom: 14px;
-    text-shadow: 0 4px 14px rgba(115, 58, 84, 0.28);
-}
-
-.events-hero p {
-    max-width: 860px;
-    margin: 0 auto 34px;
-    font-size: 1.65rem;
-    color: #fff8fb;
-    text-shadow: 0 3px 8px rgba(115, 58, 84, 0.18);
-}
-
-.hero-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 18px;
-    flex-wrap: wrap;
-}
-
-.btn {
-    display: inline-block;
-    padding: 14px 28px;
-    border-radius: 8px;
+h1, h2, h3, h4 {
     font-family: 'Playfair Display', serif;
-    font-size: 1.2rem;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* ==========================================================================
+   2. Header & Navigation Bar (Matches image_e8c49c.png perfectly)
+   ========================================================================== */
+.site-header {
+    background-color: #ffffff;
+    border-bottom: 2px solid #cb5f93; /* Using your favorite signature deep rose border */
+    width: 100%;
+    position: relative;
+    z-index: 10;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 60px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.logo img {
+    height: 75px; 
+    width: auto;
+    display: block;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    gap: 30px;       
+    margin: 0 auto;  /* 🔥 centers your links list dead-center */
+}
+
+.nav-links a {
+    color: #7a435f; /* Bold events-page header color for crisp reading */
+    font-weight: 500;
+    font-size: 0.95rem;
+    white-space: nowrap; 
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+    color: #cb5f93; /* Active page gets your beautiful events theme rose color */
+}
+
+/* Primary Navigation Subscribe Button */
+.subscribe-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background: linear-gradient(to bottom, #cb5f93, #b94f84); /* Styled exact to your event buttons */
+    color: white;
+    border: none;
+    border-radius: 20px; /* Smooth rounded pill look */
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(121, 65, 92, 0.15);
     transition: all 0.3s ease;
-    box-shadow: 0 6px 14px rgba(121, 65, 92, 0.18);
 }
 
-.btn-primary {
-    background: linear-gradient(to bottom, #cb5f93, #b94f84);
-    color: #ffffff;
-    border: 2px solid #b94f84;
-}
-
-.btn-primary:hover {
-    transform: translateY(-2px);
+.subscribe-btn:hover {
     background: linear-gradient(to bottom, #d56a9e, #c3578d);
-}
-
-.btn-secondary {
-    background: rgba(255, 245, 249, 0.95);
-    color: #7a4561;
-    border: 2px solid #ecc4d6;
-}
-
-.btn-secondary:hover {
     transform: translateY(-2px);
-    background: #ffffff;
+    box-shadow: 0 6px 16px rgba(121, 65, 92, 0.25);
 }
 
-/* =========================
-   SHARED SECTION TITLE
-========================= */
+/* ==========================================================================
+   3. Main Page Reusable Titles & Dividers
+   ========================================================================== */
+main {
+    max-width: 1260px;
+    margin: 0 auto;
+    padding: 60px 20px;
+}
 
+/* Beautiful decorative rule using your styling approach */
 .section-heading {
     position: relative;
     max-width: 1200px;
@@ -111,296 +128,357 @@
     z-index: 1;
     display: inline-block;
     padding: 0 24px;
-    background: #fbeef5;
+    background: #fbeef5; /* Blends context lines into background seamlessly */
     font-size: 2.8rem;
     color: #7a435f;
 }
 
-/* =========================
-   FEATURED EVENTS
-========================= */
-
-.featured-events {
-    background: #fbeef5;
-    padding: 70px 60px 80px;
+.section-divider {
+    border: 0;
+    height: 1px;
+    background: rgba(186, 139, 161, 0.35);
+    margin: 60px auto;
+    width: 60%;
 }
 
-.events-grid {
-    max-width: 1260px;
-    margin: 0 auto;
-}
-
-.featured-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 18px;
-}
-
-.event-card {
-    background: rgba(255, 247, 251, 0.48);
+/* ==========================================================================
+   4. Universal Event Card Styling (Matches your signature event cards)
+   ========================================================================== */
+.theme-card, 
+.event-card, 
+.value-card,
+.faq-item {
+    background: rgba(255, 247, 251, 0.7); /* Slightly cleaner translucency */
     border: 1px solid rgba(214, 175, 194, 0.4);
-    box-shadow: 0 8px 22px rgba(121, 65, 92, 0.08);
-    overflow: hidden;
-}
-
-.event-card-large {
-    grid-column: span 2;
-}
-
-.event-card-wide {
-    grid-column: span 2;
-}
-
-.event-card-small {
-    grid-column: span 1;
-}
-
-.event-image-wrap {
-    position: relative;
-    min-height: 210px;
-    background: linear-gradient(135deg, #efc4d9, #eab1cd);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.event-card-small .event-image-wrap {
-    min-height: 150px;
-}
-
-.event-image-wrap img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.event-image-wrap.placeholder-box p {
-    font-family: 'Playfair Display', serif;
-    color: #7a4561;
-    font-size: 1.5rem;
-    text-align: center;
-    padding: 20px;
-}
-
-.event-badge {
-    position: absolute;
-    top: 14px;
-    left: 0;
-    background: linear-gradient(to bottom, #cb5f93, #b94f84);
-    color: #fff;
-    font-size: 1rem;
-    font-weight: 600;
-    padding: 8px 16px;
-    border-radius: 0 6px 6px 0;
-    z-index: 2;
-    letter-spacing: 0.03em;
-}
-
-.event-card-content {
-    padding: 18px 18px 20px;
-}
-
-.event-card-content h3 {
-    font-size: 2rem;
-    line-height: 1.15;
-    color: #7a435f;
-    margin-bottom: 8px;
-}
-
-.event-date {
-    font-size: 1.3rem;
-    color: #8c5470;
-    margin-bottom: 8px;
-}
-
-.event-description {
-    font-size: 1.2rem;
-    color: #6d4759;
-    line-height: 1.55;
-    margin-bottom: 14px;
-}
-
-.event-btn {
-    display: inline-block;
-    padding: 10px 18px;
-    border-radius: 6px;
-    background: linear-gradient(to bottom, #cb5f93, #b94f84);
-    color: #ffffff;
-    font-family: 'Playfair Display', serif;
-    font-size: 1.1rem;
-    box-shadow: 0 6px 14px rgba(121, 65, 92, 0.15);
+    box-shadow: 0 8px 22px rgba(121, 65, 92, 0.06);
+    border-radius: 16px; /* Smooth, premium curved aesthetic edge */
+    padding: 35px;
     transition: all 0.3s ease;
 }
 
-.event-btn:hover {
+.theme-card:hover, 
+.event-card:hover,
+.value-card:hover,
+.faq-item:hover {
+    transform: translateY(-4px);
+    background: #ffffff;
+    box-shadow: 0 12px 28px rgba(121, 65, 92, 0.12);
+}
+
+/* Reusable buttons on cards across pages */
+.btn-secondary {
+    display: inline-block;
+    padding: 10px 20px;
+    background: rgba(255, 245, 249, 0.95);
+    color: #7a4561;
+    border: 2px solid #ecc4d6;
+    border-radius: 8px;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+    background: #ffffff;
+    border-color: #cb5f93;
+    color: #cb5f93;
     transform: translateY(-2px);
-    background: linear-gradient(to bottom, #d56a9e, #c3578d);
 }
 
-/* =========================
-   BANNER
-========================= */
-
-.events-banner {
-    background: linear-gradient(to right, #a84b76, #c55f90, #a84b76);
-    padding: 26px 20px;
+/* ==========================================================================
+   5. Home Page Layout (Bento Blocks & Gallery Grid)
+   ========================================================================== */
+/* Hero Layout Container */
+.hero {
     text-align: center;
-    border-top: 2px solid #deb3c6;
-    border-bottom: 2px solid #deb3c6;
+    padding: 90px 20px;
+    background: linear-gradient(135deg, #f8d8e8 0%, #f3b9d3 45%, #eaa7c8 100%); /* Signature star gradient */
+    border-radius: 24px;
+    box-shadow: 0 10px 30px rgba(121, 65, 92, 0.15);
+    margin-bottom: 60px;
 }
 
-.banner-content h2 {
-    font-size: 2.4rem;
+.hero h1 {
+    font-size: 4rem;
+    color: #fff7fb;
+    text-shadow: 0 4px 14px rgba(115, 58, 84, 0.28);
+    margin-bottom: 15px;
+}
+
+.hero p {
+    font-size: 1.5rem;
     color: #fff8fb;
-    margin-bottom: 8px;
-    text-transform: uppercase;
-    text-shadow: 0 2px 6px rgba(81, 29, 53, 0.2);
+    text-shadow: 0 3px 8px rgba(115, 58, 84, 0.18);
 }
 
-.banner-content p {
-    font-size: 1.35rem;
-    color: #fff3f8;
+/* Welcome Intro Styling */
+.intro {
+    text-align: center;
+    max-width: 850px;
+    margin: 0 auto 60px;
+    padding: 40px;
+    background: white;
+    border-radius: 24px;
+    box-shadow: 0 8px 24px rgba(121, 65, 92, 0.04);
 }
 
-/* =========================
-   PAST HIGHLIGHTS
-========================= */
-
-.past-highlights {
-    background: #fbeef5;
-    padding: 65px 60px 80px;
+.intro h2 {
+    font-size: 2.6rem;
+    color: #7a435f;
+    margin-bottom: 20px;
 }
 
-.highlights-top-list {
-    max-width: 1200px;
-    margin: 0 auto 28px;
+.intro p {
+    font-size: 1.2rem;
+    color: #6d4759;
+    margin-bottom: 10px;
+}
+
+.intro h4 {
+    font-size: 1.5rem;
+    color: #cb5f93;
+    margin-top: 20px;
+}
+
+.community-desc {
+    margin-top: 30px;
+    padding-top: 25px;
+    border-top: 1px dashed rgba(186, 139, 161, 0.4);
+}
+
+/* Side-by-Side Dashboard Row Layout */
+.dashboard-row {
+    display: flex;
+    gap: 25px;
+    margin: 40px 0;
+}
+
+.dashboard-row section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.dashboard-row h2 {
+    font-size: 2rem;
+    color: #7a435f;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Discord Block Widget */
+.discord-invite {
+    text-align: center;
+    background: white;
+    padding: 50px 30px;
+    border-radius: 24px;
+    box-shadow: 0 8px 24px rgba(121, 65, 92, 0.04);
+}
+
+.discord-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 32px;
+    background-color: #5865F2; /* Retains discord brand color recognition */
+    color: white;
+    border-radius: 25px;
+    font-weight: 500;
+    box-shadow: 0 6px 20px rgba(88, 101, 242, 0.25);
+    transition: all 0.3s ease;
+}
+
+.discord-btn:hover {
+    background-color: #4752C4;
+    transform: translateY(-2px);
+}
+
+/* Interactive Photo Gallery Grid */
+.community-gallery {
+    text-align: center;
+}
+
+.community-gallery h2 {
+    font-size: 2.2rem;
+    color: #7a435f;
+    margin-bottom: 15px;
+}
+
+.gallery-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+    margin-top: 30px;
 }
 
-.highlights-top-list p {
-    font-size: 1.25rem;
+.gallery-item {
+    overflow: hidden;
+    border-radius: 20px;
+    box-shadow: 0 8px 22px rgba(121, 65, 92, 0.06);
+    background: #fff;
+    aspect-ratio: 1 / 1;
+    border: 4px solid white; /* Classic Polaroid cutesy border design */
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.gallery-item:hover img {
+    transform: scale(1.08);
+}
+
+/* ==========================================================================
+   6. About Us Page Layout Specifics
+   ========================================================================== */
+.about-story {
+    display: flex;
+    gap: 40px;
+    align-items: center;
+    background: #ffffff;
+    padding: 50px;
+    border-radius: 24px;
+    box-shadow: 0 8px 24px rgba(121, 65, 92, 0.04);
+}
+
+.story-text {
+    flex: 1.2;
+    text-align: left;
+}
+
+.story-text h2 {
+    font-size: 2.4rem;
+    color: #7a435f;
+    margin-bottom: 15px;
+}
+
+.story-img {
+    flex: 0.8;
+    border-radius: 16px;
+    border: 4px solid white;
+    box-shadow: 0 8px 22px rgba(121, 65, 92, 0.08);
+}
+
+.values-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+    margin-top: 30px;
+}
+
+.value-card h3 {
+    font-size: 1.6rem;
+    color: #cb5f93;
+    margin-bottom: 12px;
+}
+
+.faq-section {
+    max-width: 850px;
+    margin: 0 auto;
+}
+
+.faq-section h2 {
+    font-size: 2.4rem;
     color: #7a435f;
     text-align: center;
+    margin-bottom: 35px;
 }
 
-.highlights-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 18px;
+.faq-item {
+    margin-bottom: 20px;
+    text-align: left;
 }
 
-.highlight-card .event-image-wrap {
-    min-height: 170px;
+.faq-item h3 {
+    font-size: 1.3rem;
+    color: #7a435f;
+    margin-bottom: 10px;
 }
 
-/* =========================
-   PLACEHOLDER
-========================= */
-
-.placeholder-box {
-    background: linear-gradient(135deg, #efc4d9, #eab1cd);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-}
-
-/* =========================
-   FOOTER
-========================= */
-
-.site-footer {
-    background: linear-gradient(to bottom, #9d4b73, #8c4066);
+/* ==========================================================================
+   7. Reusable Footer Setup (Matches Events design accent)
+   ========================================================================== */
+footer, .site-footer {
+    background: linear-gradient(to bottom, #9d4b73, #8c4066); /* Exact match to your favorite theme */
     color: #fff4f9;
-    padding: 22px 20px;
+    padding: 40px 20px;
     text-align: center;
+    margin-top: 100px;
 }
 
-.site-footer p {
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.footer-content p {
     font-family: 'Playfair Display', serif;
     font-style: italic;
     font-size: 1.15rem;
 }
 
-/* =========================
-   RESPONSIVE
-========================= */
+.socials {
+    display: flex;
+    gap: 30px;
+}
 
-@media (max-width: 1000px) {
-    .events-hero h1 {
-        font-size: 3.2rem;
-    }
+.socials a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1rem;
+    transition: opacity 0.3s ease;
+}
 
-    .events-hero p {
-        font-size: 1.25rem;
-    }
+.socials a:hover {
+    opacity: 0.8;
+}
 
-    .section-heading h2 {
-        font-size: 2.2rem;
-    }
-
-    .event-card-content h3 {
-        font-size: 1.55rem;
-    }
-
-    .event-description,
-    .event-date,
-    .highlights-top-list p {
-        font-size: 1.05rem;
-    }
+/* ==========================================================================
+   8. Responsive Settings
+   ========================================================================== */
+@media (max-width: 1024px) {
+    .navbar { padding: 20px 30px; }
+    .nav-links { gap: 15px; }
 }
 
 @media (max-width: 900px) {
-    .featured-grid,
-    .highlights-grid,
-    .highlights-top-list {
-        grid-template-columns: 1fr;
-    }
-
-    .event-card-large,
-    .event-card-wide,
-    .event-card-small {
-        grid-column: span 1;
-    }
-
-    .featured-events,
-    .past-highlights {
-        padding-left: 20px;
-        padding-right: 20px;
-    }
-}
-
-@media (max-width: 600px) {
-    .events-hero {
-        padding: 70px 20px 50px;
-        min-height: auto;
-    }
-
-    .events-hero h1 {
-        font-size: 2.5rem;
-    }
-
-    .events-hero p {
-        font-size: 1.05rem;
-    }
-
-    .btn {
-        width: 100%;
-        max-width: 100%;
+    .dashboard-row,
+    .about-story {
+        flex-direction: column;
         text-align: center;
     }
+    
+    .story-text { text-align: center; }
+    .hero h1 { font-size: 3rem; }
+}
 
-    .section-heading h2 {
-        font-size: 1.9rem;
-    }
+/* Ensure the outer section spans the complete edge-to-edge width of the screen */
+.featured-events,
+.past-highlights {
+    background: #fbeef5;
+    width: 100%;             /* 🔥 Forces the background to go completely across the page */
+    padding: 80px 40px;      /* Generous top/bottom padding, healthy side padding */
+}
 
-    .banner-content h2 {
-        font-size: 1.7rem;
-    }
+/* Update your grids to stretch wider across the page with maximum breathing room */
+.featured-grid,
+.highlights-grid {
+    display: grid;
+    max-width: 1440px;       /* 🔥 Expands the grid width significantly so it stretches out */
+    margin: 0 auto;          /* Keeps the grid content centered within the expanded width */
+    gap: 24px;               /* Gives the cards slightly more space between each other */
+}
 
-    .banner-content p {
-        font-size: 1rem;
-    }
+/* Also ensure your section headings stretch cleanly */
+.section-heading {
+    max-width: 1440px;
+    margin: 0 auto 50px;
 }

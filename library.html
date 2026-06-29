@@ -4,11 +4,274 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Baddies Bookshelf</title>
+    <title>The Baddies Bookshelf Library</title>
 
-    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/library.css">
 
     <link rel="icon" type="image/x-icon" href="favicon.ico"> 
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
 </head>
 
+<body>
+    <!-- HEADER / NAVIGATION (Perfect match) -->
+    <header class="site-header">
+        <nav class="navbar">
+            <div class="nav-left">
+                <a href="home.html" class="logo">
+                    <img src="assets/images/tbb-logo.png" alt="The Baddies Bookshelf Logo">
+                </a>
+            </div>
+
+            <ul class="nav-links">
+                <li><a href="home.html">Home</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="events.html">Events</a></li>
+                <li><a href="library.html" class="active">The Baddies Bookshelf</a></li>
+                <li><a href="readingchallenges.html">Reading Challenges</a></li>
+                <li><a href="communitygallery.html">Community Gallery</a></li>
+                <li><a href="joinus.html">Join Us</a></li>
+            </ul>
+
+            <a href="https://the-baddies-newsletter.beehiiv.com/..." target="_blank">
+                <button class="subscribe-btn">Subscribe</button>
+            </a>
+        </nav>
+    </header>
+
+    <main>
+        <!-- 1. Page Header Hero -->
+        <section class="hero" style="margin-bottom: 40px;">
+            <h1>The Baddies Bookshelf Vault</h1>
+            <p>Your ultimate digital paradise. Tap any cover to download your next escape.</p>
+        </section>
+
+        <!-- 2. Interactive Genre Filter Control Panel (Full-Width Row background style) -->
+        <section class="filter-section">
+            <div class="filter-container">
+                <span class="filter-title"><i class="fa-solid fa-sliders"></i> Filter by Genre:</span>
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="all">All Books</button>
+                    <button class="filter-btn" data-filter="romance">💖 Romance</button>
+                    <button class="filter-btn" data-filter="dark-romance">❤️‍🔥 Dark Romance</button>
+                    <button class="filter-btn" data-filter="thriller">🔪 Thriller / Horror</button>
+                    <button class="filter-btn" data-filter="fantasy">✨ Fantasy &amp; Sci-Fi</button>
+                    <button class="filter-btn" data-filter="nonfiction">📖 Nonfiction</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Expansive Digital Library Book Grid (15 Placeholders) -->
+        <section class="library-grid-section">
+            <div class="library-grid">
+                
+                <!-- Tile 1: Romance Example -->
+                <article class="book-card" data-genre="romance">
+                    <a href="downloads/book1.epub" download class="book-download-wrapper">
+                        <div class="book-cover placeholder-cover">
+                            <!-- When you have actual covers, replace this image line -->
+                            <div class="cover-text">Book Cover Coming Soon ✨</div>
+                        </div>
+                        <div class="book-info">
+                            <h3>Hart's Landing</h3>
+                            <p class="book-author">Melanie Harlow</p>
+                            <div class="book-badges">
+                                <span class="badge badge-romance">💖 Romance</span>
+                            </div>
+                        </div>
+                    </a>
+                </article>
+
+                <!-- Tile 2: Dark Romance Example -->
+                <article class="book-card" data-genre="dark-romance">
+                    <a href="#" download class="book-download-wrapper">
+                        <div class="book-cover placeholder-cover">
+                            <div class="cover-text">Book Cover Coming Soon ✨</div>
+                        </div>
+                        <div class="book-info">
+                            <h3>Embrace the Darkness</h3>
+                            <p class="book-author">Ashley N. Rostek</p>
+                            <div class="book-badges">
+                                <span class="badge badge-dark">❤️‍🔥 Dark Romance</span>
+                            </div>
+                        </div>
+                    </a>
+                </article>
+
+                <!-- Tile 3: Thriller Example -->
+                <article class="book-card" data-genre="thriller">
+                    <a href="#" download class="book-download-wrapper">
+                        <div class="book-cover placeholder-cover">
+                            <div class="cover-text">Book Cover Coming Soon ✨</div>
+                        </div>
+                        <div class="book-info">
+                            <h3>Tourist Season</h3>
+                            <p class="book-author">Brynne Weaver</p>
+                            <div class="book-badges">
+                                <span class="badge badge-thriller">🔪 Thriller</span>
+                            </div>
+                        </div>
+                    </a>
+                </article>
+
+                <!-- Tile 4: Nonfiction Example -->
+                <article class="book-card" data-genre="nonfiction">
+                    <a href="#" download class="book-download-wrapper">
+                        <div class="book-cover placeholder-cover">
+                            <div class="cover-text">Book Cover Coming Soon ✨</div>
+                        </div>
+                        <div class="book-info">
+                            <h3>Around The Way Girl</h3>
+                            <p class="book-author">Taraji P. Henson</p>
+                            <div class="book-badges">
+                                <span class="badge badge-nonfiction">📖 Nonfiction</span>
+                            </div>
+                        </div>
+                    </a>
+                </article>
+
+                <!-- Tile 5: Fantasy Example -->
+                <article class="book-card" data-genre="fantasy">
+                    <a href="#" download class="book-download-wrapper">
+                        <div class="book-cover placeholder-cover">
+                            <div class="cover-text">Book Cover Coming Soon ✨</div>
+                        </div>
+                        <div class="book-info">
+                            <h3>This Poison Heart</h3>
+                            <p class="book-author">Kalynn Bayron</p>
+                            <div class="book-badges">
+                                <span class="badge badge-fantasy">✨ Fantasy</span>
+                            </div>
+                        </div>
+                    </a>
+                </article>
+
+                <!-- Placeholders 6 through 15 (Repeating structure so you see the complete clean row layout) -->
+                <article class="book-card" data-genre="dark-romance">
+                    <a href="#" class="book-download-wrapper">
+                        <div class="book-cover placeholder-cover"><div class="cover-text">Placeholder Cover ✧</div></div>
+                        <div class="book-info"><h3>Endure the Pain</h3><p class="book-author">Ashley N. Rostek</p><div class="book-badges"><span class="badge badge-dark">❤️‍🔥 Dark Romance</span></div></div>
+                    </a>
+                </article>
+
+                <article class="book-card" data-genre="dark-romance">
+                    <a href="#" class="book-download-wrapper">
+                        <div class="book-cover placeholder-cover"><div class="cover-text">Placeholder Cover ✧</div></div>
+                        <div class="book-info"><h3>Escape the Reaper</h3><p class="book-author">Ashley N. Rostek</p><div class="book-badges"><span class="badge badge-dark">❤️‍🔥 Dark Romance</span></div></div>
+                    </a>
+                </article>
+
+                <article class="book-card" data-genre="fantasy">
+                    <a href="#" class="book-download-wrapper">
+                        <div class="book-cover placeholder-cover"><div class="cover-text">Placeholder Cover ✧</div></div>
+                        <div class="book-info"><h3>This Wicked Fate</h3><p class="book-author">Kalynn Bayron</p><div class="book-badges"><span class="badge badge-fantasy">✨ Fantasy</span></div></div>
+                    </a>
+                </article>
+
+                <article class="book-card" data-genre="romance">
+                    <a href="#" class="book-download-wrapper">
+                        <div class="book-cover placeholder-cover"><div class="cover-text">Placeholder Cover ✧</div></div>
+                        <div class="book-info"><h3>Baddie Love Story</h3><p class="book-author">Author Name</p><div class="book-badges"><span class="badge badge-romance">💖 Romance</span></div></div>
+                    </a>
+                </article>
+
+                <article class="book-card" data-genre="thriller">
+                    <a href="#" class="book-download-wrapper">
+                        <div class="book-cover placeholder-cover"><div class="cover-text">Placeholder Cover ✧</div></div>
+                        <div class="book-info"><h3>Behind Quiet Walls</h3><p class="book-author">Author Name</p><div class="book-badges"><span class="badge badge-thriller">🔪 Thriller</span></div></div>
+                    </a>
+                </article>
+
+                <article class="book-card" data-genre="fantasy">
+                    <a href="#" class="book-download-wrapper">
+                        <div class="book-cover placeholder-cover"><div class="cover-text">Placeholder Cover ✧</div></div>
+                        <div class="book-info"><h3>Kingdom of Paper</h3><p class="book-author">Author Name</p><div class="book-badges"><span class="badge badge-fantasy">✨ Fantasy</span></div></div>
+                    </a>
+                </article>
+
+                <article class="book-card" data-genre="romance">
+                    <a href="#" class="book-download-wrapper">
+                        <div class="book-cover placeholder-cover"><div class="cover-text">Placeholder Cover ✧</div></div>
+                        <div class="book-info"><h3>Spiced ink</h3><p class="book-author">Author Name</p><div class="book-badges"><span class="badge badge-romance">💖 Romance</span></div></div>
+                    </a>
+                </article>
+
+                <article class="book-card" data-genre="dark-romance">
+                    <a href="#" class="book-download-wrapper">
+                        <div class="book-cover placeholder-cover"><div class="cover-text">Placeholder Cover ✧</div></div>
+                        <div class="book-info"><h3>Tempting Shadows</h3><p class="book-author">Author Name</p><div class="book-badges"><span class="badge badge-dark">❤️‍🔥 Dark Romance</span></div></div>
+                    </a>
+                </article>
+
+                <article class="book-card" data-genre="thriller">
+                    <a href="#" class="book-download-wrapper">
+                        <div class="book-cover placeholder-cover"><div class="cover-text">Placeholder Cover ✧</div></div>
+                        <div class="book-info"><h3>Don't Blink Once</h3><p class="book-author">Author Name</p><div class="book-badges"><span class="badge badge-thriller">🔪 Thriller</span></div></div>
+                    </a>
+                </article>
+
+                <article class="book-card" data-genre="nonfiction">
+                    <a href="#" class="book-download-wrapper">
+                        <div class="book-cover placeholder-cover"><div class="cover-text">Placeholder Cover ✧</div></div>
+                        <div class="book-info"><h3>Reading Manifestos</h3><p class="book-author">Author Name</p><div class="book-badges"><span class="badge badge-nonfiction">📖 Nonfiction</span></div></div>
+                    </a>
+                </article>
+
+            </div>
+        </section>
+    </main>
+
+    <!-- UNIFIED MASTER FOOTER -->
+    <footer class="site-footer">
+        <div class="footer-tagline">
+            <h2>A Community. A Culture. A Movement.</h2>
+        </div>
+
+        <div class="footer-top">
+            <div class="footer-socials">
+                <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                <a href="#" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+                <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+            </div>
+
+            <div class="footer-newsletter">
+                <p>Join The Baddie Bulletin</p>
+                <a href="https://the-baddies-newsletter.beehiiv.com/..." class="footer-subscribe-btn">Subscribe</a>
+            </div>
+
+            <div class="footer-contact">
+                <a href="mailto:hello@baddiesbookshelf.com">hello@baddiesbookshelf.com</a>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; The Baddies Bookshelf</p>
+        </div>
+    </footer>
+
+    <!-- INTERACTIVE ENGINE JS: Handles seamless click filtering across genres instantly -->
+    <script>
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const bookCards = document.querySelectorAll('.book-card');
+
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Change highlighted filter button aesthetic look
+                document.querySelector('.filter-btn.active').classList.remove('active');
+                button.classList.add('active');
+
+                const filterTarget = button.getAttribute('data-filter');
+
+                // Filter cards visibility
+                bookCards.forEach(card => {
+                    if (filterTarget === 'all' || card.getAttribute('data-genre') === filterTarget) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

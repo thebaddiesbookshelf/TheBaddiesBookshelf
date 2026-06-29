@@ -4,21 +4,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Baddies Bookshelf</title>
+    <title>About Us - The Baddies Bookshelf</title>
 
     <link rel="stylesheet" href="/css/styles.css">
 
     <link rel="icon" type="image/x-icon" href="favicon.ico"> 
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
 </head>
 
 <body>
-    <header>
+    <header class="site-header">
         <nav class="navbar">
-            <div class="logo">The Baddies Bookshelf</div>
+            <div class="nav-left">
+                <a href="home.html" class="logo">
+                    <img src="assets/images/tbb-logo.png" alt="The Baddies Bookshelf Logo">
+                </a>
+            </div>
+
             <ul class="nav-links">
                 <li><a href="home.html">Home</a></li>
-                <li><a href="about.html">About Us</a></li>
+                <li><a href="about.html" class="active">About Us</a></li>
                 <li><a href="events.html">Events</a></li>
                 <li><a href="library.html">The Baddies Bookshelf</a></li>
                 <li><a href="readingchallenges.html">Reading Challenges</a></li>
@@ -26,12 +32,120 @@
                 <li><a href="joinus.html">Join Us</a></li>
             </ul>
 
-            <!-- Fixed: Wrapped button in an anchor tag so the newsletter link actually works -->
-            <a href="https://the-baddies-newsletter.beehiiv.com/?_gl=1*piy6ar*_gcl_aw*R0NMLjE3ODE4MjgwNTAuQ2owS0NRandyczdSQmhEdUFSSXNBSVZmQkQySHE4dmtrZmc2WUpHUEFzRW1JWmpiNk1YXzNQVUhrNm5VRWV1aUwzb1d3NTlLUXMtUHByZ2FBbXJHRUFMd193Y0I.*_gcl_au*MTQxNDY5MTA0Mi4xNzgxODI3OTUyLjEwNDgyMDE3OC4xNzgxODI4MTE0LjE3ODE4MjgyMDY.*_ga*MTU2NTM0OTI1Ni4xNzgxODI3OTUy*_ga_E6Y4WLQ2EC*czE3ODE4Mjc5NTEkbzEkZzEkdDE3ODE4MjgyMDYkajMkbDEkaDEyNTI2MzI3Ng==" target="_blank">
+            <a href="https://the-baddies-newsletter.beehiiv.com/?_gl=1*piy6ar*_gcl_aw*R0NMLjE3ODE4MjgwNTAuQ2owS0NRandyczdSQmhEdUFSSXNBSVZmQkQySHE4dmtrZmc2WUpHUEFzRW1JWmpiNk1YXzNQVUhrNm5VRWV1aUwzb1d3NTlLUXMtUHByZ2FBbXJHRUFMd193Y0I.*_gcl_au*MTQxNDY5MTA0Mi4xNzgxODI3OTUyLjEwNDgyMDEtext..." target="_blank">
                 <button class="subscribe-btn">Subscribe</button>
             </a>
         </nav>
     </header>
 
+    <main>
+        <section class="hero">
+            <h1>Behind the Bookshelf</h1>
+            <p>Unapologetic readers rewriting the rules of the bookish community.</p>
+        </section>
+
+        <section class="about-story-section">
+            <div class="about-story">
+                <div class="story-text">
+                    <div class="section-heading" style="text-align: left; margin: 0 0 20px 0;">
+                        <h2 style="padding: 0 20px 0 0; background: #ffffff;">How TBB Started ✧</h2>
+                    </div>
+                    <p style="margin-bottom: 15px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. The Baddies Bookshelf was born out of a desire for a space free of judgment, rules, and literary gatekeeping.</p>
+                    <p>We wanted a community where you could gush over dark romance, thrillers, fantasy, or spicy paperbacks with equal pride. What started as a simple idea quickly grew into a massive safe haven for readers who just want to own their taste completely.</p>
+                </div>
+                <img src="assets/images/about-story-placeholder.jpg" alt="Our community journey" class="story-img">
+            </div>
+        </section>
+
+        <section class="values-section">
+            <div class="section-heading">
+                <h2>Our Core Values ✧</h2>
+            </div>
+            <div class="values-container">
+                <p class="values-intro-text">What makes The Baddies Bookshelf entirely unique.</p>
+                
+                <div class="values-grid">
+                    <div class="value-card">
+                        <h3>Zero Judgment</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Whether you read audiobooks, e-readers, or physical paperbacks, your preferences are completely valid here.</p>
+                    </div>
+                    <div class="value-card">
+                        <h3>Radical Inclusion</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. You don't have to hit a certain book count challenge to earn your place. You belong from the moment you join.</p>
+                    </div>
+                    <div class="value-card">
+                        <h3>Unapologetic Joy</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. We celebrate your guilty pleasures, your five-star rants, and everything in between without excuses.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="expectations-section">
+            <div class="expectations-container">
+                <div class="section-heading">
+                    <h2>What Members Can Expect ✧</h2>
+                </div>
+                <div class="theme-card" style="max-width: 900px; margin: 0 auto; text-align: left; align-items: flex-start;">
+                    <p style="margin-bottom: 15px;"><strong>✨ Vibrant Real-Time Conversations:</strong> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Dive into dedicated channels for your specific favorite genres.</p>
+                    <p style="margin-bottom: 15px;"><strong>📅 Interactive Monthly Hangouts:</strong> Live discussions, fun theme reveals, and community-driven events designed to let you make true book besties.</p>
+                    <p><strong>🏆 Exciting Reading Challenges:</strong> Fun, zero-pressure community read-offs and challenges to help keep your reading spark alive and flowing.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="faq-container-section">
+            <div class="faq-section">
+                <div class="section-heading">
+                    <h2>Frequently Asked Questions ✧</h2>
+                </div>
+                
+                <div class="faq-item">
+                    <h3>Is there a fee to join The Baddies Bookshelf?</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Our core community spaces and group discussions are absolutely free to join and participate in!</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3>What genres do you focus on?</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Absolutely everything! While our members love high-stakes thrillers, gritty urban reads, romance, and fantasy, all genres are warmly embraced.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3>How do I join the official Discord?</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Head right over to our Join Us link or click the active Discord button directly on our home page to jump right into the chat.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-tagline">
+            <h2>A Community. A Culture. A Movement.</h2>
+        </div>
+
+        <div class="footer-top">
+            <div class="footer-socials">
+                <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                <a href="#" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+                <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+            </div>
+
+            <div class="footer-newsletter">
+                <p>Join The Baddie Bulletin</p>
+                <a href="https://the-baddies-newsletter.beehiiv.com/..." class="footer-subscribe-btn">Subscribe</a>
+            </div>
+
+            <div class="footer-contact">
+                <a href="mailto:hello@baddiesbookshelf.com">hello@baddiesbookshelf.com</a>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; The Baddies Bookshelf</p>
+        </div>
+    </footer>
+
+    <script src="scripts.js"></script>
 </body>
 
+</html>

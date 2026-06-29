@@ -1,0 +1,50 @@
+/* ==========================================================================
+   About Us Section Breakouts (Full Width Panels)
+   ========================================================================== */
+.about-story-section,
+.expectations-section {
+    background: #ffffff; /* Alternating crisp white panels */
+    width: 100%;
+    padding: 80px 40px;
+}
+
+.values-section,
+.faq-container-section {
+    background: #fbeef5; /* Alternating soft pink theme panels */
+    width: 100%;
+    padding: 80px 40px;
+}
+
+.values-container,
+.expectations-container {
+    max-width: 1260px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.values-intro-text {
+    margin-bottom: 30px;
+    color: #6d4759;
+    font-size: 1.2rem;
+}
+
+/* Ensure the left-aligned section header blends correctly against white backgrounds */
+.about-story-section .section-heading::before {
+    left: 0;
+}
+
+@media (max-width: 900px) {
+    .about-story-section,
+    .values-section,
+    .expectations-section,
+    .faq-container-section {
+        padding: 60px 20px;
+    }
+    .about-story {
+        flex-direction: column;
+        padding: 20px;
+    }
+    .story-img {
+        width: 100%;
+    }
+}

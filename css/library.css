@@ -1,0 +1,218 @@
+/* ==========================================================================
+   The Baddies Bookshelf Library Specific Layouts
+   ========================================================================== */
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 60px;
+    background-color: #ffffff;
+    border-bottom: 2px solid #cb5f93; /* Events theme border matching */
+    width: 100%;
+}
+
+.logo img {
+    height: 75px; 
+    width: auto;
+    display: block;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    gap: 30px; 
+    margin: 0 auto;  
+}
+
+.nav-links a {
+    color: #7a435f; /* Deep crisp plum text */
+    font-weight: 500;
+    font-size: 0.95rem;
+    white-space: nowrap; 
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+    color: #cb5f93;
+}
+
+/* Full Bleed Filter Dashboard Wrapper */
+.filter-section {
+    background: #ffffff;
+    width: 100%;
+    padding: 30px 40px;
+    border-bottom: 1px solid rgba(186, 139, 161, 0.2);
+}
+
+.filter-container {
+    max-width: 1440px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.filter-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    color: #7a435f;
+    font-weight: 600;
+}
+
+.filter-buttons {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    background: rgba(255, 245, 249, 0.95);
+    border: 1px solid #ecc4d6;
+    color: #7a4561;
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.filter-btn:hover,
+.filter-btn.active {
+    background: linear-gradient(to bottom, #cb5f93, #b94f84);
+    color: #ffffff;
+    border-color: #b94f84;
+    box-shadow: 0 4px 10px rgba(121, 65, 92, 0.15);
+}
+
+/* Full Bleed Library Panels Layout */
+.library-grid-section {
+    background: #fbeef5;
+    width: 100%;
+    padding: 60px 40px;
+}
+
+/* 5-Column Stretch Grid for highly optimized desktop catalog display */
+.library-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* Generates 5 neat small columns across the panel width */
+    max-width: 1440px;
+    margin: 0 auto;
+    gap: 25px;
+}
+
+/* Individual Book Tile Structure (Matches image_ea2140.jpg styling approach) */
+.book-card {
+    background: #ffffff;
+    border-radius: 14px;
+    border: 1px solid rgba(214, 175, 194, 0.3);
+    box-shadow: 0 6px 18px rgba(121, 65, 92, 0.04);
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.book-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(121, 65, 92, 0.12);
+}
+
+.book-download-wrapper {
+    display: block;
+    height: 100%;
+}
+
+/* Downsized Book Aspect Framing Box */
+.book-cover {
+    width: 100%;
+    aspect-ratio: 2 / 3; /* Perfect standard book dimension ratio format */
+    position: relative;
+    overflow: hidden;
+}
+
+.placeholder-cover {
+    background: linear-gradient(135deg, #efc4d9 0%, #eab1cd 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.cover-text {
+    font-family: 'Playfair Display', serif;
+    color: #7a4561;
+    font-size: 1.1rem;
+    text-align: center;
+    font-style: italic;
+    font-weight: 500;
+}
+
+.book-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Book text data info */
+.book-info {
+    padding: 16px;
+    text-align: left;
+}
+
+.book-info h3 {
+    font-family: 'Poppins', sans-serif; /* Crisp sans font matching example image */
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #3B2E35;
+    margin-bottom: 4px;
+    line-height: 1.3;
+    /* Handles text cutoff elegantly if titles get exceptionally long */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.book-author {
+    font-size: 0.9rem;
+    color: #8c5470;
+    margin-bottom: 12px;
+}
+
+/* Library Status / Genre Badges */
+.book-badges {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.badge {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 12px;
+}
+
+.badge-romance { background: #FFF0F5; color: #cb5f93; border: 1px solid rgba(203, 95, 147, 0.2); }
+.badge-dark { background: #3B2E35; color: #efc4d9; }
+.badge-thriller { background: #fdf2f2; color: #c81e1e; border: 1px solid rgba(200, 30, 30, 0.2); }
+.badge-fantasy { background: #f3e8ff; color: #6b21a8; border: 1px solid rgba(107, 33, 168, 0.2); }
+.badge-nonfiction { background: #e1effe; color: #1e429f; border: 1px solid rgba(30, 66, 159, 0.2); }
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+    .library-grid { grid-template-columns: repeat(4, 1fr); }
+}
+@media (max-width: 900px) {
+    .library-grid { grid-template-columns: repeat(2, 1fr); gap: 15px; }
+    .library-grid-section, .filter-section { padding-left: 20px; padding-right: 20px; }
+    .filter-container { flex-direction: column; align-items: flex-start; }
+}
+@media (max-width: 480px) {
+    .library-grid { grid-template-columns: 1fr; }
+}

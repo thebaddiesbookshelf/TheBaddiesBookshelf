@@ -1,3 +1,6 @@
+/* ==========================================================================
+   1. Global Resets & Theme Variables
+   ========================================================================== */
 * {
     margin: 0;
     padding: 0;
@@ -6,14 +9,12 @@
 
 body {
     font-family: 'Poppins', sans-serif;
-    background: #FFF6F9;
-    color: #3B2E35;
+    background: #fbeef5; /* Exact soft pink base from Events page */
+    color: #3B2E35;      
     line-height: 1.6;
 }
 
-h1,
-h2,
-h3 {
+h1, h2, h3, h4 {
     font-family: 'Playfair Display', serif;
 }
 
@@ -27,67 +28,443 @@ a {
     color: inherit;
 }
 
+/* ==========================================================================
+   2. Header & Navigation 
+   ========================================================================== */
 .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 20px 60px;
     background-color: #ffffff;
-    border-bottom: 2px solid #F45AA5;
+    border-bottom: 2px solid #cb5f93; /* Events theme border matching */
+    width: 100%;
 }
 
-.nav-left,
-.nav-right {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.nav-left a {
-    font-size: 1.2rem;
-    color: #B04B78;
-    transition: color 0.3s ease;
-}
-
-.nav-left a:hover {
-    color: #F45AA5;
+.logo img {
+    height: 75px; 
+    width: auto;
+    display: block;
 }
 
 .nav-links {
     display: flex;
     align-items: center;
     list-style: none;
-    gap: 30px;
+    gap: 30px; 
+    margin: 0 auto;  
 }
 
 .nav-links a {
-    color: #3B2E35;
+    color: #7a435f; /* Deep crisp plum text */
     font-weight: 500;
+    font-size: 0.95rem;
+    white-space: nowrap; 
     transition: color 0.3s ease;
 }
 
 .nav-links a:hover,
 .nav-links a.active {
-    color: #F45AA5;
+    color: #cb5f93;
 }
 
-.logo a,
-.brand-link {
-    font-family: 'Playfair Display', serif;
-    font-style: italic;
-    font-weight: 600;
-}
-
+/* Primary Subscribe Button */
 .subscribe-btn {
     display: inline-block;
     padding: 10px 20px;
-    background-color: #F45AA5;
+    background: linear-gradient(to bottom, #cb5f93, #b94f84);
     color: white;
-    border-radius: 5px;
-    transition: background-color 0.3s ease, transform 0.3s ease;
+    border: none;
+    border-radius: 20px; 
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(121, 65, 92, 0.2);
+    transition: all 0.3s ease;
 }
 
 .subscribe-btn:hover {
-    background-color: #d9448e;
+    background: linear-gradient(to bottom, #d56a9e, #c3578d);
     transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(121, 65, 92, 0.3);
+}
+
+/* ==========================================================================
+   3. Main Full-Width Breakout Layout Settings
+   ========================================================================== */
+main {
+    width: 100%; /* 🔥 Removes the layout cage so inner content can touch screen boundaries */
+}
+
+/* Shared Elegant Header Lines matching Events */
+.section-heading {
+    position: relative;
+    max-width: 1260px;
+    margin: 0 auto 35px;
+    text-align: center;
+}
+
+.section-heading::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: rgba(186, 139, 161, 0.35);
+}
+
+.section-heading h2 {
+    position: relative;
+    z-index: 1;
+    display: inline-block;
+    padding: 0 24px;
+    background: #fbeef5; 
+    font-size: 2.6rem;
+    color: #7a435f;
+}
+
+/* ==========================================================================
+   4. Page Sections (Full Bleed Backgrounds)
+   ========================================================================== */
+
+/* Hero Container */
+.hero {
+    text-align: center;
+    padding: 100px 20px;
+    background: linear-gradient(135deg, #f8d8e8 0%, #f3b9d3 45%, #eaa7c8 100%); /* Starry design */
+    width: 100%;
+}
+
+.hero h1 {
+    font-size: 4.3rem;
+    color: #fff7fb;
+    margin-bottom: 14px;
+    text-shadow: 0 4px 14px rgba(115, 58, 84, 0.28);
+}
+
+.hero p {
+    font-size: 1.65rem;
+    color: #fff8fb;
+    text-shadow: 0 3px 8px rgba(115, 58, 84, 0.18);
+}
+
+/* Welcome Intro Background Block */
+.intro-section {
+    background: #ffffff;
+    width: 100%;
+    padding: 80px 40px;
+}
+
+.intro-content {
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.intro-content h2 {
+    font-size: 2.6rem;
+    color: #7a435f;
+    margin-bottom: 20px;
+}
+
+.intro-content p {
+    font-size: 1.25rem;
+    color: #6d4759;
+    margin-bottom: 10px;
+}
+
+.intro-content h4 {
+    font-size: 1.5rem;
+    color: #cb5f93;
+    margin-top: 20px;
+}
+
+.community-desc {
+    margin-top: 35px;
+    padding-top: 25px;
+    border-top: 1px dashed rgba(186, 139, 161, 0.4);
+}
+
+/* Dashboard Side-by-Side Area */
+.dashboard-section {
+    background: #fbeef5;
+    width: 100%;
+    padding: 80px 40px;
+}
+
+.dashboard-row {
+    display: flex;
+    max-width: 1260px;
+    margin: 0 auto;
+    gap: 30px;
+}
+
+.dashboard-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.theme-card, 
+.event-card {
+    background: rgba(255, 247, 251, 0.6);
+    border: 1px solid rgba(214, 175, 194, 0.4);
+    box-shadow: 0 8px 22px rgba(121, 65, 92, 0.08);
+    padding: 40px;
+    border-radius: 12px;
+    height: 100%; 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.theme-card:hover, 
+.event-card:hover {
+    transform: translateY(-4px);
+    background: #ffffff;
+}
+
+.theme-card h3, 
+.event-card h3 {
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+    color: #7a435f;
+}
+
+.event-date {
+    display: inline-block;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    background: #FFF6F9;
+    color: #cb5f93;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+/* Secondary Button Layout Elements */
+.btn-secondary {
+    display: inline-block;
+    margin-top: 20px; 
+    padding: 10px 24px;
+    background: rgba(255, 245, 249, 0.95);
+    color: #7a4561;
+    border: 2px solid #ecc4d6;
+    border-radius: 6px;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+    background: #ffffff;
+    border-color: #cb5f93;
+    color: #cb5f93;
+    transform: translateY(-2px);
+}
+
+/* Mid-Page Connection Invite Ribbon */
+.discord-invite-section {
+    background: linear-gradient(to right, #a84b76, #c55f90, #a84b76); /* Signature Events color ribbon */
+    padding: 45px 20px;
+    text-align: center;
+    border-top: 2px solid #deb3c6;
+    border-bottom: 2px solid #deb3c6;
+    width: 100%;
+}
+
+.discord-invite-content h2 {
+    font-size: 2.4rem;
+    color: #fff8fb;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    text-shadow: 0 2px 6px rgba(81, 29, 53, 0.2);
+}
+
+.discord-invite-content p {
+    font-size: 1.35rem;
+    color: #fff3f8;
+    margin-bottom: 20px;
+}
+
+.discord-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 28px;
+    background: rgba(255, 245, 249, 0.95);
+    color: #7a4561;
+    border: 2px solid #ecc4d6;
+    border-radius: 8px;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    font-weight: 500;
+    box-shadow: 0 6px 14px rgba(121, 65, 92, 0.15);
+    transition: all 0.3s ease;
+}
+
+.discord-btn:hover {
+    background: #ffffff;
+    transform: translateY(-2px);
+}
+
+.btn-icon-fa {
+    font-size: 1.3rem;
+}
+
+/* Gallery Section Layout */
+.gallery-section {
+    background: #ffffff;
+    width: 100%;
+    padding: 80px 40px;
+}
+
+.gallery-container {
+    max-width: 1260px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.gallery-intro-text {
+    margin-bottom: 30px;
+    color: #6d4759;
+    font-size: 1.2rem;
+}
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 24px;
+}
+
+.gallery-item {
+    overflow: hidden;
+    border-radius: 12px;
+    box-shadow: 0 8px 22px rgba(121, 65, 92, 0.08);
+    background: #fff;
+    aspect-ratio: 1 / 1; 
+    border: 1px solid rgba(214, 175, 194, 0.4);
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; 
+    transition: transform 0.6s ease;
+}
+
+.gallery-item:hover img {
+    transform: scale(1.05); 
+}
+
+/* ==========================================================================
+   5. Dynamic Master Footer Setup (Matches Events Page)
+   ========================================================================== */
+.site-footer {
+    background: linear-gradient(to bottom, #9d4b73, #8c4066);
+    color: #fff4f9;
+    padding: 40px 20px;
+    text-align: center;
+    width: 100%;
+}
+
+.footer-tagline h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    margin-bottom: 30px;
+    font-style: italic;
+    font-weight: 500;
+}
+
+.footer-top {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    max-width: 1100px;
+    margin: 0 auto 30px;
+    flex-wrap: wrap;
+    gap: 30px;
+}
+
+.footer-socials {
+    display: flex;
+    gap: 20px;
+    font-size: 1.6rem;
+}
+
+.footer-socials a {
+    color: #fff4f9;
+    transition: opacity 0.3s ease;
+}
+
+.footer-socials a:hover {
+    opacity: 0.8;
+}
+
+.footer-newsletter p {
+    font-size: 1.15rem;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.footer-subscribe-btn {
+    display: inline-block;
+    padding: 10px 24px;
+    background: #ffffff;
+    color: #8c4066;
+    font-weight: 600;
+    border-radius: 20px;
+    font-size: 0.95rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.footer-subscribe-btn:hover {
+    background: #fff4f9;
+    transform: translateY(-2px);
+}
+
+.footer-contact a {
+    font-size: 1.1rem;
+    border-bottom: 1px dashed rgba(255, 244, 249, 0.5);
+    transition: opacity 0.3s ease;
+}
+
+.footer-contact a:hover {
+    opacity: 0.8;
+}
+
+.footer-bottom {
+    border-top: 1px solid rgba(255, 244, 249, 0.15);
+    padding-top: 20px;
+    max-width: 1100px;
+    margin: 0 auto;
+    font-size: 0.9rem;
+    opacity: 0.7;
+}
+
+/* ==========================================================================
+   6. Mobile Settings
+   ========================================================================== */
+@media (max-width: 900px) {
+    .dashboard-row {
+        flex-direction: column;
+    }
+    .footer-top {
+        flex-direction: column;
+        gap: 25px;
+    }
+    .hero h1 {
+        font-size: 3rem;
+    }
+    .navbar {
+        flex-direction: column;
+        gap: 15px;
+    }
 }
