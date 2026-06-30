@@ -1,0 +1,35 @@
+/* ==========================================================================
+   Community Gallery Custom Layout Enhancements
+   ========================================================================== */
+
+/* Gives the cards a clean rounded corner system with your crisp borders */
+.gallery-card-style {
+    border-radius: 16px;
+    background: #ffffff;
+    box-shadow: 0 8px 22px rgba(121, 65, 92, 0.05);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.gallery-card-style:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 28px rgba(121, 65, 92, 0.12);
+}
+
+/* Rounded framing masks for the top images */
+.gallery-card-style .event-image-wrap {
+    border-radius: 15px 15px 0 0;
+    overflow: hidden;
+}
+
+/* Custom rounded pillow badges to differentiate content categories */
+.gallery-card-style .event-badge {
+    border-radius: 20px;
+    top: 14px;
+    left: 14px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 6px 14px;
+    letter-spacing: 0.5px;
+}

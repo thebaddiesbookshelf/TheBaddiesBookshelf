@@ -4,32 +4,159 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Baddies Bookshelf</title>
+    <title>Reading Challenges - The Baddies Bookshelf</title>
 
-    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/readingchallenges.css">
 
     <link rel="icon" type="image/x-icon" href="favicon.ico"> 
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
 </head>
 
 <body>
-    <header>
+    <header class="site-header">
         <nav class="navbar">
-            <div class="logo">The Baddies Bookshelf</div>
+            <div class="nav-left">
+                <a href="home.html" class="logo">
+                    <img src="assets/images/tbb-logo.png" alt="The Baddies Bookshelf Logo">
+                </a>
+            </div>
+
             <ul class="nav-links">
                 <li><a href="home.html">Home</a></li>
                 <li><a href="about.html">About Us</a></li>
                 <li><a href="events.html">Events</a></li>
                 <li><a href="library.html">The Baddies Bookshelf</a></li>
-                <li><a href="readingchallenges.html">Reading Challenges</a></li>
+                <li><a href="readingchallenges.html" class="active">Reading Challenges</a></li>
                 <li><a href="communitygallery.html">Community Gallery</a></li>
                 <li><a href="joinus.html">Join Us</a></li>
             </ul>
 
-            <!-- Fixed: Wrapped button in an anchor tag so the newsletter link actually works -->
-            <a href="https://the-baddies-newsletter.beehiiv.com/?_gl=1*piy6ar*_gcl_aw*R0NMLjE3ODE4MjgwNTAuQ2owS0NRandyczdSQmhEdUFSSXNBSVZmQkQySHE4dmtrZmc2WUpHUEFzRW1JWmpiNk1YXzNQVUhrNm5VRWV1aUwzb1d3NTlLUXMtUHByZ2FBbXJHRUFMd193Y0I.*_gcl_au*MTQxNDY5MTA0Mi4xNzgxODI3OTUyLjEwNDgyMDE3OC4xNzgxODI4MTE0LjE3ODE4MjgyMDY.*_ga*MTU2NTM0OTI1Ni4xNzgxODI3OTUy*_ga_E6Y4WLQ2EC*czE3ODE4Mjc5NTEkbzEkZzEkdDE3ODE4MjgyMDYkajMkbDEkaDEyNTI2MzI3Ng==" target="_blank">
+            <a href="https://the-baddies-newsletter.beehiiv.com/..." target="_blank">
                 <button class="subscribe-btn">Subscribe</button>
             </a>
         </nav>
     </header>
+
+    <main>
+        <section class="hero">
+            <h1>Level Up Your Reading Journey</h1>
+            <p>From year-long streaks to sudden midnight sprints. Own your goals, baddie.</p>
+        </section>
+
+        <section class="annual-challenge-section">
+            <div class="annual-container">
+                <div class="section-heading">
+                    <h2>Annual Challenges ✧</h2>
+                </div>
+                
+                <div class="annual-card">
+                    <div class="annual-badge">Year-Long Track</div>
+                    <div class="annual-card-content">
+                        <h3>The 2026 Monthly Crown Challenge</h3>
+                        <p class="challenge-meta"><i class="fa-regular fa-calendar-days"></i> Jan 1 – Dec 31, 2026</p>
+                        <p class="challenge-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. This is our master community challenge tracker designed to keep your spark active all year long. Pace yourself, track your prompts, and log your completions inside Discord to claim your official badge collection.</p>
+                        <a href="https://discord.gg/KQ6Qhhpx6z" target="_blank" class="btn-secondary">Log Your Progress</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Monthly & Bi-Monthly Track Dashboard (Updated to match Annual Card boxes!) -->
+        <section class="periodic-challenges-section">
+            <div class="dashboard-row">
+                
+                <!-- Left Column: Monthly Reads -->
+                <div class="dashboard-col">
+                    <div class="section-heading">
+                        <h2>Monthly Challenges ✧</h2>
+                    </div>
+                    <!-- Upgraded to use annual-card structure -->
+                    <div class="annual-card periodic-card">
+                        <div class="annual-badge">Current Month</div>
+                        <div class="annual-card-content">
+                            <h3>The Monthly Read-Off</h3>
+                            <p class="challenge-meta"><i class="fa-regular fa-calendar-days"></i> Updated Monthly</p>
+                            <p class="challenge-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. A rapid, fresh theme-driven challenge reset every single month. Perfect for cleaning out your physical TBR stacks or diving into a shared hyper-focused genre speedrun alongside the whole community.</p>
+                            <a href="events.html" class="btn-secondary">View This Month's Prompts</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Special / Bi-Monthly Reads -->
+                <div class="dashboard-col">
+                    <div class="section-heading">
+                        <h2>Special Challenges ✧</h2>
+                    </div>
+                    <!-- Upgraded to use annual-card structure -->
+                    <div class="annual-card periodic-card">
+                        <div class="annual-badge">Seasonal</div>
+                        <div class="annual-card-content">
+                            <h3>Cozy Co-Op Sprints</h3>
+                            <p class="challenge-meta"><i class="fa-regular fa-calendar-days"></i> Bi-Monthly Track</p>
+                            <p class="challenge-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Special mid-tier seasonal events, team tournaments, and bi-monthly check-ins. These alternate all year long to shake up your reading patterns when you're slipping into an unexpected book slump.</p>
+                            <a href="https://discord.gg/KQ6Qhhpx6z" target="_blank" class="btn-secondary">Join Active Team Rooms</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="challenge-info-section">
+            <div class="info-layout-wrapper">
+                <div class="section-heading">
+                    <h2>✧ Challenge Info &amp; Guidelines ✧</h2>
+                </div>
+                
+                <div class="faq-item">
+                    <h3><i class="fa-solid fa-circle-check"></i> Do audiobooks or graphic novels count?</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Absolutely. We celebrate how you read, not just what you read. If you completed the story framework, log it with pride!</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3><i class="fa-solid fa-circle-check"></i> Can one book count for multiple prompts?</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. To keep things fair and challenging, we recommend using a unique title for each distinct category. However, your reading rules are ultimately yours to own!</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3><i class="fa-solid fa-circle-check"></i> Where do I claim my level badges?</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Head right over to our official Discord channel and post your completion stack logs inside the tracking room. Our community team validates submissions weekly!</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-tagline">
+            <h2>A Community. A Culture. A Movement.</h2>
+        </div>
+
+        <div class="footer-top">
+            <div class="footer-socials">
+                <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                <a href="#" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+                <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+            </div>
+
+            <div class="footer-newsletter">
+                <p>Join The Baddie Bulletin</p>
+                <a href="https://the-baddies-newsletter.beehiiv.com/..." class="footer-subscribe-btn">Subscribe</a>
+            </div>
+
+            <div class="footer-contact">
+                <a href="mailto:hello@baddiesbookshelf.com">hello@baddiesbookshelf.com</a>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; The Baddies Bookshelf</p>
+        </div>
+    </footer>
+
+    <script src="scripts.js"></script>
 </body>
+
+
+
+</html>

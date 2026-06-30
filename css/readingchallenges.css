@@ -1,0 +1,272 @@
+/* ==========================================================================
+   Reading Challenges Page Specific Full-Width Panel Extensions
+   ========================================================================== */
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 60px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.logo img {
+    height: 75px; 
+    width: auto;
+    display: block;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    gap: 30px;       
+    margin: 0 auto;  /* 🔥 centers your links list dead-center */
+}
+
+.nav-links a {
+    color: #7a435f; /* Bold events-page header color for crisp reading */
+    font-weight: 500;
+    font-size: 0.95rem;
+    white-space: nowrap; 
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+    color: #cb5f93; /* Active page gets your beautiful events theme rose color */
+}
+
+.annual-challenge-section,
+.challenge-info-section {
+    background: #ffffff; /* Contrast rows */
+    width: 100%;
+    padding: 80px 40px;
+}
+
+.periodic-challenges-section {
+    background: #fbeef5; /* Warm soft layout panel */
+    width: 100%;
+    padding: 80px 40px;
+}
+
+/* Tweaks the text sizes slightly for the side-by-side periodic challenge boxes */
+.periodic-card {
+    padding: 40px 30px;
+}
+
+.periodic-card .annual-card-content h3 {
+    font-size: 1.8rem;
+    margin-top: 15px;
+}
+
+.periodic-card .challenge-text {
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.annual-container,
+.info-layout-wrapper {
+    max-width: 1260px;
+    margin: 0 auto;
+}
+
+/* Featured Annual Tracker Banner Card Styling */
+.annual-card {
+    background: linear-gradient(135deg, #f8d8e8 0%, #f3b9d3 45%, #eaa7c8 100%);
+    border-radius: 20px;
+    padding: 50px;
+    box-shadow: 0 10px 30px rgba(121, 65, 92, 0.15);
+    position: relative;
+    overflow: hidden;
+    color: #fff7fb;
+}
+
+.annual-badge {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: #ffffff;
+    color: #cb5f93;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 6px 16px;
+    border-radius: 20px;
+}
+
+.annual-card-content {
+    max-width: 800px;
+    text-align: left;
+}
+
+.annual-card-content h3 {
+    font-size: 2.4rem;
+    margin-bottom: 10px;
+    text-shadow: 0 2px 8px rgba(115, 58, 84, 0.2);
+}
+
+.challenge-meta {
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    opacity: 0.9;
+}
+
+.challenge-text {
+    font-size: 1.15rem;
+    line-height: 1.7;
+    margin-bottom: 30px;
+    text-shadow: 0 1px 4px rgba(115, 58, 84, 0.1);
+}
+
+/* Flips the outline button color scheme to stand out on top of the heavy pink gradient banner */
+.annual-card .btn-secondary {
+    background: #ffffff;
+    color: #7a4561;
+    border-color: #ffffff;
+}
+
+.annual-card .btn-secondary:hover {
+    background: rgba(255, 245, 249, 0.9);
+    transform: translateY(-2px);
+}
+
+.info-layout-wrapper .faq-item h3 {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.info-layout-wrapper .faq-item i {
+    color: #cb5f93;
+    font-size: 1.1rem;
+}
+
+@media (max-width: 900px) {
+    .annual-card {
+        padding: 30px;
+        text-align: center;
+    }
+    .annual-card-content {
+        text-align: center;
+    }
+    .challenge-meta {
+        justify-content: center;
+    }
+    .annual-badge {
+        position: relative;
+        display: inline-block;
+        top: 0;
+        right: 0;
+        margin-bottom: 15px;
+    }
+}
+
+.site-footer {
+    background: linear-gradient(to bottom, #9d4b73, #8c4066);
+    color: #fff4f9;
+    padding: 40px 20px;
+    text-align: center;
+    width: 100%;
+}
+
+.footer-tagline h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    margin-bottom: 30px;
+    font-style: italic;
+    font-weight: 500;
+}
+
+.footer-top {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    max-width: 1100px;
+    margin: 0 auto 30px;
+    flex-wrap: wrap;
+    gap: 30px;
+}
+
+.footer-socials {
+    display: flex;
+    gap: 20px;
+    font-size: 1.6rem;
+}
+
+.footer-socials a {
+    color: #fff4f9;
+    transition: opacity 0.3s ease;
+}
+
+.footer-socials a:hover {
+    opacity: 0.8;
+}
+
+.footer-newsletter p {
+    font-size: 1.15rem;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.footer-subscribe-btn {
+    display: inline-block;
+    padding: 10px 24px;
+    background: #ffffff;
+    color: #8c4066;
+    font-weight: 600;
+    border-radius: 20px;
+    font-size: 0.95rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.footer-subscribe-btn:hover {
+    background: #fff4f9;
+    transform: translateY(-2px);
+}
+
+.footer-contact a {
+    font-size: 1.1rem;
+    border-bottom: 1px dashed rgba(255, 244, 249, 0.5);
+    transition: opacity 0.3s ease;
+}
+
+.footer-contact a:hover {
+    opacity: 0.8;
+}
+
+.footer-bottom {
+    border-top: 1px solid rgba(255, 244, 249, 0.15);
+    padding-top: 20px;
+    max-width: 1100px;
+    margin: 0 auto;
+    font-size: 0.9rem;
+    opacity: 0.7;
+}
+
+/* ==========================================================================
+   6. Mobile Settings
+   ========================================================================== */
+@media (max-width: 900px) {
+    .dashboard-row {
+        flex-direction: column;
+    }
+    .footer-top {
+        flex-direction: column;
+        gap: 25px;
+    }
+    .hero h1 {
+        font-size: 3rem;
+    }
+    .navbar {
+        flex-direction: column;
+        gap: 15px;
+    }
+}

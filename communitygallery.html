@@ -4,31 +4,173 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Baddies Bookshelf</title>
+    <title>Community Gallery - The Baddies Bookshelf</title>
 
     <link rel="stylesheet" href="/css/styles.css">
 
     <link rel="icon" type="image/x-icon" href="favicon.ico"> 
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
 </head>
 
 <body>
-    <header>
+    <!-- HEADER / NAVIGATION (Unified Global Navbar Layout) -->
+    <header class="site-header">
         <nav class="navbar">
-            <div class="logo">The Baddies Bookshelf</div>
+            <div class="nav-left">
+                <a href="home.html" class="logo">
+                    <img src="assets/images/tbb-logo.png" alt="The Baddies Bookshelf Logo">
+                </a>
+            </div>
+
             <ul class="nav-links">
                 <li><a href="home.html">Home</a></li>
                 <li><a href="about.html">About Us</a></li>
                 <li><a href="events.html">Events</a></li>
                 <li><a href="library.html">The Baddies Bookshelf</a></li>
                 <li><a href="readingchallenges.html">Reading Challenges</a></li>
-                <li><a href="communitygallery.html">Community Gallery</a></li>
+                <li><a href="communitygallery.html" class="active">Community Gallery</a></li>
                 <li><a href="joinus.html">Join Us</a></li>
             </ul>
 
-            <!-- Fixed: Wrapped button in an anchor tag so the newsletter link actually works -->
-            <a href="https://the-baddies-newsletter.beehiiv.com/?_gl=1*piy6ar*_gcl_aw*R0NMLjE3ODE4MjgwNTAuQ2owS0NRandyczdSQmhEdUFSSXNBSVZmQkQySHE4dmtrZmc2WUpHUEFzRW1JWmpiNk1YXzNQVUhrNm5VRWV1aUwzb1d3NTlLUXMtUHByZ2FBbXJHRUFMd193Y0I.*_gcl_au*MTQxNDY5MTA0Mi4xNzgxODI3OTUyLjEwNDgyMDE3OC4xNzgxODI4MTE0LjE3ODE4MjgyMDY.*_ga*MTU2NTM0OTI1Ni4xNzgxODI3OTUy*_ga_E6Y4WLQ2EC*czE3ODE4Mjc5NTEkbzEkZzEkdDE3ODE4MjgyMDYkajMkbDEkaDEyNTI2MzI3Ng==" target="_blank">
+            <a href="https://the-baddies-newsletter.beehiiv.com/..." target="_blank">
                 <button class="subscribe-btn">Subscribe</button>
             </a>
         </nav>
     </header>
+
+    <main>
+        <!-- 1. Gallery Hero Header Banner Block -->
+        <section class="hero" style="margin-bottom: 0;">
+            <h1>The Baddies Community Gallery</h1>
+            <p>A collective scrapbook of our bookshelves, cozy setups, and favorite community memories.</p>
+        </section>
+
+        <!-- 2. Main Full-Bleed Scrapbook Gallery (Badges Removed + Exact Ordered List Titles) -->
+        <section class="featured-events">
+            <div class="section-heading">
+                <h2>✧ Community Gallery ✧</h2>
+            </div>
+
+            <div class="featured-grid">
+                
+                <!-- Tile 1: Reading Journals (Large) -->
+                <article class="event-card event-card-large">
+                    <div class="event-image-wrap placeholder-box" style="min-height: 240px;">
+                        <p>Journal spread coming soon ✨</p>
+                    </div>
+                    <div class="event-card-content">
+                        <h3>Reading Journals</h3>
+                        <p class="event-description">A sneak peek into custom tracker spreads, review highlights, and hyper-detailed book annotating sessions.</p>
+                    </div>
+                </article>
+
+                <!-- Tile 2: Bookshelves (Large) -->
+                <article class="event-card event-card-large">
+                    <div class="event-image-wrap placeholder-box" style="min-height: 240px;">
+                        <p>A perfectly organized paradise ✨</p>
+                    </div>
+                    <div class="event-card-content">
+                        <h3>Bookshelves</h3>
+                        <p class="event-description">Spicy paperbacks, color-coded shelves, and beautiful library vibes curated by our community baddies.</p>
+                    </div>
+                </article>
+
+                <!-- Tile 3: Reading Setups (Wide) -->
+                <article class="event-card event-card-wide">
+                    <div class="event-image-wrap placeholder-box" style="min-height: 210px;">
+                        <p>Cozy reading corner coming soon ✨</p>
+                    </div>
+                    <div class="event-card-content">
+                        <h3>Reading Setups</h3>
+                        <p class="event-description">E-readers, ambient dim lighting, massive stacks of pillows, and the perfect hot beverage companion.</p>
+                    </div>
+                </article>
+
+                <!-- Tile 4: Event Memories (Small) -->
+                <article class="event-card event-card-small">
+                    <div class="event-image-wrap placeholder-box" style="min-height: 160px;">
+                        <p>Event group snapshot coming soon ✨</p>
+                    </div>
+                    <div class="event-card-content">
+                        <h3>Event Memories</h3>
+                        <p class="event-description">Memories from our live video chats, local group meetups, and midnight launch countdown parties.</p>
+                    </div>
+                </article>
+
+                <!-- Tile 5: Community Photos (Small) -->
+                <article class="event-card event-card-small">
+                    <div class="event-image-wrap placeholder-box" style="min-height: 160px;">
+                        <p>Baddies in the wild photo coming soon ✨</p>
+                    </div>
+                    <div class="event-card-content">
+                        <h3>Community Photos</h3>
+                        <p class="event-description">Shouting out faces in the crowd, group book club selfies, and bookmarks traveling around the world.</p>
+                    </div>
+                </article>
+
+                <!-- Tile 6: Creative Challenge Submissions (Wide) -->
+                <article class="event-card event-card-wide">
+                    <div class="event-image-wrap placeholder-box" style="min-height: 210px;">
+                        <p>Community art piece coming soon ✨</p>
+                    </div>
+                    <div class="event-card-content">
+                        <h3>Creative Challenge Submissions</h3>
+                        <p class="event-description">Spotlighting mood boards, aesthetic playlists, and original fan edits built for our bi-monthly games.</p>
+                    </div>
+                </article>
+
+                <!-- Tile 7: Wrap-ups and Graphics (Large Row - Balanced Finish) -->
+                <article class="event-card event-card-large">
+                    <div class="event-image-wrap placeholder-box" style="min-height: 240px;">
+                        <p>Community wrap-up graphics coming soon ✨</p>
+                    </div>
+                    <div class="event-card-content">
+                        <h3>Wrap-ups and Graphics</h3>
+                        <p class="event-description">Our monthly group reading summaries, review cards, and five-star community breakdown data sheets.</p>
+                    </div>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- 3. Mid-Page Call to Action Ribbon Banner -->
+        <section class="events-banner">
+            <div class="banner-content">
+                <h2>WANT YOUR COZY SETUP FEATURED?</h2>
+                <p>Drop your bookshelf flexing pictures and reading layouts into our Discord gallery room to make the wall!</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- UNIFIED MASTER FOOTER -->
+    <footer class="site-footer">
+        <div class="footer-tagline">
+            <h2>A Community. A Culture. A Movement.</h2>
+        </div>
+
+        <div class="footer-top">
+            <div class="footer-socials">
+                <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                <a href="#" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+                <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+            </div>
+
+            <div class="footer-newsletter">
+                <p>Join The Baddie Bulletin</p>
+                <a href="https://the-baddies-newsletter.beehiiv.com/..." class="footer-subscribe-btn">Subscribe</a>
+            </div>
+
+            <div class="footer-contact">
+                <a href="mailto:hello@baddiesbookshelf.com">hello@baddiesbookshelf.com</a>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; The Baddies Bookshelf</p>
+        </div>
+    </footer>
+
+    <script src="scripts.js"></script>
+</body>
+</html>
