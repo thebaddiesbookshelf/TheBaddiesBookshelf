@@ -1,9 +1,33 @@
 /* ==========================================================================
-   Community Gallery Custom Layout Enhancements
+   Community Gallery Carousel Layout Enhancements
    ========================================================================== */
 
-/* Gives the cards a clean rounded corner system with your crisp borders */
+/* Outer structural framing context box */
+.carousel-slider-container {
+    position: relative;
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 50px; /* Gives arrow buttons breathing room on the sides */
+}
+
+/* 🎡 THE TRACK: Converts the layout into a single, smooth horizontal scrolling row */
+.carousel-track {
+    display: flex;
+    gap: 25px;
+    overflow-x: auto;          /* Enables swipe/scroll horizontally */
+    scroll-behavior: smooth;    /* Makes button click animations slide fluidly */
+    padding: 20px 5px 30px;
+    scrollbar-width: none;      /* Removes ugly default scrollbars on Firefox */
+}
+
+/* Hide scrollbars for Chrome, Safari, and Opera */
+.carousel-track::-webkit-scrollbar {
+    display: none;
+}
+
+/* Universal Carousel Item Styles (Uniform layout sizes for scrolling consistency) */
 .gallery-card-style {
+    flex: 0 0 360px;            /* 🔥 Prevents cards from shrinking. Sets constant card size */
     border-radius: 16px;
     background: #ffffff;
     box-shadow: 0 8px 22px rgba(121, 65, 92, 0.05);
@@ -13,24 +37,77 @@
 }
 
 .gallery-card-style:hover {
-    transform: translateY(-4px);
+    transform: translateY(-5px);
     box-shadow: 0 12px 28px rgba(121, 65, 92, 0.12);
 }
 
-/* Rounded framing masks for the top images */
+/* Forces standard placeholder display aspect ratio metrics for consistency inside carousel track */
 .gallery-card-style .event-image-wrap {
     border-radius: 15px 15px 0 0;
     overflow: hidden;
+    min-height: 220px !important; 
+    width: 100%;
 }
 
-/* Custom rounded pillow badges to differentiate content categories */
-.gallery-card-style .event-badge {
-    border-radius: 20px;
-    top: 14px;
-    left: 14px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    padding: 6px 14px;
-    letter-spacing: 0.5px;
+/* Carousel Navigation Side Arrow Buttons */
+.carousel-nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 45px;
+    height: 45px;
+    background: #ffffff;
+    border: 1px solid #ecc4d6;
+    color: #7a4561;
+    border-radius: 50%;
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(121, 65, 92, 0.1);
+    z-index: 10;
+    transition: all 0.2s ease;
 }
 
+.carousel-nav-btn:hover {
+    background: linear-gradient(to bottom, #cb5f93, #b94f84);
+    color: #ffffff;
+    border-color: #b94f84;
+    box-shadow: 0 6px 16px rgba(121, 65, 92, 0.2);
+}
+
+.prev-btn { left: 0; }
+.next-btn { right: 0; }
+
+/* Responsive tweaks for phone viewports */
+@media (max-width: 500px) {
+    .carousel-slider-container { padding: 0 40px; }
+    .gallery-card-style { flex: 0 0 280px; } /* Slightly skinnier cards on small phones */
+    .carousel-nav-btn { width: 35px; height: 35px; font-size: 0.9rem; }
+}
+
+html, body, a, button, .filter-btn {
+    cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' style='font-size:24px'><text y='24'>❤️</text></svg>"), auto !important;
+}
+
+/* ✨ BRATZY HOT PINK HEART MOUSE CURSOR OVERRIDE */
+html, body, a, button, .filter-btn, .subscribe-btn {
+    cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><path d='M16 28.5C16 28.5 2 19.5 2 10.5C2 5.5 6 1.5 11 1.5C14 1.5 15.5 3.5 16 4.5C16.5 3.5 18 1.5 21 1.5C26 1.5 30 5.5 30 10.5C30 19.5 16 28.5 16 28.5Z' fill='%23ff1493' stroke='%23ffffff' stroke-width='2'/></svg>"), auto !important;
+}
+
+/* 💫 THE GLITTER TRAIL CONTAINER LAYOUT (Styled like your comet-trail layout) */
+#glitter-trail-canvas {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* Crucial: makes sure you can click right through the trail to your buttons */
+    z-index: 999999;      /* Keeps the glitter on top of your rows and cards */
+    mix-blend-mode: screen;
+    opacity: 0.9;
+    filter: blur(1px);    /* Keeps glitter sharp, but gives it a soft magical glow finish */
+}

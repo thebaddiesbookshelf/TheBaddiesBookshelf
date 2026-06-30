@@ -24,8 +24,8 @@
 </head>
 
 <body>
+  <canvas id="glitter-trail-canvas"></canvas>
 
-  <!-- HEADER / NAVIGATION (Perfect global lock alignment) -->
   <header class="site-header">
     <nav class="navbar">
       <div class="nav-left">
@@ -187,6 +187,92 @@
       <p>&copy; The Baddies Bookshelf</p>
     </div>
   </footer>
+
+<script>
+    const canvas = document.getElementById('glitter-trail-canvas');
+    const ctx = canvas.getContext('2d');
+
+    let particles = [];
+    let mouse = { x: -100, y: -100 };
+
+    // Automatically stretch the canvas layout to match your viewport size perfectly
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    // Tracking script updates mouse positions
+    window.addEventListener('mousemove', (e) => {
+        mouse.x = e.clientX;
+        mouse.y = e.clientY;
+        
+        // Generate a cluster of pink and gold glitter dust specifications per move
+        for (let i = 0; i < 3; i++) {
+            particles.push(new GlitterParticle(mouse.x, mouse.y));
+        }
+    });
+
+    // Glitter Particle Blueprint Object
+    class GlitterParticle {
+        constructor(x, y) {
+            this.x = x;
+            this.y = y;
+            
+            // Random small sizes for high-end micro-glitter look
+            this.size = Math.random() * 3 + 1.5; 
+            
+            // Speed and floating directional drift vectors
+            this.speedX = (Math.random() - 0.5) * 2;
+            this.speedY = Math.random() * 1.5 + 0.5; // Glides smoothly down
+            
+            // Alternates colors between Bratzy Neon Pink and Bright Luxury Gold
+            const colors = ['#ff1493', '#ff69b4', '#ffd700', '#ffea70', '#ffffff'];
+            this.color = colors[Math.floor(Math.random() * colors.length)];
+            
+            // Lifespan fade alpha tracking
+            this.alpha = 1;
+            this.decay = Math.random() * 0.02 + 0.015;
+        }
+
+        update() {
+            this.x += this.speedX;
+            this.y += this.speedY;
+            this.alpha -= this.decay;
+        }
+
+        draw() {
+            ctx.save();
+            ctx.globalAlpha = this.alpha;
+            ctx.fillStyle = this.color;
+            ctx.beginPath();
+            
+            // Renders clean circular micro-shimmers instead of characters
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+        }
+    }
+
+    // Continuously running animation frame cycle loop
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        for (let i = 0; i < particles.length; i++) {
+            particles[i].update();
+            particles[i].draw();
+            
+            // Remove dead elements to save system memory
+            if (particles[i].alpha <= 0) {
+                particles.splice(i, 1);
+                i--;
+            }
+        }
+        requestAnimationFrame(animate);
+    }
+    animate();
+</script>
 
   <script src="scripts.js"></script>
 

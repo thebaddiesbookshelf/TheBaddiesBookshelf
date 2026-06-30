@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Community Gallery - The Baddies Bookshelf</title>
 
+    <link rel="stylesheet" href="/css/communitygallery.css">
     <link rel="stylesheet" href="/css/styles.css">
 
     <link rel="icon" type="image/x-icon" href="favicon.ico"> 
@@ -14,7 +15,8 @@
 </head>
 
 <body>
-    <!-- HEADER / NAVIGATION (Unified Global Navbar Layout) -->
+    <canvas id="glitter-trail-canvas"></canvas>
+
     <header class="site-header">
         <nav class="navbar">
             <div class="nav-left">
@@ -40,99 +42,95 @@
     </header>
 
     <main>
-        <!-- 1. Gallery Hero Header Banner Block -->
-        <section class="hero" style="margin-bottom: 0;">
-            <h1>The Baddies Community Gallery</h1>
-            <p>A collective scrapbook of our bookshelves, cozy setups, and favorite community memories.</p>
-        </section>
-
-        <!-- 2. Main Full-Bleed Scrapbook Gallery (Badges Removed + Exact Ordered List Titles) -->
         <section class="featured-events">
-            <div class="section-heading">
-                <h2>✧ Community Gallery ✧</h2>
-            </div>
+    <div class="section-heading">
+        <h2>✧ Community Gallery ✧</h2>
+    </div>
 
-            <div class="featured-grid">
-                
-                <!-- Tile 1: Reading Journals (Large) -->
-                <article class="event-card event-card-large">
-                    <div class="event-image-wrap placeholder-box" style="min-height: 240px;">
-                        <p>Journal spread coming soon ✨</p>
-                    </div>
-                    <div class="event-card-content">
-                        <h3>Reading Journals</h3>
-                        <p class="event-description">A sneak peek into custom tracker spreads, review highlights, and hyper-detailed book annotating sessions.</p>
-                    </div>
-                </article>
+    <div class="carousel-slider-container">
+        <button class="carousel-nav-btn prev-btn" aria-label="Previous Slide">
+            <i class="fa-solid fa-chevron-left"></i>
+        </button>
 
-                <!-- Tile 2: Bookshelves (Large) -->
-                <article class="event-card event-card-large">
-                    <div class="event-image-wrap placeholder-box" style="min-height: 240px;">
-                        <p>A perfectly organized paradise ✨</p>
-                    </div>
-                    <div class="event-card-content">
-                        <h3>Bookshelves</h3>
-                        <p class="event-description">Spicy paperbacks, color-coded shelves, and beautiful library vibes curated by our community baddies.</p>
-                    </div>
-                </article>
+        <div class="carousel-track">
+            
+            <article class="event-card gallery-card-style">
+                <div class="event-image-wrap placeholder-box">
+                    <p>Journal spread coming soon ✨</p>
+                </div>
+                <div class="event-card-content">
+                    <h3>Reading Journals</h3>
+                    <p class="event-description">A sneak peek into custom tracker spreads, review highlights, and hyper-detailed book annotating sessions.</p>
+                </div>
+            </article>
 
-                <!-- Tile 3: Reading Setups (Wide) -->
-                <article class="event-card event-card-wide">
-                    <div class="event-image-wrap placeholder-box" style="min-height: 210px;">
-                        <p>Cozy reading corner coming soon ✨</p>
-                    </div>
-                    <div class="event-card-content">
-                        <h3>Reading Setups</h3>
-                        <p class="event-description">E-readers, ambient dim lighting, massive stacks of pillows, and the perfect hot beverage companion.</p>
-                    </div>
-                </article>
+            <article class="event-card gallery-card-style">
+                <div class="event-image-wrap placeholder-box">
+                    <p>A perfectly organized paradise ✨</p>
+                </div>
+                <div class="event-card-content">
+                    <h3>Bookshelves</h3>
+                    <p class="event-description">Spicy paperbacks, color-coded shelves, and beautiful library vibes curated by our community baddies.</p>
+                </div>
+            </article>
 
-                <!-- Tile 4: Event Memories (Small) -->
-                <article class="event-card event-card-small">
-                    <div class="event-image-wrap placeholder-box" style="min-height: 160px;">
-                        <p>Event group snapshot coming soon ✨</p>
-                    </div>
-                    <div class="event-card-content">
-                        <h3>Event Memories</h3>
-                        <p class="event-description">Memories from our live video chats, local group meetups, and midnight launch countdown parties.</p>
-                    </div>
-                </article>
+            <article class="event-card gallery-card-style">
+                <div class="event-image-wrap placeholder-box">
+                    <p>Cozy reading corner coming soon ✨</p>
+                </div>
+                <div class="event-card-content">
+                    <h3>Reading Setups</h3>
+                    <p class="event-description">E-readers, ambient dim lighting, massive stacks of pillows, and the perfect hot beverage companion.</p>
+                </div>
+            </article>
 
-                <!-- Tile 5: Community Photos (Small) -->
-                <article class="event-card event-card-small">
-                    <div class="event-image-wrap placeholder-box" style="min-height: 160px;">
-                        <p>Baddies in the wild photo coming soon ✨</p>
-                    </div>
-                    <div class="event-card-content">
-                        <h3>Community Photos</h3>
-                        <p class="event-description">Shouting out faces in the crowd, group book club selfies, and bookmarks traveling around the world.</p>
-                    </div>
-                </article>
+            <article class="event-card gallery-card-style">
+                <div class="event-image-wrap placeholder-box">
+                    <p>Event group snapshot coming soon ✨</p>
+                </div>
+                <div class="event-card-content">
+                    <h3>Event Memories</h3>
+                    <p class="event-description">Memories from our live video chats, local group meetups, and midnight launch countdown parties.</p>
+                </div>
+            </article>
 
-                <!-- Tile 6: Creative Challenge Submissions (Wide) -->
-                <article class="event-card event-card-wide">
-                    <div class="event-image-wrap placeholder-box" style="min-height: 210px;">
-                        <p>Community art piece coming soon ✨</p>
-                    </div>
-                    <div class="event-card-content">
-                        <h3>Creative Challenge Submissions</h3>
-                        <p class="event-description">Spotlighting mood boards, aesthetic playlists, and original fan edits built for our bi-monthly games.</p>
-                    </div>
-                </article>
+            <article class="event-card gallery-card-style">
+                <div class="event-image-wrap placeholder-box">
+                    <p>Baddies in the wild photo coming soon ✨</p>
+                </div>
+                <div class="event-card-content">
+                    <h3>Community Photos</h3>
+                    <p class="event-description">Shouting out faces in the crowd, group book club selfies, and bookmarks traveling around the world.</p>
+                </div>
+            </article>
 
-                <!-- Tile 7: Wrap-ups and Graphics (Large Row - Balanced Finish) -->
-                <article class="event-card event-card-large">
-                    <div class="event-image-wrap placeholder-box" style="min-height: 240px;">
-                        <p>Community wrap-up graphics coming soon ✨</p>
-                    </div>
-                    <div class="event-card-content">
-                        <h3>Wrap-ups and Graphics</h3>
-                        <p class="event-description">Our monthly group reading summaries, review cards, and five-star community breakdown data sheets.</p>
-                    </div>
-                </article>
+            <article class="event-card gallery-card-style">
+                <div class="event-image-wrap placeholder-box">
+                    <p>Community art piece coming soon ✨</p>
+                </div>
+                <div class="event-card-content">
+                    <h3>Creative Challenge Submissions</h3>
+                    <p class="event-description">Spotlighting mood boards, aesthetic playlists, and original fan edits built for our bi-monthly games.</p>
+                </div>
+            </article>
 
-            </div>
-        </section>
+            <article class="event-card gallery-card-style">
+                <div class="event-image-wrap placeholder-box">
+                    <p>Community wrap-up graphics coming soon ✨</p>
+                </div>
+                <div class="event-card-content">
+                    <h3>Wrap-ups and Graphics</h3>
+                    <p class="event-description">Our monthly group reading summaries, review cards, and five-star community breakdown data sheets.</p>
+                </div>
+            </article>
+
+        </div>
+
+        <button class="carousel-nav-btn next-btn" aria-label="Next Slide">
+            <i class="fa-solid fa-chevron-right"></i>
+        </button>
+    </div>
+</section>
 
         <!-- 3. Mid-Page Call to Action Ribbon Banner -->
         <section class="events-banner">
@@ -170,6 +168,109 @@
             <p>&copy; The Baddies Bookshelf</p>
         </div>
     </footer>
+
+    <script>
+    const track = document.querySelector('.carousel-track');
+    const prevBtn = document.querySelector('.prev-btn');
+    const nextBtn = document.querySelector('.next-btn');
+
+    // Amount to scroll on click: shifts exactly by the width of one card
+    const scrollAmount = 385; // 360px card width + 25px gap
+
+    nextBtn.addEventListener('click', () => {
+        track.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    });
+
+    prevBtn.addEventListener('click', () => {
+        track.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+    });
+</script>
+
+<script>
+    const canvas = document.getElementById('glitter-trail-canvas');
+    const ctx = canvas.getContext('2d');
+
+    let particles = [];
+    let mouse = { x: -100, y: -100 };
+
+    // Automatically stretch the canvas layout to match your viewport size perfectly
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    // Tracking script updates mouse positions
+    window.addEventListener('mousemove', (e) => {
+        mouse.x = e.clientX;
+        mouse.y = e.clientY;
+        
+        // Generate a cluster of pink and gold glitter dust specifications per move
+        for (let i = 0; i < 3; i++) {
+            particles.push(new GlitterParticle(mouse.x, mouse.y));
+        }
+    });
+
+    // Glitter Particle Blueprint Object
+    class GlitterParticle {
+        constructor(x, y) {
+            this.x = x;
+            this.y = y;
+            
+            // Random small sizes for high-end micro-glitter look
+            this.size = Math.random() * 3 + 1.5; 
+            
+            // Speed and floating directional drift vectors
+            this.speedX = (Math.random() - 0.5) * 2;
+            this.speedY = Math.random() * 1.5 + 0.5; // Glides smoothly down
+            
+            // Alternates colors between Bratzy Neon Pink and Bright Luxury Gold
+            const colors = ['#ff1493', '#ff69b4', '#ffd700', '#ffea70', '#ffffff'];
+            this.color = colors[Math.floor(Math.random() * colors.length)];
+            
+            // Lifespan fade alpha tracking
+            this.alpha = 1;
+            this.decay = Math.random() * 0.02 + 0.015;
+        }
+
+        update() {
+            this.x += this.speedX;
+            this.y += this.speedY;
+            this.alpha -= this.decay;
+        }
+
+        draw() {
+            ctx.save();
+            ctx.globalAlpha = this.alpha;
+            ctx.fillStyle = this.color;
+            ctx.beginPath();
+            
+            // Renders clean circular micro-shimmers instead of characters
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+        }
+    }
+
+    // Continuously running animation frame cycle loop
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        for (let i = 0; i < particles.length; i++) {
+            particles[i].update();
+            particles[i].draw();
+            
+            // Remove dead elements to save system memory
+            if (particles[i].alpha <= 0) {
+                particles.splice(i, 1);
+                i--;
+            }
+        }
+        requestAnimationFrame(animate);
+    }
+    animate();
+</script>
 
     <script src="scripts.js"></script>
 </body>
