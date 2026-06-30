@@ -16,7 +16,23 @@
 
 <body>
     <canvas id="glitter-trail-canvas"></canvas>
-    
+
+    <div id="vault-lock-screen">
+    <div class="lock-card">
+        <div class="lock-icon">
+            <i class="fa-solid fa-lock"></i>
+        </div>
+        <h2>The Baddies Vault is Locked</h2>
+        <p>Enter the community passcode to unlock your next escape.</p>
+        
+        <div class="password-wrapper">
+            <input type="password" id="vault-passcode" placeholder="Enter password..." autocomplete="off">
+            <button id="unlock-btn">Unlock Vault</button>
+        </div>
+        <p id="lock-error-msg" class="hidden">❌ Incorrect Passcode. Try again, baddie.</p>
+    </div>
+</div>
+
     <header class="site-header">
         <nav class="navbar">
             <div class="nav-left">
@@ -393,6 +409,42 @@
         requestAnimationFrame(animate);
     }
     animate();
+</script>
+
+<script>
+    const lockScreen = document.getElementById('vault-lock-screen');
+    const passwordInput = document.getElementById('vault-passcode');
+    const unlockBtn = document.getElementById('unlock-btn');
+    const errorMsg = document.getElementById('lock-error-msg');
+
+    // Scrambled Base64 password key. Replace this value with your own encoded text string!
+    const targetHash = 'YmFkZGllMjAyNg=='; 
+
+    function checkPasscode() {
+        // Convert input text to matching base64 hash formatting
+        const encodedInput = btoa(passwordInput.value.trim());
+
+        if (encodedInput === targetHash) {
+            // Adds the CSS hiding class to slide out the lock panel
+            lockScreen.classList.add('unlocked');
+            errorMsg.classList.add('hidden');
+        } else {
+            // Displays error notification banner if it fails matching
+            errorMsg.classList.remove('hidden');
+            passwordInput.value = ''; // Clears input box
+            passwordInput.focus();
+        }
+    }
+
+    // Unlocks on button click
+    unlockBtn.addEventListener('click', checkPasscode);
+
+    // Unlocks instantly if they press the Enter key inside the input box
+    passwordInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            checkPasscode();
+        }
+    });
 </script>
 </body>
 </html>

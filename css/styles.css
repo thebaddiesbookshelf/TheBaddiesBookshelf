@@ -9,9 +9,15 @@
 
 body {
     font-family: 'Poppins', sans-serif;
-    background: #fbeef5; /* Exact soft pink base from Events page */
-    color: #3B2E35;      
+    color: #6d4759;
     line-height: 1.6;
+
+    /* 🔥 THE BACKGROUND UPGRADE */
+    background-image: url('../assets/images/baddie-bg-3.jpg');
+    background-size: cover;          /* Stretches the image perfectly to fit the screen */
+    background-position: center;      /* Centers the graphic asset */
+    background-attachment: fixed;    /* Crucial: Keeps the background locked in place while the content scrolls smoothly over it! */
+    background-repeat: no-repeat;
 }
 
 h1, h2, h3, h4 {
@@ -151,11 +157,13 @@ main {
 
 /* Welcome Intro Background Block */
 .intro-section {
-    background: #ffffff;
+    /* 🔥 Changed from solid #ffffff to 85% transparent white so your background shows through! */
+    background: rgba(255, 255, 255, 0.85); 
+    backdrop-filter: blur(5px); /* Adds a gorgeous soft frosting effect */
+    -webkit-backdrop-filter: blur(5px);
     width: 100%;
     padding: 80px 40px;
 }
-
 .intro-content {
     max-width: 900px;
     margin: 0 auto;
@@ -188,7 +196,8 @@ main {
 
 /* Dashboard Side-by-Side Area */
 .dashboard-section {
-    background: #fbeef5;
+    /* 🔥 Changed from solid pink to a translucent pink mist */
+    background: rgba(251, 238, 245, 0.65); 
     width: 100%;
     padding: 80px 40px;
 }
@@ -320,7 +329,10 @@ main {
 
 /* Gallery Section Layout */
 .gallery-section {
-    background: #ffffff;
+    /* 🔥 Changed to matching clear glass translucency */
+    background: rgba(255, 255, 255, 0.85); 
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
     width: 100%;
     padding: 80px 40px;
 }

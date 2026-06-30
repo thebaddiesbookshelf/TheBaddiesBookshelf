@@ -483,23 +483,35 @@ footer, .site-footer {
     margin: 0 auto 50px;
 }
 
-/* ✨ BRATZY HOT PINK HEART MOUSE CURSOR OVERRIDE */
-html, body, a, button, .filter-btn, .subscribe-btn {
-    cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><path d='M16 28.5C16 28.5 2 19.5 2 10.5C2 5.5 6 1.5 11 1.5C14 1.5 15.5 3.5 16 4.5C16.5 3.5 18 1.5 21 1.5C26 1.5 30 5.5 30 10.5C30 19.5 16 28.5 16 28.5Z' fill='%23ff1493' stroke='%23ffffff' stroke-width='2'/></svg>"), auto !important;
+/* ==========================================================================
+   Virtual Summer Camp Background Image Setup
+   ========================================================================== */
+.event-image-wrap.camp-card {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.25)), url('../assets/images/camp-background.jpg');
+    background-size: cover;       /* Forces the image to completely fill the box gracefully */
+    background-position: center;   /* Keeps the bonfire and book stack centered */
+    background-repeat: no-repeat;
+    position: relative;
+    min-height: 280px;            /* Ensures plenty of vertical space to show off the art */
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-/* 💫 THE GLITTER TRAIL CONTAINER LAYOUT (Styled like your comet-trail layout) */
-#glitter-trail-canvas {
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
+/* Enhances the contrast of your little event badge on top of the art */
+.camp-card .event-badge {
+    background: #7a4561 !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Automatically formats any image dropped into your event frames */
+.event-image-wrap {
+    position: relative;
     width: 100%;
-    height: 100%;
-    pointer-events: none; /* Crucial: makes sure you can click right through the trail to your buttons */
-    z-index: 999999;      /* Keeps the glitter on top of your rows and cards */
-    mix-blend-mode: screen;
-    opacity: 0.9;
-    filter: blur(1px);    /* Keeps glitter sharp, but gives it a soft magical glow finish */
+    height: 180px;        /* 🔥 DOWNSIZED from 280px to make it a sleek landscape banner */
+    overflow: hidden;     /* Clips any messy image edges cleanly */
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
