@@ -1,6 +1,10 @@
-/* ==========================================================================
-   Reading Challenges Page Specific Full-Width Panel Extensions
-   ========================================================================== */
+.site-header {
+    background-color: #ffffff;
+    border-bottom: 2px solid #cb5f93; 
+    width: 100%;
+    position: relative;
+    z-index: 10;
+}
 
 .navbar {
     display: flex;
@@ -21,21 +25,48 @@
     display: flex;
     align-items: center;
     list-style: none;
-    gap: 30px;       
-    margin: 0 auto;  /* 🔥 centers your links list dead-center */
+    gap: 30px; 
+    margin: 0 auto;  /* Centers your links dead-center */
 }
 
 .nav-links a {
-    color: #7a435f; /* Bold events-page header color for crisp reading */
+    color: #7a435f; 
+    font-family: 'Poppins', sans-serif;
     font-weight: 500;
     font-size: 0.95rem;
     white-space: nowrap; 
+    text-decoration: none; /* Removes the ugly underlines */
     transition: color 0.3s ease;
 }
 
 .nav-links a:hover,
 .nav-links a.active {
-    color: #cb5f93; /* Active page gets your beautiful events theme rose color */
+    color: #cb5f93; /* Active page rose pink */
+}
+
+/* Restores the beautiful gradient pill shape subscribe button */
+.nav-right a {
+    text-decoration: none;
+}
+
+.subscribe-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background: linear-gradient(to bottom, #cb5f93, #b94f84); 
+    color: white !important;
+    border: none;
+    border-radius: 20px; 
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(121, 65, 92, 0.15);
+    transition: all 0.3s ease;
+}
+
+.subscribe-btn:hover {
+    background: linear-gradient(to bottom, #d56a9e, #c3578d);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(121, 65, 92, 0.25);
 }
 
 .annual-challenge-section,
@@ -270,3 +301,4 @@
         gap: 15px;
     }
 }
+

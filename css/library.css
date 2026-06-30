@@ -2,14 +2,24 @@
    The Baddies Bookshelf Library Specific Layouts
    ========================================================================== */
 
+/* ==========================================================================
+   GLOBAL NAVIGATION BAR (Matches image_031603.png Perfectly!)
+   ========================================================================== */
+.site-header {
+    background-color: #ffffff;
+    border-bottom: 2px solid #cb5f93; 
+    width: 100%;
+    position: relative;
+    z-index: 10;
+}
+
 .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 20px 60px;
-    background-color: #ffffff;
-    border-bottom: 2px solid #cb5f93; /* Events theme border matching */
-    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
 }
 
 .logo img {
@@ -23,20 +33,47 @@
     align-items: center;
     list-style: none;
     gap: 30px; 
-    margin: 0 auto;  
+    margin: 0 auto;  /* Centers your links dead-center */
 }
 
 .nav-links a {
-    color: #7a435f; /* Deep crisp plum text */
+    color: #7a435f; 
+    font-family: 'Poppins', sans-serif;
     font-weight: 500;
     font-size: 0.95rem;
     white-space: nowrap; 
+    text-decoration: none; /* Removes the ugly underlines */
     transition: color 0.3s ease;
 }
 
 .nav-links a:hover,
 .nav-links a.active {
-    color: #cb5f93;
+    color: #cb5f93; /* Active page rose pink */
+}
+
+/* Restores the beautiful gradient pill shape subscribe button */
+.nav-right a {
+    text-decoration: none;
+}
+
+.subscribe-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background: linear-gradient(to bottom, #cb5f93, #b94f84); 
+    color: white !important;
+    border: none;
+    border-radius: 20px; 
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(121, 65, 92, 0.15);
+    transition: all 0.3s ease;
+}
+
+.subscribe-btn:hover {
+    background: linear-gradient(to bottom, #d56a9e, #c3578d);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(121, 65, 92, 0.25);
 }
 
 /* Full Bleed Filter Dashboard Wrapper */
@@ -285,3 +322,25 @@
     .library-grid { grid-template-columns: 1fr; }
 }
 
+footer, .site-footer {
+    background: linear-gradient(to bottom, #9d4b73, #8c4066); /* Exact match to your favorite theme */
+    color: #fff4f9;
+    padding: 40px 20px;
+    text-align: center;
+    margin-top: 100px;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.footer-content p {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.15rem;
+}

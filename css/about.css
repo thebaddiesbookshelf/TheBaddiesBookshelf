@@ -48,3 +48,109 @@
         width: 100%;
     }
 }
+@media (max-width: 600px) {
+    .navbar,
+    .how-to-join,
+    .whats-inside,
+    .site-footer {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .join-hero {
+        padding: 70px 20px 50px;
+    }
+
+    .join-hero h1 {
+        font-size: 2.7rem;
+    }
+
+    .join-hero p {
+        font-size: 1.15rem;
+    }
+
+    .section-heading h2,
+    .inside-text h2,
+    .footer-tagline h2 {
+        font-size: 2rem;
+    }
+
+    .btn,
+    .btn-large {
+        width: 100%;
+        max-width: 100%;
+    }
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 8px 20px rgba(244, 90, 165, 0.3);
+}
+
+.join-hero,
+.how-to-join,
+.community-banner,
+.whats-inside {
+    animation: fadeIn 0.8s ease forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+body {
+    cursor: url('../assets/icons/star-cursor.png'), auto;
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    min-width: 120px; /* keeps spacing consistent */
+}
+
+.logo img {
+    height: 45px;   /* key fix */
+    width: auto;
+    display: block;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 60px;
+    background-color: #ffffff;
+    border-bottom: 2px solid #F45AA5;
+}
+
+/* THIS centers your nav properly */
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 30px;
+    margin: 0 auto; /* 🔥 centers it perfectly */
+}
+
+.logo img {
+    height: 75px; 
+    width: auto;
+    display: block;
+}
+
+.nav-join-icon img {
+    height: 42px;
+    filter: drop-shadow(0 4px 8px rgba(244, 90, 165, 0.3));
+}

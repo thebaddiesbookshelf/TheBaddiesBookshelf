@@ -210,7 +210,7 @@
 
 .banner-content h2 {
     font-size: 2.4rem;
-    color: #fff8fb;
+    color: #f19fc3;
     margin-bottom: 8px;
     text-transform: uppercase;
     text-shadow: 0 2px 6px rgba(81, 29, 53, 0.2);
@@ -218,7 +218,7 @@
 
 .banner-content p {
     font-size: 1.35rem;
-    color: #fff3f8;
+    color: #d48caa;
 }
 
 /* =========================
@@ -500,4 +500,20 @@ body {
 .nav-join-icon img {
     height: 42px;
     filter: drop-shadow(0 4px 8px rgba(244, 90, 165, 0.3));
+}
+
+/* Step Cards Grid Layout Setup */
+.how-to-join .featured-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+    margin-top: 40px;
+}
+
+.step-icon i {
+    transition: transform 0.3s ease;
+}
+
+.how-to-join .theme-card:hover .step-icon i {
+    transform: scale(1.1) rotate(5deg); /* Playful twist interaction when hovering steps guide */
 }
