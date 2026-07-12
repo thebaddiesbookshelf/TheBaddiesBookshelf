@@ -177,7 +177,7 @@
                 </article>
 
                                 <!-- Good Girl Complex -->
-                <article class="book-card" data-genre="romance">
+                <article class="book-card" data-genre="romance 18plus">
                     <a href="downloads/book1.epub" download class="book-download-wrapper">
                         <div class="book-cover">
                             <img src="/assets/bookcovers/Good Girl Complex.jpg">
@@ -198,7 +198,7 @@
                 </article>
 
                                 <!-- Bad Girl Reputation -->
-                <article class="book-card" data-genre="romance">
+                <article class="book-card" data-genre="romance 18plus">
                     <a href="downloads/book1.epub" download class="book-download-wrapper">
                         <div class="book-cover">
                             <img src="/assets/bookcovers/Bad Girl Reputation.jpg">
@@ -259,6 +259,74 @@
                     </a>
                 </article>
 
+                <article class="book-card" data-genre="nonfiction">
+                    <a href="https://drive.google.com/open?id=16YdKioiHwFmrYtvgzrYAX1kXszwGYa0c" download class="book-download-wrapper" target="_blank">
+                        <div class="book-cover">
+                            <img src="/assets/bookcovers/2amThoughts.jpg">
+                            <alt="2am Thoughts">
+                        </div>
+                        <div class="book-info">
+                            <h3>2am Thoughts</h3>
+                            <p class="book-author">Makenzie Campbell</p>
+                            </p>
+                            <div class="book-badges">
+                                <span class="badge badge-nonfiction">📖 Nonfiction</span>
+                            </div>
+                        </div>
+                    </a>
+                </article>
+
+                <article class="book-card" data-genre="ya">
+                    <a href="https://drive.google.com/open?id=11RLrg7HPZlRe_DIqBlbJqON-5ZpSWDVX" download class="book-download-wrapper" target="_blank">
+                        <div class="book-cover">
+                            <img src="/assets/bookcovers/11PaperHearts.jpg">
+                            <alt="11 Paper Hearts">
+                        </div>
+                        <div class="book-info">
+                            <h3>11 Paper Hearts</h3>
+                            <p class="book-author">Kelsey Hartwell</p>
+                            </p>
+                            <div class="book-badges">
+                                <span class="badge badge-ya">🎒YA/Middle Grade</span>
+                            </div>
+                        </div>
+                    </a>
+                </article>
+
+                <article class="book-card" data-genre="thriller">
+                    <a href="https://drive.google.com/open?id=1anGvkkze4FaTjqIp3xT5bH5p9Mw4G4J5" download class="book-download-wrapper" target="_blank">
+                        <div class="book-cover">
+                            <img src="/assets/bookcovers/14WaysToDie.jpg">
+                            <alt="14 Ways To Die">
+                        </div>
+                        <div class="book-info">
+                            <h3>14 Ways To Die</h3>
+                            <p class="book-author">Vincent Ralph</p>
+                            </p>
+                            <div class="book-badges">
+                                <span class="badge badge-thriller">🔪 Thriller / Mystery</span>
+                            </div>
+                        </div>
+                    </a>
+                </article>                
+
+                <article class="book-card" data-genre="ya">
+                    <a href="https://drive.google.com/open?id=1mXcthUIBHYN2SIt9jNCpz5Q0_HG1SpJm" download class="book-download-wrapper" target="_blank">
+                        <div class="book-cover">
+                            <img src="/assets/bookcovers/180Seconds.jpg">
+                            <alt="180 Seconds">
+                        </div>
+                        <div class="book-info">
+                            <h3>180 Seconds</h3>
+                            <p class="book-author">Jessica Park</p>
+                            </p>
+                            <div class="book-badges">
+                                <span class="badge badge-ya">🎒YA/Middle Grade</span>
+                            </div>
+                        </div>
+                    </a>
+                </article>                 
+
                 <article class="book-card" data-genre="dark-romance">
                     <a href="#" class="book-download-wrapper">
                         <div class="book-cover placeholder-cover"><div class="cover-text">Placeholder Cover ✧</div></div>
@@ -314,20 +382,22 @@
             const query = searchInput.value.toLowerCase().trim();
             const activeGenre = document.querySelector('.filter-btn.active').getAttribute('data-filter');
 
-            bookCards.forEach(card => {
-                const title = card.querySelector('.book-info h3').textContent.toLowerCase();
-                const author = card.querySelector('.book-author').textContent.toLowerCase();
-                
-                const matchesGenre = (activeGenre === 'all' || card.getAttribute('data-genre') === activeGenre);
-                const matchesSearch = (title.includes(query) || author.includes(query));
+        bookCards.forEach(card => {
+            const title = card.querySelector('.book-info h3').textContent.toLowerCase();
+            const author = card.querySelector('.book-author').textContent.toLowerCase();
+        
+        // Split or check via includes to handle multi-genre space-separated strings
+        const cardGenres = card.getAttribute('data-genre') || '';
+        const matchesGenre = (activeGenre === 'all' || cardGenres.includes(activeGenre));
+        const matchesSearch = (title.includes(query) || author.includes(query));
 
-                if (matchesGenre && matchesSearch) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
+            if (matches Genre && matchesSearch) {
+            card.style.display = 'block';
+        } else {
+            card.style.display = 'none';
         }
+    });
+}
 
         // Live filtering as they type
         searchInput.addEventListener('input', filterBooks);
