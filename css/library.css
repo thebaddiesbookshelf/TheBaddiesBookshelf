@@ -240,6 +240,33 @@
 .badge-thriller { background: #fdf2f2; color: #c81e1e; border: 1px solid rgba(200, 30, 30, 0.2); }
 .badge-fantasy { background: #f3e8ff; color: #6b21a8; border: 1px solid rgba(107, 33, 168, 0.2); }
 .badge-nonfiction { background: #e1effe; color: #1e429f; border: 1px solid rgba(30, 66, 159, 0.2); }
+/* 🌶️ Erotica: A deep, spicy plum/burgundy vibe that feels premium and mature */
+.badge-erotica { 
+    background: #fff0f3; 
+    color: #a91d49; 
+    border: 1px solid rgba(169, 29, 73, 0.2); 
+}
+
+/* 🤎 Urban: A gorgeous, rich latte/chocolate tone that looks incredibly elegant */
+.badge-urban { 
+    background: #f7f3f0; 
+    color: #6e473b; 
+    border: 1px solid rgba(110, 71, 59, 0.2); 
+}
+
+/* 🎒 YA/Middle Grade: A soft, energetic peach/coral that balances out the darker tones */
+.badge-ya { 
+    background: #fff7ed; 
+    color: #c2410c; 
+    border: 1px solid rgba(194, 65, 12, 0.2); 
+}
+
+/* 🔞 18+: A bold, high-contrast, edgy hot pink outline on a very dark charcoal background (matches your Dark Romance style!) */
+.badge-18plus { 
+    background: #2D2329; 
+    color: #ff69b4; 
+    border: 1px solid #ff1493; 
+}
 
 /* Full Width Panel Area */
 .filter-section {
