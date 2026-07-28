@@ -5949,102 +5949,58 @@
             <p>&copy; The Baddies Bookshelf</p>
         </div>
     </footer>
+<script src="/js/script.js"></script>
 
-    <script src="/js/script.js"></script>
-
-    <script>
-        const searchInput = document.getElementById('book-search');
-        const filterButtons = document.querySelectorAll('.filter-btn');
-        const bookCards = document.querySelectorAll('.book-card');
-
-        function filterBooks() {
-            const query = searchInput.value.toLowerCase().trim();
-            const activeGenre = document.querySelector('.filter-btn.active').getAttribute('data-filter');
-
-        bookCards.forEach(card => {
-            const title = card.querySelector('.book-info h3').textContent.toLowerCase();
-            const author = card.querySelector('.book-author').textContent.toLowerCase();
-        
-        // Split or check via includes to handle multi-genre space-separated strings
-        const cardGenres = card.getAttribute('data-genre') || '';
-        const matchesGenre = (activeGenre === 'all' || cardGenres.includes(activeGenre));
-        const matchesSearch = (title.includes(query) || author.includes(query));
-
-            if (matches Genre && matchesSearch) {
-            card.style.display = 'block';
-        } else {
-            card.style.display = 'none';
-        }
-    });
-}
-
-        // Live filtering as they type
-        searchInput.addEventListener('input', filterBooks);
-
-        // Prevents page reloads when hitting Enter, runs search execution instantly
-        searchInput.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter') {
-                event.preventDefault(); 
-                filterBooks();          
-            }
-        });
-
-        // Genre filter button toggles
-        filterButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                document.querySelector('.filter-btn.active').classList.remove('active');
-                button.classList.add('active');
-                filterBooks();
-            });
-        });
-    </script>
-
-    <script>
-    const canvas = document.getElementById('glitter-trail-canvas');
-    const ctx = canvas.getContext('2d');
+<script>
+    const canvas = document.getElementById("glitter-trail-canvas");
+    const ctx = canvas.getContext("2d");
 
     let particles = [];
     let mouse = { x: -100, y: -100 };
 
-    // Automatically stretch the canvas layout to match your viewport size perfectly
     function resizeCanvas() {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
     }
-    window.addEventListener('resize', resizeCanvas);
+
+    window.addEventListener("resize", resizeCanvas);
     resizeCanvas();
 
-    // Tracking script updates mouse positions
-    window.addEventListener('mousemove', (e) => {
-        mouse.x = e.clientX;
-        mouse.y = e.clientY;
-        
-        // Generate a cluster of pink and gold glitter dust specifications per move
+    window.addEventListener("mousemove", (event) => {
+        mouse.x = event.clientX;
+        mouse.y = event.clientY;
+
         for (let i = 0; i < 3; i++) {
-            particles.push(new GlitterParticle(mouse.x, mouse.y));
+            particles.push(
+                new GlitterParticle(mouse.x, mouse.y)
+            );
         }
     });
 
-    // Glitter Particle Blueprint Object
     class GlitterParticle {
         constructor(x, y) {
             this.x = x;
             this.y = y;
-            
-            // Random small sizes for high-end micro-glitter look
-            this.size = Math.random() * 3 + 1.5; 
-            
-            // Speed and floating directional drift vectors
+            this.size = Math.random() * 3 + 1.5;
             this.speedX = (Math.random() - 0.5) * 2;
-            this.speedY = Math.random() * 1.5 + 0.5; // Glides smoothly down
-            
-            // Alternates colors between Bratzy Neon Pink and Bright Luxury Gold
-            const colors = ['#ff1493', '#ff69b4', '#ffd700', '#ffea70', '#ffffff'];
-            this.color = colors[Math.floor(Math.random() * colors.length)];
-            
-            // Lifespan fade alpha tracking
+            this.speedY = Math.random() * 1.5 + 0.5;
+
+            const colors = [
+                "#ff1493",
+                "#ff69b4",
+                "#ffd700",
+                "#ffea70",
+                "#ffffff"
+            ];
+
+            this.color =
+                colors[
+                    Math.floor(Math.random() * colors.length)
+                ];
+
             this.alpha = 1;
-            this.decay = Math.random() * 0.02 + 0.015;
+            this.decay =
+                Math.random() * 0.02 + 0.015;
         }
 
         update() {
@@ -6058,67 +6014,86 @@
             ctx.globalAlpha = this.alpha;
             ctx.fillStyle = this.color;
             ctx.beginPath();
-            
-            // Renders clean circular micro-shimmers instead of characters
-            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.arc(
+                this.x,
+                this.y,
+                this.size,
+                0,
+                Math.PI * 2
+            );
             ctx.fill();
             ctx.restore();
         }
     }
 
-    // Continuously running animation frame cycle loop
     function animate() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        
+        ctx.clearRect(
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        );
+
         for (let i = 0; i < particles.length; i++) {
             particles[i].update();
             particles[i].draw();
-            
-            // Remove dead elements to save system memory
+
             if (particles[i].alpha <= 0) {
                 particles.splice(i, 1);
                 i--;
             }
         }
+
         requestAnimationFrame(animate);
     }
+
     animate();
 </script>
 
 <script>
-    const lockScreen = document.getElementById('vault-lock-screen');
-    const passwordInput = document.getElementById('vault-passcode');
-    const unlockBtn = document.getElementById('unlock-btn');
-    const errorMsg = document.getElementById('lock-error-msg');
+    const lockScreen =
+        document.getElementById("vault-lock-screen");
 
-    // Scrambled Base64 password key. Replace this value with your own encoded text string!
-    const targetHash = 'YmFkZGllMjAyNg=='; 
+    const passwordInput =
+        document.getElementById("vault-passcode");
+
+    const unlockBtn =
+        document.getElementById("unlock-btn");
+
+    const errorMsg =
+        document.getElementById("lock-error-msg");
+
+    const targetHash = "YmFkZGllMjAyNg==";
 
     function checkPasscode() {
-        // Convert input text to matching base64 hash formatting
-        const encodedInput = btoa(passwordInput.value.trim());
+        const encodedInput = btoa(
+            passwordInput.value.trim()
+        );
 
         if (encodedInput === targetHash) {
-            // Adds the CSS hiding class to slide out the lock panel
-            lockScreen.classList.add('unlocked');
-            errorMsg.classList.add('hidden');
+            lockScreen.classList.add("unlocked");
+            errorMsg.classList.add("hidden");
         } else {
-            // Displays error notification banner if it fails matching
-            errorMsg.classList.remove('hidden');
-            passwordInput.value = ''; // Clears input box
+            errorMsg.classList.remove("hidden");
+            passwordInput.value = "";
             passwordInput.focus();
         }
     }
 
-    // Unlocks on button click
-    unlockBtn.addEventListener('click', checkPasscode);
+    unlockBtn.addEventListener(
+        "click",
+        checkPasscode
+    );
 
-    // Unlocks instantly if they press the Enter key inside the input box
-    passwordInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-            checkPasscode();
+    passwordInput.addEventListener(
+        "keydown",
+        (event) => {
+            if (event.key === "Enter") {
+                checkPasscode();
+            }
         }
-    });
+    );
 </script>
+
 </body>
 </html>
