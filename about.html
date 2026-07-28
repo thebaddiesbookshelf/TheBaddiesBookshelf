@@ -663,30 +663,146 @@
     </section>
 
 </main>
+
+    <!-- ======================================================
+         FOOTER
+    ======================================================= -->
+
     <footer class="site-footer">
-        <div class="footer-tagline">
-            <h2>A Community. A Culture. A Movement.</h2>
-        </div>
 
         <div class="footer-top">
-            <div class="footer-socials">
-                <a href="https://www.instagram.com/thebaddiesbookshelf/" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-                <a href="https://www.tiktok.com/@thebaddiesbookshelf/" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+
+            <!-- Footer Message -->
+            <div class="footer-column footer-message">
+
+                <div class="footer-decorative-books" aria-hidden="true">
+                    <i class="fa-solid fa-books"></i>
+                </div>
+
+                <h2>Stay awhile, baddie.</h2>
+
+                <p>
+                    Grab your favorite blanket, brew something cozy, and let us
+                    read together.
+                </p>
+
             </div>
 
-            <div class="footer-newsletter">
-                <p>Join The Baddie Bulletin</p>
-                <a href="https://the-baddies-newsletter.beehiiv.com/?_gl=1*piy6ar*_gcl_aw*R0NMLjE3ODE4MjgwNTAuQ2owS0NRandyczdSQmhEdUFSSXNBSVZmQkQySHE4dmtrZmc2WUpHUEFzRW1JWmpiNk1YXzNQVUhrNm5VRWV1aUwzb1d3NTlLUXMtUHByZ2FBbXJHRUFMd193Y0I.*_gcl_au*MTQxNDY5MTA0Mi4xNzgxODI3OTUyLjEwNDgyMDE3OC4xNzgxODI4MTE0LjE3ODE4MjgyMDY.*_ga*MTU2NTM0OTI1Ni4xNzgxODI3OTUy*_ga_E6Y4WLQ2EC*czE3ODE4Mjc5NTEkbzEkZzEkdDE3ODE4MjgyMDYkajMkbDEkaDEyNTI2MzI3Ng" class="footer-subscribe-btn">Subscribe</a>
+            <!-- Newsletter -->
+            <div class="footer-column footer-newsletter">
+
+                <h3>Join The Baddie Bulletin</h3>
+
+                <p>
+                    Get updates on events, giveaways, monthly reads, new
+                    releases, and community news.
+                </p>
+
+                <form
+                    class="newsletter-form"
+                    action="https://the-baddies-newsletter.beehiiv.com/"
+                    method="get"
+                    target="_blank"
+                >
+                    <label for="newsletter-email" class="sr-only">
+                        Email address
+                    </label>
+
+                    <input
+                        type="email"
+                        id="newsletter-email"
+                        name="email"
+                        placeholder="Your email address"
+                        required
+                    >
+
+                    <button type="submit">
+                        Subscribe
+                    </button>
+                </form>
+
             </div>
 
-            <div class="footer-contact">
-                <a href="mailto:hello@baddiesbookshelf.com">hello@baddiesbookshelf.com</a>
+            <!-- Socials -->
+            <div class="footer-column footer-social-column">
+
+                <h3>Let’s Be Friends</h3>
+
+                <div class="footer-socials">
+
+                    <a
+                        href="https://www.instagram.com/thebaddiesbookshelf/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="Instagram"
+                    >
+                        <i class="fa-brands fa-instagram"></i>
+                    </a>
+
+                    <a
+                        href="https://www.tiktok.com/@thebaddiesbookshelf/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="TikTok"
+                    >
+                        <i class="fa-brands fa-tiktok"></i>
+                    </a>
+
+                    <a
+                        href="#"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="YouTube"
+                    >
+                        <i class="fa-brands fa-youtube"></i>
+                    </a>
+
+                    <a
+                        href="https://discord.gg/KQ6Qhhpx6z"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="Discord"
+                    >
+                        <i class="fa-brands fa-discord"></i>
+                    </a>
+
+                    <a
+                        href="mailto:hello@baddiesbookshelf.com"
+                        aria-label="Email"
+                    >
+                        <i class="fa-regular fa-envelope"></i>
+                    </a>
+
+                </div>
+
+                <a
+                    href="mailto:hello@baddiesbookshelf.com"
+                    class="footer-email"
+                >
+                    hello@baddiesbookshelf.com
+                </a>
+
             </div>
+
         </div>
 
         <div class="footer-bottom">
-            <p>&copy; The Baddies Bookshelf</p>
+
+            <p>
+                &copy; <span id="current-year"></span>
+                The Baddies Bookshelf. All rights reserved.
+            </p>
+
+            <span class="footer-divider">|</span>
+
+            <p>
+                Made with
+                <i class="fa-regular fa-heart"></i>
+                for readers, by readers.
+            </p>
+
         </div>
+
     </footer>
 
     <script>
