@@ -40,96 +40,737 @@
             </a>
         </nav>
     </header>
+<main class="challenges-page">
 
-    <main>
-        <section class="hero" style="margin-bottom: 0;">
-            <h1>Level Up Your Reading Journey</h1>
-            <p>A collective scrapbook of our bookshelves, cozy setups, and favorite community memories.</p>
-        </section>
+    <!-- ======================================================
+         CHALLENGES HERO
+    ======================================================= -->
 
-        <section class="annual-challenge-section">
-            <div class="annual-container">
-                <div class="section-heading">
-                    <h2>Annual Challenges ✧</h2>
-                </div>
-                
-                <div class="annual-card">
-                    <div class="annual-badge">Year-Long Track</div>
-                    <div class="annual-card-content">
-                        <h3>The 2026 Monthly Crown Challenge</h3>
-                        <p class="challenge-meta"><i class="fa-regular fa-calendar-days"></i> Jan 1 – Dec 31, 2026</p>
-                        <p class="challenge-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. This is our master community challenge tracker designed to keep your spark active all year long. Pace yourself, track your prompts, and log your completions inside Discord to claim your official badge collection.</p>
-                        <a href="https://discord.gg/KQ6Qhhpx6z" target="_blank" class="btn-secondary">Log Your Progress</a>
-                    </div>
-                </div>
-            </div>
-        </section>
+    <section class="challenges-hero">
 
-        <!-- 3. Monthly & Bi-Monthly Track Dashboard (Updated to match Annual Card boxes!) -->
-        <section class="periodic-challenges-section">
-            <div class="dashboard-row">
-                
-                <!-- Left Column: Monthly Reads -->
-                <div class="dashboard-col">
-                    <div class="section-heading">
-                        <h2>Monthly Challenges ✧</h2>
-                    </div>
-                    <!-- Upgraded to use annual-card structure -->
-                    <div class="annual-card periodic-card">
-                        <div class="annual-badge">Current Month</div>
-                        <div class="annual-card-content">
-                            <h3>The Monthly Read-Off</h3>
-                            <p class="challenge-meta"><i class="fa-regular fa-calendar-days"></i> Updated Monthly</p>
-                            <p class="challenge-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. A rapid, fresh theme-driven challenge reset every single month. Perfect for cleaning out your physical TBR stacks or diving into a shared hyper-focused genre speedrun alongside the whole community.</p>
-                            <a href="events.html" class="btn-secondary">View This Month's Prompts</a>
-                        </div>
-                    </div>
-                </div>
+        <div class="challenges-hero-background" aria-hidden="true">
+            <div class="challenge-grid-lines"></div>
 
-                <!-- Right Column: Special / Bi-Monthly Reads -->
-                <div class="dashboard-col">
-                    <div class="section-heading">
-                        <h2>Special Challenges ✧</h2>
-                    </div>
-                    <!-- Upgraded to use annual-card structure -->
-                    <div class="annual-card periodic-card">
-                        <div class="annual-badge">Seasonal</div>
-                        <div class="annual-card-content">
-                            <h3>Cozy Co-Op Sprints</h3>
-                            <p class="challenge-meta"><i class="fa-regular fa-calendar-days"></i> Bi-Monthly Track</p>
-                            <p class="challenge-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Special mid-tier seasonal events, team tournaments, and bi-monthly check-ins. These alternate all year long to shake up your reading patterns when you're slipping into an unexpected book slump.</p>
-                            <a href="https://discord.gg/KQ6Qhhpx6z" target="_blank" class="btn-secondary">Join Active Team Rooms</a>
-                        </div>
-                    </div>
-                </div>
+            <span class="challenge-sparkle sparkle-a">✦</span>
+            <span class="challenge-sparkle sparkle-b">✧</span>
+            <span class="challenge-sparkle sparkle-c">✦</span>
+
+            <span class="challenge-heart challenge-heart-one">♡</span>
+            <span class="challenge-heart challenge-heart-two">♡</span>
+        </div>
+
+        <div class="challenge-hero-character">
+            <img
+                src="assets/images/TBBBaddies/SageCozy.png"
+                alt=""
+            >
+        </div>
+
+        <div class="challenges-hero-content">
+
+            <span class="challenges-eyebrow">
+                Read. Track. Slay.
+            </span>
+
+            <h1>
+                Level Up Your
+                <span>Reading Journey.</span>
+            </h1>
+
+            <p>
+                Join themed challenges, earn badges, compete for crowns,
+                clear your TBR, and celebrate every page without pressure.
+            </p>
+
+            <div class="challenges-hero-buttons">
+
+                <a href="#annual-challenge" class="btn btn-primary">
+                    View Challenges
+                    <i class="fa-solid fa-arrow-down"></i>
+                </a>
+
+                <a
+                    href="https://discord.gg/KQ6Qhhpx6z"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="btn btn-outline"
+                >
+                    <i class="fa-brands fa-discord"></i>
+                    Log Your Progress
+                </a>
 
             </div>
-        </section>
 
-        <section class="challenge-info-section">
-            <div class="info-layout-wrapper">
-                <div class="section-heading">
-                    <h2>✧ Challenge Info &amp; Guidelines ✧</h2>
-                </div>
-                
-                <div class="faq-item">
-                    <h3><i class="fa-solid fa-circle-check"></i> Do audiobooks or graphic novels count?</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Absolutely. We celebrate how you read, not just what you read. If you completed the story framework, log it with pride!</p>
+        </div>
+
+    </section>
+
+
+    <!-- ======================================================
+         CHALLENGE STATS
+    ======================================================= -->
+
+    <section class="challenge-stats" aria-label="Challenge features">
+
+        <div class="challenge-stat">
+            <i class="fa-solid fa-book-open"></i>
+            <strong>Every Page</strong>
+            <span>Counts</span>
+        </div>
+
+        <div class="challenge-stat">
+            <i class="fa-solid fa-headphones"></i>
+            <strong>All Formats</strong>
+            <span>Welcome</span>
+        </div>
+
+        <div class="challenge-stat">
+            <i class="fa-solid fa-trophy"></i>
+            <strong>Badges</strong>
+            <span>And Crowns</span>
+        </div>
+
+        <div class="challenge-stat">
+            <i class="fa-solid fa-heart"></i>
+            <strong>Zero Pressure</strong>
+            <span>Your Pace</span>
+        </div>
+
+    </section>
+
+
+    <!-- ======================================================
+         ANNUAL CHALLENGE
+    ======================================================= -->
+
+    <section
+        class="annual-challenge-section challenge-section"
+        id="annual-challenge"
+    >
+
+        <div class="section-heading">
+            <span class="heading-decoration">♕</span>
+            <h2>Annual Challenge</h2>
+            <span class="heading-decoration">✦</span>
+        </div>
+
+        <p class="challenge-section-intro">
+            One year-long reading journey with monthly themes, badges,
+            milestones, and plenty of chances to earn your crown.
+        </p>
+
+        <article class="annual-card">
+
+            <div class="annual-card-art">
+
+                <div class="annual-crown">
+                    <i class="fa-solid fa-crown"></i>
                 </div>
 
-                <div class="faq-item">
-                    <h3><i class="fa-solid fa-circle-check"></i> Can one book count for multiple prompts?</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. To keep things fair and challenging, we recommend using a unique title for each distinct category. However, your reading rules are ultimately yours to own!</p>
-                </div>
+                <span class="annual-art-sparkle annual-art-one">✦</span>
+                <span class="annual-art-sparkle annual-art-two">✧</span>
 
-                <div class="faq-item">
-                    <h3><i class="fa-solid fa-circle-check"></i> Where do I claim my level badges?</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Head right over to our official Discord channel and post your completion stack logs inside the tracking room. Our community team validates submissions weekly!</p>
-                </div>
             </div>
-        </section>
-    </main>
 
+            <div class="annual-card-content">
+
+                <span class="annual-badge">
+                    Year-Long Track
+                </span>
+
+                <span class="challenge-category">
+                    The Main Event
+                </span>
+
+                <h3>The 2026 Monthly Crown Challenge</h3>
+
+                <p class="challenge-meta">
+                    <i class="fa-regular fa-calendar-days"></i>
+                    January 1 – December 31, 2026
+                </p>
+
+                <p class="challenge-text">
+                    Complete monthly reading prompts, join themed community
+                    challenges, track your books, and collect digital badges
+                    throughout the year. Read at your own pace and celebrate
+                    every milestone along the way.
+                </p>
+
+                <div class="annual-features">
+
+                    <span>
+                        <i class="fa-solid fa-check"></i>
+                        Monthly prompts
+                    </span>
+
+                    <span>
+                        <i class="fa-solid fa-check"></i>
+                        Digital badges
+                    </span>
+
+                    <span>
+                        <i class="fa-solid fa-check"></i>
+                        Community tracking
+                    </span>
+
+                    <span>
+                        <i class="fa-solid fa-check"></i>
+                        Year-end crown
+                    </span>
+
+                </div>
+
+                <a
+                    href="https://discord.gg/KQ6Qhhpx6z"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="challenge-btn"
+                >
+                    Log Your Progress
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
+
+            </div>
+
+        </article>
+
+    </section>
+
+
+    <!-- ======================================================
+         CURRENT MONTHLY CHALLENGE
+    ======================================================= -->
+
+    <section class="current-challenge-section">
+
+        <div class="current-challenge-card">
+
+            <div class="current-challenge-copy">
+
+                <span class="current-month">August</span>
+
+                <span class="challenge-category">
+                    Current Monthly Challenge
+                </span>
+
+                <h2>Back to Book Academy</h2>
+
+                <p>
+                    Class is in session. Complete bookish assignments,
+                    earn extra credit, join your reading team, and work
+                    toward the monthly crown.
+                </p>
+
+                <div class="current-progress">
+
+                    <div class="progress-label">
+                        <span>Community Progress</span>
+                        <strong>68%</strong>
+                    </div>
+
+                    <div class="progress-track">
+                        <span></span>
+                    </div>
+
+                </div>
+
+                <a href="events.html" class="btn btn-primary">
+                    View This Month
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
+
+            </div>
+
+            <div class="current-challenge-visual" aria-hidden="true">
+
+                <i class="fa-solid fa-graduation-cap"></i>
+                <i class="fa-solid fa-book-open"></i>
+                <i class="fa-solid fa-pencil"></i>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ======================================================
+         CHALLENGE COLLECTION
+    ======================================================= -->
+
+    <section class="challenge-collection-section challenge-section">
+
+        <div class="section-heading">
+            <span class="heading-decoration">♡</span>
+            <h2>Challenge Collection</h2>
+            <span class="heading-decoration">✧</span>
+        </div>
+
+        <p class="challenge-section-intro">
+            Seasonal reading challenges, monthly competitions, and themed
+            adventures that keep your reading life fresh.
+        </p>
+
+        <div class="challenge-card-grid">
+
+            <article class="challenge-card">
+
+                <div class="challenge-card-icon">
+                    <i class="fa-solid fa-crown"></i>
+                </div>
+
+                <span class="challenge-status">Monthly</span>
+
+                <h3>Monthly Crown</h3>
+
+                <p>
+                    Compete through reading, activity posts, progress
+                    updates, and themed challenges.
+                </p>
+
+                <div class="challenge-card-footer">
+                    <span>Teams + Points</span>
+
+                    <a href="events.html">
+                        Explore
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+
+            </article>
+
+
+            <article class="challenge-card">
+
+                <div class="challenge-card-icon">
+                    <i class="fa-solid fa-umbrella-beach"></i>
+                </div>
+
+                <span class="challenge-status">Summer</span>
+
+                <h3>Summer Reader</h3>
+
+                <p>
+                    Escape into sunny settings, vacation reads, beachy
+                    romances, and warm-weather adventures.
+                </p>
+
+                <div class="challenge-card-footer">
+                    <span>Seasonal Badge</span>
+
+                    <a href="#">
+                        View Prompts
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+
+            </article>
+
+
+            <article class="challenge-card">
+
+                <div class="challenge-card-icon">
+                    <i class="fa-solid fa-leaf"></i>
+                </div>
+
+                <span class="challenge-status">Autumn</span>
+
+                <h3>Autumn Academy</h3>
+
+                <p>
+                    Read campus stories, cozy mysteries, moody fantasy,
+                    academic rivals, and fall favorites.
+                </p>
+
+                <div class="challenge-card-footer">
+                    <span>Fall Badge</span>
+
+                    <a href="#">
+                        View Prompts
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+
+            </article>
+
+
+            <article class="challenge-card">
+
+                <div class="challenge-card-icon">
+                    <i class="fa-solid fa-ghost"></i>
+                </div>
+
+                <span class="challenge-status">October</span>
+
+                <h3>Spooky SZN</h3>
+
+                <p>
+                    Thrillers, horror, paranormal romance, haunted houses,
+                    suspicious characters, and dark secrets.
+                </p>
+
+                <div class="challenge-card-footer">
+                    <span>Spooky Badge</span>
+
+                    <a href="#">
+                        View Prompts
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+
+            </article>
+
+
+            <article class="challenge-card">
+
+                <div class="challenge-card-icon">
+                    <i class="fa-regular fa-snowflake"></i>
+                </div>
+
+                <span class="challenge-status">Winter</span>
+
+                <h3>Winter Retreat</h3>
+
+                <p>
+                    Cozy reads, snowy settings, holiday stories, magical
+                    worlds, and end-of-year reading goals.
+                </p>
+
+                <div class="challenge-card-footer">
+                    <span>Winter Badge</span>
+
+                    <a href="#">
+                        View Prompts
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+
+            </article>
+
+
+            <article class="challenge-card">
+
+                <div class="challenge-card-icon">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                </div>
+
+                <span class="challenge-status">January</span>
+
+                <h3>New Year, New TBR</h3>
+
+                <p>
+                    Start fresh by prioritizing unread books, forgotten
+                    favorites, new authors, and personal reading goals.
+                </p>
+
+                <div class="challenge-card-footer">
+                    <span>New Year Badge</span>
+
+                    <a href="#">
+                        View Prompts
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+
+            </article>
+
+        </div>
+
+    </section>
+
+
+    <!-- ======================================================
+         BADGE CABINET
+    ======================================================= -->
+
+    <section class="badge-section">
+
+        <div class="section-heading">
+            <span class="heading-decoration">✦</span>
+            <h2>Build Your Badge Cabinet</h2>
+            <span class="heading-decoration">♕</span>
+        </div>
+
+        <p class="challenge-section-intro">
+            Earn digital badges by completing challenges, attending events,
+            checking in, and reaching reading milestones.
+        </p>
+
+        <div class="badge-grid">
+
+            <div class="reading-badge">
+                <div class="badge-icon">
+                    <i class="fa-solid fa-book"></i>
+                </div>
+
+                <strong>First Finish</strong>
+                <span>Complete one prompt</span>
+            </div>
+
+            <div class="reading-badge">
+                <div class="badge-icon">
+                    <i class="fa-solid fa-fire"></i>
+                </div>
+
+                <strong>On a Roll</strong>
+                <span>Complete five prompts</span>
+            </div>
+
+            <div class="reading-badge">
+                <div class="badge-icon">
+                    <i class="fa-solid fa-headphones"></i>
+                </div>
+
+                <strong>Audio Baddie</strong>
+                <span>Finish an audiobook</span>
+            </div>
+
+            <div class="reading-badge">
+                <div class="badge-icon">
+                    <i class="fa-solid fa-clock"></i>
+                </div>
+
+                <strong>Night Reader</strong>
+                <span>Join a late-night sprint</span>
+            </div>
+
+            <div class="reading-badge">
+                <div class="badge-icon">
+                    <i class="fa-solid fa-users"></i>
+                </div>
+
+                <strong>Team Player</strong>
+                <span>Join a team challenge</span>
+            </div>
+
+            <div class="reading-badge">
+                <div class="badge-icon">
+                    <i class="fa-solid fa-crown"></i>
+                </div>
+
+                <strong>Crowned Baddie</strong>
+                <span>Win a monthly crown</span>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ======================================================
+         HOW CHALLENGES WORK
+    ======================================================= -->
+
+    <section class="challenge-steps-section challenge-section">
+
+        <div class="section-heading">
+            <span class="heading-decoration">♡</span>
+            <h2>How It Works</h2>
+            <span class="heading-decoration">✧</span>
+        </div>
+
+        <div class="challenge-steps-grid">
+
+            <article class="challenge-step">
+
+                <span class="step-number">01</span>
+
+                <div class="step-icon">
+                    <i class="fa-solid fa-list-check"></i>
+                </div>
+
+                <h3>Choose a Challenge</h3>
+
+                <p>
+                    Pick an annual, monthly, seasonal, or special challenge
+                    that fits your current reading mood.
+                </p>
+
+            </article>
+
+            <article class="challenge-step">
+
+                <span class="step-number">02</span>
+
+                <div class="step-icon">
+                    <i class="fa-solid fa-book-open-reader"></i>
+                </div>
+
+                <h3>Read at Your Pace</h3>
+
+                <p>
+                    Use audiobooks, e-books, physical books, manga, graphic
+                    novels, or whichever format works for you.
+                </p>
+
+            </article>
+
+            <article class="challenge-step">
+
+                <span class="step-number">03</span>
+
+                <div class="step-icon">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                </div>
+
+                <h3>Log Your Progress</h3>
+
+                <p>
+                    Share your completed prompts and progress updates inside
+                    the official Discord tracking channels.
+                </p>
+
+            </article>
+
+            <article class="challenge-step">
+
+                <span class="step-number">04</span>
+
+                <div class="step-icon">
+                    <i class="fa-solid fa-award"></i>
+                </div>
+
+                <h3>Collect Your Badge</h3>
+
+                <p>
+                    Celebrate completed challenges, unlock badges, earn
+                    recognition, and work toward the crown.
+                </p>
+
+            </article>
+
+        </div>
+
+    </section>
+
+
+    <!-- ======================================================
+         GUIDELINES / FAQ
+    ======================================================= -->
+
+    <section class="challenge-info-section">
+
+        <div class="challenge-info-container">
+
+            <div class="section-heading">
+                <span class="heading-decoration">✧</span>
+                <h2>Challenge Guidelines</h2>
+                <span class="heading-decoration">♡</span>
+            </div>
+
+            <div class="challenge-faq-list">
+
+                <details class="challenge-faq-item">
+                    <summary>
+                        <span>Do audiobooks and graphic novels count?</span>
+                        <i class="fa-solid fa-plus"></i>
+                    </summary>
+
+                    <p>
+                        Yes. Audiobooks, graphic novels, manga, e-books,
+                        physical books, and other reading formats all count.
+                    </p>
+                </details>
+
+                <details class="challenge-faq-item">
+                    <summary>
+                        <span>Can one book count for multiple prompts?</span>
+                        <i class="fa-solid fa-plus"></i>
+                    </summary>
+
+                    <p>
+                        Unless a specific challenge says otherwise, you may
+                        decide whether to reuse books. We encourage unique
+                        titles when possible, but your reading experience
+                        should remain enjoyable.
+                    </p>
+                </details>
+
+                <details class="challenge-faq-item">
+                    <summary>
+                        <span>Do I have to complete every prompt?</span>
+                        <i class="fa-solid fa-plus"></i>
+                    </summary>
+
+                    <p>
+                        No. Complete as many prompts as you want. Challenges
+                        are designed to motivate you, not create pressure.
+                    </p>
+                </details>
+
+                <details class="challenge-faq-item">
+                    <summary>
+                        <span>Where do I submit my progress?</span>
+                        <i class="fa-solid fa-plus"></i>
+                    </summary>
+
+                    <p>
+                        Post your progress inside the designated challenge
+                        or tracking channel in The Baddies Bookshelf Discord.
+                    </p>
+                </details>
+
+                <details class="challenge-faq-item">
+                    <summary>
+                        <span>How do I receive badges?</span>
+                        <i class="fa-solid fa-plus"></i>
+                    </summary>
+
+                    <p>
+                        Follow the submission instructions for the challenge.
+                        Once your completion is confirmed, eligible badges or
+                        roles will be awarded.
+                    </p>
+                </details>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ======================================================
+         FINAL CTA
+    ======================================================= -->
+
+    <section class="challenge-final-cta">
+
+        <span class="challenge-cta-label">
+            Your TBR Has Entered the Chat
+        </span>
+
+        <h2>
+            Ready to Read,
+            <span>Track, and Slay?</span>
+        </h2>
+
+        <p>
+            Join the community, choose your challenge, and start collecting
+            badges one book at a time.
+        </p>
+
+        <div class="challenge-cta-buttons">
+
+            <a
+                href="https://discord.gg/KQ6Qhhpx6z"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="btn btn-primary"
+            >
+                <i class="fa-brands fa-discord"></i>
+                Join the Challenge
+            </a>
+
+            <a href="events.html" class="btn btn-outline">
+                View Events
+            </a>
+
+        </div>
+
+    </section>
+
+</main>
      <footer class="site-footer">
         <div class="footer-tagline">
             <h2>A Community. A Culture. A Movement.</h2>

@@ -40,108 +40,661 @@
             </a>
         </nav>
     </header>
+<main class="community-gallery-page">
 
-    <main>
-        <section class="featured-events">
-    <div class="section-heading">
-        <h2>✧ Community Gallery ✧</h2>
-    </div>
+    <!-- ======================================================
+         GALLERY HERO
+    ======================================================= -->
 
-    <div class="carousel-slider-container">
-        <button class="carousel-nav-btn prev-btn" aria-label="Previous Slide">
-            <i class="fa-solid fa-chevron-left"></i>
-        </button>
+    <section class="gallery-hero">
 
-        <div class="carousel-track">
-            
-            <article class="event-card gallery-card-style">
-                <div class="event-image-wrap placeholder-box">
-                    <p>Journal spread coming soon ✨</p>
+        <div class="gallery-hero-background" aria-hidden="true">
+            <div class="gallery-grid-lines"></div>
+
+            <span class="gallery-sparkle gallery-sparkle-one">✦</span>
+            <span class="gallery-sparkle gallery-sparkle-two">✧</span>
+            <span class="gallery-sparkle gallery-sparkle-three">✦</span>
+
+            <span class="gallery-heart gallery-heart-one">♡</span>
+            <span class="gallery-heart gallery-heart-two">♡</span>
+        </div>
+
+        <div class="gallery-hero-character gallery-character-left">
+            <img
+                src="assets/images/TBBBaddies/SageCozy.png"
+                alt=""
+            >
+        </div>
+
+        <div class="gallery-hero-content">
+
+            <span class="gallery-eyebrow">
+                The Baddie Memory Wall
+            </span>
+
+            <h1>
+                Community Moments,
+                <span>Bookish Memories.</span>
+            </h1>
+
+            <p>
+                A collection of bookshelf flexes, cozy reading setups,
+                event memories, journal spreads, challenge creations,
+                and everything our baddies have shared.
+            </p>
+
+            <div class="gallery-hero-buttons">
+
+                <a href="#featured-gallery" class="btn btn-primary">
+                    Explore the Gallery
+                    <i class="fa-solid fa-arrow-down"></i>
+                </a>
+
+                <a
+                    href="https://discord.gg/KQ6Qhhpx6z"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="btn btn-outline"
+                >
+                    <i class="fa-brands fa-discord"></i>
+                    Submit Your Photo
+                </a>
+
+            </div>
+
+        </div>
+
+        <div class="gallery-hero-character gallery-character-right">
+            <img
+                src="assets/images/TBBBaddies/NovaFantasy.png"
+                alt=""
+            >
+        </div>
+
+    </section>
+
+
+    <!-- ======================================================
+         GALLERY STATS
+    ======================================================= -->
+
+    <section class="gallery-stats" aria-label="Community gallery information">
+
+        <div class="gallery-stat">
+            <i class="fa-solid fa-camera-retro"></i>
+            <strong>Real Moments</strong>
+            <span>From Our Community</span>
+        </div>
+
+        <div class="gallery-stat">
+            <i class="fa-solid fa-book-open"></i>
+            <strong>Bookish Life</strong>
+            <span>On and Off the Page</span>
+        </div>
+
+        <div class="gallery-stat">
+            <i class="fa-solid fa-palette"></i>
+            <strong>Creative Baddies</strong>
+            <span>Art, Journals and More</span>
+        </div>
+
+        <div class="gallery-stat">
+            <i class="fa-solid fa-heart"></i>
+            <strong>Shared With Love</strong>
+            <span>By TBB Members</span>
+        </div>
+
+    </section>
+
+
+    <!-- ======================================================
+         FEATURED COMMUNITY CAROUSEL
+    ======================================================= -->
+
+    <section
+        class="featured-gallery gallery-section"
+        id="featured-gallery"
+    >
+
+        <div class="section-heading">
+            <span class="heading-decoration">✦</span>
+            <h2>Featured Community Moments</h2>
+            <span class="heading-decoration">♡</span>
+        </div>
+
+        <p class="gallery-section-intro">
+            Swipe through some of our favorite bookish moments,
+            creations, spaces, and memories.
+        </p>
+
+        <div class="carousel-slider-container">
+
+            <button
+                class="carousel-nav-btn prev-btn"
+                type="button"
+                aria-label="View previous gallery items"
+            >
+                <i class="fa-solid fa-chevron-left"></i>
+            </button>
+
+            <div class="carousel-track">
+
+                <article class="gallery-carousel-card">
+
+                    <div class="gallery-card-image">
+                        <img
+                            src="assets/images/gallery/journals.jpg"
+                            alt="A decorated reading journal spread"
+                        >
+
+                        <span class="gallery-category">
+                            Reading Journals
+                        </span>
+                    </div>
+
+                    <div class="gallery-card-content">
+                        <h3>Pages Worth Remembering</h3>
+
+                        <p>
+                            Review spreads, trackers, annotations, ratings,
+                            favorite quotes, and beautifully chaotic reading notes.
+                        </p>
+                    </div>
+
+                </article>
+
+
+                <article class="gallery-carousel-card">
+
+                    <div class="gallery-card-image">
+                        <img
+                            src="assets/images/gallery/bookshelves.jpg"
+                            alt="A colorful personal bookshelf"
+                        >
+
+                        <span class="gallery-category">
+                            Shelf Flexes
+                        </span>
+                    </div>
+
+                    <div class="gallery-card-content">
+                        <h3>Bookshelf Baddie Energy</h3>
+
+                        <p>
+                            Color-coded shelves, packed bookcases, collector
+                            editions, spicy paperbacks, and growing TBR stacks.
+                        </p>
+                    </div>
+
+                </article>
+
+
+                <article class="gallery-carousel-card">
+
+                    <div class="gallery-card-image">
+                        <img
+                            src="assets/images/gallery/reading-setup.jpg"
+                            alt="A cozy reading corner with pillows and books"
+                        >
+
+                        <span class="gallery-category">
+                            Cozy Setups
+                        </span>
+                    </div>
+
+                    <div class="gallery-card-content">
+                        <h3>The Perfect Reading Spot</h3>
+
+                        <p>
+                            Blankets, candles, tablets, warm drinks, ambient
+                            lighting, and everything needed for one more chapter.
+                        </p>
+                    </div>
+
+                </article>
+
+
+                <article class="gallery-carousel-card">
+
+                    <div class="gallery-card-image">
+                        <img
+                            src="assets/images/gallery/event-memory.jpg"
+                            alt="Members participating in a book club event"
+                        >
+
+                        <span class="gallery-category">
+                            Event Memories
+                        </span>
+                    </div>
+
+                    <div class="gallery-card-content">
+                        <h3>When the Baddies Link Up</h3>
+
+                        <p>
+                            Readathons, retreats, movie nights, workshops,
+                            launches, themed events, and unforgettable group moments.
+                        </p>
+                    </div>
+
+                </article>
+
+
+                <article class="gallery-carousel-card">
+
+                    <div class="gallery-card-image">
+                        <img
+                            src="assets/images/gallery/community-photos.jpg"
+                            alt="Book club members posing together"
+                        >
+
+                        <span class="gallery-category">
+                            Community Photos
+                        </span>
+                    </div>
+
+                    <div class="gallery-card-content">
+                        <h3>The Faces Behind the Shelves</h3>
+
+                        <p>
+                            Member selfies, book hauls, meetups, happy mail,
+                            bookstore trips, and baddies in the wild.
+                        </p>
+                    </div>
+
+                </article>
+
+
+                <article class="gallery-carousel-card">
+
+                    <div class="gallery-card-image">
+                        <img
+                            src="assets/images/gallery/creative-submission.jpg"
+                            alt="A creative book-themed challenge submission"
+                        >
+
+                        <span class="gallery-category">
+                            Creative Challenges
+                        </span>
+                    </div>
+
+                    <div class="gallery-card-content">
+                        <h3>Created by the Community</h3>
+
+                        <p>
+                            Mood boards, playlists, graphics, collages,
+                            templates, fan edits, and themed challenge entries.
+                        </p>
+                    </div>
+
+                </article>
+
+
+                <article class="gallery-carousel-card">
+
+                    <div class="gallery-card-image">
+                        <img
+                            src="assets/images/gallery/monthly-wrapup.jpg"
+                            alt="A monthly reading wrap-up graphic"
+                        >
+
+                        <span class="gallery-category">
+                            Monthly Wrap-Ups
+                        </span>
+                    </div>
+
+                    <div class="gallery-card-content">
+                        <h3>Another Month, Another Stack</h3>
+
+                        <p>
+                            Reading totals, five-star favorites, community
+                            milestones, reviews, and monthly recap graphics.
+                        </p>
+                    </div>
+
+                </article>
+
+            </div>
+
+            <button
+                class="carousel-nav-btn next-btn"
+                type="button"
+                aria-label="View more gallery items"
+            >
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- ======================================================
+         COMMUNITY SPOTLIGHT
+    ======================================================= -->
+
+    <section class="community-spotlight-section">
+
+        <div class="community-spotlight-card">
+
+            <div class="spotlight-copy">
+
+                <span class="spotlight-label">
+                    Community Spotlight
+                </span>
+
+                <h2>
+                    Your Shelf Could Be
+                    <span>Featured Next.</span>
+                </h2>
+
+                <p>
+                    Each month, we highlight member bookshelves, reading
+                    spaces, journal spreads, event photos, book hauls,
+                    creative challenge entries, and reading wrap-ups.
+                </p>
+
+                <a
+                    href="https://discord.gg/KQ6Qhhpx6z"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="btn btn-primary"
+                >
+                    <i class="fa-solid fa-camera"></i>
+                    Submit to the Gallery
+                </a>
+
+            </div>
+
+            <div class="spotlight-collage">
+
+                <div class="collage-photo collage-photo-one">
+                    <img
+                        src="assets/images/gallery/spotlight-1.jpg"
+                        alt="Community reading journal"
+                    >
                 </div>
-                <div class="event-card-content">
-                    <h3>Reading Journals</h3>
-                    <p class="event-description">A sneak peek into custom tracker spreads, review highlights, and hyper-detailed book annotating sessions.</p>
+
+                <div class="collage-photo collage-photo-two">
+                    <img
+                        src="assets/images/gallery/spotlight-2.jpg"
+                        alt="Community bookshelf"
+                    >
                 </div>
+
+                <div class="collage-photo collage-photo-three">
+                    <img
+                        src="assets/images/gallery/spotlight-3.jpg"
+                        alt="Community reading setup"
+                    >
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ======================================================
+         GALLERY CATEGORIES
+    ======================================================= -->
+
+    <section class="gallery-categories-section gallery-section">
+
+        <div class="section-heading">
+            <span class="heading-decoration">♡</span>
+            <h2>What We Love to Feature</h2>
+            <span class="heading-decoration">✧</span>
+        </div>
+
+        <div class="gallery-category-grid">
+
+            <article class="gallery-category-card">
+                <i class="fa-solid fa-book-bookmark"></i>
+                <h3>Reading Journals</h3>
+                <p>
+                    Trackers, spreads, reviews, annotation pages,
+                    ratings, and favorite quotes.
+                </p>
             </article>
 
-            <article class="event-card gallery-card-style">
-                <div class="event-image-wrap placeholder-box">
-                    <p>A perfectly organized paradise ✨</p>
-                </div>
-                <div class="event-card-content">
-                    <h3>Bookshelves</h3>
-                    <p class="event-description">Spicy paperbacks, color-coded shelves, and beautiful library vibes curated by our community baddies.</p>
-                </div>
+            <article class="gallery-category-card">
+                <i class="fa-solid fa-book-open"></i>
+                <h3>Bookshelf Flexes</h3>
+                <p>
+                    Personal libraries, shelf makeovers, collections,
+                    TBR carts, and special editions.
+                </p>
             </article>
 
-            <article class="event-card gallery-card-style">
-                <div class="event-image-wrap placeholder-box">
-                    <p>Cozy reading corner coming soon ✨</p>
-                </div>
-                <div class="event-card-content">
-                    <h3>Reading Setups</h3>
-                    <p class="event-description">E-readers, ambient dim lighting, massive stacks of pillows, and the perfect hot beverage companion.</p>
-                </div>
+            <article class="gallery-category-card">
+                <i class="fa-solid fa-couch"></i>
+                <h3>Reading Setups</h3>
+                <p>
+                    Cozy corners, reading chairs, blankets, candles,
+                    tablets, mugs, and mood lighting.
+                </p>
             </article>
 
-            <article class="event-card gallery-card-style">
-                <div class="event-image-wrap placeholder-box">
-                    <p>Event group snapshot coming soon ✨</p>
-                </div>
-                <div class="event-card-content">
-                    <h3>Event Memories</h3>
-                    <p class="event-description">Memories from our live video chats, local group meetups, and midnight launch countdown parties.</p>
-                </div>
+            <article class="gallery-category-card">
+                <i class="fa-solid fa-calendar-days"></i>
+                <h3>Event Memories</h3>
+                <p>
+                    Camps, retreats, movie nights, readathons,
+                    workshops, and themed community events.
+                </p>
             </article>
 
-            <article class="event-card gallery-card-style">
-                <div class="event-image-wrap placeholder-box">
-                    <p>Baddies in the wild photo coming soon ✨</p>
-                </div>
-                <div class="event-card-content">
-                    <h3>Community Photos</h3>
-                    <p class="event-description">Shouting out faces in the crowd, group book club selfies, and bookmarks traveling around the world.</p>
-                </div>
+            <article class="gallery-category-card">
+                <i class="fa-solid fa-gift"></i>
+                <h3>Book Hauls &amp; Happy Mail</h3>
+                <p>
+                    New books, prizes, exchanges, bookmarks,
+                    subscription boxes, and member surprises.
+                </p>
             </article>
 
-            <article class="event-card gallery-card-style">
-                <div class="event-image-wrap placeholder-box">
-                    <p>Community art piece coming soon ✨</p>
-                </div>
-                <div class="event-card-content">
-                    <h3>Creative Challenge Submissions</h3>
-                    <p class="event-description">Spotlighting mood boards, aesthetic playlists, and original fan edits built for our bi-monthly games.</p>
-                </div>
-            </article>
-
-            <article class="event-card gallery-card-style">
-                <div class="event-image-wrap placeholder-box">
-                    <p>Community wrap-up graphics coming soon ✨</p>
-                </div>
-                <div class="event-card-content">
-                    <h3>Wrap-ups and Graphics</h3>
-                    <p class="event-description">Our monthly group reading summaries, review cards, and five-star community breakdown data sheets.</p>
-                </div>
+            <article class="gallery-category-card">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                <h3>Creative Submissions</h3>
+                <p>
+                    Mood boards, playlists, graphics, templates,
+                    art, collages, and challenge creations.
+                </p>
             </article>
 
         </div>
 
-        <button class="carousel-nav-btn next-btn" aria-label="Next Slide">
-            <i class="fa-solid fa-chevron-right"></i>
-        </button>
-    </div>
-</section>
+    </section>
 
-        <!-- 3. Mid-Page Call to Action Ribbon Banner -->
-        <section class="events-banner">
-            <div class="banner-content">
-                <h2>WANT YOUR COZY SETUP FEATURED?</h2>
-                <p>Drop your bookshelf flexing pictures and reading layouts into our Discord gallery room to make the wall!</p>
-            </div>
-        </section>
-    </main>
 
-    
+    <!-- ======================================================
+         PHOTO WALL
+    ======================================================= -->
+
+    <section class="photo-wall-section">
+
+        <div class="section-heading">
+            <span class="heading-decoration">✦</span>
+            <h2>The Baddie Wall</h2>
+            <span class="heading-decoration">♕</span>
+        </div>
+
+        <p class="gallery-section-intro">
+            A growing wall of bookish moments from across the community.
+        </p>
+
+        <div class="photo-wall-grid">
+
+            <figure class="photo-wall-item photo-wall-tall">
+                <img
+                    src="assets/images/gallery/wall-1.jpg"
+                    alt="Cozy reader with a book"
+                >
+            </figure>
+
+            <figure class="photo-wall-item">
+                <img
+                    src="assets/images/gallery/wall-2.jpg"
+                    alt="Reading journal spread"
+                >
+            </figure>
+
+            <figure class="photo-wall-item">
+                <img
+                    src="assets/images/gallery/wall-3.jpg"
+                    alt="Colorful bookshelf"
+                >
+            </figure>
+
+            <figure class="photo-wall-item photo-wall-wide">
+                <img
+                    src="assets/images/gallery/wall-4.jpg"
+                    alt="Community event setup"
+                >
+            </figure>
+
+            <figure class="photo-wall-item">
+                <img
+                    src="assets/images/gallery/wall-5.jpg"
+                    alt="Stack of favorite books"
+                >
+            </figure>
+
+            <figure class="photo-wall-item photo-wall-tall">
+                <img
+                    src="assets/images/gallery/wall-6.jpg"
+                    alt="Member reading setup"
+                >
+            </figure>
+
+            <figure class="photo-wall-item">
+                <img
+                    src="assets/images/gallery/wall-7.jpg"
+                    alt="Book haul and accessories"
+                >
+            </figure>
+
+            <figure class="photo-wall-item">
+                <img
+                    src="assets/images/gallery/wall-8.jpg"
+                    alt="Book-themed creative project"
+                >
+            </figure>
+
+        </div>
+
+    </section>
+
+
+    <!-- ======================================================
+         SUBMISSION STEPS
+    ======================================================= -->
+
+    <section class="gallery-submission-section gallery-section">
+
+        <div class="section-heading">
+            <span class="heading-decoration">♡</span>
+            <h2>How to Get Featured</h2>
+            <span class="heading-decoration">✧</span>
+        </div>
+
+        <div class="submission-steps-grid">
+
+            <article class="submission-step">
+                <span class="submission-number">01</span>
+                <i class="fa-solid fa-camera-retro"></i>
+
+                <h3>Capture the Moment</h3>
+
+                <p>
+                    Take a clear photo of your books, journal, setup,
+                    event experience, or creative submission.
+                </p>
+            </article>
+
+            <article class="submission-step">
+                <span class="submission-number">02</span>
+                <i class="fa-brands fa-discord"></i>
+
+                <h3>Post It in Discord</h3>
+
+                <p>
+                    Share it inside the designated community gallery
+                    or submission channel.
+                </p>
+            </article>
+
+            <article class="submission-step">
+                <span class="submission-number">03</span>
+                <i class="fa-solid fa-pen"></i>
+
+                <h3>Add a Caption</h3>
+
+                <p>
+                    Tell us what we are looking at, what you read,
+                    or what inspired your creation.
+                </p>
+            </article>
+
+            <article class="submission-step">
+                <span class="submission-number">04</span>
+                <i class="fa-solid fa-star"></i>
+
+                <h3>Watch the Wall</h3>
+
+                <p>
+                    Selected submissions may be highlighted on the
+                    website, newsletter, or social media.
+                </p>
+            </article>
+
+        </div>
+
+    </section>
+
+
+    <!-- ======================================================
+         FINAL CTA
+    ======================================================= -->
+
+    <section class="gallery-final-cta">
+
+        <span class="gallery-cta-label">
+            Show Us Your Bookish World
+        </span>
+
+        <h2>
+            Your Cozy Setup Deserves
+            <span>Its Main Character Moment.</span>
+        </h2>
+
+        <p>
+            Share your shelves, reading spaces, journal pages,
+            event memories, and creative work with the community.
+        </p>
+
+        <div class="gallery-cta-buttons">
+
+            <a
+                href="https://discord.gg/KQ6Qhhpx6z"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="btn btn-primary"
+            >
+                <i class="fa-brands fa-discord"></i>
+                Submit in Discord
+            </a>
+
+            <a href="events.html" class="btn btn-outline">
+                Explore Events
+            </a>
+
+        </div>
+
+    </section>
+
+</main>  
 
  <footer class="site-footer">
         <div class="footer-tagline">
@@ -168,6 +721,39 @@
             <p>&copy; The Baddies Bookshelf</p>
         </div>
     </footer>
+
+<script>
+    const track = document.querySelector(".carousel-track");
+    const previousButton = document.querySelector(".prev-btn");
+    const nextButton = document.querySelector(".next-btn");
+
+    function getScrollAmount() {
+        const firstCard = track.querySelector(".gallery-carousel-card");
+
+        if (!firstCard) {
+            return 370;
+        }
+
+        const trackStyles = window.getComputedStyle(track);
+        const gap = parseFloat(trackStyles.columnGap) || 22;
+
+        return firstCard.getBoundingClientRect().width + gap;
+    }
+
+    nextButton.addEventListener("click", () => {
+        track.scrollBy({
+            left: getScrollAmount(),
+            behavior: "smooth"
+        });
+    });
+
+    previousButton.addEventListener("click", () => {
+        track.scrollBy({
+            left: -getScrollAmount(),
+            behavior: "smooth"
+        });
+    });
+</script>
 
     <script>
     const track = document.querySelector('.carousel-track');
