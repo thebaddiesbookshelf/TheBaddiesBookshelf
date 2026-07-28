@@ -4,226 +4,1361 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>The Baddies Bookshelf</title>
 
+    <meta
+        name="description"
+        content="The Baddies Bookshelf is an inclusive online reading community where readers become besties, TBRs keep growing, and every genre is welcome."
+    >
+
+    <!-- Main Stylesheet -->
     <link rel="stylesheet" href="/css/styles.css">
 
-    <link rel="icon" type="image/x-icon" href="favicon.ico"> 
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+
+    <!-- Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=Great+Vibes&family=Playfair+Display:wght@500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- Font Awesome -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
 </head>
 
 <body>
-    <!-- Full-viewport particle canvas for the glitter trail -->
-<canvas id="glitter-trail-canvas"></canvas>
+
+    <!-- Glitter Cursor Effect -->
+    <canvas id="glitter-trail-canvas" aria-hidden="true"></canvas>
+
+    <!-- Decorative Page Glow -->
+    <div class="page-glow page-glow-left" aria-hidden="true"></div>
+    <div class="page-glow page-glow-right" aria-hidden="true"></div>
+
+    <!-- ======================================================
+         HEADER
+    ======================================================= -->
 
     <header class="site-header">
-        <nav class="navbar">
+        <nav class="navbar" aria-label="Main navigation">
+
             <div class="nav-left">
-                <a href="home.html" class="logo">
-                    <img src="assets/images/tbb-logo.png" alt="The Baddies Bookshelf Logo">
+                <a href="home.html" class="logo" aria-label="The Baddies Bookshelf home">
+                    <img
+                        src="assets/images/tbb-logo.png"
+                        alt="The Baddies Bookshelf Logo"
+                    >
                 </a>
             </div>
 
-            <ul class="nav-links">
-                <li><a href="home.html" class="active">Home</a></li>
-                <li><a href="about.html">About Us</a></li>
-                <li><a href="events.html">Events</a></li>
-                <li><a href="library.html">The Baddies Bookshelf</a></li>
-                <li><a href="readingchallenges.html">Reading Challenges</a></li>
-                <li><a href="communitygallery.html">Community Gallery</a></li>
-                <li><a href="joinus.html">Join Us</a></li>
+            <button
+                class="mobile-menu-btn"
+                type="button"
+                aria-label="Open navigation menu"
+                aria-expanded="false"
+                aria-controls="primary-navigation"
+            >
+                <i class="fa-solid fa-bars"></i>
+            </button>
+
+            <ul class="nav-links" id="primary-navigation">
+                <li>
+                    <a href="home.html" class="active">Home</a>
+                </li>
+
+                <li>
+                    <a href="about.html">About Us</a>
+                </li>
+
+                <li>
+                    <a href="events.html">Events</a>
+                </li>
+
+                <li>
+                    <a href="library.html">The Baddies Bookshelf</a>
+                </li>
+
+                <li>
+                    <a href="readingchallenges.html">Reading Challenges</a>
+                </li>
+
+                <li>
+                    <a href="communitygallery.html">Community Gallery</a>
+                </li>
+
+                <li>
+                    <a href="joinus.html">Join Us</a>
+                </li>
             </ul>
 
-            <a href="https://the-baddies-newsletter.beehiiv.com/?_gl=1*piy6ar*_gcl_aw*R0NMLjE3ODE4MjgwNTAuQ2owS0NRandyczdSQmhEdUFSSXNBSVZmQkQySHE4dmtrZmc2WUpHUEFzRW1JWmpiNk1YXzNQVUhrNm5VRWV1aUwzb1d3NTlLUXMtUHByZ2FBbXJHRUFMd193Y0I.*_gcl_au*MTQxNDY5MTA0Mi4xNzgxODI3OTUyLjEwNDgyMDEtext..." target="_blank">
-                <button class="subscribe-btn">Subscribe</button>
+            <a
+                href="https://discord.gg/KQ6Qhhpx6z"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="nav-discord-btn"
+            >
+                <i class="fa-brands fa-discord"></i>
+                <span>Join Discord</span>
             </a>
+
         </nav>
     </header>
 
     <main>
+
+        <!-- ======================================================
+             HERO
+        ======================================================= -->
+
         <section class="hero">
-            <h1>Reading Makes You a Baddie</h1>
-            <p>Not what you read. Not how you read. Just own it.</p>
+
+            <div class="hero-background" aria-hidden="true">
+                <div class="hero-grid"></div>
+                <span class="hero-sparkle sparkle-one">✦</span>
+                <span class="hero-sparkle sparkle-two">✧</span>
+                <span class="hero-sparkle sparkle-three">✦</span>
+                <span class="hero-heart heart-one">♡</span>
+                <span class="hero-heart heart-two">♡</span>
+            </div>
+
+            <!-- Left Hero Character / Image -->
+            <div class="hero-character hero-character-left">
+                <img
+                    src="assets/images/TBBBaddies/RomiRomance.png"
+                    alt="Stylish reader holding a romance book"
+                >
+            </div>
+
+            <!-- Main Hero Content -->
+            <div class="hero-content">
+
+                <div class="hero-eyebrow">
+                    <span>✦</span>
+                    Welcome to
+                    <span>✦</span>
+                </div>
+
+                <h1>
+                    <span class="hero-script">The Baddies</span>
+                    <span class="hero-block">Bookshelf</span>
+                </h1>
+
+                <p class="hero-description">
+                    Where readers become besties, TBRs never stop growing,
+                    and every book feels like home.
+                </p>
+
+                <div class="hero-divider" aria-hidden="true">
+                    <span></span>
+                    <i class="fa-regular fa-heart"></i>
+                    <span></span>
+                </div>
+
+                <div class="hero-buttons">
+
+                    <a
+                        href="https://discord.gg/KQ6Qhhpx6z"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="btn btn-primary"
+                    >
+                        <i class="fa-brands fa-discord"></i>
+                        Join Discord
+                    </a>
+
+                    <a
+                        href="https://the-baddies-newsletter.beehiiv.com/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="btn btn-outline"
+                    >
+                        <i class="fa-regular fa-envelope"></i>
+                        Join The Bulletin
+                    </a>
+
+                </div>
+            </div>
+
+            <!-- Right Hero Character / Image -->
+            <div class="hero-character hero-character-right">
+                <img
+                    src="assets/images/TBBBaddies/NovaFantasy.png"
+                    alt="Stylish reader wearing pink and reading a book"
+                >
+            </div>
+
+            <!-- Hero Decorative Items -->
+            <div class="hero-book-stack hero-books-left" aria-hidden="true">
+                <span>Thriller Babe</span>
+                <span>Dark Romance</span>
+                <span>Fantasy Girlie</span>
+                <span>Pages &amp; Coffee</span>
+            </div>
+
+            <div class="hero-book-stack hero-books-right" aria-hidden="true">
+                <span>TBR</span>
+                <span>Coffee</span>
+                <span>Late Nights</span>
+            </div>
+
         </section>
+
+        <!-- ======================================================
+             COMMUNITY STATS
+        ======================================================= -->
+
+        <section class="community-stats" aria-label="Community statistics">
+
+            <div class="stat-card">
+                <i class="fa-solid fa-users"></i>
+
+                <div>
+                    <strong>1,650+</strong>
+                    <span>Baddie Readers</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <i class="fa-solid fa-book-open"></i>
+
+                <div>
+                    <strong>2M+</strong>
+                    <span>Pages Read</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <i class="fa-regular fa-calendar-star"></i>
+
+                <div>
+                    <strong>100+</strong>
+                    <span>Community Events</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <i class="fa-regular fa-comments"></i>
+
+                <div>
+                    <strong>Daily</strong>
+                    <span>Book Discussions</span>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ======================================================
+             WELCOME INTRO
+        ======================================================= -->
 
         <section class="intro-section">
+
+            <div class="section-kicker">
+                <span>Our Community</span>
+            </div>
+
             <div class="intro-content">
-                <h2>Welcome to The Baddies Bookshelf</h2>
-                <p>You don't have to justify your bookshelf here.</p>
-                <p>You don't have to defend your genre.</p>
-                <p>You don't have to earn your place.</p>
-                <h4><strong>You already belong.</strong></h4>
-                
-                <div class="community-desc">
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. The Baddies Bookshelf is a vibrant, inclusive community dedicated to celebrating readers of all kinds, shattering literary snobbery, and owning your taste proudly.</p>
+
+                <div class="intro-heading">
+                    <span class="mini-crown">♕</span>
+
+                    <h2>
+                        Reading Makes You
+                        <span>A Baddie</span>
+                    </h2>
                 </div>
+
+                <p class="intro-lead">
+                    Not what you read. Not how you read. Just own it.
+                </p>
+
+                <div class="intro-statements">
+                    <p>You do not have to justify your bookshelf here.</p>
+                    <p>You do not have to defend your favorite genre.</p>
+                    <p>You do not have to earn your place.</p>
+
+                    <strong>You already belong.</strong>
+                </div>
+
+                <p class="community-description">
+                    The Baddies Bookshelf is a diverse and inclusive reading
+                    community built for readers who love books without judgment,
+                    pressure, or literary snobbery. Come for the books, stay for
+                    the friendships, challenges, movie nights, events, and pure
+                    baddie chaos.
+                </p>
+
             </div>
+
         </section>
 
-        <section class="dashboard-section">
-            <div class="dashboard-row">
-                <div class="dashboard-col">
-                    <div class="section-heading">
-                        <h2>✧ Current Monthly Theme ✧</h2>
-                    </div>
-                    <div class="theme-card">
-                        <h3>[Insert Theme Title Here]</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. This month, we are diving deep into themes that challenge us, excite us, and make us proud to be readers. Stay tuned for our community reads and discussions!</p>
-                    </div>
+        <!-- ======================================================
+             CURRENTLY READING
+        ======================================================= -->
+
+        <section class="content-section currently-reading-section">
+
+            <div class="section-heading">
+                <span class="heading-decoration">✦</span>
+                <h2>Currently Reading Together</h2>
+                <span class="heading-decoration">♕</span>
+            </div>
+
+            <div class="reading-slider">
+
+                <button
+                    class="slider-btn slider-prev"
+                    type="button"
+                    aria-label="View previous books"
+                >
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
+
+                <div class="reading-grid">
+
+                    <!-- Current Book -->
+                    <article class="book-feature-card">
+
+                        <div class="book-cover-wrap">
+                            <img
+                                src="assets/bookcovers/TillSummerDoUsPart.jpg"
+                                alt="Till Summer Do Us Part by Meghan Quinn"
+                            >
+                        </div>
+
+                        <div class="book-feature-content">
+                            <span class="card-label">Current Community Read</span>
+
+                            <h3>Till Summer Do Us Part</h3>
+
+                            <p class="book-author">by Meghan Quinn</p>
+
+                            <div class="book-rating" aria-label="Five star rating">
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                            </div>
+
+                            <a href="library.html" class="card-btn">
+                                Join Discussion
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                        </div>
+
+                    </article>
+
+                    <!-- Upcoming BOTM -->
+                    <article class="book-feature-card">
+
+                        <div class="book-cover-wrap">
+                            <img
+                                src="assets/bookcovers/KingofGluttony.jpg"
+                                alt="King of Gluttony by Ana Huang"
+                            >
+                        </div>
+
+                        <div class="book-feature-content">
+                            <span class="card-label">Upcoming BOTM</span>
+
+                            <h3>King of Gluttony</h3>
+
+                            <p class="book-author">by Ana Huang</p>
+
+                            <div class="book-rating" aria-label="Five star rating">
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-regular fa-star"></i>
+                            </div>
+
+                            <a href="library.html" class="card-btn">
+                                View Details
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                        </div>
+
+                    </article>
+
+                    <!-- Readathon -->
+                    <article class="book-feature-card event-feature-mini">
+
+                        <div class="mini-event-art">
+                            <i class="fa-solid fa-book-open-reader"></i>
+                            <span class="mini-event-sparkle">✦</span>
+                        </div>
+
+                        <div class="book-feature-content">
+                            <span class="card-label">Next Readathon</span>
+
+                            <h3>Back to Book Academy</h3>
+
+                            <p class="event-mini-date">
+                                August 15th – August 18th
+                            </p>
+
+                            <a href="events.html" class="card-btn">
+                                See Event
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                        </div>
+
+                    </article>
+
+                    <!-- Community Favorite -->
+                    <article class="book-feature-card">
+
+                        <div class="book-cover-wrap">
+                            <img
+                                src="assets/bookcovers/FourthWing.jpg"
+                                alt="Fourth Wing by Rebecca Yarros"
+                            >
+                        </div>
+
+                        <div class="book-feature-content">
+                            <span class="card-label">Community Favorite</span>
+
+                            <h3>Fourth Wing</h3>
+
+                            <p class="book-author">by Rebecca Yarros</p>
+
+                            <div class="book-rating" aria-label="Five star rating">
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                            </div>
+
+                            <a href="library.html" class="card-btn">
+                                See Why We Love It
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                        </div>
+
+                    </article>
+
                 </div>
 
-                <div class="dashboard-col">
-                    <div class="section-heading">
-                        <h2>✧ Upcoming Events ✧</h2>
-                    </div>
-                    <div class="event-card">
-                        <span class="event-date">October 24, 2026</span>
-                        <h3>Baddies Book Club Night</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Join us for our live monthly hangout where we chat about our latest reads, share hot takes, and connect with fellow baddies.</p>
-                        <a href="events.html" class="btn-secondary">View All Events</a>
-                    </div>
-                </div>
+                <button
+                    class="slider-btn slider-next"
+                    type="button"
+                    aria-label="View more books"
+                >
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+
             </div>
+
         </section>
 
-        <section class="discord-invite-section">
-            <div class="discord-invite-content">
-                <h2>Connect with the Community</h2>
-                <p>Want to chat in real-time, share your current reads, and find your next book bestie?</p>
-                <a href="https://discord.gg/KQ6Qhhpx6z" target="_blank" class="discord-btn">
-                    <i class="fa-brands fa-discord btn-icon-fa"></i> Join Our Discord
+        <!-- ======================================================
+             UPCOMING EVENTS
+        ======================================================= -->
+
+        <section class="content-section events-preview-section">
+
+            <div class="section-heading">
+                <span class="heading-decoration">✧</span>
+                <h2>Upcoming &amp; Featured Events</h2>
+                <span class="heading-decoration">♡</span>
+            </div>
+
+            <div class="events-grid">
+
+                <!-- Summer Camp -->
+                <article class="event-preview-card event-image-card">
+
+                    <div class="event-card-image">
+                        <img
+                            src="assets/images/virtual-summer-camp.jpg"
+                            alt="Virtual Summer Camp beside a glowing campfire"
+                        >
+
+                        <span class="event-image-overlay"></span>
+                    </div>
+
+                    <div class="event-card-content">
+                        <span class="event-type">Featured Event</span>
+
+                        <h3>Virtual Summer Camp</h3>
+
+                        <p class="event-date">
+                            July 20th – July 27th
+                        </p>
+
+                        <p>
+                            Games, reading sprints, workshops, movie nights,
+                            friendship activities, and more.
+                        </p>
+
+                        <a href="events.html" class="card-btn">
+                            Join the Fun
+                        </a>
+                    </div>
+
+                </article>
+
+                <!-- Monthly Crown -->
+                <article class="event-preview-card icon-event-card">
+
+                    <div class="event-icon">
+                        <i class="fa-solid fa-crown"></i>
+                    </div>
+
+                    <div class="event-card-content">
+                        <span class="event-type">Monthly Competition</span>
+
+                        <h3>Monthly Crown</h3>
+
+                        <p class="event-date">
+                            August 1st – August 30th
+                        </p>
+
+                        <p>
+                            Compete with your team, earn points, complete
+                            challenges, and get crowned.
+                        </p>
+
+                        <a href="readingchallenges.html" class="card-btn">
+                            Sign Up
+                        </a>
+                    </div>
+
+                </article>
+
+                <!-- Movie Night -->
+                <article class="event-preview-card icon-event-card">
+
+                    <div class="event-icon">
+                        <i class="fa-solid fa-clapperboard"></i>
+                    </div>
+
+                    <div class="event-card-content">
+                        <span class="event-type">Weekly Community Event</span>
+
+                        <h3>Baddie Movie Night</h3>
+
+                        <p class="event-date">Selected Fridays</p>
+
+                        <p>
+                            Pull up with your snacks for movies, live chats,
+                            reactions, and plenty of side commentary.
+                        </p>
+
+                        <a href="events.html" class="card-btn">
+                            Save Your Seat
+                        </a>
+                    </div>
+
+                </article>
+
+                <!-- Book Bestie Match -->
+                <article class="event-preview-card icon-event-card">
+
+                    <div class="event-icon broken-heart-icon">
+                        <i class="fa-solid fa-heart-circle-bolt"></i>
+                    </div>
+
+                    <div class="event-card-content">
+                        <span class="event-type">Community Connection</span>
+
+                        <h3>Book Bestie Match</h3>
+
+                        <p class="event-date">Find Your People</p>
+
+                        <p>
+                            Connect with readers who share your favorite genres,
+                            tropes, authors, and reading habits.
+                        </p>
+
+                        <a href="joinus.html" class="card-btn">
+                            Find Your Match
+                        </a>
+                    </div>
+
+                </article>
+
+            </div>
+
+            <div class="section-cta">
+                <a href="events.html" class="btn btn-outline">
+                    View All Events
+                    <i class="fa-solid fa-arrow-right"></i>
                 </a>
             </div>
+
         </section>
 
-        <section class="gallery-section">
+        <!-- ======================================================
+             WHY READERS LOVE TBB
+        ======================================================= -->
+
+        <section class="content-section benefits-section">
+
             <div class="section-heading">
-                <h2>Baddies in the Community ✧</h2>
+                <span class="heading-decoration">♡</span>
+                <h2>Why Readers Love TBB</h2>
+                <span class="heading-decoration">✧</span>
             </div>
-            <div class="gallery-container">
-                <p class="gallery-intro-text">Moments from our events, bookshelf flexes, and favorite reads.</p>
-                <div class="gallery-grid">
-                    <div class="gallery-item"><img src="gallery1.jpg" alt="Lorem ipsum dolor sit"></div>
-                    <div class="gallery-item"><img src="gallery2.jpg" alt="Lorem ipsum dolor sit"></div>
-                    <div class="gallery-item"><img src="gallery3.jpg" alt="Lorem ipsum dolor sit"></div>
-                    <div class="gallery-item"><img src="gallery4.jpg" alt="Lorem ipsum dolor sit"></div>
-                </div>
+
+            <div class="benefits-grid">
+
+                <article class="benefit-item">
+                    <i class="fa-regular fa-comments"></i>
+
+                    <div>
+                        <h3>Find Your Reading Bestie</h3>
+
+                        <p>
+                            Meet people who understand your reading habits,
+                            favorite tropes, and fictional obsessions.
+                        </p>
+                    </div>
+                </article>
+
+                <article class="benefit-item">
+                    <i class="fa-solid fa-book-heart"></i>
+
+                    <div>
+                        <h3>Get Out of Reading Slumps</h3>
+
+                        <p>
+                            Challenges, themed months, buddy reads, and community
+                            accountability help keep you motivated.
+                        </p>
+                    </div>
+                </article>
+
+                <article class="benefit-item">
+                    <i class="fa-solid fa-mug-hot"></i>
+
+                    <div>
+                        <h3>Events That Hit Different</h3>
+
+                        <p>
+                            From camps and retreats to readathons and movie
+                            nights, there is always something happening.
+                        </p>
+                    </div>
+                </article>
+
+                <article class="benefit-item">
+                    <i class="fa-solid fa-gift"></i>
+
+                    <div>
+                        <h3>Goodies &amp; Giveaways</h3>
+
+                        <p>
+                            Members can participate in prizes, exchanges,
+                            giveaways, and surprise community treats.
+                        </p>
+                    </div>
+                </article>
+
+                <article class="benefit-item">
+                    <i class="fa-solid fa-headphones"></i>
+
+                    <div>
+                        <h3>A Judgment-Free Zone</h3>
+
+                        <p>
+                            Read what you love, share your opinion, and enjoy
+                            books without literary snobbery.
+                        </p>
+                    </div>
+                </article>
+
             </div>
+
         </section>
+
+        <!-- ======================================================
+             READING VIBES
+        ======================================================= -->
+
+        <section class="content-section reading-vibes-section">
+
+            <div class="section-heading">
+                <span class="heading-decoration">✧</span>
+                <h2>Choose Your Reading Vibe</h2>
+                <span class="heading-decoration">✧</span>
+            </div>
+
+            <div class="vibes-grid">
+
+                <a href="library.html?genre=romance" class="vibe-card">
+                    <div class="vibe-icon">
+                        <i class="fa-solid fa-heart"></i>
+                    </div>
+
+                    <span>Romance Reader</span>
+                </a>
+
+                <a href="library.html?genre=fantasy" class="vibe-card">
+                    <div class="vibe-icon">
+                        <i class="fa-solid fa-dragon"></i>
+                    </div>
+
+                    <span>Fantasy Girlie</span>
+                </a>
+
+                <a href="library.html?genre=dark-romance" class="vibe-card">
+                    <div class="vibe-icon">
+                        <i class="fa-solid fa-heart-crack"></i>
+                    </div>
+
+                    <span>Dark Romance</span>
+                </a>
+
+                <a href="library.html?genre=cozy" class="vibe-card">
+                    <div class="vibe-icon">
+                        <i class="fa-solid fa-couch"></i>
+                    </div>
+
+                    <span>Cozy Reader</span>
+                </a>
+
+                <a href="library.html?genre=romantasy" class="vibe-card">
+                    <div class="vibe-icon">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    </div>
+
+                    <span>Romantasy Lover</span>
+                </a>
+
+                <a href="library.html?genre=thriller" class="vibe-card">
+                    <div class="vibe-icon">
+                        <i class="fa-solid fa-knife"></i>
+                    </div>
+
+                    <span>Thriller Baddie</span>
+                </a>
+
+                <a href="library.html?genre=classic" class="vibe-card">
+                    <div class="vibe-icon">
+                        <i class="fa-solid fa-feather-pointed"></i>
+                    </div>
+
+                    <span>Classic Girlie</span>
+                </a>
+
+                <a href="library.html" class="vibe-card">
+                    <div class="vibe-icon">
+                        <i class="fa-solid fa-books"></i>
+                    </div>
+
+                    <span>All the Genres</span>
+                </a>
+
+            </div>
+
+        </section>
+
+        <!-- ======================================================
+             MONTHLY THEME
+        ======================================================= -->
+
+        <section class="content-section monthly-theme-section">
+
+            <div class="monthly-theme-card">
+
+                <div class="monthly-theme-decoration theme-decoration-left" aria-hidden="true">
+                    <i class="fa-solid fa-book"></i>
+                    <i class="fa-solid fa-pencil"></i>
+                    <i class="fa-solid fa-paperclip"></i>
+                </div>
+
+                <div class="monthly-theme-content">
+
+                    <span class="theme-month">August</span>
+
+                    <span class="theme-label">Current Monthly Theme</span>
+
+                    <h2>Back to Book Academy</h2>
+
+                    <p>
+                        Class is officially in session. Join us for bookish
+                        assignments, reading challenges, student introductions,
+                        themed games, buddy reads, and plenty of extra credit.
+                    </p>
+
+                    <a href="events.html" class="btn btn-primary">
+                        Explore This Month
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+
+                </div>
+
+                <div class="monthly-theme-decoration theme-decoration-right" aria-hidden="true">
+                    <i class="fa-solid fa-bow"></i>
+                    <i class="fa-solid fa-book-open"></i>
+                    <i class="fa-solid fa-mug-hot"></i>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- ======================================================
+             CHALLENGES + SHELF GOALS
+        ======================================================= -->
+
+        <section class="content-section challenge-shelf-section">
+
+            <div class="split-section">
+
+                <!-- Challenges -->
+                <div class="split-panel challenge-panel">
+
+                    <div class="panel-heading">
+                        <h2>Reading Challenges</h2>
+                        <span>✧</span>
+                    </div>
+
+                    <div class="challenge-grid">
+
+                        <a href="readingchallenges.html" class="challenge-badge">
+                            <div class="challenge-icon">
+                                <i class="fa-solid fa-umbrella-beach"></i>
+                            </div>
+
+                            <span>Summer Reader</span>
+                        </a>
+
+                        <a href="readingchallenges.html" class="challenge-badge">
+                            <div class="challenge-icon">
+                                <i class="fa-solid fa-crown"></i>
+                            </div>
+
+                            <span>Monthly Crown</span>
+                        </a>
+
+                        <a href="readingchallenges.html" class="challenge-badge">
+                            <div class="challenge-icon">
+                                <i class="fa-solid fa-pineapple"></i>
+                            </div>
+
+                            <span>Tropical Escape</span>
+                        </a>
+
+                        <a href="readingchallenges.html" class="challenge-badge">
+                            <div class="challenge-icon">
+                                <i class="fa-solid fa-pumpkin"></i>
+                            </div>
+
+                            <span>Autumn Academy</span>
+                        </a>
+
+                        <a href="readingchallenges.html" class="challenge-badge">
+                            <div class="challenge-icon">
+                                <i class="fa-solid fa-ghost"></i>
+                            </div>
+
+                            <span>Spooky SZN</span>
+                        </a>
+
+                        <a href="readingchallenges.html" class="challenge-badge">
+                            <div class="challenge-icon">
+                                <i class="fa-regular fa-snowflake"></i>
+                            </div>
+
+                            <span>Winter Retreat</span>
+                        </a>
+
+                        <a href="readingchallenges.html" class="challenge-badge">
+                            <div class="challenge-icon">
+                                <i class="fa-solid fa-wand-sparkles"></i>
+                            </div>
+
+                            <span>New Year TBR</span>
+                        </a>
+
+                    </div>
+
+                    <a href="readingchallenges.html" class="card-btn panel-btn">
+                        View All Challenges
+                    </a>
+
+                </div>
+
+                <!-- Shelf Goals -->
+                <div class="split-panel shelf-panel">
+
+                    <div class="panel-heading">
+                        <h2>Shelf Goals</h2>
+                        <span>✧</span>
+                    </div>
+
+                    <div class="book-shelf">
+
+                        <a href="library.html" class="shelf-book">
+                            <img
+                                src="assets/bookcovers/Powerless.jpg"
+                                alt="Powerless by Lauren Roberts"
+                            >
+                        </a>
+
+                        <a href="library.html" class="shelf-book">
+                            <img
+                                src="assets/bookcovers/Reckless.jpg"
+                                alt="Reckless by Elsie Silver"
+                            >
+                        </a>
+
+                        <a href="library.html" class="shelf-book">
+                            <img
+                                src="assets/bookcovers/LoveUnwritten.jpg"
+                                alt="Love Unwritten by Lauren Asher"
+                            >
+                        </a>
+
+                        <a href="library.html" class="shelf-book">
+                            <img
+                                src="assets/bookcovers/TheCruelPrince.jpg"
+                                alt="The Cruel Prince by Holly Black"
+                            >
+                        </a>
+
+                        <span class="shelf-line" aria-hidden="true"></span>
+
+                    </div>
+
+                    <a href="library.html" class="card-btn panel-btn">
+                        Browse All Books
+                    </a>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- ======================================================
+             COMMUNITY GALLERY
+        ======================================================= -->
+
+        <section class="content-section gallery-section">
+
+            <div class="section-heading">
+                <span class="heading-decoration">✦</span>
+                <h2>Baddies in the Community</h2>
+                <span class="heading-decoration">♡</span>
+            </div>
+
+            <p class="gallery-intro-text">
+                Book hauls, community events, bookshelf flexes, themed
+                activities, and memories made with our favorite readers.
+            </p>
+
+            <div class="gallery-grid">
+
+                <a
+                    href="communitygallery.html"
+                    class="gallery-item gallery-item-large"
+                >
+                    <img
+                        src="assets/images/gallery1.jpg"
+                        alt="Baddies Bookshelf community event"
+                    >
+
+                    <span class="gallery-overlay">
+                        <strong>Community Events</strong>
+                        <small>View Gallery</small>
+                    </span>
+                </a>
+
+                <a href="communitygallery.html" class="gallery-item">
+                    <img
+                        src="assets/images/gallery2.jpg"
+                        alt="Reader sharing a favorite book"
+                    >
+
+                    <span class="gallery-overlay">
+                        <strong>Current Reads</strong>
+                    </span>
+                </a>
+
+                <a href="communitygallery.html" class="gallery-item">
+                    <img
+                        src="assets/images/gallery3.jpg"
+                        alt="Bookish challenge activity"
+                    >
+
+                    <span class="gallery-overlay">
+                        <strong>Challenges</strong>
+                    </span>
+                </a>
+
+                <a href="communitygallery.html" class="gallery-item">
+                    <img
+                        src="assets/images/gallery4.jpg"
+                        alt="Decorated community bookshelf"
+                    >
+
+                    <span class="gallery-overlay">
+                        <strong>Shelf Flexes</strong>
+                    </span>
+                </a>
+
+            </div>
+
+        </section>
+
+        <!-- ======================================================
+             DISCORD CTA
+        ======================================================= -->
+
+        <section class="discord-invite-section">
+
+            <div class="discord-decoration discord-decoration-left" aria-hidden="true">
+                <i class="fa-solid fa-crown"></i>
+                <i class="fa-regular fa-heart"></i>
+            </div>
+
+            <div class="discord-invite-content">
+
+                <span class="discord-kicker">The Group Chat Is Waiting</span>
+
+                <h2>Ready to Meet Your Book Besties?</h2>
+
+                <p>
+                    Chat in real time, share your current reads, join challenges,
+                    attend events, and connect with baddies who understand your
+                    fictional attachments.
+                </p>
+
+                <a
+                    href="https://discord.gg/KQ6Qhhpx6z"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="discord-btn"
+                >
+                    <i class="fa-brands fa-discord"></i>
+                    Join Our Discord
+                </a>
+
+            </div>
+
+            <div class="discord-decoration discord-decoration-right" aria-hidden="true">
+                <i class="fa-solid fa-book-open"></i>
+                <i class="fa-solid fa-sparkles"></i>
+            </div>
+
+        </section>
+
     </main>
 
+    <!-- ======================================================
+         FOOTER
+    ======================================================= -->
+
     <footer class="site-footer">
-        <div class="footer-tagline">
-            <h2>A Community. A Culture. A Movement.</h2>
-        </div>
 
         <div class="footer-top">
-            <div class="footer-socials">
-                <a href="https://www.instagram.com/thebaddiesbookshelf/" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-                <a href="https://www.tiktok.com/@thebaddiesbookshelf/" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+
+            <!-- Footer Message -->
+            <div class="footer-column footer-message">
+
+                <div class="footer-decorative-books" aria-hidden="true">
+                    <i class="fa-solid fa-books"></i>
+                </div>
+
+                <h2>Stay awhile, baddie.</h2>
+
+                <p>
+                    Grab your favorite blanket, brew something cozy, and let us
+                    read together.
+                </p>
+
             </div>
 
-            <div class="footer-newsletter">
-                <p>Join The Baddie Bulletin</p>
-                <a href="https://the-baddies-newsletter.beehiiv.com/?_gl=1*piy6ar*_gcl_aw*R0NMLjE3ODE4MjgwNTAuQ2owS0NRandyczdSQmhEdUFSSXNBSVZmQkQySHE4dmtrZmc2WUpHUEFzRW1JWmpiNk1YXzNQVUhrNm5VRWV1aUwzb1d3NTlLUXMtUHByZ2FBbXJHRUFMd193Y0I.*_gcl_au*MTQxNDY5MTA0Mi4xNzgxODI3OTUyLjEwNDgyMDE3OC4xNzgxODI4MTE0LjE3ODE4MjgyMDY.*_ga*MTU2NTM0OTI1Ni4xNzgxODI3OTUy*_ga_E6Y4WLQ2EC*czE3ODE4Mjc5NTEkbzEkZzEkdDE3ODE4MjgyMDYkajMkbDEkaDEyNTI2MzI3Ng" class="footer-subscribe-btn">Subscribe</a>
+            <!-- Newsletter -->
+            <div class="footer-column footer-newsletter">
+
+                <h3>Join The Baddie Bulletin</h3>
+
+                <p>
+                    Get updates on events, giveaways, monthly reads, new
+                    releases, and community news.
+                </p>
+
+                <form
+                    class="newsletter-form"
+                    action="https://the-baddies-newsletter.beehiiv.com/"
+                    method="get"
+                    target="_blank"
+                >
+                    <label for="newsletter-email" class="sr-only">
+                        Email address
+                    </label>
+
+                    <input
+                        type="email"
+                        id="newsletter-email"
+                        name="email"
+                        placeholder="Your email address"
+                        required
+                    >
+
+                    <button type="submit">
+                        Subscribe
+                    </button>
+                </form>
+
             </div>
 
-            <div class="footer-contact">
-                <a href="mailto:hello@baddiesbookshelf.com">hello@baddiesbookshelf.com</a>
+            <!-- Socials -->
+            <div class="footer-column footer-social-column">
+
+                <h3>Let’s Be Friends</h3>
+
+                <div class="footer-socials">
+
+                    <a
+                        href="https://www.instagram.com/thebaddiesbookshelf/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="Instagram"
+                    >
+                        <i class="fa-brands fa-instagram"></i>
+                    </a>
+
+                    <a
+                        href="https://www.tiktok.com/@thebaddiesbookshelf/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="TikTok"
+                    >
+                        <i class="fa-brands fa-tiktok"></i>
+                    </a>
+
+                    <a
+                        href="#"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="YouTube"
+                    >
+                        <i class="fa-brands fa-youtube"></i>
+                    </a>
+
+                    <a
+                        href="https://discord.gg/KQ6Qhhpx6z"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="Discord"
+                    >
+                        <i class="fa-brands fa-discord"></i>
+                    </a>
+
+                    <a
+                        href="mailto:hello@baddiesbookshelf.com"
+                        aria-label="Email"
+                    >
+                        <i class="fa-regular fa-envelope"></i>
+                    </a>
+
+                </div>
+
+                <a
+                    href="mailto:hello@baddiesbookshelf.com"
+                    class="footer-email"
+                >
+                    hello@baddiesbookshelf.com
+                </a>
+
             </div>
+
         </div>
 
         <div class="footer-bottom">
-            <p>&copy; The Baddies Bookshelf</p>
+
+            <p>
+                &copy; <span id="current-year"></span>
+                The Baddies Bookshelf. All rights reserved.
+            </p>
+
+            <span class="footer-divider">|</span>
+
+            <p>
+                Made with
+                <i class="fa-regular fa-heart"></i>
+                for readers, by readers.
+            </p>
+
         </div>
+
     </footer>
 
+    <!-- ======================================================
+         JAVASCRIPT
+    ======================================================= -->
+
     <script>
-    const canvas = document.getElementById('glitter-trail-canvas');
-    const ctx = canvas.getContext('2d');
+        /* ------------------------------------------------------
+           MOBILE NAVIGATION
+        ------------------------------------------------------- */
 
-    let particles = [];
-    let mouse = { x: -100, y: -100 };
+        const mobileMenuButton = document.querySelector(".mobile-menu-btn");
+        const navLinks = document.querySelector(".nav-links");
 
-    // Automatically stretch the canvas layout to match your viewport size perfectly
-    function resizeCanvas() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-    }
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
+        if (mobileMenuButton && navLinks) {
+            mobileMenuButton.addEventListener("click", () => {
+                const menuIsOpen = navLinks.classList.toggle("nav-open");
 
-    // Tracking script updates mouse positions
-    window.addEventListener('mousemove', (e) => {
-        mouse.x = e.clientX;
-        mouse.y = e.clientY;
-        
-        // Generate a cluster of pink and gold glitter dust specifications per move
-        for (let i = 0; i < 3; i++) {
-            particles.push(new GlitterParticle(mouse.x, mouse.y));
-        }
-    });
+                mobileMenuButton.setAttribute(
+                    "aria-expanded",
+                    String(menuIsOpen)
+                );
 
-    // Glitter Particle Blueprint Object
-    class GlitterParticle {
-        constructor(x, y) {
-            this.x = x;
-            this.y = y;
-            
-            // Random small sizes for high-end micro-glitter look
-            this.size = Math.random() * 3 + 1.5; 
-            
-            // Speed and floating directional drift vectors
-            this.speedX = (Math.random() - 0.5) * 2;
-            this.speedY = Math.random() * 1.5 + 0.5; // Glides smoothly down
-            
-            // Alternates colors between Bratzy Neon Pink and Bright Luxury Gold
-            const colors = ['#ff1493', '#ff69b4', '#ffd700', '#ffea70', '#ffffff'];
-            this.color = colors[Math.floor(Math.random() * colors.length)];
-            
-            // Lifespan fade alpha tracking
-            this.alpha = 1;
-            this.decay = Math.random() * 0.02 + 0.015;
+                const menuIcon = mobileMenuButton.querySelector("i");
+
+                if (menuIcon) {
+                    menuIcon.classList.toggle("fa-bars", !menuIsOpen);
+                    menuIcon.classList.toggle("fa-xmark", menuIsOpen);
+                }
+            });
         }
 
-        update() {
-            this.x += this.speedX;
-            this.y += this.speedY;
-            this.alpha -= this.decay;
+        /* ------------------------------------------------------
+           FOOTER YEAR
+        ------------------------------------------------------- */
+
+        const currentYear = document.getElementById("current-year");
+
+        if (currentYear) {
+            currentYear.textContent = new Date().getFullYear();
         }
 
-        draw() {
-            ctx.save();
-            ctx.globalAlpha = this.alpha;
-            ctx.fillStyle = this.color;
-            ctx.beginPath();
-            
-            // Renders clean circular micro-shimmers instead of characters
-            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.restore();
-        }
-    }
+        /* ------------------------------------------------------
+           GLITTER CURSOR
+        ------------------------------------------------------- */
 
-    // Continuously running animation frame cycle loop
-    function animate() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        
-        for (let i = 0; i < particles.length; i++) {
-            particles[i].update();
-            particles[i].draw();
-            
-            // Remove dead elements to save system memory
-            if (particles[i].alpha <= 0) {
-                particles.splice(i, 1);
-                i--;
+        const canvas = document.getElementById("glitter-trail-canvas");
+        const ctx = canvas.getContext("2d");
+
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener("resize", resizeCanvas);
+        resizeCanvas();
+
+        window.addEventListener("mousemove", (event) => {
+            for (let i = 0; i < 3; i++) {
+                particles.push(
+                    new GlitterParticle(event.clientX, event.clientY)
+                );
+            }
+        });
+
+        class GlitterParticle {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+
+                this.size = Math.random() * 3 + 1.5;
+
+                this.speedX = (Math.random() - 0.5) * 2;
+                this.speedY = Math.random() * 1.5 + 0.5;
+
+                const colors = [
+                    "#ff1493",
+                    "#ff4fb3",
+                    "#ff8bd5",
+                    "#ffffff",
+                    "#d96cff"
+                ];
+
+                this.color =
+                    colors[Math.floor(Math.random() * colors.length)];
+
+                this.alpha = 1;
+                this.decay = Math.random() * 0.02 + 0.015;
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                this.alpha -= this.decay;
+            }
+
+            draw() {
+                ctx.save();
+
+                ctx.globalAlpha = this.alpha;
+                ctx.fillStyle = this.color;
+                ctx.shadowColor = this.color;
+                ctx.shadowBlur = 8;
+
+                ctx.beginPath();
+                ctx.arc(
+                    this.x,
+                    this.y,
+                    this.size,
+                    0,
+                    Math.PI * 2
+                );
+                ctx.fill();
+
+                ctx.restore();
             }
         }
-        requestAnimationFrame(animate);
-    }
-    animate();
-</script>
+
+        function animateGlitter() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+
+                if (particles[i].alpha <= 0) {
+                    particles.splice(i, 1);
+                    i--;
+                }
+            }
+
+            requestAnimationFrame(animateGlitter);
+        }
+
+        animateGlitter();
+
+        /* ------------------------------------------------------
+           SIMPLE READING CARD SLIDER
+        ------------------------------------------------------- */
+
+        const readingGrid = document.querySelector(".reading-grid");
+        const previousButton = document.querySelector(".slider-prev");
+        const nextButton = document.querySelector(".slider-next");
+
+        if (readingGrid && previousButton && nextButton) {
+            previousButton.addEventListener("click", () => {
+                readingGrid.scrollBy({
+                    left: -350,
+                    behavior: "smooth"
+                });
+            });
+
+            nextButton.addEventListener("click", () => {
+                readingGrid.scrollBy({
+                    left: 350,
+                    behavior: "smooth"
+                });
+            });
+        }
+    </script>
+
     <script src="scripts.js"></script>
+
 </body>
 </html>
