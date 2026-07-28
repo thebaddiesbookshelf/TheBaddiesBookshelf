@@ -51,149 +51,658 @@
       </a>
     </nav>
   </header>
+<main class="events-page">
 
-  <main>
-    <!-- 1. Events Hero Section -->
-    <section class="hero">
-            <h1>Events</h1>
-        </section>
+    <!-- ======================================================
+         EVENTS HERO
+    ======================================================= -->
 
+    <section class="events-hero">
 
-    <!-- 2. Featured Events Grid -->
-    <section class="featured-events">
-      <div class="section-heading">
-        <h2>Upcoming &amp; Featured Events ✧</h2>
-      </div>
+        <div class="events-hero-background" aria-hidden="true">
+            <div class="events-grid-lines"></div>
 
-      <div class="events-grid featured-grid">
-    
-    
-    <article class="event-card event-card-large">
-        <div class="event-image-wrap">
-            <img src="assets/images/Camp_Retreat.png">
+            <span class="event-sparkle event-sparkle-one">✦</span>
+            <span class="event-sparkle event-sparkle-two">✧</span>
+            <span class="event-sparkle event-sparkle-three">✦</span>
+
+            <span class="event-heart event-heart-one">♡</span>
+            <span class="event-heart event-heart-two">♡</span>
         </div>
 
-        <div class="event-card-content">
-            <h3>Virtual Summer Camp</h3>
-            <p class="event-date">July 1st - July 15th</p>
-            <p class="event-description">Grab your snacks and gather round the virtual beachside.</p>
-            <a href="#" class="event-btn">View Details</a>
+        <div class="events-hero-character">
+            <img
+                src="assets/images/TBBBaddies/ScarletThriller.png"
+                alt=""
+            >
         </div>
-    </article>
 
-</div>
+        <div class="events-hero-content">
 
-        <article class="event-card event-card-large">
-          <div class="event-image-wrap placeholder-box">
-            <p>Event image coming soon ✨</p>
-          </div>
+            <span class="events-eyebrow">
+                The Baddie Calendar
+            </span>
 
-          <div class="event-card-content">
-            <h3>Monthly Readathon</h3>
-            <p class="event-description">Join our next binge-read session!</p>
-            <a href="#" class="event-btn">View Details</a>
-          </div>
-        </article>
+            <h1>
+                Events That
+                <span>Hit Different.</span>
+            </h1>
 
-        <article class="event-card event-card-wide">
-          <div class="event-image-wrap placeholder-box">
-            <p>Event image coming soon ✨</p>
-          </div>
-
-          <div class="event-card-content">
-            <h3>Seasonal Book Chats</h3>
-            <p class="event-description">
-              Engaging discussions on your favorite reads.
+            <p>
+                Readathons, seasonal retreats, workshops, movie nights,
+                challenges, book chats, and enough bookish chaos to keep
+                your calendar full.
             </p>
-            <a href="#" class="event-btn">View Details</a>
-          </div>
-        </article>
 
-        <article class="event-card event-card-small">
-          <div class="event-image-wrap placeholder-box">
-            <!-- Fixed stray bracket error here -->
-            <p>Event image coming soon ✨</p>
-          </div>
+            <div class="events-hero-buttons">
 
-          <div class="event-card-content">
-            <h3>Weekly Buddy Reads</h3>
-            <p class="event-description">
-              Reading sprints to help you hit your goals.
-            </p>
-          </div>
-        </article>
+                <a href="#upcoming-events" class="btn btn-primary">
+                    Explore Events
+                    <i class="fa-solid fa-arrow-down"></i>
+                </a>
 
-        <article class="event-card event-card-small">
-          <div class="event-image-wrap placeholder-box">
-            <p>Event image coming soon ✨</p>
-          </div>
+                <a
+                    href="https://discord.gg/KQ6Qhhpx6z"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="btn btn-outline"
+                >
+                    <i class="fa-brands fa-discord"></i>
+                    Join the Community
+                </a>
 
-          <div class="event-card-content">
-            <h3>TBB Awards</h3>
-            <p class="event-date">December 2024</p>
-            <p class="event-description">
-              Rewarding your reading achievements.
-            </p>
-          </div>
-        </article>
-      </div>
+            </div>
+
+        </div>
+
     </section>
 
-    <!-- 3. Mid-Page Quote Banner -->
-    <section class="events-banner">
-      <div class="banner-content">
-        <h2>REAL READERS MAKE TIME TO READ.</h2>
-        <p>
-          Because prioritizing your reading journey isn’t selfish—it’s self-care.
+
+    <!-- ======================================================
+         EVENT STATS
+    ======================================================= -->
+
+    <section class="event-stats" aria-label="Event information">
+
+        <div class="event-stat">
+            <i class="fa-solid fa-calendar-days"></i>
+
+            <strong>Year-Round</strong>
+
+            <span>Community Programming</span>
+        </div>
+
+        <div class="event-stat">
+            <i class="fa-solid fa-book-open-reader"></i>
+
+            <strong>Monthly</strong>
+
+            <span>Readathons and Challenges</span>
+        </div>
+
+        <div class="event-stat">
+            <i class="fa-solid fa-champagne-glasses"></i>
+
+            <strong>Seasonal</strong>
+
+            <span>Camps and Retreats</span>
+        </div>
+
+        <div class="event-stat">
+            <i class="fa-solid fa-heart"></i>
+
+            <strong>Zero Pressure</strong>
+
+            <span>Join at Your Own Pace</span>
+        </div>
+
+    </section>
+
+
+    <!-- ======================================================
+         UPCOMING AND FEATURED EVENTS
+    ======================================================= -->
+
+    <section
+        class="featured-events event-section"
+        id="upcoming-events"
+    >
+
+        <div class="section-heading">
+            <span class="heading-decoration">✦</span>
+            <h2>Upcoming &amp; Featured Events</h2>
+            <span class="heading-decoration">♡</span>
+        </div>
+
+        <p class="event-section-intro">
+            See what the baddies are reading, creating, watching, and
+            getting into next.
         </p>
-      </div>
+
+        <div class="featured-events-grid">
+
+            <!-- Main Featured Event -->
+            <article class="event-card event-card-featured">
+
+                <div class="event-image-wrap">
+                    <img
+                        src="assets/images/Camp_Retreat.png"
+                        alt="Virtual Summer Camp event"
+                    >
+
+                    <span class="event-image-shade"></span>
+
+                    <span class="event-status">
+                        Featured Event
+                    </span>
+                </div>
+
+                <div class="event-card-content">
+
+                    <span class="event-category">
+                        Seasonal Experience
+                    </span>
+
+                    <h3>Virtual Summer Camp</h3>
+
+                    <p class="event-date">
+                        July 20th – July 27th
+                    </p>
+
+                    <p class="event-description">
+                        Pack your virtual bags for reading sprints, themed
+                        activities, workshops, games, movie nights, friendship
+                        challenges, and plenty of camp chaos.
+                    </p>
+
+                    <div class="event-tags">
+                        <span>Readathons</span>
+                        <span>Games</span>
+                        <span>Workshops</span>
+                        <span>Movie Nights</span>
+                    </div>
+
+                    <a href="#" class="event-btn">
+                        View Event Details
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+
+                </div>
+
+            </article>
+
+
+            <!-- Monthly Readathon -->
+            <article class="event-card">
+
+                <div class="event-art event-art-readathon">
+                    <i class="fa-solid fa-book-open-reader"></i>
+                    <span>✦</span>
+                </div>
+
+                <div class="event-card-content">
+
+                    <span class="event-category">
+                        Monthly Event
+                    </span>
+
+                    <h3>Monthly Readathon</h3>
+
+                    <p class="event-date">
+                        Last Saturday of Each Month
+                    </p>
+
+                    <p class="event-description">
+                        Spend the day reading with the community through
+                        check-ins, sprints, mini challenges, and cozy breaks.
+                    </p>
+
+                    <div class="event-tags">
+                        <span>24 Hours</span>
+                        <span>Sprints</span>
+                    </div>
+
+                    <a href="#" class="event-btn">
+                        Join the Next One
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+
+                </div>
+
+            </article>
+
+
+            <!-- Movie Night -->
+            <article class="event-card">
+
+                <div class="event-art event-art-movie">
+                    <i class="fa-solid fa-clapperboard"></i>
+                    <span>♡</span>
+                </div>
+
+                <div class="event-card-content">
+
+                    <span class="event-category">
+                        Community Night
+                    </span>
+
+                    <h3>Baddie Movie Night</h3>
+
+                    <p class="event-date">
+                        Selected Fridays
+                    </p>
+
+                    <p class="event-description">
+                        Bring your snacks and commentary for movies,
+                        book adaptations, live reactions, and side conversations.
+                    </p>
+
+                    <div class="event-tags">
+                        <span>Movies</span>
+                        <span>Live Chat</span>
+                    </div>
+
+                    <a href="#" class="event-btn">
+                        Save Your Seat
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+
+                </div>
+
+            </article>
+
+
+            <!-- Buddy Reads -->
+            <article class="event-card">
+
+                <div class="event-art event-art-buddy">
+                    <i class="fa-solid fa-user-group"></i>
+                    <span>✧</span>
+                </div>
+
+                <div class="event-card-content">
+
+                    <span class="event-category">
+                        Weekly Community Activity
+                    </span>
+
+                    <h3>Buddy Reads</h3>
+
+                    <p class="event-date">
+                        Happening Throughout the Month
+                    </p>
+
+                    <p class="event-description">
+                        Read alongside members who love the same genres,
+                        tropes, authors, and fictional chaos.
+                    </p>
+
+                    <div class="event-tags">
+                        <span>Book Besties</span>
+                        <span>Discussions</span>
+                    </div>
+
+                    <a href="#" class="event-btn">
+                        Find a Buddy Read
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+
+                </div>
+
+            </article>
+
+
+            <!-- Monthly Crown -->
+            <article class="event-card">
+
+                <div class="event-art event-art-crown">
+                    <i class="fa-solid fa-crown"></i>
+                    <span>♕</span>
+                </div>
+
+                <div class="event-card-content">
+
+                    <span class="event-category">
+                        Reading Competition
+                    </span>
+
+                    <h3>Monthly Crown</h3>
+
+                    <p class="event-date">
+                        New Theme Every Month
+                    </p>
+
+                    <p class="event-description">
+                        Earn points through reading, activities, check-ins,
+                        and challenges while competing for the monthly crown.
+                    </p>
+
+                    <div class="event-tags">
+                        <span>Teams</span>
+                        <span>Points</span>
+                        <span>Prizes</span>
+                    </div>
+
+                    <a href="readingchallenges.html" class="event-btn">
+                        View Challenges
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+
+                </div>
+
+            </article>
+
+        </div>
+
     </section>
 
-    <!-- 4. Past Highlights List & Grid -->
-    <section class="past-highlights">
-      <div class="section-heading">
-        <h2>✧ Past Highlights ✧</h2>
-      </div>
 
-      <div class="events-grid highlights-grid">
-        <article class="event-card highlight-card">
-          <div class="event-image-wrap placeholder-box">
-            <p>Event image coming soon ✨</p>
-          </div>
+    <!-- ======================================================
+         MONTHLY EVENT SPOTLIGHT
+    ======================================================= -->
 
-          <div class="event-card-content">
-            <h3>Spring Into Stories Readathon</h3>
-            <p class="event-date">May 2026</p>
-            <a href="#" class="event-btn">View Details</a>
-          </div>
-        </article>
+    <section class="event-spotlight-section">
 
-        <article class="event-card highlight-card">
-          <div class="event-image-wrap placeholder-box">
-            <p>Event image coming soon ✨</p>
-          </div>
+        <div class="event-spotlight">
 
-          <div class="event-card-content">
-            <h3>Couture Coven</h3>
-            <p class="event-date">October 2025</p>
-            <a href="#" class="event-btn">View Details</a>
-          </div>
-        </article>
+            <div class="spotlight-decoration spotlight-left" aria-hidden="true">
+                <i class="fa-solid fa-book"></i>
+                <i class="fa-solid fa-star"></i>
+            </div>
 
-        <article class="event-card highlight-card">
-          <div class="event-image-wrap placeholder-box">
-            <p>Event image coming soon ✨</p>
-          </div>
+            <div class="spotlight-content">
 
-          <div class="event-card-content">
-            <h3>TBB Awards</h3>
-            <p class="event-date">December 2024</p>
-            <a href="#" class="event-btn">View Details</a>
-          </div>
-        </article>
-      </div>
+                <span class="spotlight-month">
+                    August
+                </span>
+
+                <span class="spotlight-label">
+                    Monthly Event Theme
+                </span>
+
+                <h2>Back to Book Academy</h2>
+
+                <p>
+                    Class is in session with reading assignments, themed
+                    challenges, student introductions, buddy reads, games,
+                    extra credit, and plenty of bookish school spirit.
+                </p>
+
+                <a href="#" class="btn btn-primary">
+                    Enter the Academy
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
+
+            </div>
+
+            <div class="spotlight-decoration spotlight-right" aria-hidden="true">
+                <i class="fa-solid fa-pencil"></i>
+                <i class="fa-solid fa-mug-hot"></i>
+            </div>
+
+        </div>
+
     </section>
-  </main>
+
+
+    <!-- ======================================================
+         EVENT TYPES
+    ======================================================= -->
+
+    <section class="event-types-section event-section">
+
+        <div class="section-heading">
+            <span class="heading-decoration">♡</span>
+            <h2>Choose Your Event Vibe</h2>
+            <span class="heading-decoration">✧</span>
+        </div>
+
+        <div class="event-types-grid">
+
+            <article class="event-type-card">
+                <i class="fa-solid fa-stopwatch"></i>
+
+                <h3>Readathons</h3>
+
+                <p>
+                    Reading sprints, check-ins, milestones, and themed
+                    activities for a full day of bookish motivation.
+                </p>
+            </article>
+
+            <article class="event-type-card">
+                <i class="fa-solid fa-campground"></i>
+
+                <h3>Camps &amp; Retreats</h3>
+
+                <p>
+                    Immersive seasonal experiences packed with teams,
+                    challenges, activities, and community bonding.
+                </p>
+            </article>
+
+            <article class="event-type-card">
+                <i class="fa-solid fa-pen-nib"></i>
+
+                <h3>Writing Events</h3>
+
+                <p>
+                    Sprints, prompts, workshops, story games, and themed
+                    experiences for writers at every level.
+                </p>
+            </article>
+
+            <article class="event-type-card">
+                <i class="fa-solid fa-film"></i>
+
+                <h3>Movie Nights</h3>
+
+                <p>
+                    Watch parties with live reactions, snacks, book
+                    adaptations, and community commentary.
+                </p>
+            </article>
+
+            <article class="event-type-card">
+                <i class="fa-solid fa-comments"></i>
+
+                <h3>Book Chats</h3>
+
+                <p>
+                    Guided discussions, hot takes, reviews, theories,
+                    and spoiler-filled conversations.
+                </p>
+            </article>
+
+            <article class="event-type-card">
+                <i class="fa-solid fa-trophy"></i>
+
+                <h3>Challenges</h3>
+
+                <p>
+                    Team competitions, bingo, themed prompts, badges,
+                    points, prizes, and monthly crowns.
+                </p>
+            </article>
+
+        </div>
+
+    </section>
+
+
+    <!-- ======================================================
+         QUOTE BANNER
+    ======================================================= -->
+
+    <section class="events-banner">
+
+        <div class="banner-content">
+
+            <span>✦ Booked. Busy. Unbothered. ✦</span>
+
+            <h2>
+                Reading time is not wasted time.
+            </h2>
+
+            <p>
+                Prioritizing your reading life is not selfish.
+                It is self-care.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- ======================================================
+         PAST EVENT HIGHLIGHTS
+    ======================================================= -->
+
+    <section class="past-highlights event-section">
+
+        <div class="section-heading">
+            <span class="heading-decoration">✧</span>
+            <h2>Past Event Highlights</h2>
+            <span class="heading-decoration">♕</span>
+        </div>
+
+        <p class="event-section-intro">
+            A few of the events, retreats, and themed experiences that
+            made TBB memories.
+        </p>
+
+        <div class="highlights-grid">
+
+            <article class="highlight-card">
+
+                <div class="highlight-image">
+                    <img
+                        src="assets/images/events/spring-readathon.jpg"
+                        alt="Spring Into Stories Readathon"
+                    >
+                </div>
+
+                <div class="highlight-content">
+                    <span>May 2026</span>
+                    <h3>Spring Into Stories</h3>
+
+                    <p>
+                        A seasonal readathon filled with floral prompts,
+                        page goals, challenges, and cozy check-ins.
+                    </p>
+
+                    <a href="#">
+                        View Memories
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+
+            </article>
+
+            <article class="highlight-card">
+
+                <div class="highlight-image">
+                    <img
+                        src="assets/images/events/couture-coven.jpg"
+                        alt="Couture Coven event"
+                    >
+                </div>
+
+                <div class="highlight-content">
+                    <span>October 2025</span>
+                    <h3>Couture Coven</h3>
+
+                    <p>
+                        A glam witchy celebration with magical prompts,
+                        fashion challenges, reading games, and dark sparkle.
+                    </p>
+
+                    <a href="#">
+                        View Memories
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+
+            </article>
+
+            <article class="highlight-card">
+
+                <div class="highlight-image">
+                    <img
+                        src="assets/images/events/tbb-awards.jpg"
+                        alt="The Baddies Bookshelf Awards"
+                    >
+                </div>
+
+                <div class="highlight-content">
+                    <span>December 2025</span>
+                    <h3>The TBB Awards</h3>
+
+                    <p>
+                        A year-end celebration honoring readers, books,
+                        community moments, and unforgettable achievements.
+                    </p>
+
+                    <a href="#">
+                        View Memories
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+
+            </article>
+
+        </div>
+
+    </section>
+
+
+    <!-- ======================================================
+         EVENT CTA
+    ======================================================= -->
+
+    <section class="events-final-cta">
+
+        <span class="events-cta-label">
+            Do Not Miss the Next One
+        </span>
+
+        <h2>
+            Pull Up, Baddie.
+            <span>The Group Chat Is Waiting.</span>
+        </h2>
+
+        <p>
+            Join the Discord for event announcements, sign-ups,
+            reminders, live chats, and everything happening inside TBB.
+        </p>
+
+        <div class="events-cta-buttons">
+
+            <a
+                href="https://discord.gg/KQ6Qhhpx6z"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="btn btn-primary"
+            >
+                <i class="fa-brands fa-discord"></i>
+                Join Our Discord
+            </a>
+
+            <a
+                href="https://the-baddies-newsletter.beehiiv.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="btn btn-outline"
+            >
+                <i class="fa-regular fa-envelope"></i>
+                Join the Bulletin
+            </a>
+
+        </div>
+
+    </section>
+
+</main>
 
    <footer class="site-footer">
         <div class="footer-tagline">
