@@ -50,49 +50,216 @@
                 <li><a href="communitygallery.html">Community Gallery</a></li>
                 <li><a href="joinus.html">Join Us</a></li>
             </ul>
+<div class="nav-right">
+    <a
+        href="https://the-baddies-newsletter.beehiiv.com/"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="subscribe-btn"
+    >
+        Subscribe
+    </a>
+</div>        </nav>
 
-            <a href="https://the-baddies-newsletter.beehiiv.com/?_gl=1*piy6ar*_gcl_aw*R0NMLjE3ODE4MjgwNTAuQ2owS0NRandyczdSQmhEdUFSSXNBSVZmQkQySHE4dmtrZmc2WUpHUEFzRW1JWmpiNk1YXzNQVUhrNm5VRWV1aUwzb1d3NTlLUXMtUHByZ2FBbXJHRUFMd193Y0I.*_gcl_au*MTQxNDY5MTA0Mi4xNzgxODI3OTUyLjEwNDgyMDE3OC4xNzgxODI4MTE0LjE3ODE4MjgyMDY.*_ga*MTU2NTM0OTI1Ni4xNzgxODI3OTUy*_ga_E6Y4WLQ2EC*czE3ODE4Mjc5NTEkbzEkZzEkdDE3ODE4MjgyMDYkajMkbDEkaDEyNTI2MzI3Ng" target="_blank">
-                <button class="subscribe-btn">Subscribe</button>
-            </a>
-        </nav>
     </header>
+    
+<main class="library-page">
 
-    <main>
-        <!-- 1. Page Header Hero -->
-        <section class="hero" style="margin-bottom: 0;">
-            <h1>The Baddies Bookshelf</h1>
-            <p>A collective scrapbook of our bookshelves, cozy setups, and favorite community memories.</p>
-        </section>
+    <!-- ======================================================
+         LIBRARY HERO
+    ======================================================= -->
 
-        <!-- 2. Interactive Genre Filter Control Panel (Full-Width Row background style) -->
-        <section class="filter-section">
+    <section class="library-hero">
+
+        <div class="library-hero-background" aria-hidden="true">
+            <div class="library-grid-lines"></div>
+
+            <span class="library-sparkle library-sparkle-one">✦</span>
+            <span class="library-sparkle library-sparkle-two">✧</span>
+            <span class="library-sparkle library-sparkle-three">✦</span>
+
+            <span class="library-heart library-heart-one">♡</span>
+            <span class="library-heart library-heart-two">♡</span>
+        </div>
+
+        <div class="library-hero-content">
+
+            <span class="library-eyebrow">
+                The Members-Only Book Vault
+            </span>
+
+            <h1>
+                The Baddies
+                <span>Bookshelf.</span>
+            </h1>
+
+            <p>
+                Browse the collection, search by title or author,
+                filter by genre, and discover your next bookish escape.
+            </p>
+
+            <a href="#library-filters" class="btn btn-primary">
+                Browse the Vault
+                <i class="fa-solid fa-arrow-down"></i>
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <!-- ======================================================
+         SEARCH AND GENRE FILTERS
+    ======================================================= -->
+
+    <section class="filter-section" id="library-filters">
+
         <div class="filter-container">
-            <div class="search-row">
-            <div class="search-wrapper">
-                <i class="fa-solid fa-magnifying-glass search-icon"></i>
-                <input type="text" id="book-search" placeholder="Search by title or author..." autocomplete="off">
+
+            <div class="filter-heading">
+
+                <div>
+                    <span class="filter-eyebrow">
+                        Search the Collection
+                    </span>
+
+                    <h2>Find Your Next Read</h2>
+                </div>
+
+                <p>
+                    Search by title or author, or select a genre below.
+                </p>
+
             </div>
+
+            <div class="search-row">
+
+                <div class="search-wrapper">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+
+                    <input
+                        type="text"
+                        id="book-search"
+                        placeholder="Search by title or author..."
+                        autocomplete="off"
+                        aria-label="Search the library by title or author"
+                    >
+                </div>
+
+            </div>
+
+            <div class="filter-row">
+
+                <span class="filter-title">
+                    <i class="fa-solid fa-sliders"></i>
+                    Filter by Genre
+                </span>
+
+                <div class="filter-buttons">
+
+                    <button
+                        type="button"
+                        class="filter-btn active"
+                        data-filter="all"
+                    >
+                        All Books
+                    </button>
+
+                    <button
+                        type="button"
+                        class="filter-btn"
+                        data-filter="romance"
+                    >
+                        💖 Romance
+                    </button>
+
+                    <button
+                        type="button"
+                        class="filter-btn"
+                        data-filter="dark-romance"
+                    >
+                        ❤️‍🔥 Dark Romance
+                    </button>
+
+                    <button
+                        type="button"
+                        class="filter-btn"
+                        data-filter="thriller"
+                    >
+                        🔪 Thriller / Mystery
+                    </button>
+
+                    <button
+                        type="button"
+                        class="filter-btn"
+                        data-filter="fantasy"
+                    >
+                        ✨ Fantasy &amp; Sci-Fi
+                    </button>
+
+                    <button
+                        type="button"
+                        class="filter-btn"
+                        data-filter="nonfiction"
+                    >
+                        📖 Nonfiction
+                    </button>
+
+                    <button
+                        type="button"
+                        class="filter-btn"
+                        data-filter="erotica"
+                    >
+                        🌶️ Erotica
+                    </button>
+
+                    <button
+                        type="button"
+                        class="filter-btn"
+                        data-filter="urban"
+                    >
+                        🤎 Urban
+                    </button>
+
+                    <button
+                        type="button"
+                        class="filter-btn"
+                        data-filter="ya"
+                    >
+                        🎒 YA / Middle Grade
+                    </button>
+
+                    <button
+                        type="button"
+                        class="filter-btn"
+                        data-filter="18plus"
+                    >
+                        🔞 18+
+                    </button>
+
+                    <button
+                        type="button"
+                        class="filter-btn"
+                        data-filter="historicalfiction"
+                    >
+                        📜 Historical Fiction
+                    </button>
+
+                    <button
+                        type="button"
+                        class="filter-btn"
+                        data-filter="literaryfiction"
+                    >
+                        🖋️ Literary Fiction
+                    </button>
+
+                </div>
+
+            </div>
+
         </div>
 
-        <div class="filter-row">
-            <span class="filter-title"><i class="fa-solid fa-sliders"></i> Filter by Genre:</span>
-            <div class="filter-buttons">
-                <button class="filter-btn active" data-filter="all">All Books</button>
-                <button class="filter-btn" data-filter="romance">💖 Romance</button>
-                <button class="filter-btn" data-filter="dark-romance">❤️‍🔥 Dark Romance</button>
-                <button class="filter-btn" data-filter="thriller">🔪 Thriller / Mystery</button>
-                <button class="filter-btn" data-filter="fantasy">✨ Fantasy &amp; Sci-Fi</button>
-                <button class="filter-btn" data-filter="nonfiction">📖 Nonfiction</button>
-                <button class="filter-btn" data-filter="erotica">🌶️ Erotica</button>
-                <button class="filter-btn" data-filter="urban">🤎 Urban</button>
-                <button class="filter-btn" data-filter="ya">🎒 YA/Middle Grade</button>
-                <button class="filter-btn" data-filter="18plus">🔞 18+</button>
-                <button class="filter-btn" data-filter="historicalfiction">📜 Historical Fiction</button>
-                <button class="filter-btn" data-filter="literaryfiction">🖋️Literary Fiction</button>
-            </div>
-        </div>
-    </div>
-</section>
+    </section>
 
         <!-- 3. Expansive Digital Library Book Grid (15 Placeholders) -->
         <section class="library-grid-section">

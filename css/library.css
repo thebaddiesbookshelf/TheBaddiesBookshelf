@@ -1,418 +1,696 @@
 /* ==========================================================================
-   The Baddies Bookshelf Library Specific Layouts
+   THE BADDIES BOOKSHELF
+   LIBRARY PAGE
+
+   Preserves:
+   - Existing five-column catalog layout
+   - Existing book cards
+   - Search functionality
+   - Genre filtering
+   - Vault lock screen
    ========================================================================== */
+
 
 /* ==========================================================================
-   GLOBAL NAVIGATION BAR (Matches image_031603.png Perfectly!)
+   1. PAGE FOUNDATION
    ========================================================================== */
-.site-header {
-    background-color: #ffffff;
-    border-bottom: 2px solid #cb5f93; 
+
+.library-page {
     width: 100%;
+    overflow: hidden;
+    background:
+        radial-gradient(
+            circle at 50% 8%,
+            rgba(255, 20, 147, 0.08),
+            transparent 25%
+        ),
+        #040104;
+}
+
+
+/* ==========================================================================
+   2. LIBRARY HERO
+   ========================================================================== */
+
+.library-hero {
     position: relative;
-    z-index: 10;
+    min-height: 510px;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+    border-bottom: 1px solid rgba(255, 20, 147, 0.5);
+    background:
+        radial-gradient(
+            circle at 50% 40%,
+            rgba(255, 20, 147, 0.24),
+            transparent 38%
+        ),
+        radial-gradient(
+            circle at 15% 65%,
+            rgba(190, 46, 255, 0.1),
+            transparent 27%
+        ),
+        linear-gradient(
+            180deg,
+            #10030d,
+            #030103
+        );
 }
 
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 60px;
-    max-width: 1400px;
-    margin: 0 auto;
+.library-hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background:
+        radial-gradient(
+            circle at center,
+            transparent 35%,
+            rgba(0, 0, 0, 0.72) 100%
+        );
 }
 
-.logo img {
-    height: 75px; 
-    width: auto;
-    display: block;
+.library-hero-background {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
 }
 
-.nav-links {
-    display: flex;
-    align-items: center;
-    list-style: none;
-    gap: 30px; 
-    margin: 0 auto;  /* Centers your links dead-center */
+.library-grid-lines {
+    position: absolute;
+    inset: auto 0 0;
+    height: 55%;
+    opacity: 0.25;
+    background-image:
+        linear-gradient(
+            rgba(255, 20, 147, 0.11) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            rgba(255, 20, 147, 0.11) 1px,
+            transparent 1px
+        );
+    background-size: 44px 44px;
+    transform: perspective(500px) rotateX(54deg) scale(1.4);
+    transform-origin: bottom;
 }
 
-.nav-links a {
-    color: #7a435f; 
-    font-family: 'Poppins', sans-serif;
-    font-weight: 500;
-    font-size: 0.95rem;
-    white-space: nowrap; 
-    text-decoration: none; /* Removes the ugly underlines */
-    transition: color 0.3s ease;
+.library-hero-content {
+    position: relative;
+    z-index: 5;
+    width: min(90%, 850px);
+    padding: 90px 25px;
+    text-align: center;
 }
 
-.nav-links a:hover,
-.nav-links a.active {
-    color: #cb5f93; /* Active page rose pink */
-}
-
-/* Restores the beautiful gradient pill shape subscribe button */
-.nav-right a {
-    text-decoration: none;
-}
-
-.subscribe-btn {
+.library-eyebrow {
     display: inline-block;
-    padding: 10px 20px;
-    background: linear-gradient(to bottom, #cb5f93, #b94f84); 
-    color: white !important;
-    border: none;
-    border-radius: 20px; 
-    font-family: 'Poppins', sans-serif;
-    font-weight: 500;
-    cursor: pointer;
-    box-shadow: 0 4px 12px rgba(121, 65, 92, 0.15);
-    transition: all 0.3s ease;
+    margin-bottom: 14px;
+    color: var(--pink-light);
+    font-size: 0.76rem;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    text-shadow: var(--glow-small);
 }
 
-.subscribe-btn:hover {
-    background: linear-gradient(to bottom, #d56a9e, #c3578d);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(121, 65, 92, 0.25);
+.library-hero h1 {
+    color: var(--white);
+    font-size: clamp(3.8rem, 8vw, 7rem);
+    line-height: 0.95;
+    text-shadow:
+        0 0 7px rgba(255, 255, 255, 0.2),
+        0 0 25px rgba(255, 20, 147, 0.35);
 }
 
-/* Full Bleed Filter Dashboard Wrapper */
+.library-hero h1 span {
+    display: block;
+    margin-top: 12px;
+    color: var(--pink-light);
+    font-family: "Great Vibes", cursive;
+    font-size: 0.92em;
+    font-weight: 400;
+    text-shadow: var(--glow-large);
+}
+
+.library-hero p {
+    max-width: 680px;
+    margin: 27px auto 29px;
+    color: var(--white-soft);
+    font-size: 1.05rem;
+}
+
+.library-hero .btn {
+    margin-inline: auto;
+}
+
+.library-sparkle,
+.library-heart {
+    position: absolute;
+    color: var(--pink-light);
+    text-shadow: var(--glow-large);
+}
+
+.library-sparkle-one {
+    top: 18%;
+    left: 17%;
+    font-size: 2rem;
+}
+
+.library-sparkle-two {
+    top: 28%;
+    right: 21%;
+    font-size: 1.5rem;
+}
+
+.library-sparkle-three {
+    left: 35%;
+    bottom: 18%;
+    font-size: 1.7rem;
+}
+
+.library-heart-one {
+    top: 17%;
+    right: 10%;
+    font-size: 2.8rem;
+}
+
+.library-heart-two {
+    bottom: 17%;
+    left: 9%;
+    font-size: 2.4rem;
+}
+
+
+/* ==========================================================================
+   3. FILTER CONTROL PANEL
+   ========================================================================== */
+
 .filter-section {
-    background: #ffffff;
+    position: relative;
     width: 100%;
-    padding: 30px 40px;
-    border-bottom: 1px solid rgba(186, 139, 161, 0.2);
+    padding: 50px 40px;
+    border-bottom: 1px solid rgba(255, 20, 147, 0.28);
+    background:
+        radial-gradient(
+            circle at 50% 0,
+            rgba(255, 20, 147, 0.11),
+            transparent 44%
+        ),
+        #080207;
 }
 
 .filter-container {
-    max-width: 1440px;
+    width: min(100%, 1440px);
     margin: 0 auto;
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    gap: 22px;
+}
+
+.filter-heading {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 30px;
+}
+
+.filter-eyebrow {
+    color: var(--pink-light);
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+.filter-heading h2 {
+    margin-top: 4px;
+    color: var(--white);
+    font-size: clamp(2rem, 4vw, 3.2rem);
+}
+
+.filter-heading p {
+    max-width: 430px;
+    color: var(--muted);
+    font-size: 0.82rem;
+    text-align: right;
+}
+
+.search-row {
+    width: 100%;
+}
+
+.search-wrapper {
+    position: relative;
+    width: min(100%, 540px);
+}
+
+.search-wrapper input {
+    width: 100%;
+    min-height: 52px;
+    padding: 13px 21px 13px 48px;
+    border: 1px solid rgba(255, 20, 147, 0.5);
+    border-radius: 28px;
+    outline: none;
+    background: rgba(5, 2, 6, 0.92);
+    color: var(--white);
+    font-family: "DM Sans", sans-serif;
+    font-size: 0.92rem;
+    box-shadow:
+        inset 0 0 18px rgba(255, 20, 147, 0.025),
+        0 0 10px rgba(255, 20, 147, 0.06);
+    transition:
+        border-color var(--transition),
+        box-shadow var(--transition),
+        background var(--transition);
+}
+
+.search-wrapper input::placeholder {
+    color: rgba(255, 211, 237, 0.52);
+}
+
+.search-wrapper input:focus {
+    border-color: var(--pink);
+    background: rgba(16, 3, 13, 0.98);
+    box-shadow: var(--glow-medium);
+}
+
+.search-icon {
+    position: absolute;
+    top: 50%;
+    left: 19px;
+    transform: translateY(-50%);
+    color: var(--pink-light);
+    font-size: 1rem;
+    pointer-events: none;
+    text-shadow: var(--glow-small);
+}
+
+.filter-row {
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
     gap: 20px;
-    flex-wrap: wrap;
 }
 
 .filter-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.3rem;
-    color: #7a435f;
-    font-weight: 600;
+    padding-top: 8px;
+    flex: 0 0 auto;
+    color: var(--white);
+    font-family: "Playfair Display", serif;
+    font-size: 1rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.filter-title i {
+    margin-right: 7px;
+    color: var(--pink-light);
+    text-shadow: var(--glow-small);
 }
 
 .filter-buttons {
     display: flex;
-    gap: 12px;
     flex-wrap: wrap;
+    gap: 10px;
 }
 
 .filter-btn {
-    background: rgba(255, 245, 249, 0.95);
-    border: 1px solid #ecc4d6;
-    color: #7a4561;
-    padding: 8px 18px;
-    border-radius: 20px;
-    font-family: 'Poppins', sans-serif;
-    font-size: 0.9rem;
-    font-weight: 500;
+    padding: 8px 16px;
+    border: 1px solid rgba(255, 20, 147, 0.42);
+    border-radius: 22px;
+    background: rgba(255, 20, 147, 0.045);
+    color: var(--white-soft);
+    font-family: "DM Sans", sans-serif;
+    font-size: 0.76rem;
+    font-weight: 700;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition:
+        transform var(--transition),
+        color var(--transition),
+        border-color var(--transition),
+        background var(--transition),
+        box-shadow var(--transition);
 }
 
-.filter-btn:hover,
+.filter-btn:hover {
+    transform: translateY(-2px);
+    border-color: var(--pink-light);
+    color: var(--white);
+    background: rgba(255, 20, 147, 0.13);
+    box-shadow: var(--glow-small);
+}
+
 .filter-btn.active {
-    background: linear-gradient(to bottom, #cb5f93, #b94f84);
-    color: #ffffff;
-    border-color: #b94f84;
-    box-shadow: 0 4px 10px rgba(121, 65, 92, 0.15);
+    border-color: var(--pink);
+    background:
+        linear-gradient(
+            135deg,
+            var(--pink-dark),
+            var(--pink)
+        );
+    color: var(--white);
+    box-shadow: var(--glow-medium);
 }
 
-/* Full Bleed Library Panels Layout */
+
+/* ==========================================================================
+   4. LIBRARY GRID
+   Layout intentionally preserved
+   ========================================================================== */
+
 .library-grid-section {
-    background: #fbeef5;
     width: 100%;
-    padding: 60px 40px;
+    padding: 60px 40px 100px;
+    background:
+        radial-gradient(
+            circle at 50% 0,
+            rgba(255, 20, 147, 0.055),
+            transparent 24%
+        ),
+        #040104;
 }
 
-/* 5-Column Stretch Grid for highly optimized desktop catalog display */
 .library-grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr); /* Generates 5 neat small columns across the panel width */
-    max-width: 1440px;
+    width: min(100%, 1440px);
     margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
     gap: 25px;
 }
 
-/* Individual Book Tile Structure (Matches image_ea2140.jpg styling approach) */
+
+/* ==========================================================================
+   5. BOOK CARDS
+   Existing sizing and layout preserved
+   ========================================================================== */
+
 .book-card {
-    background: #ffffff;
-    border-radius: 14px;
-    border: 1px solid rgba(214, 175, 194, 0.3);
-    box-shadow: 0 6px 18px rgba(121, 65, 92, 0.04);
+    position: relative;
     overflow: hidden;
-    transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+    border: 1px solid rgba(255, 20, 147, 0.32);
+    border-radius: 14px;
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255, 20, 147, 0.055),
+            rgba(6, 2, 6, 0.98)
+        );
+    box-shadow:
+        0 8px 20px rgba(0, 0, 0, 0.32),
+        0 0 8px rgba(255, 20, 147, 0.04);
+    transition:
+        transform 0.3s ease,
+        border-color 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+.book-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    opacity: 0;
+    pointer-events: none;
+    border-radius: inherit;
+    box-shadow: inset 0 0 22px rgba(255, 20, 147, 0.14);
+    transition: opacity 0.3s ease;
 }
 
 .book-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 25px rgba(121, 65, 92, 0.12);
+    transform: translateY(-6px);
+    border-color: rgba(255, 20, 147, 0.86);
+    box-shadow:
+        0 15px 30px rgba(0, 0, 0, 0.48),
+        var(--glow-small);
+}
+
+.book-card:hover::before {
+    opacity: 1;
 }
 
 .book-download-wrapper {
     display: block;
     height: 100%;
+    color: inherit;
+    text-decoration: none;
 }
 
-/* Downsized Book Aspect Framing Box */
 .book-cover {
-    width: 100%;
-    aspect-ratio: 2 / 3; /* Perfect standard book dimension ratio format */
     position: relative;
+    width: 100%;
+    aspect-ratio: 2 / 3;
     overflow: hidden;
+    background: #11030d;
 }
 
-.placeholder-cover {
-    background: linear-gradient(135deg, #efc4d9 0%, #eab1cd 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-}
-
-.cover-text {
-    font-family: 'Playfair Display', serif;
-    color: #7a4561;
-    font-size: 1.1rem;
-    text-align: center;
-    font-style: italic;
-    font-weight: 500;
+.book-cover::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+        linear-gradient(
+            180deg,
+            transparent 72%,
+            rgba(4, 1, 4, 0.32) 100%
+        );
 }
 
 .book-cover img {
     width: 100%;
     height: 100%;
+    display: block;
     object-fit: cover;
+    transition:
+        transform 0.45s ease,
+        filter 0.45s ease;
 }
 
-/* Book text data info */
+.book-card:hover .book-cover img {
+    transform: scale(1.025);
+    filter: brightness(1.04);
+}
+
+.placeholder-cover {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(255, 20, 147, 0.24),
+            transparent 60%
+        ),
+        #10030d;
+}
+
+.cover-text {
+    color: var(--pink-light);
+    font-family: "Playfair Display", serif;
+    font-size: 1.1rem;
+    font-style: italic;
+    font-weight: 600;
+    text-align: center;
+    text-shadow: var(--glow-small);
+}
+
 .book-info {
+    min-height: 145px;
     padding: 16px;
     text-align: left;
+    background:
+        linear-gradient(
+            180deg,
+            rgba(15, 3, 12, 0.97),
+            rgba(5, 2, 6, 0.99)
+        );
 }
 
 .book-info h3 {
-    font-family: 'Poppins', sans-serif; /* Crisp sans font matching example image */
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #3B2E35;
-    margin-bottom: 4px;
-    line-height: 1.3;
-    /* Handles text cutoff elegantly if titles get exceptionally long */
+    margin-bottom: 5px;
+    overflow: hidden;
     display: -webkit-box;
+    color: var(--white);
+    font-family: "DM Sans", sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.3;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
-    overflow: hidden;
 }
 
 .book-author {
-    font-size: 0.9rem;
-    color: #8c5470;
-    margin-bottom: 12px;
+    margin-bottom: 8px;
+    color: var(--pink-light);
+    font-size: 0.78rem;
+    font-weight: 600;
 }
 
-/* Library Status / Genre Badges */
+.book-series {
+    margin-bottom: 11px;
+    color: var(--muted);
+    font-size: 0.7rem;
+    line-height: 1.35;
+}
+
 .book-badges {
     display: flex;
-    gap: 6px;
     flex-wrap: wrap;
+    gap: 6px;
 }
 
 .badge {
     display: inline-block;
-    font-size: 0.75rem;
-    font-weight: 600;
-    padding: 4px 10px;
+    padding: 4px 9px;
+    border: 1px solid rgba(255, 20, 147, 0.36);
     border-radius: 12px;
+    background: rgba(255, 20, 147, 0.08);
+    color: var(--white-soft);
+    font-size: 0.63rem;
+    font-weight: 700;
 }
 
-.badge-romance { background: #FFF0F5; color: #cb5f93; border: 1px solid rgba(203, 95, 147, 0.2); }
-.badge-dark { background: #3B2E35; color: #efc4d9; }
-.badge-thriller { background: #fdf2f2; color: #c81e1e; border: 1px solid rgba(200, 30, 30, 0.2); }
-.badge-fantasy { background: #f3e8ff; color: #6b21a8; border: 1px solid rgba(107, 33, 168, 0.2); }
-.badge-nonfiction { background: #e1effe; color: #1e429f; border: 1px solid rgba(30, 66, 159, 0.2); }
-/* 🌶️ Erotica: A deep, spicy plum/burgundy vibe that feels premium and mature */
-.badge-erotica { 
-    background: #fff0f3; 
-    color: #a91d49; 
-    border: 1px solid rgba(169, 29, 73, 0.2); 
-}
-
-/* 🤎 Urban: A gorgeous, rich latte/chocolate tone that looks incredibly elegant */
-.badge-urban { 
-    background: #f7f3f0; 
-    color: #6e473b; 
-    border: 1px solid rgba(110, 71, 59, 0.2); 
-}
-
-/* 🎒 YA/Middle Grade: A soft, energetic peach/coral that balances out the darker tones */
-.badge-ya { 
-    background: #fff7ed; 
-    color: #c2410c; 
-    border: 1px solid rgba(194, 65, 12, 0.2); 
-}
-
-/* 🔞 18+: A bold, high-contrast, edgy hot pink outline on a very dark charcoal background (matches your Dark Romance style!) */
-.badge-18plus { 
-    background: #2D2329; 
-    color: #ff69b4; 
-    border: 1px solid #ff1493; 
-}
-
-/* Full Width Panel Area */
-.filter-section {
-    background: #ffffff;
-    width: 100%;
-    padding: 30px 40px;
-    border-bottom: 1px solid rgba(186, 139, 161, 0.2);
-}
-
-/* Vertical Stack Setup */
-.filter-container {
-    max-width: 1440px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column; /* Organizes everything into separate horizontal rows */
-    gap: 20px;
-}
-
-/* Search Row Setup */
-.search-row {
-    width: 100%;
-    display: flex;
-    justify-content: flex-start;
-}
-
-.search-wrapper {
-    position: relative;
-    width: 100%;
-    max-width: 450px; /* Slightly wider for an elegant look */
-}
-
-.search-wrapper input {
-    width: 100%;
-    padding: 12px 20px 12px 45px;
-    border: 1px solid #ecc4d6;
-    background-color: rgba(255, 245, 249, 0.6);
-    border-radius: 25px;
-    font-family: 'Poppins', sans-serif;
-    font-size: 0.95rem;
-    color: #3B2E35;
-    outline: none;
-    transition: all 0.3s ease;
-}
-
-.search-wrapper input:focus {
-    background-color: #ffffff;
-    border-color: #cb5f93;
-    box-shadow: 0 4px 12px rgba(121, 65, 92, 0.08);
-}
-
-.search-icon {
-    position: absolute;
-    left: 18px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #8c5470;
-    font-size: 1rem;
-    pointer-events: none;
-}
-
-/* Genres Row Setup */
-.filter-row {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    flex-wrap: wrap;
-    width: 100%;
-}
-
-/* Responsive adjustments */
-@media (max-width: 1200px) {
-    .library-grid { grid-template-columns: repeat(4, 1fr); }
-}
-@media (max-width: 900px) {
-    .library-grid { grid-template-columns: repeat(2, 1fr); gap: 15px; }
-    .library-grid-section, .filter-section { padding-left: 20px; padding-right: 20px; }
-    .filter-container { flex-direction: column; align-items: flex-start; }
-}
-@media (max-width: 480px) {
-    .library-grid { grid-template-columns: 1fr; }
-}
-
-footer, .site-footer {
-    background: linear-gradient(to bottom, #9d4b73, #8c4066); /* Exact match to your favorite theme */
-    color: #fff4f9;
-    padding: 40px 20px;
-    text-align: center;
-    margin-top: 100px;
-}
-
-.footer-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-}
-
-.footer-content p {
-    font-family: 'Playfair Display', serif;
-    font-style: italic;
-    font-size: 1.15rem;
-}
-
-/* ✨ BRATZY HOT PINK HEART MOUSE CURSOR OVERRIDE */
-html, body, a, button, .filter-btn, .subscribe-btn {
-    cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><path d='M16 28.5C16 28.5 2 19.5 2 10.5C2 5.5 6 1.5 11 1.5C14 1.5 15.5 3.5 16 4.5C16.5 3.5 18 1.5 21 1.5C26 1.5 30 5.5 30 10.5C30 19.5 16 28.5 16 28.5Z' fill='%23ff1493' stroke='%23ffffff' stroke-width='2'/></svg>"), auto !important;
-}
-
-/* 💫 THE GLITTER TRAIL CONTAINER LAYOUT (Styled like your comet-trail layout) */
-#glitter-trail-canvas {
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none; /* Crucial: makes sure you can click right through the trail to your buttons */
-    z-index: 999999;      /* Keeps the glitter on top of your rows and cards */
-    mix-blend-mode: screen;
-    opacity: 0.9;
-    filter: blur(1px);    /* Keeps glitter sharp, but gives it a soft magical glow finish */
-}
 
 /* ==========================================================================
-   Vault Password Gateway Overlay Styling
+   6. GENRE BADGES
+   Distinct colors retained, darkened for the neon theme
    ========================================================================== */
+
+.badge-romance {
+    border-color: rgba(255, 105, 180, 0.55);
+    background: rgba(255, 105, 180, 0.12);
+    color: #ff9bd1;
+}
+
+.badge-dark-romance,
+.badge-dark {
+    border-color: rgba(201, 63, 117, 0.65);
+    background: rgba(91, 8, 42, 0.48);
+    color: #ff78ac;
+}
+
+.badge-thriller {
+    border-color: rgba(255, 75, 75, 0.55);
+    background: rgba(112, 13, 22, 0.34);
+    color: #ff8c93;
+}
+
+.badge-fantasy {
+    border-color: rgba(189, 112, 255, 0.58);
+    background: rgba(76, 22, 118, 0.36);
+    color: #d6a0ff;
+}
+
+.badge-nonfiction {
+    border-color: rgba(90, 170, 255, 0.55);
+    background: rgba(16, 68, 124, 0.36);
+    color: #97c9ff;
+}
+
+.badge-erotica {
+    border-color: rgba(255, 70, 139, 0.57);
+    background: rgba(117, 13, 54, 0.4);
+    color: #ff89b6;
+}
+
+.badge-urban {
+    border-color: rgba(204, 145, 101, 0.58);
+    background: rgba(91, 52, 27, 0.44);
+    color: #ddb08f;
+}
+
+.badge-ya {
+    border-color: rgba(255, 155, 77, 0.58);
+    background: rgba(117, 58, 13, 0.38);
+    color: #ffb77e;
+}
+
+.badge-18plus {
+    border-color: rgba(255, 20, 147, 0.8);
+    background: rgba(26, 3, 18, 0.9);
+    color: #ff69b4;
+    box-shadow: 0 0 7px rgba(255, 20, 147, 0.18);
+}
+
+.badge-historicalfiction {
+    border-color: rgba(221, 183, 91, 0.58);
+    background: rgba(100, 71, 11, 0.36);
+    color: #ebca7e;
+}
+
+.badge-literaryfiction {
+    border-color: rgba(182, 150, 255, 0.56);
+    background: rgba(57, 38, 102, 0.4);
+    color: #c5acff;
+}
+
+.badge-horror {
+    border-color: rgba(168, 168, 168, 0.52);
+    background: rgba(40, 40, 47, 0.58);
+    color: #d4d4db;
+}
+
+
+/* ==========================================================================
+   7. FILTERING STATES
+   ========================================================================== */
+
+.book-card.hidden,
+.book-card[hidden] {
+    display: none;
+}
+
+
+/* ==========================================================================
+   8. VAULT LOCK SCREEN
+   ========================================================================== */
+
 #vault-lock-screen {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(251, 238, 245, 0.85); /* Matches your soft pink page background */
-    backdrop-filter: blur(15px);          /* Blurs the library books behind the card */
-    -webkit-backdrop-filter: blur(15px);
-    z-index: 1000000;                     /* Sits firmly above everything, including navbars */
+    inset: 0;
+    z-index: 1000000;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: opacity 0.4s ease, visibility 0.4s ease;
+    padding: 25px;
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(255, 20, 147, 0.2),
+            transparent 34%
+        ),
+        rgba(3, 1, 3, 0.93);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+    transition:
+        opacity 0.4s ease,
+        visibility 0.4s ease;
 }
 
-/* Smooth fade-out animation once unlocked */
+#vault-lock-screen::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.16;
+    background-image:
+        linear-gradient(
+            rgba(255, 20, 147, 0.1) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            rgba(255, 20, 147, 0.1) 1px,
+            transparent 1px
+        );
+    background-size: 42px 42px;
+}
+
 #vault-lock-screen.unlocked {
     opacity: 0;
     visibility: hidden;
@@ -420,33 +698,55 @@ html, body, a, button, .filter-btn, .subscribe-btn {
 }
 
 .lock-card {
-    background: #ffffff;
-    padding: 40px 30px;
+    position: relative;
+    z-index: 2;
+    width: min(100%, 430px);
+    padding: 46px 34px;
+    border: 1px solid var(--pink);
     border-radius: 24px;
-    border: 1px solid rgba(214, 175, 194, 0.4);
-    box-shadow: 0 15px 35px rgba(121, 65, 92, 0.15);
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255, 20, 147, 0.09),
+            rgba(5, 2, 6, 0.98)
+        );
+    box-shadow:
+        var(--glow-medium),
+        0 24px 55px rgba(0, 0, 0, 0.65);
     text-align: center;
-    max-width: 400px;
-    width: 90%;
+}
+
+.lock-icon {
+    width: 86px;
+    height: 86px;
+    margin: 0 auto 22px;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--pink);
+    border-radius: 50%;
+    background: rgba(255, 20, 147, 0.07);
+    box-shadow:
+        inset 0 0 22px rgba(255, 20, 147, 0.07),
+        var(--glow-small);
 }
 
 .lock-icon i {
-    font-size: 3rem;
-    color: #cb5f93;
-    margin-bottom: 20px;
+    color: var(--pink-light);
+    font-size: 2.5rem;
+    text-shadow: var(--glow-medium);
 }
 
 .lock-card h2 {
-    color: #7a435f;
-    font-size: 1.8rem;
     margin-bottom: 10px;
+    color: var(--white);
+    font-size: 2rem;
 }
 
-.lock-card p {
-    color: #8c5470;
-    font-size: 0.95rem;
+.lock-card > p {
     margin-bottom: 25px;
-    line-height: 1.5;
+    color: var(--muted);
+    font-size: 0.88rem;
+    line-height: 1.55;
 }
 
 .password-wrapper {
@@ -457,50 +757,181 @@ html, body, a, button, .filter-btn, .subscribe-btn {
 
 .lock-card input {
     width: 100%;
-    padding: 12px 20px;
-    border: 1px solid #ecc4d6;
-    background-color: rgba(255, 245, 249, 0.6);
+    min-height: 49px;
+    padding: 12px 18px;
+    border: 1px solid rgba(255, 20, 147, 0.48);
     border-radius: 25px;
-    font-family: 'Poppins', sans-serif;
-    font-size: 1rem;
-    color: #3B2E35;
-    text-align: center;
     outline: none;
+    background: rgba(3, 1, 4, 0.9);
+    color: var(--white);
+    font-family: "DM Sans", sans-serif;
+    font-size: 0.92rem;
+    text-align: center;
+    transition:
+        border-color var(--transition),
+        box-shadow var(--transition);
+}
+
+.lock-card input::placeholder {
+    color: rgba(255, 211, 237, 0.48);
 }
 
 .lock-card input:focus {
-    background-color: #ffffff;
-    border-color: #cb5f93;
-    box-shadow: 0 4px 12px rgba(121, 65, 92, 0.08);
+    border-color: var(--pink);
+    box-shadow: var(--glow-small);
 }
 
 #unlock-btn {
     width: 100%;
-    padding: 12px;
-    background: linear-gradient(to bottom, #cb5f93, #b94f84);
-    color: white;
-    border: none;
+    min-height: 49px;
+    padding: 12px 20px;
+    border: 1px solid var(--pink);
     border-radius: 25px;
-    font-family: 'Poppins', sans-serif;
-    font-weight: 500;
-    font-size: 1rem;
+    background:
+        linear-gradient(
+            135deg,
+            var(--pink-dark),
+            var(--pink)
+        );
+    color: var(--white);
+    font-family: "DM Sans", sans-serif;
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    box-shadow: var(--glow-small);
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(121, 65, 92, 0.15);
-    transition: all 0.3s ease;
+    transition:
+        transform var(--transition),
+        box-shadow var(--transition);
 }
 
 #unlock-btn:hover {
-    background: linear-gradient(to bottom, #d56a9e, #c3578d);
-    transform: translateY(-1px);
+    transform: translateY(-2px);
+    box-shadow: var(--glow-large);
 }
 
 #lock-error-msg {
-    color: #c81e1e !important;
-    font-weight: 500;
-    margin-top: 15px;
-    margin-bottom: 0;
+    margin: 15px 0 0;
+    color: #ff8c93;
+    font-size: 0.79rem;
+    font-weight: 700;
 }
 
 .hidden {
     display: none;
+}
+
+
+/* ==========================================================================
+   9. RESPONSIVE
+   ========================================================================== */
+
+@media (max-width: 1200px) {
+    .library-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media (max-width: 900px) {
+    .filter-heading {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .filter-heading p {
+        text-align: left;
+    }
+
+    .filter-row {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .filter-title {
+        padding-top: 0;
+    }
+
+    .library-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+
+    .library-grid-section,
+    .filter-section {
+        padding-right: 20px;
+        padding-left: 20px;
+    }
+}
+
+@media (max-width: 540px) {
+    .library-hero {
+        min-height: 480px;
+    }
+
+    .library-hero-content {
+        width: calc(100% - 18px);
+        padding-right: 9px;
+        padding-left: 9px;
+    }
+
+    .library-hero h1 {
+        font-size: clamp(3.3rem, 17vw, 5.1rem);
+    }
+
+    .filter-section {
+        padding-top: 38px;
+        padding-bottom: 38px;
+    }
+
+    .filter-buttons {
+        gap: 8px;
+    }
+
+    .filter-btn {
+        padding: 7px 12px;
+        font-size: 0.69rem;
+    }
+
+    .library-grid {
+        grid-template-columns: 1fr;
+        max-width: 330px;
+    }
+
+    .book-info {
+        min-height: 135px;
+    }
+
+    .lock-card {
+        padding: 38px 22px;
+    }
+}
+
+
+/* ==========================================================================
+   10. CURSOR AND GLITTER
+   ========================================================================== */
+
+html,
+body,
+a,
+button,
+.filter-btn,
+.subscribe-btn {
+    cursor:
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><path d='M16 28.5C16 28.5 2 19.5 2 10.5C2 5.5 6 1.5 11 1.5C14 1.5 15.5 3.5 16 4.5C16.5 3.5 18 1.5 21 1.5C26 1.5 30 5.5 30 10.5C30 19.5 16 28.5 16 28.5Z' fill='%23ff1493' stroke='%23ffffff' stroke-width='2'/></svg>"),
+        auto !important;
+}
+
+#glitter-trail-canvas {
+    position: fixed;
+    inset: 0;
+    z-index: 999999;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    mix-blend-mode: screen;
+    opacity: 0.9;
+    filter: blur(1px);
 }
