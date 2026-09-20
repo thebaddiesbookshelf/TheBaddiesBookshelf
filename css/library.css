@@ -908,6 +908,64 @@
     }
 }
 
+/* Historical Fiction — Grey */
+.badge-historicalfiction {
+    border-color: #a3a3a3;
+    background: #55555e;
+    color: #ffffff;
+}
+
+/* Literary Fiction — Orange */
+.badge-literaryfiction {
+    border-color: #ffad66;
+    background: #c45a16;
+    color: #ffffff;
+}
+
+/* YA / Middle Grade — Orange box, white text */
+.badge-ya {
+    border-color: #ffb77e;
+    background: #b85b18;
+    color: #ffffff;
+}
+
+/* Horror — Grey box, white text */
+.badge-horror {
+    border-color: #a8a8a8;
+    background: #45454f;
+    color: #ffffff;
+}
+
+/* Selected genre filter */
+.filter-btn.active {
+    background: linear-gradient(
+        135deg,
+        #ff1493,
+        #c71585
+    );
+
+    color: #ffffff;
+    border: 2px solid #ffb6e1;
+
+    box-shadow:
+        0 0 0 2px rgba(255, 20, 147, 0.18),
+        0 0 18px rgba(255, 20, 147, 0.55);
+
+    transform: translateY(-2px);
+}
+
+/* Keep the active appearance on hover */
+.filter-btn.active:hover {
+    background: #ff1493;
+    color: #ffffff;
+    border-color: #ffffff;
+}
+
+/* Keyboard accessibility */
+.filter-btn:focus-visible {
+    outline: 2px solid #ffffff;
+    outline-offset: 4px;
+}
 
 /* ==========================================================================
    10. CURSOR AND GLITTER

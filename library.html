@@ -6095,5 +6095,71 @@
     );
 </script>
 
+    <script>
+document.addEventListener("DOMContentLoaded", () => {
+    const filterButtons =
+        document.querySelectorAll(".filter-btn");
+
+    const bookCards =
+        document.querySelectorAll(".book-card");
+
+    const searchInput =
+        document.getElementById("book-search");
+
+    let selectedGenre = "all";
+
+    function updateLibrary() {
+        const searchTerm =
+            searchInput.value.toLowerCase().trim();
+
+        bookCards.forEach(card => {
+            const genres =
+                (card.dataset.genre || "").split(/\s+/);
+
+            const title =
+                card.querySelector("h3")?.textContent.toLowerCase() || "";
+
+            const author =
+                card.querySelector(".book-author")?.textContent.toLowerCase() || "";
+
+            const matchesGenre =
+                selectedGenre === "all" ||
+                genres.includes(selectedGenre);
+
+            const matchesSearch =
+                title.includes(searchTerm) ||
+                author.includes(searchTerm);
+
+            card.hidden = !(matchesGenre && matchesSearch);
+        });
+    }
+
+    filterButtons.forEach(button => {
+        button.setAttribute(
+            "aria-pressed",
+            button.classList.contains("active") ? "true" : "false"
+        );
+
+        button.addEventListener("click", () => {
+            selectedGenre = button.dataset.filter;
+
+            filterButtons.forEach(btn => {
+                btn.classList.remove("active");
+                btn.setAttribute("aria-pressed", "false");
+            });
+
+            button.classList.add("active");
+            button.setAttribute("aria-pressed", "true");
+
+            updateLibrary();
+        });
+    });
+
+    searchInput.addEventListener("input", updateLibrary);
+
+    updateLibrary();
+});
+</script>
+
 </body>
 </html>
