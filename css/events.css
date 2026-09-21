@@ -291,6 +291,7 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 21px;
+    
 }
 
 .event-card {
@@ -320,10 +321,6 @@
     transform: translateY(-7px);
     border-color: var(--pink);
     box-shadow: var(--glow-medium);
-}
-
-.event-card-featured {
-    grid-row: span 2;
 }
 
 .event-image-wrap {
@@ -413,7 +410,7 @@
     text-shadow: var(--glow-large);
 }
 
-.event-art span {
+.event-art > span:not(.event-status) {
     position: absolute;
     top: 18%;
     right: 20%;
