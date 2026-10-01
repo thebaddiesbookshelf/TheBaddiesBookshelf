@@ -935,3 +935,26 @@ button,
     opacity: 0.9;
     filter: blur(1px);
 }
+/* Series tiles reuse the existing book card design. */
+.series-open {
+    width: 100%; padding: 0; border: 0; background: transparent;
+    font: inherit; text-align: inherit; cursor: pointer;
+}
+.series-open:focus-visible { outline: 3px solid #ff69b4; outline-offset: -3px; }
+.series-dialog {
+    width: min(960px, 94vw); max-height: 88dvh; padding: 24px;
+    border: 1px solid rgba(255,20,147,.6); border-radius: 18px;
+    background: #10030d; color: #fff; margin: auto;
+    font-family: "Poppins", sans-serif;
+    box-shadow: 0 20px 70px rgba(0,0,0,.6);
+}
+.series-dialog::backdrop { background: rgba(0,0,0,.8); }
+.series-dialog-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 24px; }
+.series-dialog-header h2 { margin: 0; font-size: 1.35rem; color: #ff69b4; }
+.series-dialog-close { flex-shrink: 0; width: 44px; height: 44px; border: 1px solid #ff69b4; border-radius: 50%; background: transparent; color: #fff; font-size: 28px; cursor: pointer; }
+.series-dialog-books { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 20px; }
+.series-dialog-books .book-card { width: 100%; max-width: 260px; }
+@media (max-width: 520px) {
+    .series-dialog { padding: 16px; }
+    .series-dialog-books { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+}
