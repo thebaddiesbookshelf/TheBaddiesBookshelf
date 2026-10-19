@@ -1003,9 +1003,11 @@ async function blockMember() {
   )) return;
 
   try {
+    
     const {error} = await db.rpc("tbb_vm_block",{
-      p_blocked_id:recipientId
+      p_user:recipientId
     });
+
 
     if (error) throw error;
 
@@ -1027,10 +1029,12 @@ async function reportMessage(messageId) {
   if (!reason?.trim()) return;
 
   try {
+    
     const {error} = await db.rpc("tbb_vm_report",{
-      p_message_id:messageId,
+      p_message:messageId,
       p_reason:reason.trim()
     });
+
 
     if (error) throw error;
 
