@@ -349,6 +349,20 @@ a { color:var(--pink-light); }
 .compose-hint{padding:0 20px 16px;color:var(--muted);font-size:12px}.chat-head .chat-person{display:flex;align-items:center;gap:10px}
 @media(max-width:480px){.compose-launch{width:48px;height:48px}.compose-dialog{max-height:92vh}}
 
+
+/* Blocked Baddies management */
+.blocked-section{margin-top:26px;padding-top:22px;border-top:1px solid var(--border)}
+.blocked-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.blocked-heading h3{margin:0;font-size:21px;color:var(--pink-light)}
+.blocked-list{display:grid;gap:10px;margin-top:15px}
+.blocked-card{display:flex;align-items:center;gap:12px;justify-content:space-between;padding:14px;border:1px solid var(--border);border-radius:16px;background:var(--alt)}
+.blocked-identity{display:flex;align-items:center;gap:11px;min-width:0}
+.blocked-avatar{width:43px;height:43px;flex:none;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--pink),#723d8f);font-weight:900}
+.blocked-name{min-width:0;overflow-wrap:anywhere}.blocked-name strong{display:block}.blocked-name small{color:var(--muted)}
+.blocked-card .btn{flex:none}
+.blocked-feedback{margin-top:10px;color:var(--pink-light)}
+@media(max-width:480px){.blocked-card{align-items:flex-start;flex-wrap:wrap}.blocked-card .btn{margin-left:auto}}
+
 </style>
 </head>
 
@@ -467,6 +481,20 @@ a { color:var(--pink-light); }
           type="button">Save Preferences 💗</button>
 
   <p class="muted" id="preferencesStatus" role="status"></p>
+  <div class="blocked-section" aria-labelledby="blockedHeading">
+    <div class="blocked-heading">
+      <div>
+        <h3 id="blockedHeading">💔 Blocked Baddies</h3>
+        <p class="muted">Your boundaries, your choice. Unblocking does not send a notification.</p>
+      </div>
+      <button class="btn" id="refreshBlocked" type="button">Refresh ↻</button>
+    </div>
+    <div id="blockedList" class="blocked-list" aria-live="polite">
+      <div class="muted">Loading your blocked list...</div>
+    </div>
+    <p id="blockedStatus" class="blocked-feedback" role="status" aria-live="polite"></p>
+  </div>
+
 </section>
 
 </main>
@@ -915,14 +943,9 @@ async function loadMessages(conversationId) {
     renderConversationList();
   }
 
-  const {error:readError} = await db.rpc(
-    "tbb_vm_mark_read",
-    {p_conversation_id:conversationId}
-  );
+  // Read receipt RPC accepts an individual message ID, not a conversation ID.
+  // Keep it disabled until per-message read tracking is implemented.
 
-  if (readError) {
-    console.warn("Could not mark messages read:",readError.message);
-  }
 }
 
 async function sendMessage(event) {
@@ -1015,6 +1038,7 @@ async function blockMember() {
     await loadConversations();
 
     notify("Member blocked. 🛡️");
+    await loadBlockedBaddies();
 
   } catch (error) {
     notify(error.message,true);
@@ -1042,6 +1066,86 @@ async function reportMessage(messageId) {
 
   } catch (error) {
     notify(error.message,true);
+  }
+}
+
+async function loadBlockedBaddies() {
+  if (!user) return;
+  const list = $("blockedList");
+  const refresh = $("refreshBlocked");
+  refresh.disabled = true;
+  list.replaceChildren();
+  const loading = document.createElement("div");
+  loading.className = "muted";
+  loading.textContent = "Checking your blocked list... 💗";
+  list.append(loading);
+
+  try {
+    // This SELECT must be protected by an own-blocks RLS policy in Supabase.
+    const {data:blocks,error} = await db.from("tbb_vm_blocks")
+      .select("blocked_id,created_at")
+      .eq("blocker_id",user.id)
+      .order("created_at",{ascending:false});
+    if (error) throw error;
+    const ids = [...new Set((blocks || []).map(row => row.blocked_id))];
+    let names = new Map();
+    if (ids.length) names = await getMemberNames(ids);
+    list.replaceChildren();
+    if (!ids.length) {
+      const empty = document.createElement("p");
+      empty.className = "muted";
+      empty.textContent = "No blocked Baddies to show. 💗";
+      list.append(empty);
+      return;
+    }
+    for (const id of ids) {
+      const displayName = names.get(id) || "Blocked member";
+      const card = document.createElement("div");
+      card.className = "blocked-card";
+      const identity = document.createElement("div");
+      identity.className = "blocked-identity";
+      const avatar = document.createElement("span");
+      avatar.className = "blocked-avatar";
+      avatar.textContent = displayName === "Blocked member" ? "💗" : displayName.charAt(0).toUpperCase();
+      const details = document.createElement("div");
+      details.className = "blocked-name";
+      const name = document.createElement("strong");
+      name.textContent = displayName;
+      const subtitle = document.createElement("small");
+      subtitle.textContent = "Blocked from messaging you";
+      details.append(name,subtitle);
+      identity.append(avatar,details);
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "btn primary";
+      button.textContent = "Unblock 💗";
+      button.setAttribute("aria-label",`Unblock ${displayName}`);
+      button.addEventListener("click",async () => {
+        if (!confirm(`Unblock ${displayName}? This removes your block, but messaging permissions still apply.`)) return;
+        button.disabled = true;
+        $("blockedStatus").textContent = "";
+        try {
+          const {error:unblockError} = await db.rpc("tbb_vm_unblock",{p_user:id});
+          if (unblockError) throw unblockError;
+          $("blockedStatus").textContent = `${displayName} was unblocked. 💗`;
+          await loadBlockedBaddies();
+          await loadConversations();
+        } catch (error) {
+          $("blockedStatus").textContent = "Could not unblock: " + error.message;
+          button.disabled = false;
+        }
+      });
+      card.append(identity,button);
+      list.append(card);
+    }
+  } catch(error) {
+    list.replaceChildren();
+    const warning = document.createElement("p");
+    warning.className = "notice error";
+    warning.textContent = "Blocked list unavailable: " + error.message;
+    list.append(warning);
+  } finally {
+    refresh.disabled = false;
   }
 }
 
@@ -1120,6 +1224,7 @@ async function init() {
 
     await loadPreferences();
     await loadConversations();
+    await loadBlockedBaddies();
 
   } catch (error) {
     notify(error.message,true);
@@ -1127,6 +1232,7 @@ async function init() {
 }
 
 $("logout").addEventListener("click",logout);
+$("refreshBlocked").addEventListener("click",loadBlockedBaddies);
 $("newMessageButton").addEventListener("click",openCompose);
 $("closeCompose").addEventListener("click",closeCompose);
 $("composeOverlay").addEventListener("click",event => {
