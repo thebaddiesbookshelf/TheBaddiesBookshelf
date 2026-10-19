@@ -1,0 +1,658 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#130d17">
+<title>The Baddie Directory™ | TBB 2.0</title>
+
+<style>
+:root{
+  --accent:#ff4da6;
+  --light:#ffb5da;
+  --bg:#130d17;
+  --surface:#241727;
+  --alt:#332036;
+  --border:#65415d;
+  --text:#fff5fb;
+  --muted:#d6bccc;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:
+    radial-gradient(circle at 85% 5%,#ff4da61c,transparent 35%),
+    radial-gradient(circle at 5% 65%,#b77cff12,transparent 40%),
+    var(--bg);
+  color:var(--text);
+  font-family:"Trebuchet MS",Arial,sans-serif;
+  min-height:100vh;
+}
+button,input,select{font:inherit}
+button{cursor:pointer}
+button:disabled{opacity:.55;cursor:not-allowed}
+a{color:inherit;text-decoration:none}
+.shell{width:min(1240px,94%);margin:auto;padding:24px 0 60px}
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:15px;flex-wrap:wrap;
+}
+.brand{font-weight:900;letter-spacing:2px;color:var(--light)}
+.nav{display:flex;gap:9px;flex-wrap:wrap}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  gap:6px;padding:11px 15px;border:1px solid var(--border);
+  background:var(--alt);color:var(--text);
+  border-radius:13px;font-weight:bold;
+}
+.btn.primary{
+  background:var(--accent);color:#180b14;border-color:var(--accent)
+}
+.btn:hover,.member-card:hover{filter:brightness(1.12)}
+.hero{
+  margin:27px 0 20px;padding:38px 32px;
+  background:linear-gradient(120deg,var(--surface),var(--alt));
+  border:1px solid var(--border);border-radius:26px;
+  position:relative;overflow:hidden;
+}
+.hero:after{
+  content:"✦";position:absolute;right:25px;top:5px;
+  font-size:150px;color:var(--accent);opacity:.12;
+  pointer-events:none;
+}
+.eyebrow{
+  color:var(--light);font-size:11px;font-weight:900;
+  letter-spacing:3px;text-transform:uppercase;
+}
+.hero h1{
+  margin:12px 0;font-size:clamp(36px,6vw,66px);
+  line-height:1.05;position:relative;z-index:1;
+}
+.hero p{color:var(--muted);max-width:600px;line-height:1.6}
+.toolbar{
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  padding:18px;border:1px solid var(--border);
+  background:var(--surface);border-radius:20px;
+}
+.search{
+  flex:1;min-width:200px;
+  padding:14px 16px;background:var(--alt);
+  border:1px solid var(--border);border-radius:13px;
+  color:var(--text);outline:none;
+}
+.search:focus{border-color:var(--accent)}
+.count{color:var(--light);font-size:13px;font-weight:bold}
+.status{
+  margin:15px 0;color:var(--light);font-size:14px;
+  min-height:18px;
+}
+.status.error{color:#ff9fae}
+.section-head{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:10px;flex-wrap:wrap;margin:22px 0 15px;
+}
+.section-head h2{margin:0;font-size:23px}
+.muted{color:var(--muted)}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(235px,1fr));
+  gap:17px;
+}
+.member-card{
+  padding:23px 18px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:23px;
+  text-align:center;
+  transition:transform .15s,border-color .15s;
+}
+.member-card:hover{
+  transform:translateY(-3px);
+  border-color:var(--accent);
+}
+.avatar{
+  width:92px;height:92px;
+  margin:0 auto 14px;
+  border:3px solid var(--accent);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--alt);
+  color:var(--light);
+  font-size:35px;font-weight:900;
+  overflow:hidden;
+}
+.avatar img{width:100%;height:100%;object-fit:cover}
+.member-card h3{
+  margin:7px 0;font-size:19px;
+  overflow-wrap:anywhere;
+}
+.handle{
+  font-size:13px;color:var(--light);
+  overflow-wrap:anywhere;min-height:18px;
+}
+.card-note{
+  color:var(--muted);font-size:12px;
+  margin:13px 0 16px;
+}
+.card-actions{display:flex;gap:8px;justify-content:center}
+.card-actions .btn{flex:1;font-size:12px}
+.empty{
+  grid-column:1/-1;text-align:center;
+  padding:50px 20px;background:var(--surface);
+  border:1px dashed var(--border);
+  border-radius:20px;color:var(--muted);
+}
+.overlay{
+  position:fixed;inset:0;
+  background:#08050bd9;
+  display:flex;align-items:center;justify-content:center;
+  padding:20px;z-index:50;
+}
+.overlay[hidden]{display:none}
+.modal{
+  width:min(520px,100%);max-height:90vh;overflow-y:auto;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:25px;padding:25px;
+  box-shadow:0 20px 70px #0009;
+}
+.modal-top{
+  display:flex;justify-content:flex-end;
+}
+.modal-top button{
+  border:0;background:transparent;color:var(--light);
+  font-size:27px;
+}
+.modal-avatar{width:115px;height:115px;font-size:44px}
+.modal h2{text-align:center;margin:12px 0 5px}
+.modal .handle{text-align:center}
+.modal .section{
+  margin-top:20px;padding:17px;background:var(--alt);
+  border:1px solid var(--border);border-radius:15px;
+}
+.modal .section h3{margin:0 0 9px;font-size:15px;color:var(--light)}
+.modal .section p{margin:0;line-height:1.6;overflow-wrap:anywhere}
+.modal-actions{
+  display:flex;gap:10px;flex-wrap:wrap;margin-top:20px;
+}
+.modal-actions>*{flex:1}
+.pill{
+  display:inline-block;margin:4px 5px 4px 0;
+  padding:7px 11px;background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:30px;font-size:12px;
+}
+.footer{
+  text-align:center;color:var(--muted);
+  font-size:12px;margin-top:40px;
+}
+@media(max-width:540px){
+  .hero{padding:28px 22px}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .member-card{padding:18px 10px}
+  .member-card h3{font-size:15px}
+  .avatar{width:74px;height:74px;font-size:28px}
+  .card-actions{flex-direction:column}
+}
+@media(max-width:360px){
+  .grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+
+<body>
+<main class="shell">
+
+<header class="topbar">
+  <div class="brand">TBB ✦ 2.0</div>
+  <nav class="nav" aria-label="Member navigation">
+    <a class="btn" href="member.html">← The Vanity™</a>
+    <a class="btn" href="vanity-mail.html">💌 Vanity Mail™</a>
+    <button class="btn" id="logout" type="button">Sign Out</button>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="eyebrow">✦ The Baddie Book Club Presents ✦</div>
+  <h1>The Baddie<br>Directory™ 💋</h1>
+  <p>
+    Find your people, discover fellow readers, and connect
+    with the Baddies who make this community unforgettable.
+  </p>
+</section>
+
+<section class="toolbar" aria-label="Directory search">
+  <input
+    class="search"
+    id="search"
+    type="search"
+    placeholder="Search Baddies by name or @username..."
+    aria-label="Search members"
+    maxlength="100"
+  >
+  <button class="btn" id="refresh" type="button">↻ Refresh</button>
+  <span class="count" id="memberCount">Loading...</span>
+</section>
+
+<p id="status" class="status" role="status" aria-live="polite"></p>
+
+<div class="section-head">
+  <h2>Meet the Baddies ✨</h2>
+  <span class="muted">Your bookish community</span>
+</div>
+
+<section class="grid" id="memberGrid" aria-label="Member directory">
+  <div class="empty">Finding your fellow Baddies... 💗</div>
+</section>
+
+<footer class="footer">
+  THE BADDIE BOOK CLUB ✦ THE VANITY™ ✦ 2026
+</footer>
+</main>
+
+<div class="overlay" id="profileOverlay" hidden>
+  <section
+    class="modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="modalName"
+  >
+    <div class="modal-top">
+      <button id="closeModal" type="button" aria-label="Close profile">×</button>
+    </div>
+
+    <div class="avatar modal-avatar" id="modalAvatar">💗</div>
+    <h2 id="modalName">Baddie</h2>
+    <div class="handle" id="modalHandle"></div>
+
+    <div class="section">
+      <h3>✦ Meet This Baddie</h3>
+      <p id="modalBio">No bio added yet.</p>
+    </div>
+
+    <div class="section">
+      <h3>✦ Reader Type</h3>
+      <p id="modalReaderType">A certified book lover 💗</p>
+    </div>
+
+    <div class="section">
+      <h3>✦ Favorite Genres</h3>
+      <div id="modalGenres"></div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn primary" id="messageMember" type="button">
+        💌 Vanity Mail™
+      </button>
+      <button class="btn" id="closeProfile" type="button">
+        Back to Directory
+      </button>
+    </div>
+  </section>
+</div>
+
+<script type="module">
+import {db,requireAccess,logout} from "./js/auth.js";
+
+const $ = id => document.getElementById(id);
+
+const THEMES = {
+  romi:{
+    accent:"#ff4da6",light:"#ffb5da",
+    bg:"#130d17",surface:"#241727",
+    alt:"#332036",border:"#65415d"
+  },
+  nyx:{
+    accent:"#ff319d",light:"#ffa0d5",
+    bg:"#09090d",surface:"#1b1520",
+    alt:"#302034",border:"#63365e"
+  },
+  nova:{
+    accent:"#b77cff",light:"#ddbdff",
+    bg:"#120d23",surface:"#241a3c",
+    alt:"#362650",border:"#665087"
+  },
+  sage:{
+    accent:"#c99b69",light:"#f1cba0",
+    bg:"#17120e",surface:"#30251e",
+    alt:"#46362a",border:"#79604a"
+  },
+  scarlett:{
+    accent:"#f34a65",light:"#ffabb7",
+    bg:"#180c12",surface:"#30171f",
+    alt:"#47232c",border:"#85414e"
+  }
+};
+
+let currentUser = null;
+let members = [];
+let selectedMember = null;
+let lastFocused = null;
+
+function setStatus(text,error=false){
+  $("status").textContent = text;
+  $("status").classList.toggle("error",error);
+}
+
+function applyTheme(name){
+  const theme = THEMES[String(name||"romi").toLowerCase()]
+    || THEMES.romi;
+
+  const root = document.documentElement.style;
+
+  for(const [key,value] of Object.entries(theme)){
+    root.setProperty("--"+key,value);
+  }
+}
+
+function el(tag,className,text){
+  const node = document.createElement(tag);
+  if(className) node.className = className;
+  if(text !== undefined) node.textContent = text;
+  return node;
+}
+
+function displayName(member){
+  return member.display_name?.trim() || "New Baddie";
+}
+
+function initials(member){
+  const words = displayName(member).split(/\s+/).slice(0,2);
+  return words.map(word=>word[0]||"").join("").toUpperCase();
+}
+
+function handle(member){
+  return member.username
+    ? "@"+member.username.replace(/^@/,"")
+    : "TBB Member";
+}
+
+function avatarNode(member,extraClass=""){
+  const avatar = el("div","avatar "+extraClass);
+  avatar.textContent = initials(member) || "💗";
+
+  if(member.signedAvatarUrl){
+    const image = document.createElement("img");
+    image.src = member.signedAvatarUrl;
+    image.alt = "";
+    image.loading = "lazy";
+    image.referrerPolicy = "no-referrer";
+    image.onerror = ()=>{
+      image.remove();
+      avatar.textContent = initials(member) || "💗";
+    };
+    avatar.replaceChildren(image);
+  }
+
+  return avatar;
+}
+
+async function loadMyTheme(){
+  const {data,error} = await db
+    .from("tbb_profiles")
+    .select("vanity_theme")
+    .eq("user_id",currentUser.id)
+    .maybeSingle();
+
+  if(error){
+    console.warn("Theme could not load:",error.message);
+    return;
+  }
+
+  applyTheme(data?.vanity_theme);
+}
+
+async function signedAvatar(path){
+  if(!path || typeof path !== "string") return null;
+
+  // Private storage only. Never use a service-role key.
+  const {data,error} = await db.storage
+    .from("tbb-avatars")
+    .createSignedUrl(path,3600);
+
+  if(error) return null;
+  return data?.signedUrl || null;
+}
+
+async function loadDirectory(){
+  $("refresh").disabled = true;
+  setStatus("Loading the Baddie Directory™...");
+
+  try{
+    /*
+      RLS uses tbb_can_view_vanity_profile(user_id).
+      Only approved/authorized profile rows are returned.
+
+      We deliberately do NOT select:
+      - emails
+      - age groups
+      - private favorites
+      - activity history
+      - bookshelf contents
+    */
+    const {data,error} = await db
+      .from("tbb_profiles")
+      .select(
+        "user_id,display_name,username,avatar_path,"+
+        "bio,reader_type,favorite_genres"
+      )
+      .neq("user_id",currentUser.id)
+      .order("display_name",{ascending:true})
+      .limit(500);
+
+    if(error) throw error;
+
+    members = data || [];
+
+    // Signed avatar URLs are temporary.
+    // A failed image request does not hide the member.
+    await Promise.all(
+      members.map(async member=>{
+        member.signedAvatarUrl =
+          await signedAvatar(member.avatar_path);
+      })
+    );
+
+    renderDirectory();
+    setStatus("");
+
+  }catch(error){
+    console.error(error);
+    setStatus(error.message,true);
+
+    $("memberGrid").replaceChildren(
+      el("div","empty",
+        "The directory could not load. Please try refreshing.")
+    );
+  }finally{
+    $("refresh").disabled = false;
+  }
+}
+
+function renderDirectory(){
+  const query = $("search").value.trim().toLowerCase();
+
+  const visible = members.filter(member=>{
+    const searchable = [
+      member.display_name || "",
+      member.username || ""
+    ].join(" ").toLowerCase();
+
+    return searchable.includes(query);
+  });
+
+  $("memberCount").textContent =
+    visible.length+" Baddie"+(visible.length===1?"":"s");
+
+  const grid = $("memberGrid");
+  grid.replaceChildren();
+
+  if(!visible.length){
+    grid.append(
+      el(
+        "div",
+        "empty",
+        query
+          ? "No Baddies matched that search. Try another name! 💗"
+          : "No discoverable profiles yet. Check back soon! 💗"
+      )
+    );
+    return;
+  }
+
+  const fragment = document.createDocumentFragment();
+
+  for(const member of visible){
+    const card = el("article","member-card");
+
+    card.append(avatarNode(member));
+    card.append(el("h3","",displayName(member)));
+    card.append(el("div","handle",handle(member)));
+    card.append(
+      el("p","card-note","✦ Official TBB Baddie ✦")
+    );
+
+    const actions = el("div","card-actions");
+    const view = el("button","btn primary","View Library Card");
+    view.type = "button";
+    view.addEventListener("click",()=>openProfile(member));
+
+    actions.append(view);
+    card.append(actions);
+    fragment.append(card);
+  }
+
+  grid.append(fragment);
+}
+
+function openProfile(member){
+  selectedMember = member;
+  lastFocused = document.activeElement;
+
+  $("modalName").textContent = displayName(member);
+  $("modalHandle").textContent = handle(member);
+  $("modalBio").textContent =
+    member.bio?.trim() || "This Baddie hasn't added a bio yet.";
+  $("modalReaderType").textContent =
+    member.reader_type?.trim() || "A certified book lover 💗";
+
+  $("modalAvatar").replaceWith(
+    (() => {
+      const avatar = avatarNode(member,"modal-avatar");
+      avatar.id = "modalAvatar";
+      return avatar;
+    })()
+  );
+
+  const genres = $("modalGenres");
+  genres.replaceChildren();
+
+  if(Array.isArray(member.favorite_genres)
+      && member.favorite_genres.length){
+    for(const genre of member.favorite_genres.slice(0,15)){
+      genres.append(el("span","pill",String(genre)));
+    }
+  }else{
+    genres.append(
+      el("p","muted","Favorite genres coming soon.")
+    );
+  }
+
+  $("profileOverlay").hidden = false;
+  document.body.style.overflow = "hidden";
+  $("closeModal").focus();
+}
+
+function closeProfile(){
+  $("profileOverlay").hidden = true;
+  document.body.style.overflow = "";
+  selectedMember = null;
+  lastFocused?.focus?.();
+}
+
+function messageMember(){
+  if(!selectedMember) return;
+
+  /*
+    Phase 3 messaging connection:
+    tbb_vm_request(uuid) already exists in Supabase,
+    but its argument name and eligibility checks
+    have not yet been verified.
+
+    Do not guess an RPC argument or bypass
+    the adult/junior consent rules.
+  */
+
+  setStatus(
+    "Vanity Mail™ requests will be enabled after "+
+    "the messaging security check. 💌"
+  );
+
+  closeProfile();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+async function init(){
+  try{
+    const access = await requireAccess();
+    if(!access) return;
+
+    currentUser = access.user;
+
+    await loadMyTheme();
+    await loadDirectory();
+
+  }catch(error){
+    console.error(error);
+    setStatus(error.message,true);
+  }
+}
+
+$("logout").addEventListener("click",logout);
+
+$("refresh").addEventListener("click",loadDirectory);
+
+$("search").addEventListener("input",renderDirectory);
+
+$("closeModal").addEventListener("click",closeProfile);
+$("closeProfile").addEventListener("click",closeProfile);
+
+$("messageMember").addEventListener("click",messageMember);
+
+$("profileOverlay").addEventListener("click",event=>{
+  if(event.target === $("profileOverlay")) closeProfile();
+});
+
+document.addEventListener("keydown",event=>{
+  if($("profileOverlay").hidden) return;
+
+  if(event.key === "Escape"){
+    closeProfile();
+    return;
+  }
+
+  if(event.key === "Tab"){
+    const focusable = [...$("profileOverlay").querySelectorAll(
+      "button:not([disabled]),a[href],input:not([disabled])"
+    )].filter(node=>node.getClientRects().length);
+
+    if(!focusable.length) return;
+
+    const first = focusable[0];
+    const last = focusable[focusable.length-1];
+
+    if(event.shiftKey && document.activeElement===first){
+      event.preventDefault();
+      last.focus();
+    }else if(!event.shiftKey && document.activeElement===last){
+      event.preventDefault();
+      first.focus();
+    }
+  }
+});
+
+init();
+</script>
+</body>
+</html>
