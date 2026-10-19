@@ -1106,7 +1106,238 @@ a {
 }
 
 /* ==========================================
-   CUSTOM SHELF COVERS™ | PHASE 5 STEP 4G.6.5
+   TBB 2.0 — MY BOOK TAGS™
+   PHASE 5 | STEP 4G.7
+   ========================================== */
+
+/* Main tag-management area */
+
+#bookTags {
+  scroll-margin-top: 25px;
+}
+
+#bookTags > .library-helper {
+  max-width: 760px;
+}
+
+#bookTags .library-search-actions {
+  margin: 18px 0 22px;
+}
+
+/* Tag collections */
+
+.book-tags-list,
+.book-tag-list,
+.book-tags-grid,
+.book-tag-choices,
+.book-tags-chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.book-tags-list:empty,
+.book-tag-list:empty,
+.book-tags-chips:empty {
+  display: none;
+}
+
+/* Individual tag chips */
+
+.book-tag-chip,
+.book-tag-badge {
+  --tag-color: #F8BFDC;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+
+  max-width: 100%;
+  padding: 8px 13px;
+
+  border: 1px solid
+    color-mix(in srgb, var(--tag-color) 65%, transparent);
+
+  border-radius: 999px;
+
+  background:
+    color-mix(in srgb, var(--tag-color) 22%, var(--surface));
+
+  color: var(--text);
+
+  font-size: 12px;
+  font-weight: 900;
+  line-height: 1.4;
+
+  overflow-wrap: anywhere;
+
+  transition:
+    transform .2s ease,
+    border-color .2s ease,
+    background .2s ease;
+}
+
+.book-tag-chip:hover {
+  border-color: var(--tag-color);
+  transform: translateY(-2px);
+}
+
+.book-tag-chip[data-selected="true"],
+.book-tag-chip[aria-pressed="true"] {
+  background:
+    color-mix(in srgb, var(--tag-color) 45%, var(--surface));
+
+  border-color: var(--tag-color);
+}
+
+/* Tag-management cards */
+
+.book-tag-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+
+  min-width: 0;
+  padding: 17px 19px;
+
+  border: 1px solid var(--border);
+  border-radius: 18px;
+
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--accent) 7%, var(--surface)),
+      var(--surface)
+    );
+
+  box-shadow: 0 10px 28px #0002;
+}
+
+.book-tag-card:hover {
+  border-color: var(--accent);
+}
+
+.book-tag-card-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.book-tag-card-actions button {
+  padding: 9px 13px;
+  border: 1px solid var(--border);
+  border-radius: 11px;
+
+  background: var(--alt);
+  color: var(--light);
+
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.book-tag-card-actions button:hover {
+  border-color: var(--accent);
+}
+
+/* Tag color picker */
+
+.book-tag-color-picker,
+.book-tag-colors,
+.tag-color-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.book-tag-color-option,
+.tag-color-swatch {
+  width: 43px;
+  height: 43px;
+  padding: 0;
+
+  border: 3px solid transparent;
+  border-radius: 50%;
+
+  background: var(--tag-color, #F8BFDC);
+
+  box-shadow: 0 4px 14px #0004;
+
+  cursor: pointer;
+
+  transition:
+    transform .2s ease,
+    box-shadow .2s ease,
+    border-color .2s ease;
+}
+
+.book-tag-color-option:hover,
+.tag-color-swatch:hover {
+  transform: scale(1.1);
+}
+
+.book-tag-color-option[aria-checked="true"],
+.book-tag-color-option[aria-pressed="true"],
+.tag-color-swatch[aria-checked="true"] {
+  border-color: var(--text);
+  box-shadow:
+    0 0 0 3px var(--surface),
+    0 0 0 5px var(--accent);
+}
+
+/* Tag controls inside reading records */
+
+.book-editor-tags,
+.book-tag-assignment {
+  margin-top: 22px;
+  padding: 18px;
+
+  border: 1px solid var(--border);
+  border-radius: 17px;
+
+  background: var(--alt);
+}
+
+.book-editor-tags h4,
+.book-tag-assignment h4 {
+  margin: 0 0 10px;
+  color: var(--light);
+  font-size: 15px;
+}
+
+.book-tag-assignment .library-helper {
+  margin-bottom: 14px;
+}
+
+/* Tag chips displayed on book cards */
+
+.library-book-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 3px 0;
+}
+
+.library-book-tags .book-tag-chip,
+.library-book-tags .book-tag-badge {
+  padding: 5px 9px;
+  font-size: 10px;
+}
+
+/* Library tag filtering */
+
+.library-tag-filter,
+.book-tag
+
+/* ==========================================
+   CUSTOM SHELF COVERS™
+   PHASE 5 | STEP 4G.6.5
+   RESTORED STYLING
    ========================================== */
 
 .shelf-cover-upload {
@@ -1114,9 +1345,11 @@ a {
   padding: clamp(16px, 3vw, 24px);
   border: 1px solid var(--border);
   border-radius: 22px;
-  background: linear-gradient(145deg,
+  background: linear-gradient(
+    145deg,
     color-mix(in srgb, var(--accent) 10%, var(--alt)),
-    var(--surface));
+    var(--surface)
+  );
 }
 
 .shelf-cover-upload h4 {
@@ -1133,51 +1366,15 @@ a {
   font-weight: 900;
 }
 
-.shelf-cover-preview {
-  position: relative;
-  display: grid;
-  place-items: center;
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  max-height: 270px;
-  overflow: hidden;
-  border: 2px dashed var(--border);
-  border-radius: 18px;
-  background:
-    radial-gradient(circle at 28% 20%,
-      color-mix(in srgb, var(--accent) 35%, transparent),
-      transparent 60%),
-    linear-gradient(135deg, var(--alt), var(--surface));
-}
-
-#shelfCoverPlaceholder {
-  color: var(--light);
-  font-size: clamp(52px, 9vw, 85px);
-  filter: drop-shadow(0 8px 16px #0005);
-}
-
-#shelfCoverPreviewImage:not([hidden]) {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-#shelfCoverPreviewImage[hidden],
-#removeShelfCoverButton[hidden] {
-  display: none !important;
-}
-
 #shelfCoverFile {
   display: block;
   width: 100%;
   max-width: 100%;
   padding: 12px;
   border: 1px solid var(--border);
-  border-radius: 13px;
+  border-radius: 12px;
   background: var(--alt);
   color: var(--text);
-  font-size: 13px;
 }
 
 #shelfCoverFile::file-selector-button {
@@ -1192,33 +1389,59 @@ a {
   cursor: pointer;
 }
 
-#shelfCoverFile:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
+.shelf-cover-preview {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: min(100%, 300px);
+  aspect-ratio: 3 / 2;
+  margin: 18px auto;
+  overflow: hidden;
+  border: 2px dashed var(--border);
+  border-radius: 19px;
+  background: linear-gradient(
+    135deg,
+    var(--alt),
+    var(--surface)
+  );
+}
+
+#shelfCoverPlaceholder {
+  color: var(--light);
+  font-size: 60px;
+}
+
+#shelfCoverPreviewImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+#shelfCoverPreviewImage[hidden],
+#shelfCoverPlaceholder[hidden],
+#removeShelfCoverButton[hidden] {
+  display: none !important;
 }
 
 #shelfCoverFileName {
-  margin-bottom: 8px;
   overflow-wrap: anywhere;
 }
 
-#removeShelfCoverButton:not([hidden]) {
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
+#removeShelfCoverButton {
+  border-color: #cf677b;
+  color: #ffbdc9;
 }
 
 @media (max-width: 600px) {
   .shelf-cover-upload {
-    padding: 16px;
+    padding: 15px;
   }
 
   .shelf-cover-preview {
-    aspect-ratio: 4 / 3;
+    width: 100%;
   }
 
   #shelfCoverFile::file-selector-button {
-    margin-right: 8px;
-    padding: 9px;
+    margin-bottom: 8px;
   }
 }

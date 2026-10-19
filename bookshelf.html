@@ -84,6 +84,12 @@
         <a href="#customShelves">Explore My Shelves ✦</a>
       </article>
       <article class="bookshelf-feature">
+        <div class="feature-icon">🏷️</div>
+        <h3>My Book Tags™</h3>
+        <p>Create your own colorful labels for every bookish obsession.</p>
+        <a href="#bookTags">Explore My Tags ✦</a>
+      </article>
+      <article class="bookshelf-feature">
         <div class="feature-icon">✍🏽</div>
         <h3>Reading Diary™</h3>
         <p>Journal your thoughts, reviews, and favorite reading moments.</p>
@@ -152,6 +158,12 @@
           <option value="finished">Finished</option>
           <option value="on_hold">On Hold</option>
           <option value="dnf">DNF</option>
+        </select>
+      </label>
+      <label for="libraryTagFilter">
+        Tag:
+        <select id="libraryTagFilter">
+          <option value="all">All Tags</option>
         </select>
       </label>
     </div>
@@ -281,6 +293,61 @@
       </form>
     </dialog>
   </section>
+
+
+  <!-- MY BOOK TAGS™ — CUSTOM TAGS ONLY -->
+  <section class="bookshelf-section" id="bookTags" aria-labelledby="bookTagsHeading">
+    <div class="bookshelf-section-heading">
+      <h2 id="bookTagsHeading">🏷️ My Book Tags™</h2>
+      <span>YOUR BOOKS, YOUR LABELS</span>
+    </div>
+    <p class="library-helper">Create your own color-coded tags and organize your personal reading collection. No presets, just your vibe. 💗</p>
+    <div class="library-search-actions">
+      <button class="library-action-btn" type="button" id="createBookTagButton">Create a Tag 🎀</button>
+    </div>
+    <div id="myBookTagsList" class="book-tags-list" aria-live="polite">
+      <p class="library-empty-message">Your custom tags will appear here. 💗</p>
+    </div>
+  </section>
+
+  <!-- CREATE / EDIT CUSTOM BOOK TAG -->
+  <dialog id="bookTagDialog" class="library-dialog">
+    <form id="bookTagForm">
+      <h3 id="bookTagDialogTitle">🎀 Create a Book Tag</h3>
+      <input type="hidden" id="editingBookTagId">
+      <div class="library-form-grid">
+        <label for="bookTagName">Tag Name *</label>
+        <input id="bookTagName" type="text" maxlength="60" required placeholder="e.g., Morally Gray MMC">
+        <fieldset class="book-tag-color-options">
+          <legend>Choose Your Tag Color</legend>
+          <label><input type="radio" name="bookTagColor" value="#F8BFDC" checked> 💗 Pink</label>
+          <label><input type="radio" name="bookTagColor" value="#E2C6F4"> 💜 Lilac</label>
+          <label><input type="radio" name="bookTagColor" value="#C8DFBD"> 🌿 Sage</label>
+          <label><input type="radio" name="bookTagColor" value="#EED1A9"> 🍯 Honey</label>
+          <label><input type="radio" name="bookTagColor" value="#E9A5AE"> 🌹 Rose</label>
+          <label><input type="radio" name="bookTagColor" value="#C7C4C8"> 🩶 Silver</label>
+        </fieldset>
+      </div>
+      <div class="library-dialog-actions">
+        <button id="cancelBookTagButton" type="button">Cancel</button>
+        <button id="deleteBookTagButton" type="button" hidden>Delete Tag 🗑️</button>
+        <button id="saveBookTagButton" type="submit">Save Tag 💗</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- ASSIGN CUSTOM TAGS TO A BOOK -->
+  <dialog id="bookTagAssignmentDialog" class="library-dialog">
+    <div>
+      <h3>🏷️ Tag This Book™</h3>
+      <p id="bookTagAssignmentSubtitle" class="library-helper"></p>
+      <input type="hidden" id="taggingBookshelfEntryId">
+      <div id="bookTagAssignmentChoices" class="book-tag-choices" aria-live="polite"></div>
+      <div class="library-dialog-actions">
+        <button id="closeBookTagAssignmentButton" type="button">Done 💗</button>
+      </div>
+    </div>
+  </dialog>
 
   <!-- CUSTOM SHELVES™ -->
   <section class="bookshelf-section" id="customShelves"
