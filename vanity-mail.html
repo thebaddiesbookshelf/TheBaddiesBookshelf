@@ -523,6 +523,7 @@ let memberSearchGeneration = 0;
 let memberSearchTimer = null;
 let chatPreviews = new Map();
 let memberAvatarUrls = new Map();
+const readReceiptFlights = new Map();
 
 function notify(text,error=false) {
   $("message").textContent = text;
@@ -899,6 +900,9 @@ async function loadMessages(conversationId) {
   if (activeConversation?.id !== conversationId) return;
 
   const container = $("messages");
+  const previousScrollTop = container.scrollTop;
+  const previousScrollHeight = container.scrollHeight;
+  const nearBottom = previousScrollHeight - previousScrollTop - container.clientHeight < 90;
   container.replaceChildren();
 
   if (!data?.length) {
@@ -921,6 +925,12 @@ async function loadMessages(conversationId) {
 
     const time = document.createElement("time");
     time.textContent = shortDate(item.created_at);
+    if (mine) {
+      time.textContent += item.read_at ? " · Seen 💗" : " · Sent 💌";
+      if (item.read_at) {
+        time.title = "Read " + new Date(item.read_at).toLocaleString();
+      }
+    }
 
     bubble.append(body,time);
 
@@ -937,14 +947,42 @@ async function loadMessages(conversationId) {
     container.append(bubble);
   }
 
-  container.scrollTop = container.scrollHeight;
+  if (nearBottom) {
+    container.scrollTop = container.scrollHeight;
+  } else {
+    container.scrollTop = previousScrollTop;
+  }
   if (data?.length) {
     chatPreviews.set(conversationId,data[data.length - 1]);
     renderConversationList();
   }
 
-  // Read receipt RPC accepts an individual message ID, not a conversation ID.
-  // Keep it disabled until per-message read tracking is implemented.
+  // Mark only incoming unread messages, by their individual IDs.
+  // Use a single-flight guard to avoid overlapping polling requests.
+  const unread = (data || []).filter(item =>
+    item.sender_id !== user.id && !item.read_at
+  );
+  if (unread.length && !readReceiptFlights.has(conversationId)) {
+    const flight = (async () => {
+      let succeeded = false;
+      for (const item of unread) {
+        if (activeConversation?.id !== conversationId || document.hidden) break;
+        const {error:readError} = await db.rpc("tbb_vm_mark_read",{
+          p_message:item.id
+        });
+        if (readError) {
+          console.warn("Could not mark message read:",readError.message);
+          break;
+        }
+        succeeded = true;
+      }
+      // Sender's 5-second polling will pick up updated read_at values.
+      return succeeded;
+    })();
+    readReceiptFlights.set(conversationId,flight);
+    try { await flight; }
+    finally { readReceiptFlights.delete(conversationId); }
+  }
 
 }
 
@@ -1278,18 +1316,20 @@ $("savePreferences").addEventListener(
   "click",savePreferences
 );
 
-// Refresh inbox and active conversation periodically.
-// This is polling, not Supabase Realtime.
+// Refresh active messages and read receipts every 5 seconds.
+// Refresh the inbox/previews every 15 seconds to reduce database traffic.
+// Polling is used here; Supabase Realtime is not required.
 let refreshBusy = false;
+let refreshTick = 0;
 
 const refreshTimer = setInterval(async () => {
   if (!user || document.hidden || refreshBusy) return;
-
   refreshBusy = true;
-
+  refreshTick++;
   try {
-    await loadConversations();
-
+    if (refreshTick % 3 === 0) {
+      await loadConversations();
+    }
     if (activeConversation?.status === "accepted") {
       await loadMessages(activeConversation.id);
     }
@@ -1298,7 +1338,7 @@ const refreshTimer = setInterval(async () => {
   } finally {
     refreshBusy = false;
   }
-},15000);
+},5000);
 
 window.addEventListener("pagehide",() => {
   clearInterval(refreshTimer);
