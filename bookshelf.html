@@ -358,10 +358,57 @@
         </label>
       </div>
 
-      <p class="library-helper">
-        Custom shelf covers are coming in a later step.
-        Your shelf name and description can be changed anytime.
-      </p>
+      <!-- CUSTOM SHELF COVER™ -->
+      <div class="shelf-cover-upload" id="shelfCoverUpload">
+        <h4>🎨 My Shelf Cover™</h4>
+        <p class="library-helper">
+          Give your shelf its own aesthetic! Choose a JPG,
+          PNG, or WebP image up to 5 MB.
+        </p>
+
+        <div class="shelf-cover-preview"
+             id="shelfCoverPreview"
+             aria-label="Shelf cover preview">
+          <span id="shelfCoverPlaceholder" aria-hidden="true">
+            🎀
+          </span>
+          <img id="shelfCoverPreviewImage"
+               alt="Preview of your custom shelf cover"
+               hidden>
+        </div>
+
+        <label for="shelfCoverFile">
+          Choose a Cover Image
+        </label>
+        <input
+          id="shelfCoverFile"
+          type="file"
+          accept="image/jpeg,image/png,image/webp"
+          aria-describedby="shelfCoverHelp"
+        >
+
+        <p class="library-helper" id="shelfCoverHelp">
+          Select an image from your device. The cover will
+          be uploaded when this feature is connected in
+          the next step.
+        </p>
+
+        <p id="shelfCoverFileName"
+           class="library-helper"
+           aria-live="polite">
+          No new image selected.
+        </p>
+
+        <div class="library-search-actions">
+          <button
+            id="removeShelfCoverButton"
+            type="button"
+            class="library-action-btn library-secondary-btn"
+            hidden>
+            Remove Cover 🗑️
+          </button>
+        </div>
+      </div>
 
       <div class="library-dialog-actions">
         <button id="cancelShelfForm" type="button">Cancel</button>
