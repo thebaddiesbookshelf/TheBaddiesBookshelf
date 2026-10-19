@@ -1,104 +1,334 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Member Access | The Baddies Bookshelf</title>
-<link rel="icon" href="favicon.ico">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
-<style>
-:root{color-scheme:dark;--pink:#ff39b0;--pale:#ffd4ec;--bg:#100913;--muted:#c5afc2}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 20% 10%,#542044 0,transparent 40%),radial-gradient(ellipse at 90% 90%,#3e1540 0,transparent 40%),var(--bg);color:#fff;font-family:'DM Sans',sans-serif}
-header{padding:20px clamp(20px,6vw,90px);display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #ffffff18}
-header a{color:white;text-decoration:none;font-weight:700}header a:hover{color:var(--pink)}.brand{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:1px}.brand span{color:var(--pink)}
-main{min-height:calc(100vh - 84px);display:grid;place-items:center;padding:40px 16px}
-.shell{width:min(100%,520px);border:1px solid #f787d05c;border-radius:26px;background:#1b1021e8;padding:clamp(22px,5vw,44px);box-shadow:0 20px 75px #0008,0 0 70px #ff39b013}
-.kicker{text-align:center;text-transform:uppercase;letter-spacing:4px;color:var(--pink);font-size:12px;font-weight:700}
-h1{text-align:center;font-family:'Playfair Display',serif;font-size:clamp(31px,6vw,45px);margin:10px 0}h1 em{color:var(--pink);font-style:normal}
-.intro{text-align:center;color:var(--muted);line-height:1.6;margin:0 0 25px}
-.tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:22px;background:#0e0813;padding:6px;border-radius:14px}
-.tabs button{border:0;background:transparent;color:#cbb6c9;padding:12px;border-radius:10px;cursor:pointer;font:700 14px 'DM Sans',sans-serif}
-.tabs button.active{background:#f22c9e;color:white}
-form{display:grid;gap:14px}label{display:block;font-size:13px;font-weight:700;margin-bottom:7px;color:#ffe3f2}
-input{width:100%;border:1px solid #76516f;border-radius:11px;background:#120b17;color:white;padding:13px 14px;font:inherit;outline:none}
-input:focus{border-color:var(--pink);box-shadow:0 0 0 3px #ff39b022}
-.hint{color:#baa4b9;font-size:12px;line-height:1.5;margin-top:5px}
-.primary{border:0;border-radius:12px;background:linear-gradient(110deg,#ff229e,#f35bbb);color:white;font-weight:800;padding:15px;cursor:pointer;font-size:15px;margin-top:6px}
-.primary:disabled{opacity:.55;cursor:wait}
-.secondary{border:0;background:none;color:#ff90d0;cursor:pointer;text-decoration:underline;font:inherit;padding:8px}
-.actions{text-align:center;margin-top:14px}
-#message{display:none;padding:13px;border-radius:12px;margin:0 0 18px;line-height:1.5;font-size:14px}
-#message.show{display:block}#message.error{background:#55202b;border:1px solid #fa8390}#message.success{background:#203f32;border:1px solid #6ad0a2}
-[hidden]{display:none!important}.footer-note{text-align:center;font-size:12px;color:#a48ba4;margin:22px 0 0}
-</style>
-</head>
-<body>
-<header><a class="brand" href="home.html">THE BADDIES <span>BOOKSHELF</span> ♕</a><a href="home.html">← Back Home</a></header>
-<main><section class="shell" aria-labelledby="heading">
-<div class="kicker">✦ The Baddie Access Club ✦</div>
-<h1 id="heading">Hey, <em>Book Bestie.</em></h1>
-<p class="intro">Your bookshelf, your community, your era. Sign in or request your membership below.</p>
-<div id="message" role="status" aria-live="polite"></div>
-<div class="tabs" role="tablist" aria-label="Member access">
-<button id="signinTab" class="active" type="button" aria-selected="true">Sign In</button>
-<button id="signupTab" type="button" aria-selected="false">Join the Club</button>
-</div>
-<form id="signinForm">
-<div><label for="signinEmail">Email address</label><input id="signinEmail" type="email" autocomplete="email" required></div>
-<div><label for="signinPassword">Password</label><input id="signinPassword" type="password" autocomplete="current-password" required></div>
-<button class="primary" type="submit">Enter My Baddie Era ♡</button>
-</form>
-<form id="signupForm" hidden>
-<div><label for="displayName">Display name</label><input id="displayName" maxlength="60" autocomplete="nickname" required></div>
-<div><label for="discordUsername">Discord username</label><input id="discordUsername" minlength="3" maxlength="30" autocomplete="off" pattern="[a-z0-9_.]+" required placeholder="your.discord.username"><div class="hint">Use your exact lowercase Discord username. Verification and approval are handled by admins.</div></div>
-<div><label for="signupEmail">Email address</label><input id="signupEmail" type="email" autocomplete="email" required></div>
-<div><label for="signupPassword">Password</label><input id="signupPassword" type="password" minlength="8" autocomplete="new-password" required><div class="hint">At least 8 characters.</div></div>
-<button class="primary" type="submit">Request My Membership ♕</button>
-</form>
-<div class="actions"><button id="resetButton" class="secondary" type="button">Forgot your password?</button></div>
-<div id="signedIn" hidden>
-<p class="intro" id="accountMessage"></p>
-<button id="signoutButton" class="primary" style="width:100%" type="button">Sign Out</button>
-</div>
-<p class="footer-note">Membership and age-group access are verified by TBB admins. Joining does not automatically grant Commons access.</p>
-</section></main>
-<script type="module">
-import {createClient} from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
-const supabase=createClient('https://rmfmdetdykwfxxfzamhj.supabase.co','sb_publishable_6UBKZvkvkyPNACqDDNRjNQ_wlgy-Jr2');
-const $=id=>document.getElementById(id);
-const adminPortal=new URLSearchParams(location.search).get('portal')==='admin';
-if(adminPortal){
-  document.title='Admin Access | The Baddies Bookshelf';
-  $('heading').innerHTML='Admin <em>Access.</em>';
-  document.querySelector('.intro').textContent='Authorized TBB administrators only. Sign in using your existing TBB account.';
-  $('signupTab').hidden=true;
-  $('resetButton').hidden=false;
-  document.querySelector('.footer-note').textContent='Admin privileges are checked against your Supabase role. A separate admin account is not required.';
-}
 
-const signinTab=$('signinTab'),signupTab=$('signupTab'),signinForm=$('signinForm'),signupForm=$('signupForm');
-function message(text,error=false){const el=$('message');el.textContent=text;el.className='show '+(error?'error':'success')}
-function clearMessage(){$('message').className='';$('message').textContent=''}
-function tab(mode){if(adminPortal)mode='signin';clearMessage();const signIn=mode==='signin';signinForm.hidden=!signIn;signupForm.hidden=signIn;signinTab.classList.toggle('active',signIn);signupTab.classList.toggle('active',!signIn);signinTab.setAttribute('aria-selected',String(signIn));signupTab.setAttribute('aria-selected',String(!signIn));$('resetButton').hidden=!signIn}
-signinTab.addEventListener('click',()=>tab('signin'));signupTab.addEventListener('click',()=>{if(!adminPortal)tab('signup')});
-function busy(form,value){form.querySelector('button[type="submit"]').disabled=value}
-async function showSession(){const {data:{user},error}=await supabase.auth.getUser();if(error||!user){$('signedIn').hidden=true;signinForm.hidden=!signinTab.classList.contains('active');signupForm.hidden=!signupTab.classList.contains('active');document.querySelector('.tabs').hidden=false;$('resetButton').hidden=!signinTab.classList.contains('active');return}
-signinForm.hidden=true;signupForm.hidden=true;document.querySelector('.tabs').hidden=true;$('resetButton').hidden=true;$('signedIn').hidden=false;
-if(adminPortal){
- const {data:role,error:roleError}=await supabase.from('tbb_user_roles').select('role').eq('user_id',user.id).eq('role','admin').maybeSingle();
- $('accountMessage').textContent=role&&!roleError?'Admin access verified. Your Admin HQ interface will be connected here once it is built.':'This account is not verified as a TBB administrator. Admin features are unavailable.';
- return;
-}
-let status='pending';const {data:membership}=await supabase.from('tbb_memberships').select('status').eq('user_id',user.id).maybeSingle();if(membership?.status)status=membership.status;
-$('accountMessage').textContent=status==='approved'?'You are signed in and your membership is approved! Your Commons access will depend on admin-verified age permissions.':'You are signed in. Your membership status is '+status+'. An admin must approve your account before you can enter member-only areas.';
-}
-signinForm.addEventListener('submit',async e=>{e.preventDefault();busy(signinForm,true);clearMessage();try{const {error}=await supabase.auth.signInWithPassword({email:$('signinEmail').value.trim(),password:$('signinPassword').value});if(error)throw error;message('Welcome back, bestie! ♡');await showSession()}catch(err){message(err.message,true)}finally{busy(signinForm,false)}});
-signupForm.addEventListener('submit',async e=>{e.preventDefault();busy(signupForm,true);clearMessage();try{const username=$('discordUsername').value.trim();if(!/^[a-z0-9_.]{3,30}$/.test(username))throw Error('Use a valid lowercase Discord username (3–30 characters).');
-const {data,error}=await supabase.auth.signUp({email:$('signupEmail').value.trim(),password:$('signupPassword').value,options:{emailRedirectTo:new URL('login.html',location.href).href,data:{display_name:$('displayName').value.trim(),discord_username:username}}});if(error)throw error;
-if(data.session){message('Account created! Your membership still requires admin approval.');await showSession()}else{message('Request received! Check your email for a confirmation link, then sign in. Admin approval is still required.')}
-}catch(err){message(err.message,true)}finally{busy(signupForm,false)}});
-$('resetButton').addEventListener('click',async()=>{const email=$('signinEmail').value.trim()||prompt('What email address should receive your password reset link?');if(!email)return;const {error}=await supabase.auth.resetPasswordForEmail(email,{redirectTo:new URL('login.html',location.href).href});message(error?error.message:'If that email is registered, a reset email will be sent.',!!error)});
-$('signoutButton').addEventListener('click',async()=>{const {error}=await supabase.auth.signOut();if(error){message(error.message,true);return}tab('signin');await showSession();message('Signed out successfully. ♡')});
-supabase.auth.onAuthStateChange(()=>{setTimeout(showSession,0)});
-await showSession();
-</script>
-</body></html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Member Access | The Baddies Bookshelf</title>
+  <link rel="icon" href="favicon.ico">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      color-scheme: dark;
+      --pink: #ff39b0;
+      --pale: #ffd4ec;
+      --bg: #100913;
+      --muted: #c5afc2
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(ellipse at 20% 10%, #542044 0, transparent 40%), radial-gradient(ellipse at 90% 90%, #3e1540 0, transparent 40%), var(--bg);
+      color: #fff;
+      font-family: 'DM Sans', sans-serif
+    }
+
+    header {
+      padding: 20px clamp(20px, 6vw, 90px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #ffffff18
+    }
+
+    header a {
+      color: white;
+      text-decoration: none;
+      font-weight: 700
+    }
+
+    header a:hover {
+      color: var(--pink)
+    }
+
+    .brand {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 28px;
+      letter-spacing: 1px
+    }
+
+    .brand span {
+      color: var(--pink)
+    }
+
+    main {
+      min-height: calc(100vh - 84px);
+      display: grid;
+      place-items: center;
+      padding: 40px 16px
+    }
+
+    .shell {
+      width: min(100%, 520px);
+      border: 1px solid #f787d05c;
+      border-radius: 26px;
+      background: #1b1021e8;
+      padding: clamp(22px, 5vw, 44px);
+      box-shadow: 0 20px 75px #0008, 0 0 70px #ff39b013
+    }
+
+    .kicker {
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 4px;
+      color: var(--pink);
+      font-size: 12px;
+      font-weight: 700
+    }
+
+    h1 {
+      text-align: center;
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(31px, 6vw, 45px);
+      margin: 10px 0
+    }
+
+    h1 em {
+      color: var(--pink);
+      font-style: normal
+    }
+
+    .intro {
+      text-align: center;
+      color: var(--muted);
+      line-height: 1.6;
+      margin: 0 0 25px
+    }
+
+    .tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 22px;
+      background: #0e0813;
+      padding: 6px;
+      border-radius: 14px
+    }
+
+    .tabs button {
+      border: 0;
+      background: transparent;
+      color: #cbb6c9;
+      padding: 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      font: 700 14px 'DM Sans', sans-serif
+    }
+
+    .tabs button.active {
+      background: #f22c9e;
+      color: white
+    }
+
+    form {
+      display: grid;
+      gap: 14px
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 7px;
+      color: #ffe3f2
+    }
+
+    input {
+      width: 100%;
+      border: 1px solid #76516f;
+      border-radius: 11px;
+      background: #120b17;
+      color: white;
+      padding: 13px 14px;
+      font: inherit;
+      outline: none
+    }
+
+    input:focus {
+      border-color: var(--pink);
+      box-shadow: 0 0 0 3px #ff39b022
+    }
+
+    .hint {
+      color: #baa4b9;
+      font-size: 12px;
+      line-height: 1.5;
+      margin-top: 5px
+    }
+
+    .primary {
+      border: 0;
+      border-radius: 12px;
+      background: linear-gradient(110deg, #ff229e, #f35bbb);
+      color: white;
+      font-weight: 800;
+      padding: 15px;
+      cursor: pointer;
+      font-size: 15px;
+      margin-top: 6px
+    }
+
+    .primary:disabled {
+      opacity: .55;
+      cursor: wait
+    }
+
+    .secondary {
+      border: 0;
+      background: none;
+      color: #ff90d0;
+      cursor: pointer;
+      text-decoration: underline;
+      font: inherit;
+      padding: 8px
+    }
+
+    .actions {
+      text-align: center;
+      margin-top: 14px
+    }
+
+    #message {
+      display: none;
+      padding: 13px;
+      border-radius: 12px;
+      margin: 0 0 18px;
+      line-height: 1.5;
+      font-size: 14px
+    }
+
+    #message.show {
+      display: block
+    }
+
+    #message.error {
+      background: #55202b;
+      border: 1px solid #fa8390
+    }
+
+    #message.success {
+      background: #203f32;
+      border: 1px solid #6ad0a2
+    }
+
+    [hidden] {
+      display: none !important
+    }
+
+    .footer-note {
+      text-align: center;
+      font-size: 12px;
+      color: #a48ba4;
+      margin: 22px 0 0
+    }
+  </style>
+</head>
+
+<body>
+  <header><a class="brand" href="home.html">THE BADDIES <span>BOOKSHELF</span> ♕</a><a href="home.html">← Back Home</a>
+  </header>
+  <main>
+    <section class="shell" aria-labelledby="heading">
+      <div class="kicker">✦ The Baddie Access Club ✦</div>
+      <h1 id="heading">Hey, <em>Book Bestie.</em></h1>
+      <p class="intro">Your bookshelf, your community, your era. Sign in or request your membership below.</p>
+      <div id="message" role="status" aria-live="polite"></div>
+      <div class="tabs" role="tablist" aria-label="Member access">
+        <button id="signinTab" class="active" type="button" aria-selected="true">Sign In</button>
+        <button id="signupTab" type="button" aria-selected="false">Join the Club</button>
+      </div>
+      <form id="signinForm">
+        <div><label for="signinEmail">Email address</label><input id="signinEmail" type="email" autocomplete="email"
+            required></div>
+        <div><label for="signinPassword">Password</label><input id="signinPassword" type="password"
+            autocomplete="current-password" required></div>
+        <button class="primary" type="submit">Enter My Baddie Era ♡</button>
+      </form>
+      <form id="signupForm" hidden>
+        <div><label for="displayName">Display name</label><input id="displayName" maxlength="60" autocomplete="nickname"
+            required></div>
+        <div><label for="discordUsername">Discord username</label><input id="discordUsername" minlength="3"
+            maxlength="30" autocomplete="off" pattern="[a-z0-9_.]+" required placeholder="your.discord.username">
+          <div class="hint">Use your exact lowercase Discord username. Verification and approval are handled by admins.
+          </div>
+        </div>
+        <div><label for="signupEmail">Email address</label><input id="signupEmail" type="email" autocomplete="email"
+            required></div>
+        <div><label for="signupPassword">Password</label><input id="signupPassword" type="password" minlength="8"
+            autocomplete="new-password" required>
+          <div class="hint">At least 8 characters.</div>
+        </div>
+        <button class="primary" type="submit">Request My Membership ♕</button>
+      </form>
+      <div class="actions"><button id="resetButton" class="secondary" type="button">Forgot your password?</button></div>
+      <div id="signedIn" hidden>
+        <p class="intro" id="accountMessage"></p>
+        <button id="signoutButton" class="primary" style="width:100%" type="button">Sign Out</button>
+      </div>
+      <p class="footer-note">Membership and age-group access are verified by TBB admins. Joining does not automatically
+        grant Commons access.</p>
+    </section>
+  </main>
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+    const supabase = createClient('https://rmfmdetdykwfxxfzamhj.supabase.co', 'sb_publishable_6UBKZvkvkyPNACqDDNRjNQ_wlgy-Jr2');
+    const $ = id => document.getElementById(id);
+    const adminPortal = new URLSearchParams(location.search).get('portal') === 'admin';
+    if (adminPortal) {
+      document.title = 'Admin Access | The Baddies Bookshelf';
+      $('heading').innerHTML = 'Admin <em>Access.</em>';
+      document.querySelector('.intro').textContent = 'Authorized TBB administrators only. Sign in using your existing TBB account.';
+      $('signupTab').hidden = true;
+      $('resetButton').hidden = false;
+      document.querySelector('.footer-note').textContent = 'Admin privileges are checked against your Supabase role. A separate admin account is not required.';
+    }
+
+    const signinTab = $('signinTab'), signupTab = $('signupTab'), signinForm = $('signinForm'), signupForm = $('signupForm');
+    function message(text, error = false) { const el = $('message'); el.textContent = text; el.className = 'show ' + (error ? 'error' : 'success') }
+    function clearMessage() { $('message').className = ''; $('message').textContent = '' }
+    function tab(mode) { if (adminPortal) mode = 'signin'; clearMessage(); const signIn = mode === 'signin'; signinForm.hidden = !signIn; signupForm.hidden = signIn; signinTab.classList.toggle('active', signIn); signupTab.classList.toggle('active', !signIn); signinTab.setAttribute('aria-selected', String(signIn)); signupTab.setAttribute('aria-selected', String(!signIn)); $('resetButton').hidden = !signIn }
+    signinTab.addEventListener('click', () => tab('signin')); signupTab.addEventListener('click', () => { if (!adminPortal) tab('signup') });
+    function busy(form, value) { form.querySelector('button[type="submit"]').disabled = value }
+    async function showSession() {
+      const { data: { user }, error } = await supabase.auth.getUser(); if (error || !user) { $('signedIn').hidden = true; signinForm.hidden = !signinTab.classList.contains('active'); signupForm.hidden = !signupTab.classList.contains('active'); document.querySelector('.tabs').hidden = false; $('resetButton').hidden = !signinTab.classList.contains('active'); return }
+      signinForm.hidden = true; signupForm.hidden = true; document.querySelector('.tabs').hidden = true; $('resetButton').hidden = true; $('signedIn').hidden = false;
+      if (adminPortal) {
+        const { data: role, error: roleError } = await supabase.from('tbb_user_roles').select('role').eq('user_id', user.id).eq('role', 'admin').maybeSingle();
+        if (roleError) {
+          $('accountMessage').textContent = 'Unable to verify admin access: ' + roleError.message;
+          return;
+        }
+        if (role) {
+          $('accountMessage').textContent = 'Admin access verified. Opening Admin HQ…';
+          window.location.replace(new URL('admin.html', window.location.href).href);
+          return;
+        }
+        $('accountMessage').textContent = 'This account is not verified as a TBB administrator. Admin features are unavailable.';
+        return;
+      }
+      let status = 'pending'; const { data: membership } = await supabase.from('tbb_memberships').select('status').eq('user_id', user.id).maybeSingle(); if (membership?.status) status = membership.status;
+      $('accountMessage').textContent = status === 'approved' ? 'You are signed in and your membership is approved! Your Commons access will depend on admin-verified age permissions.' : 'You are signed in. Your membership status is ' + status + '. An admin must approve your account before you can enter member-only areas.';
+    }
+    signinForm.addEventListener('submit', async e => { e.preventDefault(); busy(signinForm, true); clearMessage(); try { const { error } = await supabase.auth.signInWithPassword({ email: $('signinEmail').value.trim(), password: $('signinPassword').value }); if (error) throw error; message('Welcome back, bestie! ♡'); await showSession() } catch (err) { message(err.message, true) } finally { busy(signinForm, false) } });
+    signupForm.addEventListener('submit', async e => {
+      e.preventDefault(); busy(signupForm, true); clearMessage(); try {
+        const username = $('discordUsername').value.trim(); if (!/^[a-z0-9_.]{3,30}$/.test(username)) throw Error('Use a valid lowercase Discord username (3–30 characters).');
+        const { data, error } = await supabase.auth.signUp({ email: $('signupEmail').value.trim(), password: $('signupPassword').value, options: { emailRedirectTo: new URL('login.html', location.href).href, data: { display_name: $('displayName').value.trim(), discord_username: username } } }); if (error) throw error;
+        if (data.session) { message('Account created! Your membership still requires admin approval.'); await showSession() } else { message('Request received! Check your email for a confirmation link, then sign in. Admin approval is still required.') }
+      } catch (err) { message(err.message, true) } finally { busy(signupForm, false) }
+    });
+    $('resetButton').addEventListener('click', async () => { const email = $('signinEmail').value.trim() || prompt('What email address should receive your password reset link?'); if (!email) return; const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: new URL('login.html', location.href).href }); message(error ? error.message : 'If that email is registered, a reset email will be sent.', !!error) });
+    $('signoutButton').addEventListener('click', async () => { const { error } = await supabase.auth.signOut(); if (error) { message(error.message, true); return } tab('signin'); await showSession(); message('Signed out successfully. ♡') });
+    supabase.auth.onAuthStateChange(() => { setTimeout(showSession, 0) });
+    await showSession();
+  </script>
+</body>
+
+</html>
