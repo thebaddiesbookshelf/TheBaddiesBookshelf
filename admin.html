@@ -764,7 +764,7 @@ async function startImport() {
         namesToCreate.set(normalize(book.series_name), book.series_name);
       }
     }
-
+ 
     // Resolve series before comparing books: the unique database index uses series_id.
     for (const [key, name] of namesToCreate) {
       const { data, error } = await db.from('tbb_book_series')
