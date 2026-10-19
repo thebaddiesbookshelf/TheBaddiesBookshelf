@@ -1,22 +1,1064 @@
+
 <!doctype html>
 <html lang="en">
-
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Baddie HQ</title>
-    <link rel="stylesheet" href="css/auth.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The Vanity™ | TBB 2.0</title>
+  <link rel="stylesheet" href="css/auth.css">
+
+  <style>
+    :root {
+      --accent: #ff4da6;
+      --accent-light: #ffb5da;
+      --background: #130d17;
+      --surface: #241727;
+      --surface-alt: #332036;
+      --text: #fff5fb;
+      --muted: #d4b9ca;
+      --border: #65415d;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(ellipse at top right,
+          color-mix(in srgb, var(--accent) 17%, transparent),
+          transparent 55%),
+        var(--background);
+      color: var(--text);
+      font-family: "Trebuchet MS", Arial, sans-serif;
+    }
+
+    button, input, textarea {
+      font: inherit;
+    }
+
+    button { cursor: pointer; }
+
+    .vanity-shell {
+      width: min(1200px, 94%);
+      margin: auto;
+      padding: 25px 0 65px;
+    }
+
+    .topbar, .top-actions, .profile-heading,
+    .section-heading, .theme-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+    }
+
+    .brand {
+      color: var(--accent-light);
+      font-weight: 900;
+      letter-spacing: 2px;
+      font-size: 18px;
+    }
+
+    .eyebrow {
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      color: var(--accent-light);
+      font-size: 11px;
+      font-weight: bold;
+    }
+
+    h1 {
+      font-size: clamp(35px, 6vw, 64px);
+      margin: 12px 0;
+      line-height: 1;
+    }
+
+    h2 { margin: 0; font-size: 24px; }
+
+    h3 { margin: 0; font-size: 18px; }
+
+    p { line-height: 1.6; }
+
+    .muted { color: var(--muted); }
+
+    .hero {
+      padding: 38px;
+      margin-top: 25px;
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      background: linear-gradient(
+        135deg,
+        color-mix(in srgb, var(--accent) 18%, var(--surface)),
+        var(--surface)
+      );
+    }
+
+    .hero p { max-width: 680px; }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 7px 13px;
+      color: var(--accent-light);
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .btn {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 11px 16px;
+      background: var(--surface-alt);
+      color: var(--text);
+      font-weight: bold;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #160c13;
+      border-color: var(--accent);
+    }
+
+    .btn:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+    }
+
+    .section {
+      margin-top: 34px;
+    }
+
+    .section-heading {
+      margin-bottom: 16px;
+    }
+
+    .panel-card {
+      padding: 24px;
+      border-radius: 22px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      min-width: 0;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .dashboard-card {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .dashboard-card .symbol {
+      font-size: 28px;
+    }
+
+    .dashboard-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .dashboard-card .status {
+      margin-top: auto;
+      padding-top: 12px;
+      color: var(--accent-light);
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .profile-avatar {
+      width: 78px;
+      height: 78px;
+      border-radius: 22px;
+      display: grid;
+      place-items: center;
+      font-size: 35px;
+      background: var(--surface-alt);
+      border: 2px solid var(--accent);
+      flex-shrink: 0;
+    }
+
+    .profile-heading {
+      justify-content: flex-start;
+      flex-wrap: wrap;
+    }
+
+    .profile-heading h2 { margin-bottom: 5px; }
+
+    .theme-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .theme-option {
+      background: var(--surface-alt);
+      color: var(--text);
+      border: 2px solid var(--border);
+      border-radius: 18px;
+      padding: 9px;
+      text-align: center;
+      transition: transform .15s, border-color .15s;
+      min-width: 0;
+    }
+
+    .theme-option:hover {
+      transform: translateY(-3px);
+    }
+
+    .theme-option[aria-pressed="true"] {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px
+        color-mix(in srgb, var(--accent) 25%, transparent);
+    }
+
+    .theme-option img {
+      width: 100%;
+      aspect-ratio: 3 / 4;
+      object-fit: cover;
+      object-position: top;
+      border-radius: 12px;
+      display: block;
+      background: #21141f;
+    }
+
+    .theme-option strong {
+      display: block;
+      margin-top: 10px;
+      font-size: 14px;
+    }
+
+    .theme-option small {
+      display: block;
+      color: var(--muted);
+      margin-top: 4px;
+      font-size: 11px;
+    }
+
+    .theme-actions {
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+
+    .edit-form {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .field.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-size: 13px;
+      font-weight: bold;
+      color: var(--accent-light);
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 12px 13px;
+      background: var(--surface-alt);
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      color: var(--text);
+    }
+
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    input:focus, textarea:focus {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    .helper {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .notice {
+      padding: 12px 15px;
+      border-radius: 12px;
+      background: var(--surface-alt);
+      color: var(--accent-light);
+      margin-top: 16px;
+    }
+
+    .notice.error {
+      color: #ffaaaa;
+    }
+
+    .notice:empty {
+      display: none;
+    }
+
+    .announcement {
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .announcement:last-child {
+      border-bottom: 0;
+    }
+
+    .announcement h3 {
+      margin-bottom: 7px;
+    }
+
+    .announcement p {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      margin-bottom: 0;
+    }
+
+    .announcement time {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .hidden { display: none !important; }
+
+    @media (max-width: 800px) {
+      .theme-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 600px) {
+      .hero { padding: 25px; }
+      .dashboard-grid, .edit-form {
+        grid-template-columns: 1fr;
+      }
+      .theme-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .topbar { align-items: flex-start; }
+      .section-heading { align-items: flex-start; }
+      .panel-card { padding: 18px; }
+    }
+  </style>
 </head>
 
 <body>
-    <main class="panel">
-        <h1>📚 Welcome, Baddie!</h1>
-        <p>Your membership is approved. The Vanity, Bookshelf, and social features are coming in later phases.</p>
-        <p id="message"></p><button id="logout">Sign Out</button>
-        <nav><a href="home.html">Public library home</a></nav>
-    </main>
-    <script
-        type="module">import { requireAccess, logout, $, message } from './js/auth.js'; requireAccess().catch(e => message(e.message, true)); $('logout').onclick = logout;</script>
-</body>
+  <main class="vanity-shell">
 
+    <header class="topbar">
+      <div class="brand">TBB ✦ 2.0</div>
+      <div class="top-actions">
+        <a class="btn" href="home.html">Library Home</a>
+        <button class="btn" id="logout" type="button">
+          Sign Out
+        </button>
+      </div>
+    </header>
+
+    <section class="hero">
+      <span class="eyebrow">
+        The Baddies Bookshelf Presents
+      </span>
+      <h1>The Vanity™</h1>
+      <p id="welcome">
+        Your personal corner of the TBB universe.
+      </p>
+      <span class="pill" id="currentTheme">
+        💗 Romi Era
+      </span>
+    </section>
+
+    <p id="message" class="notice" role="status"></p>
+
+    <!-- MEMBER LIBRARY CARD -->
+
+    <section class="section" id="libraryCard">
+      <div class="section-heading">
+        <h2>💋 My Library Card</h2>
+        <span class="pill">My Profile</span>
+      </div>
+
+      <div class="panel-card">
+        <div class="profile-heading">
+          <div class="profile-avatar" aria-hidden="true">
+            📚
+          </div>
+          <div>
+            <h2 id="cardName">Loading Baddie...</h2>
+            <div class="muted" id="cardUsername"></div>
+            <div class="muted" id="cardBio"></div>
+          </div>
+        </div>
+
+        <form id="profileForm" class="edit-form">
+
+          <div class="field">
+            <label for="displayName">Display Name</label>
+            <input id="displayName"
+                   maxlength="80"
+                   required>
+          </div>
+
+          <div class="field">
+            <label for="username">Username</label>
+            <input id="username"
+                   maxlength="30"
+                   placeholder="yourusername"
+                   pattern="[A-Za-z0-9_]+">
+            <span class="helper">
+              Letters, numbers and underscores only.
+            </span>
+          </div>
+
+          <div class="field full">
+            <label for="bio">My Bio</label>
+            <textarea id="bio"
+                      maxlength="500"
+                      placeholder="Tell the Baddies about yourself..."></textarea>
+          </div>
+
+          <div class="field full">
+            <label for="genres">Favorite Genres</label>
+            <input id="genres"
+                   placeholder="Romance, Fantasy, Thriller">
+            <span class="helper">
+              Separate multiple genres with commas.
+            </span>
+          </div>
+
+          <div class="field">
+            <label for="books">Favorite Books</label>
+            <input id="books"
+                   placeholder="Fourth Wing, ...">
+          </div>
+
+          <div class="field">
+            <label for="authors">Favorite Authors</label>
+            <input id="authors"
+                   placeholder="Your favorite authors">
+          </div>
+
+          <div class="field full">
+            <label for="currentRead">Currently Reading</label>
+            <input id="currentRead"
+                   maxlength="200"
+                   placeholder="What's on your nightstand?">
+          </div>
+
+          <div class="field full">
+            <span class="helper">
+              Profile picture uploads and banner editing
+              will be connected when the profile storage
+              setup is ready.
+            </span>
+          </div>
+
+          <div class="field full">
+            <button type="submit"
+                    id="saveProfile"
+                    class="btn btn-primary">
+              Save My Library Card 💗
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- CHARACTER THEME SELECTOR -->
+
+    <section class="section" id="baddieEra">
+      <div class="section-heading">
+        <h2>🎀 Choose Your Baddie Era™</h2>
+        <span class="pill">Personalize</span>
+      </div>
+
+      <div class="panel-card">
+        <p class="muted">
+          Five Baddies. Five aesthetics. One fabulous
+          reading universe. Choose the character who
+          matches your current era!
+        </p>
+
+        <div class="theme-grid" id="themeGrid">
+
+          <button class="theme-option"
+                  type="button"
+                  data-theme="romi"
+                  aria-pressed="false">
+            <img src="images/baddies/Romi_1.png"
+                 alt="Romi official character artwork">
+            <strong>Romi</strong>
+            <small>Pink Romance</small>
+          </button>
+
+          <button class="theme-option"
+                  type="button"
+                  data-theme="nyx"
+                  aria-pressed="false">
+            <img src="images/baddies/Nyx.png"
+                 alt="Nyx official character artwork">
+            <strong>Nyx</strong>
+            <small>Dark Romance</small>
+          </button>
+
+          <button class="theme-option"
+                  type="button"
+                  data-theme="nova"
+                  aria-pressed="false">
+            <img src="images/baddies/Nova.png"
+                 alt="Nova official character artwork">
+            <strong>Nova</strong>
+            <small>Fantasy</small>
+          </button>
+
+          <button class="theme-option"
+                  type="button"
+                  data-theme="sage"
+                  aria-pressed="false">
+            <img src="images/baddies/Sage.png"
+                 alt="Sage official character artwork">
+            <strong>Sage</strong>
+            <small>Cozy Reading</small>
+          </button>
+
+          <button class="theme-option"
+                  type="button"
+                  data-theme="scarlett"
+                  aria-pressed="false">
+            <img src="images/baddies/Scarlett.png"
+                 alt="Scarlett official character artwork">
+            <strong>Scarlett</strong>
+            <small>Thriller</small>
+          </button>
+
+        </div>
+
+        <div class="theme-actions">
+          <span id="themeStatus" class="muted"
+                role="status"></span>
+          <button class="btn btn-primary"
+                  id="saveTheme"
+                  type="button">
+            Save My Baddie Era 💋
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- MEMBER DESTINATIONS -->
+
+    <section class="section" id="campus">
+      <div class="section-heading">
+        <h2>💗 My Baddie Universe</h2>
+      </div>
+
+      <div class="dashboard-grid">
+
+        <article class="panel-card dashboard-card">
+          <div class="symbol">💌</div>
+          <h3>Vanity Mail™</h3>
+          <p>
+            Private conversations, Baddie-to-Baddie
+            messages, and message requests.
+          </p>
+          <div class="status">
+            Inbox integration coming next
+          </div>
+        </article>
+
+        <article class="panel-card dashboard-card">
+          <div class="symbol">📣</div>
+          <h3>The Baddie Post™</h3>
+          <p>
+            Announcements, important updates, and
+            official news from TBB administration.
+          </p>
+          <div class="status">
+            Latest announcements below
+          </div>
+        </article>
+
+        <article class="panel-card dashboard-card">
+          <div class="symbol">💬</div>
+          <h3>The Commons™</h3>
+          <p>
+            Your community discussions, including
+            age-appropriate Commons spaces.
+          </p>
+          <div class="status">
+            Dashboard navigation pending
+          </div>
+        </article>
+
+        <article class="panel-card dashboard-card">
+          <div class="symbol">🎉</div>
+          <h3>Activity Hub™</h3>
+          <p>
+            Challenges, games, community activities,
+            and all the fun happening at TBB.
+          </p>
+          <div class="status">
+            Dashboard navigation pending
+          </div>
+        </article>
+
+        <article class="panel-card dashboard-card">
+          <div class="symbol">📚</div>
+          <h3>The Bookshelf™</h3>
+          <p>
+            Your personal reading collection,
+            favorites, and bookish life.
+          </p>
+          <div class="status">
+            Personal Bookshelf integration pending
+          </div>
+        </article>
+
+        <article class="panel-card dashboard-card">
+          <div class="symbol">🛡️</div>
+          <h3>Privacy & Settings</h3>
+          <p>
+            Control your profile visibility,
+            messages, and personal preferences.
+          </p>
+          <div class="status">
+            Settings integration pending
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- OFFICIAL ANNOUNCEMENTS -->
+
+    <section class="section" id="baddiePost">
+      <div class="section-heading">
+        <h2>📣 The Baddie Post™</h2>
+      </div>
+
+      <div class="panel-card">
+        <p class="muted">
+          Straight from the TBB administration desk.
+        </p>
+        <div id="announcements" aria-live="polite">
+          Loading announcements...
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script type="module">
+    import {
+      db,
+      requireAccess,
+      logout
+    } from "./js/auth.js";
+
+    const $ = id => document.getElementById(id);
+
+    const themes = {
+      romi: {
+        accent: "#ff4da6",
+        light: "#ffb5da",
+        background: "#130d17",
+        surface: "#241727",
+        alt: "#332036",
+        border: "#65415d",
+        label: "💗 Romi Era"
+      },
+      nyx: {
+        accent: "#ff319d",
+        light: "#ffa0d5",
+        background: "#09090d",
+        surface: "#1b1520",
+        alt: "#302034",
+        border: "#63365e",
+        label: "🖤 Nyx Era"
+      },
+      nova: {
+        accent: "#b77cff",
+        light: "#ddbdff",
+        background: "#120d23",
+        surface: "#241a3c",
+        alt: "#362650",
+        border: "#665087",
+        label: "🔮 Nova Era"
+      },
+      sage: {
+        accent: "#c99b69",
+        light: "#f1cba0",
+        background: "#17120e",
+        surface: "#30251e",
+        alt: "#46362a",
+        border: "#79604a",
+        label: "🍂 Sage Era"
+      },
+      scarlett: {
+        accent: "#f34a65",
+        light: "#ffabb7",
+        background: "#180c12",
+        surface: "#30171f",
+        alt: "#47232c",
+        border: "#85414e",
+        label: "❤️ Scarlett Era"
+      }
+    };
+
+    let currentUser = null;
+    let selectedTheme = "romi";
+    let savedTheme = "romi";
+
+    function notify(text, error = false) {
+      const element = $("message");
+      element.textContent = text;
+      element.className = error
+        ? "notice error"
+        : "notice";
+    }
+
+    function applyTheme(name) {
+      const theme = themes[name] || themes.romi;
+      const root = document.documentElement;
+
+      root.style.setProperty("--accent", theme.accent);
+      root.style.setProperty("--accent-light", theme.light);
+      root.style.setProperty("--background", theme.background);
+      root.style.setProperty("--surface", theme.surface);
+      root.style.setProperty("--surface-alt", theme.alt);
+      root.style.setProperty("--border", theme.border);
+
+      $("currentTheme").textContent = theme.label;
+
+      document.querySelectorAll(".theme-option")
+        .forEach(button => {
+          button.setAttribute(
+            "aria-pressed",
+            String(button.dataset.theme === name)
+          );
+        });
+    }
+
+    function selectTheme(name) {
+      if (!themes[name]) return;
+      selectedTheme = name;
+      applyTheme(name);
+
+      $("themeStatus").textContent =
+        selectedTheme === savedTheme
+          ? "Your current Baddie Era"
+          : "Previewing — save to keep this theme";
+    }
+
+    function listToText(value) {
+      return Array.isArray(value)
+        ? value.join(", ")
+        : "";
+    }
+
+    function textToList(value) {
+      return [...new Set(
+        value.split(",")
+          .map(item => item.trim())
+          .filter(Boolean)
+      )];
+    }
+
+    async function loadProfile() {
+      const { data, error } = await db
+        .from("tbb_profiles")
+        .select(`
+          display_name,
+          username,
+          bio,
+          favorite_genres,
+          favorite_books,
+          favorite_authors,
+          current_read,
+          vanity_theme
+        `)
+        .eq("user_id", currentUser.id)
+        .maybeSingle();
+
+      if (error) throw error;
+
+      if (!data) {
+        throw new Error(
+          "Your profile record could not be found."
+        );
+      }
+
+      $("displayName").value =
+        data.display_name || "";
+
+      $("username").value =
+        data.username || "";
+
+      $("bio").value =
+        data.bio || "";
+
+      $("genres").value =
+        listToText(data.favorite_genres);
+
+      $("books").value =
+        listToText(data.favorite_books);
+
+      $("authors").value =
+        listToText(data.favorite_authors);
+
+      $("currentRead").value =
+        data.current_read || "";
+
+      $("cardName").textContent =
+        data.display_name || "New Baddie";
+
+      $("cardUsername").textContent =
+        data.username ? `@${data.username}` : "";
+
+      $("cardBio").textContent =
+        data.bio || "";
+
+      savedTheme = themes[data.vanity_theme]
+        ? data.vanity_theme
+        : "romi";
+
+      selectTheme(savedTheme);
+    }
+
+    async function saveProfile(event) {
+      event.preventDefault();
+
+      if (!currentUser) return;
+
+      const button = $("saveProfile");
+      button.disabled = true;
+
+      try {
+        const displayName =
+          $("displayName").value.trim();
+
+        const username =
+          $("username").value.trim();
+
+        if (!displayName) {
+          throw new Error("Display name is required.");
+        }
+
+        if (
+          username &&
+          !/^[A-Za-z0-9_]+$/.test(username)
+        ) {
+          throw new Error(
+            "Username may contain only letters, " +
+            "numbers and underscores."
+          );
+        }
+
+        const updates = {
+          display_name: displayName,
+          username: username || null,
+          bio: $("bio").value.trim() || null,
+          favorite_genres:
+            textToList($("genres").value),
+          favorite_books:
+            textToList($("books").value),
+          favorite_authors:
+            textToList($("authors").value),
+          current_read:
+            $("currentRead").value.trim() || null
+        };
+
+        const { data, error } = await db
+          .from("tbb_profiles")
+          .update(updates)
+          .eq("user_id", currentUser.id)
+          .select("user_id");
+
+        if (error) throw error;
+
+        if (!data?.length) {
+          throw new Error(
+            "Profile was not updated. Check your " +
+            "Supabase profile permissions."
+          );
+        }
+
+        $("cardName").textContent = displayName;
+        $("cardUsername").textContent =
+          username ? `@${username}` : "";
+        $("cardBio").textContent =
+          updates.bio || "";
+
+        notify("Your Library Card was saved! 💗");
+      } catch (error) {
+        notify(error.message, true);
+      } finally {
+        button.disabled = false;
+      }
+    }
+
+    async function saveTheme() {
+      if (!currentUser) return;
+
+      const button = $("saveTheme");
+      button.disabled = true;
+
+      try {
+        const { data, error } = await db
+          .from("tbb_profiles")
+          .update({
+            vanity_theme: selectedTheme
+          })
+          .eq("user_id", currentUser.id)
+          .select("vanity_theme");
+
+        if (error) throw error;
+
+        if (!data?.length) {
+          throw new Error(
+            "Theme was not saved. Check your " +
+            "Supabase profile permissions."
+          );
+        }
+
+        savedTheme = selectedTheme;
+        $("themeStatus").textContent =
+          "Baddie Era saved! 💋";
+
+        notify(
+          `${themes[selectedTheme].label} saved successfully!`
+        );
+      } catch (error) {
+        notify(error.message, true);
+        selectedTheme = savedTheme;
+        applyTheme(savedTheme);
+      } finally {
+        button.disabled = false;
+      }
+    }
+
+    async function loadAnnouncements() {
+      const container = $("announcements");
+
+      const { data, error } = await db
+        .from("tbb_post_announcements")
+        .select(`
+          id,
+          title,
+          body,
+          is_pinned,
+          published_at
+        `)
+        .eq("status", "published")
+        .order("is_pinned", {
+          ascending: false
+        })
+        .order("published_at", {
+          ascending: false
+        })
+        .limit(10);
+
+      if (error) {
+        container.textContent =
+          "Announcements couldn't be loaded.";
+        return;
+      }
+
+      container.replaceChildren();
+
+      if (!data?.length) {
+        container.textContent =
+          "No announcements have been published yet.";
+        return;
+      }
+
+      for (const item of data) {
+        const article =
+          document.createElement("article");
+        article.className = "announcement";
+
+        const title = document.createElement("h3");
+        title.textContent =
+          `${item.is_pinned ? "📌 " : ""}${item.title}`;
+
+        const body = document.createElement("p");
+        body.textContent = item.body;
+
+        article.append(title);
+
+        if (item.published_at) {
+          const time = document.createElement("time");
+          time.dateTime = item.published_at;
+          time.textContent = new Date(
+            item.published_at
+          ).toLocaleDateString();
+
+          article.append(time);
+        }
+
+        article.append(body);
+        container.append(article);
+      }
+    }
+
+    async function init() {
+      try {
+        const access = await requireAccess();
+
+        if (!access) return;
+
+        currentUser = access.user;
+
+        $("welcome").textContent =
+          "Your profile, your people, your books, " +
+          "and your Baddie Era — all in one place.";
+
+        await loadProfile();
+        await loadAnnouncements();
+      } catch (error) {
+        notify(error.message, true);
+      }
+    }
+
+    $("logout").addEventListener("click", logout);
+
+    $("profileForm").addEventListener(
+      "submit",
+      saveProfile
+    );
+
+    $("saveTheme").addEventListener(
+      "click",
+      saveTheme
+    );
+
+    document.querySelectorAll(".theme-option")
+      .forEach(button => {
+        button.addEventListener("click", () => {
+          selectTheme(button.dataset.theme);
+        });
+      });
+
+    init();
+  </script>
+</body>
 </html>
