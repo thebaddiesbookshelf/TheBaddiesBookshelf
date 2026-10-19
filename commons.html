@@ -1,0 +1,700 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="#160b19">
+    <title>The Commons™ | The Baddies Bookshelf</title>
+    <link rel="icon" href="favicon.ico">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        :root {
+            color-scheme: dark;
+            --bg: #100912;
+            --panel: #1e1122;
+            --panel2: #28172b;
+            --pink: #ff3ba9;
+            --light: #ffd4ef;
+            --text: #fff5fc;
+            --muted: #bda7bd;
+            --line: #6b3b62;
+            --gold: #f3c77c
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            background: radial-gradient(ellipse at 15% 0, #48203f 0, transparent 34%), radial-gradient(ellipse at 100% 30%, #351039 0, transparent 32%), var(--bg);
+            color: var(--text);
+            font: 15px/1.5 "DM Sans", sans-serif;
+            min-height: 100vh
+        }
+
+        button,
+        input,
+        textarea,
+        select {
+            font: inherit
+        }
+
+        button {
+            cursor: pointer
+        }
+
+        button:disabled {
+            opacity: .55;
+            cursor: not-allowed
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none
+        }
+
+        a:hover {
+            color: #ff8acc
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            padding: 15px clamp(16px, 4vw, 55px);
+            border-bottom: 1px solid #ffffff1e;
+            background: #110916d9;
+            flex-wrap: wrap
+        }
+
+        .brand {
+            font-family: "Bebas Neue", sans-serif;
+            letter-spacing: 1.2px;
+            font-size: 27px
+        }
+
+        .brand span {
+            color: var(--pink)
+        }
+
+        .nav {
+            display: flex;
+            gap: 17px;
+            align-items: center;
+            flex-wrap: wrap;
+            font-weight: 700;
+            font-size: 13px
+        }
+
+        .nav button {
+            background: none;
+            border: 1px solid var(--line);
+            border-radius: 20px;
+            padding: 8px 13px;
+            color: white
+        }
+
+        .page {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 35px 18px 80px
+        }
+
+        .hero {
+            text-align: center;
+            padding: 28px 10px 34px
+        }
+
+        .eyebrow {
+            color: #ff91d0;
+            font-weight: 800;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            font-size: 12px
+        }
+
+        .hero h1 {
+            font-family: "Playfair Display", serif;
+            font-size: clamp(38px, 6vw, 68px);
+            margin: 8px 0
+        }
+
+        .hero h1 em {
+            color: var(--pink);
+            font-style: normal
+        }
+
+        .hero p {
+            color: var(--muted);
+            margin: 0 auto;
+            max-width: 620px
+        }
+
+        .notice {
+            border: 1px solid #ac5d93;
+            background: #30162c;
+            border-radius: 16px;
+            padding: 15px 18px;
+            margin: 20px auto;
+            max-width: 750px
+        }
+
+        .notice.error {
+            border-color: #e4778e;
+            background: #471d2a
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 270px minmax(0, 1fr);
+            gap: 22px;
+            align-items: start
+        }
+
+        .sidebar,
+        .composer,
+        .post,
+        .empty,
+        .welcome {
+            background: #201224e8;
+            border: 1px solid #673d64;
+            border-radius: 20px;
+            box-shadow: 0 10px 35px #0003
+        }
+
+        .sidebar {
+            padding: 19px;
+            position: sticky;
+            top: 15px
+        }
+
+        .sidebar h2 {
+            font-family: "Playfair Display", serif;
+            font-size: 20px;
+            margin: 0 0 14px
+        }
+
+        .room {
+            display: block;
+            width: 100%;
+            text-align: left;
+            background: #301c35;
+            color: white;
+            border: 1px solid transparent;
+            padding: 15px 13px;
+            border-radius: 14px;
+            margin: 8px 0
+        }
+
+        .room.active {
+            background: #552443;
+            border-color: #ff6dc1
+        }
+
+        .room:focus-visible,
+        .btn:focus-visible {
+            outline: 2px solid white;
+            outline-offset: 2px
+        }
+
+        .room strong {
+            display: block
+        }
+
+        .room small {
+            color: #d5b5d0;
+            display: block;
+            margin-top: 3px
+        }
+
+        .room:disabled {
+            opacity: .5
+        }
+
+        .sidebar-note {
+            font-size: 12px;
+            color: var(--muted);
+            margin: 18px 0 0
+        }
+
+        .maincol {
+            min-width: 0
+        }
+
+        .roomhead {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 16px
+        }
+
+        .roomhead h2 {
+            font-family: "Playfair Display", serif;
+            font-size: 28px;
+            margin: 0
+        }
+
+        .roomhead p {
+            margin: 4px 0;
+            color: var(--muted);
+            font-size: 13px
+        }
+
+        .btn {
+            background: #ff35a7;
+            color: white;
+            border: 0;
+            border-radius: 11px;
+            padding: 10px 16px;
+            font-weight: 800
+        }
+
+        .btn.ghost {
+            background: #3a2440;
+            border: 1px solid #9c5a8b
+        }
+
+        .btn.small {
+            font-size: 12px;
+            padding: 8px 11px
+        }
+
+        .composer {
+            padding: 20px;
+            margin-bottom: 18px
+        }
+
+        .composer label {
+            display: block;
+            font-weight: 800;
+            margin-bottom: 9px
+        }
+
+        .composer textarea,
+        .reply textarea {
+            width: 100%;
+            background: #120b16;
+            border: 1px solid #805275;
+            border-radius: 12px;
+            padding: 13px;
+            color: white;
+            resize: vertical;
+            min-height: 100px
+        }
+
+        .composer textarea:focus,
+        .reply textarea:focus {
+            outline: 2px solid #ff58b6
+        }
+
+        .composer-actions {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: center;
+            margin-top: 10px;
+            flex-wrap: wrap
+        }
+
+        .muted {
+            color: var(--muted);
+            font-size: 12px
+        }
+
+        .post {
+            padding: 19px;
+            margin: 0 0 16px
+        }
+
+        .posthead {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px
+        }
+
+        .author {
+            font-weight: 800;
+            color: #ffb1dd
+        }
+
+        .meta {
+            font-size: 12px;
+            color: var(--muted)
+        }
+
+        .postbody {
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+            margin: 13px 0 17px
+        }
+
+        .postactions,
+        .reactions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap
+        }
+
+        .reactions {
+            margin: 12px 0
+        }
+
+        .reaction {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #38213d;
+            border: 1px solid #805075;
+            color: #fff;
+            border-radius: 30px;
+            padding: 5px 9px;
+            font-size: 12px
+        }
+
+        .reaction.mine {
+            border-color: #ff61bc;
+            background: #673052
+        }
+
+        .reaction img,
+        .emoji-option img {
+            height: 25px;
+            width: 25px;
+            object-fit: contain
+        }
+
+        .comments {
+            margin-top: 14px;
+            border-top: 1px solid #573653;
+            padding-top: 12px
+        }
+
+        .comment {
+            padding: 10px 0;
+            border-bottom: 1px solid #ffffff17
+        }
+
+        .comment p {
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+            margin: 7px 0
+        }
+
+        .reply {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 12px
+        }
+
+        .reply textarea {
+            min-height: 65px
+        }
+
+        .emoji-picker {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            background: #160c1b;
+            border: 1px solid #643d62;
+            border-radius: 13px;
+            padding: 10px;
+            margin-top: 9px
+        }
+
+        .emoji-option {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: #3b2440;
+            color: white;
+            border: 1px solid #75466d;
+            border-radius: 10px;
+            padding: 6px 9px;
+            font-size: 12px
+        }
+
+        .empty,
+        .welcome {
+            padding: 30px;
+            text-align: center;
+            color: #e7c9e0
+        }
+
+        .empty i,
+        .welcome i {
+            font-size: 34px;
+            color: var(--pink)
+        }
+
+        footer {
+            text-align: center;
+            color: #9d819e;
+            padding: 30px 15px;
+            font-size: 12px
+        }
+
+        @media(max-width:750px) {
+            .layout {
+                grid-template-columns: 1fr
+            }
+
+            .sidebar {
+                position: static
+            }
+
+            .room {
+                display: inline-block;
+                width: 100%
+            }
+
+            .hero {
+                padding-top: 14px
+            }
+
+            .topbar {
+                justify-content: center
+            }
+
+            .roomhead h2 {
+                font-size: 23px
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="topbar">
+        <a class="brand" href="home.html">THE BADDIES <span>BOOKSHELF</span> ♕</a>
+        <nav class="nav" aria-label="Site navigation"><a href="home.html">Home</a><a href="library.html">Bookshelf</a><a
+                href="login.html">My Account</a><button id="signout" type="button" hidden>Sign Out</button></nav>
+    </header>
+    <main class="page">
+        <section class="hero">
+            <div class="eyebrow">✦ Your Bookish Group Chat ✦</div>
+            <h1>The <em>Commons™</em></h1>
+            <p>Where the pages turn, the tea spills, and the besties always have something to say. ♡</p>
+        </section>
+        <div id="notice" class="notice" role="status" aria-live="polite">Checking your member access…</div>
+        <div id="app" class="layout" hidden>
+            <aside class="sidebar">
+                <h2>✦ Pick Your Space</h2>
+                <div id="rooms"></div>
+                <p class="sidebar-note">Your spaces are based on admin-verified membership and age permissions.
+                    Adult-only spaces never appear for junior members.</p>
+            </aside>
+            <section class="maincol" aria-label="Commons feed">
+                <div class="roomhead">
+                    <div>
+                        <h2 id="roomTitle"></h2>
+                        <p id="roomSubtitle"></p>
+                    </div><button id="toggleMembership" class="btn ghost small" type="button" hidden></button>
+                </div>
+                <form id="composer" class="composer"><label for="postBody">💌 What's the tea, bestie?</label><textarea
+                        id="postBody" maxlength="5000"
+                        placeholder="Spill your thoughts, your current read, or your latest fictional obsession…"
+                        required></textarea>
+                    <div class="composer-actions"><span class="muted">Be kind. Protect everyone's privacy.
+                            ♡</span><button class="btn" type="submit">Post to the Commons ✦</button></div>
+                </form>
+                <div id="feed" aria-live="polite"></div>
+                <button id="more" class="btn ghost" type="button" hidden>Load More Posts</button>
+            </section>
+        </div>
+    </main>
+    <footer>✦ The Baddies Bookshelf · For readers, by readers ✦</footer>
+    <script type="module">
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+        const db = createClient('https://rmfmdetdykwfxxfzamhj.supabase.co', 'sb_publishable_6UBKZvkvkyPNACqDDNRjNQ_wlgy-Jr2');
+        const $ = id => document.getElementById(id);
+        const ROOM = {
+            baddie_central: { name: '💖 Baddie Central™', subtitle: 'The main lounge for verified adult Baddies.' },
+            junior_central: { name: '🎀 Junior Central™', subtitle: 'A protected space for our verified Junior Baddies.' },
+            after_dark: { name: '🖤 After Dark™', subtitle: 'An optional adults-only corner of the Commons.' }
+        };
+        let user = null, age = 'unverified', active = null, joined = new Set(), emojis = [], posts = [], page = 0, hasMore = false;
+        const LIMIT = 15;
+        function notice(text, error = false) { $('notice').textContent = text; $('notice').className = 'notice' + (error ? ' error' : ''); $('notice').hidden = false }
+        function clearNotice() { $('notice').hidden = true }
+        function el(tag, cls, text) { const x = document.createElement(tag); if (cls) x.className = cls; if (text !== undefined) x.textContent = text; return x }
+        function button(text, cls, fn) { const b = el('button', cls, text); b.type = 'button'; b.addEventListener('click', fn); return b }
+        function err(e) { notice(e?.message || 'Something went wrong. Please try again.', true) }
+        function time(s) { return new Date(s).toLocaleString(undefined, { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' }) }
+        function canSee(id) { if (age === 'adult') return id === 'baddie_central' || joined.has(id); if (age === 'junior') return id === 'junior_central'; return false }
+        function optional(id) { return age === 'adult' && id !== 'baddie_central' }
+        function rooms() {
+            const root = $('rooms'); root.replaceChildren();
+            for (const [id, r] of Object.entries(ROOM)) {
+                if (age === 'junior' && id !== 'junior_central') continue;
+                const available = canSee(id);
+                const b = button(r.name, 'room' + (active === id ? ' active' : ''), () => { if (available) selectRoom(id); else if (optional(id)) join(id) });
+                const hint = el('small', '', available ? (active === id ? 'Viewing now' : 'Enter the lounge') : optional(id) ? 'Tap to opt in' : 'Unavailable');
+                b.append(hint); root.append(b);
+            }
+        }
+        async function memberships() {
+            const { data, error } = await db.from('tbb_commons_memberships').select('commons_id').eq('user_id', user.id);
+            if (error) throw error; joined = new Set((data || []).map(x => x.commons_id));
+        }
+        async function join(id) {
+            if (!optional(id) || joined.has(id)) return;
+            const { error } = await db.rpc('tbb_join_commons', { target_commons_id: id });
+            if (error) return err(error); await memberships(); rooms(); await selectRoom(id);
+        }
+        async function leave(id) {
+            if (!optional(id) || !joined.has(id)) return;
+            if (!confirm('Leave this space? Your existing posts will remain, but you will lose access until you rejoin.')) return;
+            const { error } = await db.rpc('tbb_leave_commons', { target_commons_id: id });
+            if (error) return err(error); await memberships(); await selectRoom('baddie_central');
+        }
+        async function selectRoom(id) {
+            if (!canSee(id)) return; active = id; page = 0; posts = [];
+            $('roomTitle').textContent = ROOM[id].name; $('roomSubtitle').textContent = ROOM[id].subtitle;
+            $('toggleMembership').hidden = !optional(id);
+            if (optional(id)) { $('toggleMembership').textContent = 'Leave this space'; $('toggleMembership').onclick = () => leave(id) }
+            rooms(); await loadPosts(false);
+        }
+        async function loadPosts(append) {
+            if (!active) return;
+            const current = active, offset = append ? page * LIMIT : 0;
+            $('feed').replaceChildren(el('div', 'empty', 'Loading the latest bookish tea…'));
+            const { data, error } = await db.from('tbb_commons_posts')
+                .select('id,commons_id,author_id,body,is_pinned,created_at')
+                .eq('commons_id', current).eq('is_deleted', false)
+                .order('is_pinned', { ascending: false }).order('created_at', { ascending: false })
+                .range(offset, offset + LIMIT - 1);
+            if (current !== active) return;
+            if (error) { err(error); $('feed').replaceChildren(); return }
+            if (append) posts.push(...(data || [])); else posts = data || [];
+            hasMore = (data || []).length === LIMIT; $('more').hidden = !hasMore;
+            await renderPosts();
+        }
+        async function getProfiles(ids) {
+            if (!ids.length) return {};
+            const { data } = await db.from('tbb_profiles').select('user_id,display_name,username').in('user_id', [...new Set(ids)]);
+            return Object.fromEntries((data || []).map(x => [x.user_id, x]));
+        }
+        async function getReactions(items, type) {
+            if (!items.length) return [];
+            const col = type === 'post' ? 'post_id' : 'comment_id';
+            const { data, error } = await db.from('tbb_commons_reactions').select('id,user_id,emoji_id,' + col).in(col, items);
+            if (error) { console.warn('Reactions unavailable', error.message); return [] }
+            return data || [];
+        }
+        function emojiUrl(path) {
+            // Encode individual path components; use the public storage bucket configured for TBB emojis.
+            return 'https://rmfmdetdykwfxxfzamhj.supabase.co/storage/v1/object/public/tbb-custom-emojis/' + path.split('/').map(encodeURIComponent).join('/');
+        }
+        function emojiImg(item) { const im = el('img'); im.src = emojiUrl(item.storage_path); im.alt = item.name; im.loading = 'lazy'; return im }
+        function reactionArea(container, targetType, targetId, reactions) {
+            const counts = new Map();
+            for (const r of reactions) { const key = r.emoji_id; if (!counts.has(key)) counts.set(key, []); counts.get(key).push(r) }
+            for (const [emojiId, list] of counts) {
+                const em = emojis.find(e => e.id === emojiId); if (!em) continue;
+                const mine = list.some(r => r.user_id === user.id);
+                const b = button('', 'reaction' + (mine ? ' mine' : ''), () => react(targetType, targetId, emojiId, mine, list));
+                b.append(emojiImg(em), el('span', '', String(list.length))); b.title = em.name + (mine ? ' (remove reaction)' : ' (react)'); container.append(b);
+            }
+            const picker = el('div', 'emoji-picker'); picker.hidden = true;
+            const add = button('♡ React', 'btn ghost small', () => { picker.hidden = !picker.hidden });
+            container.append(add);
+            for (const em of emojis) { const b = button('', 'emoji-option', () => react(targetType, targetId, em.id, false, [])); b.append(emojiImg(em), el('span', '', em.name)); picker.append(b) }
+            container.after(picker);
+        }
+        async function react(type, id, emojiId, mine, list) {
+            let error;
+            if (mine) { const mineReaction = list.find(r => r.user_id === user.id); if (!mineReaction) return; ({ error } = await db.from('tbb_commons_reactions').delete().eq('id', mineReaction.id).eq('user_id', user.id)) }
+            else {
+                const payload = { user_id: user.id, emoji_id: emojiId, post_id: type === 'post' ? id : null, comment_id: type === 'comment' ? id : null };
+                ({ error } = await db.from('tbb_commons_reactions').insert(payload));
+            }
+            if (error) return err(error); await loadPosts(false);
+        }
+        async function renderPosts() {
+            const feed = $('feed'); feed.replaceChildren();
+            if (!posts.length) { const empty = el('div', 'empty'); empty.append(el('i', 'fa-solid fa-comments'), el('h3', '', "It's quiet in here… for now!"), el('p', '', "Be the first to start the conversation, bestie. ♡")); feed.append(empty); return }
+            const ids = posts.map(p => p.id);
+            const [profiles, reactions] = await Promise.all([getProfiles(posts.map(p => p.author_id)), getReactions(ids, 'post')]);
+            for (const p of posts) {
+                const card = el('article', 'post');
+                const head = el('div', 'posthead'), identity = el('div');
+                const who = profiles[p.author_id]; identity.append(el('div', 'author', who?.display_name || 'TBB Baddie'), el('div', 'meta', time(p.created_at) + (p.is_pinned ? ' · 📌 Pinned' : '')));
+                head.append(identity, button('⚑ Report', 'btn ghost small', () => report('post', p.id))); card.append(head, el('div', 'postbody', p.body));
+                const reactionWrap = el('div', 'reactions'); card.append(reactionWrap);
+                reactionArea(reactionWrap, 'post', p.id, reactions.filter(r => r.post_id === p.id));
+                const section = el('div', 'comments'), open = button('💬 Show Comments', 'btn ghost small', async () => { if (section.dataset.loaded === 'true') { section.hidden = !section.hidden; return } await loadComments(p.id, section) });
+                card.append(open, section); section.hidden = true; feed.append(card);
+            }
+        }
+        async function loadComments(postId, section) {
+            section.hidden = false; section.replaceChildren(el('div', 'muted', 'Loading comments…'));
+            const { data, error } = await db.from('tbb_commons_comments').select('id,author_id,body,created_at').eq('post_id', postId).eq('is_deleted', false).order('created_at', { ascending: true }).limit(100);
+            if (error) { section.replaceChildren(); return err(error) }
+            section.replaceChildren(); section.dataset.loaded = 'true';
+            const comments = data || [];
+            const [profiles, reactions] = await Promise.all([getProfiles(comments.map(c => c.author_id)), getReactions(comments.map(c => c.id), 'comment')]);
+            if (!comments.length) section.append(el('p', 'muted', 'No comments yet. Start the conversation!'));
+            for (const c of comments) {
+                const item = el('div', 'comment'), header = el('div', 'posthead'), name = profiles[c.author_id]?.display_name || 'TBB Baddie';
+                header.append(el('span', 'author', name + ' · ' + time(c.created_at)), button('⚑', 'btn ghost small', () => report('comment', c.id)));
+                item.append(header, el('p', '', c.body)); const row = el('div', 'reactions'); item.append(row); reactionArea(row, 'comment', c.id, reactions.filter(r => r.comment_id === c.id)); section.append(item);
+            }
+            const form = el('form', 'reply'), text = el('textarea'); text.maxLength = 2000; text.required = true; text.placeholder = 'Reply to your bestie…'; text.setAttribute('aria-label', 'Write a comment');
+            const send = el('button', 'btn small', 'Post Comment'); send.type = 'submit'; form.append(text, send);
+            form.addEventListener('submit', async e => { e.preventDefault(); send.disabled = true; const { error } = await db.from('tbb_commons_comments').insert({ post_id: postId, author_id: user.id, body: text.value.trim() }); send.disabled = false; if (error) return err(error); section.dataset.loaded = 'false'; await loadComments(postId, section) });
+            section.append(form);
+        }
+        async function report(type, id) {
+            const reason = prompt('Report reason: harassment, bullying, hate_speech, sexual_content, spam, spoilers, privacy, or other', 'other');
+            if (reason === null) return;
+            const allowed = ['harassment', 'bullying', 'hate_speech', 'sexual_content', 'spam', 'spoilers', 'privacy', 'other'];
+            const normalized = reason.trim().toLowerCase(); if (!allowed.includes(normalized)) return notice('Please choose one of the listed report reasons.', true);
+            const details = prompt('Optional: Tell the admins what happened (avoid sharing private information).', '');
+            if (details === null) return;
+            const payload = { reporter_id: user.id, reason: normalized, details: details.trim() || null, post_id: type === 'post' ? id : null, comment_id: type === 'comment' ? id : null };
+            const { error } = await db.from('tbb_commons_reports').insert(payload);
+            if (error) return err(error); notice('Report sent privately to the TBB admins. Thank you for looking out for the community. ♡');
+        }
+        $('composer').addEventListener('submit', async e => {
+            e.preventDefault(); if (!active || !canSee(active)) return;
+            const text = $('postBody').value.trim(); if (!text) return;
+            const submit = $('composer').querySelector('[type=submit]'); submit.disabled = true;
+            const { error } = await db.from('tbb_commons_posts').insert({ commons_id: active, author_id: user.id, body: text });
+            submit.disabled = false; if (error) return err(error);
+            $('postBody').value = ''; clearNotice(); page = 0; await loadPosts(false);
+        });
+        $('more').addEventListener('click', async () => { if (!hasMore) return; page++; await loadPosts(true) });
+        $('signout').addEventListener('click', async () => { await db.auth.signOut(); location.href = 'login.html' });
+        async function init() {
+            try {
+                const { data: { user: me }, error: authError } = await db.auth.getUser();
+                if (authError || !me) { notice('This space is for TBB members. Please sign in to continue.'); $('notice').append(' ', Object.assign(document.createElement('a'), { href: 'login.html', textContent: 'Go to Baddie Login →' })); return }
+                user = me; $('signout').hidden = false;
+                const [{ data: membership, error: mError }, { data: ageRow, error: aError }] = await Promise.all([
+                    db.from('tbb_memberships').select('status').eq('user_id', user.id).maybeSingle(),
+                    db.from('tbb_member_age_groups').select('age_group').eq('user_id', user.id).maybeSingle()
+                ]);
+                if (mError || aError) throw mError || aError;
+                if (membership?.status !== 'approved') { notice('Your membership is not approved yet. An admin must approve your account before you can enter The Commons™.'); return }
+                age = ageRow?.age_group || 'unverified';
+                if (!['adult', 'junior'].includes(age)) { notice('Your membership is approved, but an admin still needs to verify your age-group access before you can enter The Commons™.'); return }
+                await memberships();
+                const { data: catalog, error: emojiError } = await db.from('tbb_custom_emojis').select('id,name,shortcode,storage_path').eq('status', 'published').order('display_order', { ascending: true });
+                if (emojiError) console.warn('Emoji catalog unavailable', emojiError.message); emojis = catalog || [];
+                $('app').hidden = false; clearNotice(); await selectRoom(age === 'junior' ? 'junior_central' : 'baddie_central');
+            } catch (e) { err(e) }
+        }
+        await init();
+    </script>
+</body>
+
+</html>
