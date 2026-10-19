@@ -182,6 +182,7 @@ input:focus,textarea:focus,button:focus-visible {
   <div class="brand">TBB ✦ 2.0</div>
   <div class="actions">
     <a class="btn" href="home.html">Library Home</a>
+    <a class="btn" id="adminHqLink" href="admin.html" hidden>👑 Back to Admin HQ</a>
     <button class="btn" id="logout" type="button">Sign Out</button>
   </div>
 </header>
@@ -920,6 +921,16 @@ async function init() {
     if (!access) return;
 
     currentUser = access.user;
+
+    // Show the admin shortcut only after the database confirms admin access.
+    // Admin HQ independently enforces requireAccess(true).
+    const { data:isAdmin, error:adminCheckError } = await db.rpc("tbb_post_is_admin");
+    if (adminCheckError) {
+      console.warn("Admin navigation check unavailable:",adminCheckError.message);
+    } else if (isAdmin === true) {
+      $("adminHqLink").hidden = false;
+    }
+
     await loadProfile();
     await loadAnnouncements();
 
