@@ -3,495 +3,404 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1">
-
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>The Bookshelf™ | TBB 2.0</title>
-
   <link rel="stylesheet" href="css/auth.css">
   <link rel="stylesheet" href="css/bookshelf.css">
 </head>
-
 <body>
+<main class="bookshelf-shell">
 
-  <main class="bookshelf-shell">
+  <!-- TOP NAVIGATION -->
+  <header class="bookshelf-topbar">
+    <div class="bookshelf-brand">TBB ✦ 2.0</div>
+    <nav class="bookshelf-nav" aria-label="Bookshelf navigation">
+      <a href="member.html">💋 The Vanity™</a>
+      <a href="home.html">🏠 Library Home</a>
+      <button id="logout" type="button">Sign Out</button>
+    </nav>
+  </header>
 
-    <!-- TOP NAVIGATION -->
-    <header class="bookshelf-topbar">
-      <div class="bookshelf-brand">
-        TBB ✦ 2.0
+  <!-- BOOKSHELF HERO -->
+  <section class="bookshelf-hero">
+    <p class="bookshelf-eyebrow">THE BADDIES BOOKSHELF PRESENTS</p>
+    <h1>The Bookshelf™</h1>
+    <p class="bookshelf-subtitle">
+      Your stories. Your shelves. Your whole bookish universe.
+    </p>
+    <div class="bookshelf-hero-meta">
+      <span id="bookshelfOwner">Loading your Bookshelf...</span>
+      <span id="bookshelfTheme">🎀 Your Baddie Era</span>
+    </div>
+  </section>
+
+  <!-- STATUS MESSAGES -->
+  <p id="message" class="bookshelf-notice"
+     role="status" aria-live="polite"></p>
+
+  <!-- READING DASHBOARD -->
+  <section class="bookshelf-section">
+    <div class="bookshelf-section-heading">
+      <h2>📚 My Reading Universe</h2>
+      <span>THE COLLECTION</span>
+    </div>
+    <div class="bookshelf-stats">
+      <article class="bookshelf-stat">
+        <strong id="totalBooks">0</strong>
+        <span>Books Collected</span>
+      </article>
+      <article class="bookshelf-stat">
+        <strong id="currentlyReading">0</strong>
+        <span>Currently Reading</span>
+      </article>
+      <article class="bookshelf-stat">
+        <strong id="finishedBooks">0</strong>
+        <span>Books Finished</span>
+      </article>
+      <article class="bookshelf-stat">
+        <strong id="customShelfCount">0</strong>
+        <span>Custom Shelves</span>
+      </article>
+    </div>
+  </section>
+
+  <!-- FEATURE NAVIGATION -->
+  <section class="bookshelf-section">
+    <div class="bookshelf-section-heading">
+      <h2>💗 My Bookish Spaces</h2>
+      <span>EXPLORE</span>
+    </div>
+    <div class="bookshelf-feature-grid">
+      <article class="bookshelf-feature">
+        <div class="feature-icon">📖</div>
+        <h3>My Library</h3>
+        <p>Track what you're reading, what you've finished, and what's next.</p>
+        <a href="#myLibrary">Open My Library ✦</a>
+      </article>
+      <article class="bookshelf-feature">
+        <div class="feature-icon">🎀</div>
+        <h3>Custom Shelves</h3>
+        <p>Build unlimited personalized shelves for every reading mood.</p>
+        <a href="#customShelves">Explore My Shelves ✦</a>
+      </article>
+      <article class="bookshelf-feature">
+        <div class="feature-icon">✍🏽</div>
+        <h3>Reading Diary™</h3>
+        <p>Journal your thoughts, reviews, and favorite reading moments.</p>
+        <span>Coming next ✦</span>
+      </article>
+      <article class="bookshelf-feature">
+        <div class="feature-icon">💌</div>
+        <h3>Quote Vault™</h3>
+        <p>Save the lines that made you feel absolutely everything.</p>
+        <span>Coming next ✦</span>
+      </article>
+      <article class="bookshelf-feature">
+        <div class="feature-icon">🖋️</div>
+        <h3>Baddie Writing Studio™</h3>
+        <p>Express yourself with gorgeous fonts, colorful ink, and rich text.</p>
+        <span>Coming next ✦</span>
+      </article>
+      <article class="bookshelf-feature">
+        <div class="feature-icon">🏆</div>
+        <h3>Reading Goals</h3>
+        <p>Track your reading progress, sessions, and personal milestones.</p>
+        <span>Coming next ✦</span>
+      </article>
+    </div>
+  </section>
+
+  <!-- MY LIBRARY™ -->
+  <section class="bookshelf-section" id="myLibrary">
+    <div class="bookshelf-section-heading">
+      <h2>💋 My Library™</h2>
+      <span>MY PERSONAL COLLECTION</span>
+    </div>
+
+    <div class="library-toolbar">
+      <div class="library-search">
+        <label for="bookSearch">Find Your Next Obsession 📚</label>
+        <input id="bookSearch" type="search" maxlength="150"
+               placeholder="Search by book title or author..."
+               autocomplete="off">
       </div>
-
-      <nav class="bookshelf-nav"
-           aria-label="Bookshelf navigation">
-
-        <a href="member.html">
-          💋 The Vanity™
-        </a>
-
-        <a href="home.html">
-          🏠 Library Home
-        </a>
-
-        <button id="logout"
-                type="button">
-          Sign Out
+      <div class="library-search-actions">
+        <button class="library-action-btn" id="searchCatalog" type="button">
+          Search Catalog 💗
         </button>
-
-      </nav>
-    </header>
-
-    <!-- BOOKSHELF HERO -->
-    <section class="bookshelf-hero">
-
-      <p class="bookshelf-eyebrow">
-        THE BADDIES BOOKSHELF PRESENTS
-      </p>
-
-      <h1>The Bookshelf™</h1>
-
-      <p class="bookshelf-subtitle">
-        Your stories. Your shelves.
-        Your whole bookish universe.
-      </p>
-
-      <div class="bookshelf-hero-meta">
-
-        <span id="bookshelfOwner">
-          Loading your Bookshelf...
-        </span>
-
-        <span id="bookshelfTheme">
-          🎀 Your Baddie Era
-        </span>
-
+        <button class="library-action-btn library-secondary-btn"
+                id="openCommunityBookForm" type="button">
+          Add My Own Book 🎀
+        </button>
       </div>
-
-    </section>
-
-    <!-- STATUS MESSAGES -->
-    <p id="message"
-       class="bookshelf-notice"
-       role="status"
-       aria-live="polite"></p>
-
-    <!-- READING DASHBOARD -->
-    <section class="bookshelf-section">
-
-      <div class="bookshelf-section-heading">
-        <h2>📚 My Reading Universe</h2>
-        <span>THE COLLECTION</span>
-      </div>
-
-      <div class="bookshelf-stats">
-
-        <article class="bookshelf-stat">
-          <strong id="totalBooks">0</strong>
-          <span>Books Collected</span>
-        </article>
-
-        <article class="bookshelf-stat">
-          <strong id="currentlyReading">0</strong>
-          <span>Currently Reading</span>
-        </article>
-
-        <article class="bookshelf-stat">
-          <strong id="finishedBooks">0</strong>
-          <span>Books Finished</span>
-        </article>
-
-        <article class="bookshelf-stat">
-          <strong id="customShelfCount">0</strong>
-          <span>Custom Shelves</span>
-        </article>
-
-      </div>
-
-    </section>
-
-    <!-- FEATURE NAVIGATION -->
-    <section class="bookshelf-section">
-
-      <div class="bookshelf-section-heading">
-        <h2>💗 My Bookish Spaces</h2>
-        <span>EXPLORE</span>
-      </div>
-
-      <div class="bookshelf-feature-grid">
-
-        <article class="bookshelf-feature">
-          <div class="feature-icon">📖</div>
-          <h3>My Library</h3>
-          <p>
-            Track what you're reading, what you've
-            finished, and what's next.
-          </p>
-          <span>Coming next ✦</span>
-        </article>
-
-        <article class="bookshelf-feature">
-          <div class="feature-icon">🎀</div>
-          <h3>Custom Shelves</h3>
-          <p>
-            Build unlimited personalized shelves
-            for every reading mood.
-          </p>
-          <span>Coming next ✦</span>
-        </article>
-
-        <article class="bookshelf-feature">
-          <div class="feature-icon">✍🏽</div>
-          <h3>Reading Diary™</h3>
-          <p>
-            Journal your thoughts, reviews,
-            and favorite reading moments.
-          </p>
-          <span>Coming next ✦</span>
-        </article>
-
-        <article class="bookshelf-feature">
-          <div class="feature-icon">💌</div>
-          <h3>Quote Vault™</h3>
-          <p>
-            Save the lines that made you
-            feel absolutely everything.
-          </p>
-          <span>Coming next ✦</span>
-        </article>
-
-        <article class="bookshelf-feature">
-          <div class="feature-icon">🖋️</div>
-          <h3>Baddie Writing Studio™</h3>
-          <p>
-            Express yourself with gorgeous
-            fonts, colorful ink, and rich text.
-          </p>
-          <span>Coming next ✦</span>
-        </article>
-
-        <article class="bookshelf-feature">
-          <div class="feature-icon">🏆</div>
-          <h3>Reading Goals</h3>
-          <p>
-            Track your reading progress,
-            sessions, and personal milestones.
-          </p>
-          <span>Coming next ✦</span>
-        </article>
-
-      </div>
-
-    </section>
-
-    
-<!-- MY LIBRARY™ -->
-<section class="bookshelf-section" id="myLibrary">
-
-  <div class="bookshelf-section-heading">
-    <h2>💋 My Library™</h2>
-    <span>MY PERSONAL COLLECTION</span>
-  </div>
-
-  <!-- CATALOG SEARCH -->
-  <div class="library-toolbar">
-
-    <div class="library-search">
-      <label for="bookSearch">
-        Find Your Next Obsession 📚
-      </label>
-
-      <input
-        id="bookSearch"
-        type="search"
-        maxlength="150"
-        placeholder="Search by book title or author..."
-        autocomplete="off"
-      >
     </div>
 
-    
+    <p class="library-helper">
+      Search the TBB catalog to add books to your personal collection.
+    </p>
+    <div id="catalogResults" class="library-book-grid"
+         aria-live="polite"></div>
+
+    <div class="library-collection-heading">
+      <h3>🎀 My Book Collection</h3>
+      <label for="libraryStatusFilter">
+        Filter:
+        <select id="libraryStatusFilter">
+          <option value="all">All Books</option>
+          <option value="want_to_read">Want to Read</option>
+          <option value="currently_reading">Currently Reading</option>
+          <option value="finished">Finished</option>
+          <option value="on_hold">On Hold</option>
+          <option value="dnf">DNF</option>
+        </select>
+      </label>
+    </div>
+
+    <div id="myBookCollection" class="library-book-grid"
+         aria-live="polite"></div>
+
+    <!-- BRING YOUR OWN BOOK™ -->
+    <dialog id="communityBookDialog" class="library-dialog">
+      <form id="communityBookForm">
+        <h3>🎀 Add My Own Book™</h3>
+        <p class="library-helper">
+          Can't find your book in the TBB catalog?
+          Add it to our shared community collection!
+        </p>
+
+        <div class="library-form-grid">
+          <label>
+            Book Title *
+            <input id="communityBookTitle" type="text" maxlength="250"
+                   required placeholder="Enter book title">
+          </label>
+          <label>
+            Author *
+            <input id="communityBookAuthor" type="text" maxlength="200"
+                   required placeholder="Enter author">
+          </label>
+          <label>
+            Cover Image URL
+            <input id="communityBookCover" type="url" maxlength="2000"
+                   placeholder="https://...">
+          </label>
+          <label>
+            Series Name
+            <input id="communityBookSeries" type="text" maxlength="200"
+                   placeholder="Optional">
+          </label>
+          <label>
+            Book Number
+            <input id="communityBookNumber" type="text" maxlength="30"
+                   placeholder="Optional">
+          </label>
+        </div>
+
+        <p class="library-helper">
+          💗 Community books are shared with approved TBB members.
+          Your personal reading progress and ratings remain separate.
+        </p>
+        <div class="library-dialog-actions">
+          <button type="button" id="cancelCommunityBook">Cancel</button>
+          <button type="submit" id="submitCommunityBook">
+            Add to Community 💗
+          </button>
+        </div>
+      </form>
+    </dialog>
+
+    <!-- EDIT READING RECORD -->
+    <dialog id="bookEditor" class="library-dialog">
+      <form id="bookEditorForm">
+        <h3 id="bookEditorTitle">Edit My Reading Record</h3>
+        <p id="bookEditorSubtitle" class="library-helper"></p>
+        <input type="hidden" id="editingEntryId">
+
+        <div class="library-form-grid">
+          <label>
+            Reading Status
+            <select id="editReadingStatus" required>
+              <option value="want_to_read">Want to Read</option>
+              <option value="currently_reading">Currently Reading</option>
+              <option value="finished">Finished</option>
+              <option value="on_hold">On Hold</option>
+              <option value="dnf">DNF</option>
+            </select>
+          </label>
+          <label>
+            Book Format
+            <select id="editBookFormat">
+              <option value="">Not Selected</option>
+              <option value="physical">Physical</option>
+              <option value="ebook">Ebook</option>
+              <option value="audiobook">Audiobook</option>
+            </select>
+          </label>
+          <label>
+            Total Pages
+            <input id="editTotalPages" type="number" min="1" step="1"
+                   placeholder="Optional">
+          </label>
+          <label>
+            Current Page
+            <input id="editCurrentPage" type="number" min="0" step="1"
+                   placeholder="0">
+          </label>
+          <label>
+            My Rating
+            <select id="editRating">
+              <option value="">Not Rated</option>
+              <option value="0.5">½ Star</option>
+              <option value="1">★ 1</option>
+              <option value="1.5">★ 1½</option>
+              <option value="2">★★ 2</option>
+              <option value="2.5">★★ 2½</option>
+              <option value="3">★★★ 3</option>
+              <option value="3.5">★★★ 3½</option>
+              <option value="4">★★★★ 4</option>
+              <option value="4.5">★★★★ 4½</option>
+              <option value="5">★★★★★ 5</option>
+            </select>
+          </label>
+          <label>
+            Date Started
+            <input id="editStartedAt" type="date">
+          </label>
+          <label>
+            Date Finished
+            <input id="editFinishedAt" type="date">
+          </label>
+        </div>
+
+        <div class="library-dialog-actions">
+          <button type="button" id="cancelBookEditor">Cancel</button>
+          <button type="submit" id="saveBookEditor">
+            Save Reading Record 💗
+          </button>
+        </div>
+      </form>
+    </dialog>
+  </section>
+
+  <!-- CUSTOM SHELVES™ -->
+  <section class="bookshelf-section" id="customShelves"
+           aria-labelledby="customShelvesHeading">
+    <div class="bookshelf-section-heading">
+      <h2 id="customShelvesHeading">🎀 Custom Shelves™</h2>
+      <span>CURATE YOUR OWN UNIVERSE</span>
+    </div>
+
+    <p class="library-helper">
+      Build your own collections for every mood, trope, and fictional
+      obsession. A book can live on more than one shelf without
+      changing its reading progress.
+    </p>
+
     <div class="library-search-actions">
-    <button
-        class="library-action-btn"
-        id="searchCatalog"
-        type="button">
-        Search Catalog 💗
-    </button>
-
-    <button
-        class="library-action-btn library-secondary-btn"
-        id="openCommunityBookForm"
-        type="button">
-        Add My Own Book 🎀
-    </button>
-    </div>
-
-
-  </div>
-
-  <p class="library-helper">
-    Search the TBB catalog to add books to your
-    personal collection.
-  </p>
-
-  <div
-    id="catalogResults"
-    class="library-book-grid"
-    aria-live="polite">
-  </div>
-
-  <!-- COLLECTION HEADER -->
-  <div class="library-collection-heading">
-
-    <h3>🎀 My Book Collection</h3>
-
-    <label for="libraryStatusFilter">
-      Filter:
-      <select id="libraryStatusFilter">
-        <option value="all">All Books</option>
-        <option value="want_to_read">Want to Read</option>
-        <option value="currently_reading">
-          Currently Reading
-        </option>
-        <option value="finished">Finished</option>
-        <option value="on_hold">On Hold</option>
-        <option value="dnf">DNF</option>
-      </select>
-    </label>
-
-  </div>
-
-  <div
-    id="myBookCollection"
-    class="library-book-grid"
-    aria-live="polite">
-  </div>
-
-  
-<!-- BRING YOUR OWN BOOK™ -->
-<dialog
-  id="communityBookDialog"
-  class="library-dialog">
-
-  <form id="communityBookForm">
-
-    <h3>🎀 Add My Own Book™</h3>
-
-    <p class="library-helper">
-      Can't find your book in the TBB catalog?
-      Add it to our shared community collection!
-    </p>
-
-    <div class="library-form-grid">
-
-      <label>
-        Book Title *
-        <input
-          id="communityBookTitle"
-          type="text"
-          maxlength="250"
-          required
-          placeholder="Enter book title"
-        >
-      </label>
-
-      <label>
-        Author *
-        <input
-          id="communityBookAuthor"
-          type="text"
-          maxlength="200"
-          required
-          placeholder="Enter author"
-        >
-      </label>
-
-      <label>
-        Cover Image URL
-        <input
-          id="communityBookCover"
-          type="url"
-          maxlength="2000"
-          placeholder="https://..."
-        >
-      </label>
-
-      <label>
-        Series Name
-        <input
-          id="communityBookSeries"
-          type="text"
-          maxlength="200"
-          placeholder="Optional"
-        >
-      </label>
-
-      <label>
-        Book Number
-        <input
-          id="communityBookNumber"
-          type="text"
-          maxlength="30"
-          placeholder="Optional"
-        >
-      </label>
-
-    </div>
-
-    <p class="library-helper">
-      💗 Community books are shared with approved
-      TBB members. Your personal reading progress
-      and ratings remain separate.
-    </p>
-
-    <div class="library-dialog-actions">
-
-      <button
-        type="button"
-        id="cancelCommunityBook">
-        Cancel
+      <button class="library-action-btn" type="button"
+              id="createShelfButton">
+        Create a Shelf 🎀
       </button>
-
-      <button
-        type="submit"
-        id="submitCommunityBook">
-        Add to Community 💗
-      </button>
-
     </div>
 
-  </form>
+    <div id="customShelvesList" class="library-book-grid"
+         aria-live="polite">
+      <div class="library-empty-message">
+        Your shelves will appear here. 🎀
+      </div>
+    </div>
 
-</dialog>
+    <!-- INDIVIDUAL SHELF VIEW -->
+    <div id="customShelfDetail" hidden>
+      <div class="library-collection-heading">
+        <h3 id="customShelfTitle">My Shelf</h3>
+        <div class="library-search-actions">
+          <button type="button"
+                  class="library-action-btn library-secondary-btn"
+                  id="backToShelves">
+            All Shelves
+          </button>
+          <button type="button"
+                  class="library-action-btn library-secondary-btn"
+                  id="editShelfButton">
+            Edit Shelf ✏️
+          </button>
+          <button type="button" class="library-action-btn"
+                  id="addShelfBooksButton">
+            Add Books 💗
+          </button>
+        </div>
+      </div>
+      <p id="customShelfDescription" class="library-helper"></p>
+      <p id="customShelfBookCount" class="library-helper"></p>
+      <div id="customShelfBooks" class="library-book-grid"
+           aria-live="polite"></div>
+    </div>
+  </section>
 
-  <!-- EDIT READING RECORD -->
-  <dialog id="bookEditor" class="library-dialog">
-
-    <form id="bookEditorForm">
-
-      <h3 id="bookEditorTitle">
-        Edit My Reading Record
-      </h3>
-
-      <p id="bookEditorSubtitle"
-         class="library-helper"></p>
-
-      <input type="hidden" id="editingEntryId">
+  <!-- CREATE / EDIT SHELF -->
+  <dialog id="customShelfDialog" class="library-dialog">
+    <form id="customShelfForm">
+      <h3 id="customShelfDialogTitle">🎀 Create a Shelf</h3>
+      <input type="hidden" id="editingShelfId">
 
       <div class="library-form-grid">
-
         <label>
-          Reading Status
-          <select id="editReadingStatus" required>
-            <option value="want_to_read">
-              Want to Read
-            </option>
-            <option value="currently_reading">
-              Currently Reading
-            </option>
-            <option value="finished">
-              Finished
-            </option>
-            <option value="on_hold">
-              On Hold
-            </option>
-            <option value="dnf">DNF</option>
-          </select>
+          Shelf Name *
+          <input id="customShelfName" type="text" maxlength="60"
+                 required placeholder="e.g., Morally Grey Men 🖤">
         </label>
-
         <label>
-          Book Format
-          <select id="editBookFormat">
-            <option value="">Not Selected</option>
-            <option value="physical">Physical</option>
-            <option value="ebook">Ebook</option>
-            <option value="audiobook">Audiobook</option>
-          </select>
+          Shelf Description
+          <textarea id="customShelfDescriptionInput"
+                    maxlength="500" rows="4"
+                    placeholder="What's the vibe of this shelf?"></textarea>
         </label>
-
-        <label>
-          Total Pages
-          <input
-            id="editTotalPages"
-            type="number"
-            min="1"
-            step="1"
-            placeholder="Optional"
-          >
-        </label>
-
-        <label>
-          Current Page
-          <input
-            id="editCurrentPage"
-            type="number"
-            min="0"
-            step="1"
-            placeholder="0"
-          >
-        </label>
-
-        <label>
-          My Rating
-          <select id="editRating">
-            <option value="">Not Rated</option>
-            <option value="0.5">½ Star</option>
-            <option value="1">★ 1</option>
-            <option value="1.5">★ 1½</option>
-            <option value="2">★★ 2</option>
-            <option value="2.5">★★ 2½</option>
-            <option value="3">★★★ 3</option>
-            <option value="3.5">★★★ 3½</option>
-            <option value="4">★★★★ 4</option>
-            <option value="4.5">★★★★ 4½</option>
-            <option value="5">★★★★★ 5</option>
-          </select>
-        </label>
-
-        <label>
-          Date Started
-          <input id="editStartedAt" type="date">
-        </label>
-
-        <label>
-          Date Finished
-          <input id="editFinishedAt" type="date">
-        </label>
-
       </div>
+
+      <p class="library-helper">
+        Custom shelf covers are coming in a later step.
+        Your shelf name and description can be changed anytime.
+      </p>
 
       <div class="library-dialog-actions">
-
-        <button
-          type="button"
-          id="cancelBookEditor">
-          Cancel
+        <button id="cancelShelfForm" type="button">Cancel</button>
+        <button id="deleteShelfButton" type="button" hidden>
+          Delete Shelf 🗑️
         </button>
-
-        <button
-          type="submit"
-          id="saveBookEditor">
-          Save Reading Record 💗
+        <button id="saveShelfButton" type="submit">
+          Save Shelf 💗
         </button>
-
       </div>
-
     </form>
-
   </dialog>
 
-</section>
+  <!-- ASSIGN BOOKS FROM MY LIBRARY -->
+  <dialog id="shelfBooksDialog" class="library-dialog">
+    <div>
+      <h3>📚 Organize My Shelf</h3>
+      <p id="shelfBooksDialogSubtitle" class="library-helper">
+        Choose books from My Library™.
+      </p>
+      <label for="shelfBookSearch">Find a book in My Library™</label>
+      <input id="shelfBookSearch" type="search" maxlength="150"
+             placeholder="Search by title or author...">
+      <div id="shelfBookChoices" class="library-book-grid"
+           aria-live="polite"></div>
+      <div class="library-dialog-actions">
+        <button type="button" id="closeShelfBooksDialog">
+          Done 💗
+        </button>
+      </div>
+    </div>
+  </dialog>
 
+  <footer class="bookshelf-footer">
+    THE BADDIES BOOKSHELF ✦ YOUR STORY, YOUR ERA.
+  </footer>
 
-    <footer class="bookshelf-footer">
-      THE BADDIES BOOKSHELF ✦
-      YOUR STORY, YOUR ERA.
-    </footer>
+</main>
 
-  </main>
-
-  <script type="module"
-          src="js/bookshelf.js"></script>
-
+<script type="module" src="js/bookshelf.js"></script>
 </body>
 </html>

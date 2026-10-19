@@ -831,3 +831,276 @@ a {
     width: 100%;
   }
 }
+
+/* ==========================================
+   TBB 2.0 — CUSTOM SHELVES™
+   PHASE 5 | STEP 4G.4
+   ========================================== */
+
+/* Keep hidden detail and delete controls truly hidden. */
+#customShelfDetail[hidden],
+#deleteShelfButton[hidden] {
+  display: none !important;
+}
+
+#customShelves {
+  scroll-margin-top: 25px;
+}
+
+#customShelves > .library-helper {
+  max-width: 760px;
+}
+
+#customShelves > .library-search-actions {
+  margin: 20px 0 22px;
+}
+
+/* Shelf tiles will be created by JavaScript in Step 4G.5. */
+.custom-shelf-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 280px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 23px;
+  background: linear-gradient(150deg,
+    color-mix(in srgb, var(--accent) 12%, var(--surface)),
+    var(--surface) 65%);
+  box-shadow: 0 14px 35px #0003;
+  transition: transform .2s ease, border-color .2s ease;
+}
+
+.custom-shelf-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent);
+}
+
+.custom-shelf-art {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 145px;
+  padding: 18px;
+  overflow: hidden;
+  background: radial-gradient(circle at 25% 20%,
+    color-mix(in srgb, var(--accent) 32%, transparent), transparent 65%),
+    linear-gradient(135deg, var(--alt), var(--surface));
+}
+
+.custom-shelf-art::after {
+  content: '✦ 🎀 ✦';
+  color: var(--light);
+  font-size: clamp(23px, 4vw, 37px);
+  letter-spacing: 9px;
+  text-shadow: 0 5px 25px #0006;
+}
+
+.custom-shelf-art img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.custom-shelf-info {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 10px;
+  padding: 18px;
+}
+
+.custom-shelf-info h3 {
+  margin: 0;
+  font-size: 19px;
+  overflow-wrap: anywhere;
+}
+
+.custom-shelf-info p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.custom-shelf-count {
+  align-self: flex-start;
+  margin-top: auto;
+  padding: 7px 12px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--alt);
+  color: var(--light);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.custom-shelf-open {
+  width: 100%;
+  margin-top: 5px;
+  padding: 12px;
+  border: 1px solid var(--accent);
+  border-radius: 12px;
+  background: var(--accent);
+  color: #170d15;
+  font-weight: 900;
+}
+
+.custom-shelf-open:hover {
+  filter: brightness(1.08);
+}
+
+/* Selected shelf and its book gallery. */
+#customShelfDetail {
+  margin-top: 25px;
+  padding: clamp(18px, 3vw, 30px);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  background: var(--surface);
+}
+
+#customShelfDetail .library-collection-heading {
+  margin-top: 0;
+}
+
+#customShelfTitle {
+  color: var(--light);
+  overflow-wrap: anywhere;
+}
+
+#customShelfDescription,
+#customShelfBookCount {
+  overflow-wrap: anywhere;
+}
+
+#customShelfBookCount {
+  font-weight: 900;
+  color: var(--light);
+}
+
+/* Dialog fields: preserve the existing reading editor styling. */
+#customShelfDialog .library-form-grid {
+  grid-template-columns: 1fr;
+}
+
+.library-form-grid textarea,
+#shelfBookSearch {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--alt);
+  color: var(--text);
+  outline: none;
+}
+
+.library-form-grid textarea {
+  min-height: 120px;
+  resize: vertical;
+  line-height: 1.6;
+}
+
+.library-form-grid textarea:focus,
+#shelfBookSearch:focus {
+  border-color: var(--accent);
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+#deleteShelfButton {
+  margin-right: auto;
+  border-color: #cf677b;
+  color: #ffbdc9;
+}
+
+#shelfBooksDialog {
+  width: min(750px, 94vw);
+}
+
+#shelfBooksDialog label {
+  display: block;
+  margin: 18px 0 9px;
+  color: var(--light);
+  font-size: 13px;
+  font-weight: 900;
+}
+
+#shelfBookChoices {
+  max-height: 48vh;
+  overflow-y: auto;
+  margin-top: 18px;
+  padding: 3px;
+  align-content: start;
+}
+
+/* Compact book choices inside the shelf assignment dialog. */
+.shelf-book-choice {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  min-width: 0;
+  padding: 15px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--alt);
+}
+
+.shelf-book-choice h4 {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.shelf-book-choice p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.shelf-book-choice button {
+  margin-top: auto;
+  padding: 10px;
+  border: 1px solid var(--accent);
+  border-radius: 10px;
+  background: var(--accent);
+  color: #170d15;
+  font-weight: 900;
+}
+
+.shelf-book-choice button[aria-pressed='true'] {
+  background: var(--surface);
+  color: var(--light);
+}
+
+@media (max-width: 600px) {
+  #customShelfDetail {
+    padding: 16px;
+  }
+
+  #customShelfDetail .library-search-actions {
+    width: 100%;
+  }
+
+  #customShelfDetail .library-search-actions button {
+    width: 100%;
+  }
+
+  .custom-shelf-art {
+    min-height: 115px;
+  }
+
+  .custom-shelf-info {
+    padding: 13px;
+  }
+
+  .custom-shelf-info h3 {
+    font-size: 16px;
+  }
+
+  #shelfBookChoices {
+    grid-template-columns: 1fr;
+  }
+}
