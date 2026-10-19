@@ -183,29 +183,197 @@
 
     </section>
 
-    <!-- COLLECTION PLACEHOLDER -->
-    <section class="bookshelf-section">
+    
+<!-- MY LIBRARY™ -->
+<section class="bookshelf-section" id="myLibrary">
 
-      <div class="bookshelf-section-heading">
-        <h2>💋 My Collection</h2>
-        <span>MY BOOKS</span>
+  <div class="bookshelf-section-heading">
+    <h2>💋 My Library™</h2>
+    <span>MY PERSONAL COLLECTION</span>
+  </div>
+
+  <!-- CATALOG SEARCH -->
+  <div class="library-toolbar">
+
+    <div class="library-search">
+      <label for="bookSearch">
+        Find Your Next Obsession 📚
+      </label>
+
+      <input
+        id="bookSearch"
+        type="search"
+        maxlength="150"
+        placeholder="Search by book title or author..."
+        autocomplete="off"
+      >
+    </div>
+
+    <button
+      class="library-action-btn"
+      id="searchCatalog"
+      type="button">
+      Search Catalog 💗
+    </button>
+
+  </div>
+
+  <p class="library-helper">
+    Search the TBB catalog to add books to your
+    personal collection.
+  </p>
+
+  <div
+    id="catalogResults"
+    class="library-book-grid"
+    aria-live="polite">
+  </div>
+
+  <!-- COLLECTION HEADER -->
+  <div class="library-collection-heading">
+
+    <h3>🎀 My Book Collection</h3>
+
+    <label for="libraryStatusFilter">
+      Filter:
+      <select id="libraryStatusFilter">
+        <option value="all">All Books</option>
+        <option value="want_to_read">Want to Read</option>
+        <option value="currently_reading">
+          Currently Reading
+        </option>
+        <option value="finished">Finished</option>
+        <option value="on_hold">On Hold</option>
+        <option value="dnf">DNF</option>
+      </select>
+    </label>
+
+  </div>
+
+  <div
+    id="myBookCollection"
+    class="library-book-grid"
+    aria-live="polite">
+  </div>
+
+  <!-- EDIT READING RECORD -->
+  <dialog id="bookEditor" class="library-dialog">
+
+    <form id="bookEditorForm">
+
+      <h3 id="bookEditorTitle">
+        Edit My Reading Record
+      </h3>
+
+      <p id="bookEditorSubtitle"
+         class="library-helper"></p>
+
+      <input type="hidden" id="editingEntryId">
+
+      <div class="library-form-grid">
+
+        <label>
+          Reading Status
+          <select id="editReadingStatus" required>
+            <option value="want_to_read">
+              Want to Read
+            </option>
+            <option value="currently_reading">
+              Currently Reading
+            </option>
+            <option value="finished">
+              Finished
+            </option>
+            <option value="on_hold">
+              On Hold
+            </option>
+            <option value="dnf">DNF</option>
+          </select>
+        </label>
+
+        <label>
+          Book Format
+          <select id="editBookFormat">
+            <option value="">Not Selected</option>
+            <option value="physical">Physical</option>
+            <option value="ebook">Ebook</option>
+            <option value="audiobook">Audiobook</option>
+          </select>
+        </label>
+
+        <label>
+          Total Pages
+          <input
+            id="editTotalPages"
+            type="number"
+            min="1"
+            step="1"
+            placeholder="Optional"
+          >
+        </label>
+
+        <label>
+          Current Page
+          <input
+            id="editCurrentPage"
+            type="number"
+            min="0"
+            step="1"
+            placeholder="0"
+          >
+        </label>
+
+        <label>
+          My Rating
+          <select id="editRating">
+            <option value="">Not Rated</option>
+            <option value="0.5">½ Star</option>
+            <option value="1">★ 1</option>
+            <option value="1.5">★ 1½</option>
+            <option value="2">★★ 2</option>
+            <option value="2.5">★★ 2½</option>
+            <option value="3">★★★ 3</option>
+            <option value="3.5">★★★ 3½</option>
+            <option value="4">★★★★ 4</option>
+            <option value="4.5">★★★★ 4½</option>
+            <option value="5">★★★★★ 5</option>
+          </select>
+        </label>
+
+        <label>
+          Date Started
+          <input id="editStartedAt" type="date">
+        </label>
+
+        <label>
+          Date Finished
+          <input id="editFinishedAt" type="date">
+        </label>
+
       </div>
 
-      <div class="bookshelf-empty"
-           id="bookshelfCollection">
+      <div class="library-dialog-actions">
 
-        <div class="empty-icon">📚</div>
+        <button
+          type="button"
+          id="cancelBookEditor">
+          Cancel
+        </button>
 
-        <h3>Your next obsession belongs here.</h3>
-
-        <p>
-          Your personal collection will appear
-          here once we connect your books.
-        </p>
+        <button
+          type="submit"
+          id="saveBookEditor">
+          Save Reading Record 💗
+        </button>
 
       </div>
 
-    </section>
+    </form>
+
+  </dialog>
+
+</section>
+
 
     <footer class="bookshelf-footer">
       THE BADDIES BOOKSHELF ✦
