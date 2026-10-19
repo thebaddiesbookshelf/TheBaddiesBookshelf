@@ -20,16 +20,15 @@
 }
 *{box-sizing:border-box}
 body{
-  margin:0;
+  margin:0;min-height:100vh;
   background:
     radial-gradient(circle at 85% 5%,#ff4da61c,transparent 35%),
     radial-gradient(circle at 5% 65%,#b77cff12,transparent 40%),
     var(--bg);
   color:var(--text);
   font-family:"Trebuchet MS",Arial,sans-serif;
-  min-height:100vh;
 }
-button,input,select{font:inherit}
+button,input{font:inherit}
 button{cursor:pointer}
 button:disabled{opacity:.55;cursor:not-allowed}
 a{color:inherit;text-decoration:none}
@@ -42,14 +41,16 @@ a{color:inherit;text-decoration:none}
 .nav{display:flex;gap:9px;flex-wrap:wrap}
 .btn{
   display:inline-flex;align-items:center;justify-content:center;
-  gap:6px;padding:11px 15px;border:1px solid var(--border);
+  gap:6px;padding:11px 15px;
+  border:1px solid var(--border);
   background:var(--alt);color:var(--text);
   border-radius:13px;font-weight:bold;
 }
 .btn.primary{
-  background:var(--accent);color:#180b14;border-color:var(--accent)
+  background:var(--accent);color:#180b14;
+  border-color:var(--accent);
 }
-.btn:hover,.member-card:hover{filter:brightness(1.12)}
+.btn:hover:not(:disabled){filter:brightness(1.12)}
 .hero{
   margin:27px 0 20px;padding:38px 32px;
   background:linear-gradient(120deg,var(--surface),var(--alt));
@@ -85,7 +86,7 @@ a{color:inherit;text-decoration:none}
 .count{color:var(--light);font-size:13px;font-weight:bold}
 .status{
   margin:15px 0;color:var(--light);font-size:14px;
-  min-height:18px;
+  min-height:18px;line-height:1.5;
 }
 .status.error{color:#ff9fae}
 .section-head{
@@ -100,10 +101,8 @@ a{color:inherit;text-decoration:none}
   gap:17px;
 }
 .member-card{
-  padding:23px 18px;
-  background:var(--surface);
-  border:1px solid var(--border);
-  border-radius:23px;
+  padding:23px 18px;background:var(--surface);
+  border:1px solid var(--border);border-radius:23px;
   text-align:center;
   transition:transform .15s,border-color .15s;
 }
@@ -112,30 +111,27 @@ a{color:inherit;text-decoration:none}
   border-color:var(--accent);
 }
 .avatar{
-  width:92px;height:92px;
-  margin:0 auto 14px;
-  border:3px solid var(--accent);
-  border-radius:50%;
+  width:92px;height:92px;margin:0 auto 14px;
+  border:3px solid var(--accent);border-radius:50%;
   display:flex;align-items:center;justify-content:center;
-  background:var(--alt);
-  color:var(--light);
-  font-size:35px;font-weight:900;
-  overflow:hidden;
+  background:var(--alt);color:var(--light);
+  font-size:35px;font-weight:900;overflow:hidden;
 }
 .avatar img{width:100%;height:100%;object-fit:cover}
 .member-card h3{
-  margin:7px 0;font-size:19px;
-  overflow-wrap:anywhere;
+  margin:7px 0;font-size:19px;overflow-wrap:anywhere;
 }
 .handle{
   font-size:13px;color:var(--light);
   overflow-wrap:anywhere;min-height:18px;
 }
 .card-note{
-  color:var(--muted);font-size:12px;
-  margin:13px 0 16px;
+  color:var(--muted);font-size:12px;margin:13px 0 16px;
 }
-.card-actions{display:flex;gap:8px;justify-content:center}
+.card-actions{
+  display:flex;gap:8px;justify-content:center;
+  flex-wrap:wrap;
+}
 .card-actions .btn{flex:1;font-size:12px}
 .empty{
   grid-column:1/-1;text-align:center;
@@ -144,8 +140,7 @@ a{color:inherit;text-decoration:none}
   border-radius:20px;color:var(--muted);
 }
 .overlay{
-  position:fixed;inset:0;
-  background:#08050bd9;
+  position:fixed;inset:0;background:#08050bd9;
   display:flex;align-items:center;justify-content:center;
   padding:20px;z-index:50;
 }
@@ -157,12 +152,10 @@ a{color:inherit;text-decoration:none}
   border-radius:25px;padding:25px;
   box-shadow:0 20px 70px #0009;
 }
-.modal-top{
-  display:flex;justify-content:flex-end;
-}
+.modal-top{display:flex;justify-content:flex-end}
 .modal-top button{
-  border:0;background:transparent;color:var(--light);
-  font-size:27px;
+  border:0;background:transparent;
+  color:var(--light);font-size:27px;
 }
 .modal-avatar{width:115px;height:115px;font-size:44px}
 .modal h2{text-align:center;margin:12px 0 5px}
@@ -171,8 +164,13 @@ a{color:inherit;text-decoration:none}
   margin-top:20px;padding:17px;background:var(--alt);
   border:1px solid var(--border);border-radius:15px;
 }
-.modal .section h3{margin:0 0 9px;font-size:15px;color:var(--light)}
-.modal .section p{margin:0;line-height:1.6;overflow-wrap:anywhere}
+.modal .section h3{
+  margin:0 0 9px;font-size:15px;color:var(--light);
+}
+.modal .section p{
+  margin:0;line-height:1.6;overflow-wrap:anywhere;
+  white-space:pre-wrap;
+}
 .modal-actions{
   display:flex;gap:10px;flex-wrap:wrap;margin-top:20px;
 }
@@ -183,6 +181,14 @@ a{color:inherit;text-decoration:none}
   border:1px solid var(--border);
   border-radius:30px;font-size:12px;
 }
+.request-status{
+  margin-top:14px;padding:12px;
+  background:var(--alt);border-radius:12px;
+  color:var(--light);font-size:13px;
+  line-height:1.5;
+}
+.request-status:empty{display:none}
+.request-status.error{color:#ffb0b0}
 .footer{
   text-align:center;color:var(--muted);
   font-size:12px;margin-top:40px;
@@ -249,6 +255,7 @@ a{color:inherit;text-decoration:none}
 <footer class="footer">
   THE BADDIE BOOK CLUB ✦ THE VANITY™ ✦ 2026
 </footer>
+
 </main>
 
 <div class="overlay" id="profileOverlay" hidden>
@@ -281,9 +288,16 @@ a{color:inherit;text-decoration:none}
       <div id="modalGenres"></div>
     </div>
 
+    <p
+      class="request-status"
+      id="requestStatus"
+      role="status"
+      aria-live="polite"
+    ></p>
+
     <div class="modal-actions">
       <button class="btn primary" id="messageMember" type="button">
-        💌 Vanity Mail™
+        💌 Send Vanity Mail™
       </button>
       <button class="btn" id="closeProfile" type="button">
         Back to Directory
@@ -329,10 +343,17 @@ let currentUser = null;
 let members = [];
 let selectedMember = null;
 let lastFocused = null;
+let requestBusy = false;
+let profileGeneration = 0;
 
 function setStatus(text,error=false){
   $("status").textContent = text;
   $("status").classList.toggle("error",error);
+}
+
+function setRequestStatus(text,error=false){
+  $("requestStatus").textContent = text;
+  $("requestStatus").classList.toggle("error",error);
 }
 
 function applyTheme(name){
@@ -406,7 +427,6 @@ async function loadMyTheme(){
 async function signedAvatar(path){
   if(!path || typeof path !== "string") return null;
 
-  // Private storage only. Never use a service-role key.
   const {data,error} = await db.storage
     .from("tbb-avatars")
     .createSignedUrl(path,3600);
@@ -420,17 +440,6 @@ async function loadDirectory(){
   setStatus("Loading the Baddie Directory™...");
 
   try{
-    /*
-      RLS uses tbb_can_view_vanity_profile(user_id).
-      Only approved/authorized profile rows are returned.
-
-      We deliberately do NOT select:
-      - emails
-      - age groups
-      - private favorites
-      - activity history
-      - bookshelf contents
-    */
     const {data,error} = await db
       .from("tbb_profiles")
       .select(
@@ -445,8 +454,6 @@ async function loadDirectory(){
 
     members = data || [];
 
-    // Signed avatar URLs are temporary.
-    // A failed image request does not hide the member.
     await Promise.all(
       members.map(async member=>{
         member.signedAvatarUrl =
@@ -509,11 +516,10 @@ function renderDirectory(){
     card.append(avatarNode(member));
     card.append(el("h3","",displayName(member)));
     card.append(el("div","handle",handle(member)));
-    card.append(
-      el("p","card-note","✦ Official TBB Baddie ✦")
-    );
+    card.append(el("p","card-note","✦ Official TBB Baddie ✦"));
 
     const actions = el("div","card-actions");
+
     const view = el("button","btn primary","View Library Card");
     view.type = "button";
     view.addEventListener("click",()=>openProfile(member));
@@ -526,9 +532,89 @@ function renderDirectory(){
   grid.append(fragment);
 }
 
+function updateMessageButton(status){
+  const button = $("messageMember");
+
+  button.disabled = requestBusy;
+
+  if(status === "accepted"){
+    button.textContent = "💌 Open Vanity Mail™";
+  }else if(status === "pending"){
+    button.textContent = "💌 View Pending Request";
+  }else if(status === "declined"){
+    button.textContent = "Request Previously Declined";
+    button.disabled = true;
+  }else{
+    button.textContent = "💌 Send Vanity Mail™";
+  }
+}
+
+async function getExistingConversation(memberId){
+  const {data,error} = await db
+    .from("tbb_vm_conversations")
+    .select("id,status,requested_by,member_a,member_b")
+    .or(
+      "and(member_a.eq."+currentUser.id+
+      ",member_b.eq."+memberId+"),"+
+      "and(member_a.eq."+memberId+
+      ",member_b.eq."+currentUser.id+")"
+    )
+    .maybeSingle();
+
+  if(error) throw error;
+
+  return data;
+}
+
+async function refreshConversationStatus(member,token){
+  try{
+    const conversation =
+      await getExistingConversation(member.user_id);
+
+    if(token !== profileGeneration) return;
+
+    member.existingConversation = conversation;
+
+    updateMessageButton(conversation?.status);
+
+    if(conversation?.status === "pending"){
+      const incoming =
+        conversation.requested_by !== currentUser.id;
+
+      setRequestStatus(
+        incoming
+          ? "💌 This Baddie has already sent you a request! "+
+            "Open Vanity Mail™ to accept or decline it."
+          : "💗 Your message request is already pending."
+      );
+    }else if(conversation?.status === "accepted"){
+      setRequestStatus(
+        "💗 You're already connected! Open your inbox to chat."
+      );
+    }else if(conversation?.status === "declined"){
+      setRequestStatus(
+        "This conversation request was previously declined."
+      );
+    }else{
+      setRequestStatus("");
+    }
+
+  }catch(error){
+    if(token !== profileGeneration) return;
+
+    console.warn("Conversation status:",error.message);
+    setRequestStatus(
+      "Could not check existing requests. You can try again.",
+      true
+    );
+  }
+}
+
 function openProfile(member){
   selectedMember = member;
   lastFocused = document.activeElement;
+
+  const token = ++profileGeneration;
 
   $("modalName").textContent = displayName(member);
   $("modalHandle").textContent = handle(member);
@@ -537,13 +623,9 @@ function openProfile(member){
   $("modalReaderType").textContent =
     member.reader_type?.trim() || "A certified book lover 💗";
 
-  $("modalAvatar").replaceWith(
-    (() => {
-      const avatar = avatarNode(member,"modal-avatar");
-      avatar.id = "modalAvatar";
-      return avatar;
-    })()
-  );
+  const avatar = avatarNode(member,"modal-avatar");
+  avatar.id = "modalAvatar";
+  $("modalAvatar").replaceWith(avatar);
 
   const genres = $("modalGenres");
   genres.replaceChildren();
@@ -559,38 +641,154 @@ function openProfile(member){
     );
   }
 
+  member.existingConversation = null;
+
+  setRequestStatus("Checking message availability...");
+  $("messageMember").textContent = "Checking...";
+  $("messageMember").disabled = true;
+
   $("profileOverlay").hidden = false;
   document.body.style.overflow = "hidden";
   $("closeModal").focus();
+
+  refreshConversationStatus(member,token);
 }
 
 function closeProfile(){
+  if(requestBusy) return;
+
+  ++profileGeneration;
   $("profileOverlay").hidden = true;
   document.body.style.overflow = "";
   selectedMember = null;
   lastFocused?.focus?.();
 }
 
-function messageMember(){
-  if(!selectedMember) return;
+async function messageMember(){
+  if(!selectedMember || requestBusy) return;
 
-  /*
-    Phase 3 messaging connection:
-    tbb_vm_request(uuid) already exists in Supabase,
-    but its argument name and eligibility checks
-    have not yet been verified.
+  const member = selectedMember;
+  const existing = member.existingConversation;
 
-    Do not guess an RPC argument or bypass
-    the adult/junior consent rules.
-  */
+  if(existing?.status === "accepted" ||
+     existing?.status === "pending"){
+    window.location.href = "vanity-mail.html";
+    return;
+  }
 
-  setStatus(
-    "Vanity Mail™ requests will be enabled after "+
-    "the messaging security check. 💌"
+  if(existing?.status === "declined"){
+    setRequestStatus(
+      "This conversation request was previously declined.",
+      true
+    );
+    return;
+  }
+
+  const confirmed = confirm(
+    "Send a Vanity Mail™ conversation request to "+
+    displayName(member)+"?\n\n"+
+    "They'll need to accept before you can chat."
   );
 
-  closeProfile();
-  window.scrollTo({top:0,behavior:"smooth"});
+  if(!confirmed) return;
+
+  requestBusy = true;
+  $("messageMember").disabled = true;
+  $("messageMember").textContent = "Sending request...";
+  setRequestStatus("Delivering your Vanity Mail™ request... 💌");
+
+  try{
+    /*
+      Verified Supabase function signature:
+      tbb_vm_request(p_recipient uuid) RETURNS uuid
+
+      The server checks:
+      - Approved/eligible members
+      - Messaging blocks
+      - Recipient request preferences
+      - Junior/Adult consent
+      - Existing conversations
+    */
+    const {data:conversationId,error} = await db.rpc(
+      "tbb_vm_request",
+      {p_recipient:member.user_id}
+    );
+
+    if(error) throw error;
+
+    if(!conversationId){
+      throw new Error(
+        "The server did not return a conversation ID."
+      );
+    }
+
+    /*
+      A returned ID may represent an existing conversation,
+      not necessarily a newly created request.
+    */
+    const {data:conversation,error:lookupError} = await db
+      .from("tbb_vm_conversations")
+      .select("id,status,requested_by")
+      .eq("id",conversationId)
+      .maybeSingle();
+
+    if(lookupError) throw lookupError;
+
+    if(!conversation){
+      setRequestStatus(
+        "The server processed the request, but its "+
+        "conversation could not be displayed. Check Vanity Mail™."
+      );
+      return;
+    }
+
+    member.existingConversation = conversation;
+
+    if(conversation.status === "accepted"){
+      setRequestStatus(
+        "💗 You're already connected! Open Vanity Mail™ to chat."
+      );
+    }else if(conversation.status === "pending"){
+      setRequestStatus(
+        conversation.requested_by === currentUser.id
+          ? "💌 Request delivered! This Baddie can accept "+
+            "or decline it in Vanity Mail™."
+          : "💌 This Baddie already requested you! "+
+            "Open Vanity Mail™ to respond."
+      );
+    }else{
+      setRequestStatus(
+        "Conversation status: "+conversation.status
+      );
+    }
+
+  }catch(error){
+    console.error("Vanity Mail request:",error);
+
+    const raw = String(error.message || "");
+
+    if(raw.includes("Message request not permitted")){
+      setRequestStatus(
+        "💗 This request isn't available. The member's "+
+        "messaging settings, eligibility, or safety "+
+        "protections may prevent it.",
+        true
+      );
+    }else if(raw.includes("declined")){
+      setRequestStatus(
+        "This conversation request was previously declined.",
+        true
+      );
+    }else{
+      setRequestStatus(
+        "We couldn't complete your request: "+raw,
+        true
+      );
+    }
+  }finally{
+    requestBusy = false;
+    updateMessageButton(member.existingConversation?.status);
+  }
 }
 
 async function init(){
@@ -610,14 +808,11 @@ async function init(){
 }
 
 $("logout").addEventListener("click",logout);
-
 $("refresh").addEventListener("click",loadDirectory);
-
 $("search").addEventListener("input",renderDirectory);
 
 $("closeModal").addEventListener("click",closeProfile);
 $("closeProfile").addEventListener("click",closeProfile);
-
 $("messageMember").addEventListener("click",messageMember);
 
 $("profileOverlay").addEventListener("click",event=>{
