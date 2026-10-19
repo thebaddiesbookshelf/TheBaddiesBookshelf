@@ -1,0 +1,982 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Vanity Mail™ | TBB 2.0</title>
+<link rel="stylesheet" href="css/auth.css">
+
+<style>
+:root {
+  --pink:#ff4da6;
+  --pink-light:#ffb5da;
+  --bg:#130d17;
+  --surface:#241727;
+  --alt:#332036;
+  --border:#65415d;
+  --text:#fff5fb;
+  --muted:#d4b9ca;
+}
+
+* { box-sizing:border-box; }
+
+body {
+  margin:0;
+  min-height:100vh;
+  background:
+    radial-gradient(circle at top right,
+      #60204755,transparent 45%),
+    var(--bg);
+  color:var(--text);
+  font-family:"Trebuchet MS",Arial,sans-serif;
+}
+
+button,input,textarea { font:inherit; }
+
+button { cursor:pointer; }
+
+button:disabled { opacity:.5;cursor:not-allowed; }
+
+a { color:var(--pink-light); }
+
+.shell {
+  width:min(1250px,95%);
+  margin:auto;
+  padding:25px 0 55px;
+}
+
+.topbar {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+}
+
+.brand {
+  font-weight:900;
+  letter-spacing:2px;
+  color:var(--pink-light);
+}
+
+.btn {
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:10px 15px;
+  background:var(--alt);
+  color:var(--text);
+  font-weight:bold;
+  text-decoration:none;
+  display:inline-block;
+}
+
+.btn.primary {
+  background:var(--pink);
+  color:#1a0d16;
+  border-color:var(--pink);
+}
+
+.btn.danger {
+  border-color:#a64b68;
+  color:#ffb6c7;
+}
+
+.hero {
+  margin:25px 0;
+  padding:30px;
+  border:1px solid var(--border);
+  border-radius:25px;
+  background:linear-gradient(125deg,#5d2048,var(--surface));
+}
+
+.hero h1 {
+  font-size:clamp(34px,5vw,58px);
+  margin:10px 0;
+}
+
+.eyebrow {
+  font-size:11px;
+  letter-spacing:3px;
+  color:var(--pink-light);
+  font-weight:bold;
+}
+
+.muted { color:var(--muted); }
+
+.notice {
+  margin:15px 0;
+  padding:12px 15px;
+  background:var(--alt);
+  border-radius:12px;
+  color:var(--pink-light);
+}
+
+.notice:empty { display:none; }
+.notice.error { color:#ffb0b0; }
+
+.mail-layout {
+  display:grid;
+  grid-template-columns:340px minmax(0,1fr);
+  gap:18px;
+  min-height:570px;
+}
+
+.panel {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:22px;
+  overflow:hidden;
+}
+
+.panel-header {
+  padding:18px;
+  border-bottom:1px solid var(--border);
+}
+
+.panel-header h2 { margin:0 0 6px;font-size:21px; }
+
+.tabs {
+  display:flex;
+  gap:8px;
+  padding:12px;
+  flex-wrap:wrap;
+}
+
+.tab {
+  padding:9px 12px;
+  border:1px solid var(--border);
+  background:var(--alt);
+  color:var(--text);
+  border-radius:12px;
+}
+
+.tab[aria-selected="true"] {
+  background:var(--pink);
+  border-color:var(--pink);
+  color:#190b14;
+  font-weight:bold;
+}
+
+.list {
+  padding:0 10px 15px;
+  max-height:520px;
+  overflow-y:auto;
+}
+
+.thread-item {
+  display:block;
+  width:100%;
+  padding:15px;
+  margin:6px 0;
+  text-align:left;
+  border:1px solid var(--border);
+  background:var(--alt);
+  border-radius:15px;
+  color:var(--text);
+}
+
+.thread-item.active {
+  border-color:var(--pink);
+  box-shadow:inset 3px 0 var(--pink);
+}
+
+.thread-item strong { display:block;margin-bottom:5px; }
+
+.thread-item small { color:var(--muted); }
+
+.unread {
+  display:inline-block;
+  padding:3px 8px;
+  border-radius:20px;
+  background:var(--pink);
+  color:#170c14;
+  font-size:11px;
+  font-weight:bold;
+}
+
+.chat {
+  display:flex;
+  flex-direction:column;
+  min-height:570px;
+}
+
+.chat-head {
+  padding:18px;
+  border-bottom:1px solid var(--border);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+}
+
+.chat-head h2 { margin:0;font-size:21px; }
+
+.chat-actions {
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.messages {
+  flex:1;
+  min-height:300px;
+  max-height:490px;
+  overflow-y:auto;
+  padding:18px;
+  display:flex;
+  flex-direction:column;
+  gap:13px;
+}
+
+.bubble {
+  max-width:80%;
+  padding:12px 15px;
+  border-radius:17px;
+  background:var(--alt);
+  border:1px solid var(--border);
+  overflow-wrap:anywhere;
+  white-space:pre-wrap;
+}
+
+.bubble.mine {
+  align-self:flex-end;
+  background:#5a2348;
+  border-color:#9c3f7d;
+}
+
+.bubble.theirs { align-self:flex-start; }
+
+.bubble time {
+  display:block;
+  margin-top:7px;
+  font-size:10px;
+  color:var(--muted);
+}
+
+.bubble button {
+  margin-top:8px;
+  border:0;
+  background:none;
+  color:var(--pink-light);
+  padding:0;
+  font-size:11px;
+}
+
+.composer {
+  padding:15px;
+  border-top:1px solid var(--border);
+  display:flex;
+  gap:10px;
+}
+
+.composer textarea {
+  flex:1;
+  resize:vertical;
+  min-height:50px;
+  max-height:140px;
+  border-radius:12px;
+  background:var(--alt);
+  border:1px solid var(--border);
+  color:var(--text);
+  padding:12px;
+}
+
+.composer button { align-self:flex-end; }
+
+.empty {
+  padding:25px;
+  color:var(--muted);
+  text-align:center;
+}
+
+.settings {
+  margin-top:24px;
+  padding:24px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:22px;
+}
+
+.settings h2 { margin-top:0; }
+
+.setting-row {
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+  margin:15px 0;
+}
+
+.setting-row input { margin-top:5px; }
+
+.setting-row label { line-height:1.5; }
+
+.hidden { display:none !important; }
+
+@media(max-width:780px) {
+  .mail-layout { grid-template-columns:1fr; }
+  .chat { min-height:450px; }
+  .messages { min-height:260px; }
+}
+
+@media(max-width:480px) {
+  .hero { padding:22px; }
+  .bubble { max-width:92%; }
+  .composer { flex-direction:column; }
+  .composer button { align-self:stretch; }
+}
+</style>
+</head>
+
+<body>
+<main class="shell">
+
+<header class="topbar">
+  <div class="brand">TBB ✦ 2.0</div>
+  <div>
+    <a class="btn" href="member.html">← The Vanity™</a>
+    <button class="btn" id="logout" type="button">Sign Out</button>
+  </div>
+</header>
+
+<section class="hero">
+  <span class="eyebrow">PRIVATE BADDIE CORRESPONDENCE</span>
+  <h1>💌 Vanity Mail™</h1>
+  <p>Your inbox, your conversations, your Baddie connections.</p>
+</section>
+
+<p class="notice" id="message" role="status" aria-live="polite"></p>
+
+<div class="mail-layout">
+
+  <aside class="panel">
+    <div class="panel-header">
+      <h2>My Inbox 💗</h2>
+      <span class="muted">Your conversations and requests</span>
+    </div>
+
+    <div class="tabs" role="tablist" aria-label="Mail folders">
+      <button class="tab" type="button" data-tab="inbox"
+              aria-selected="true">Inbox</button>
+      <button class="tab" type="button" data-tab="requests"
+              aria-selected="false">Requests</button>
+    </div>
+
+    <div class="list" id="conversationList">
+      <div class="empty">Loading your inbox...</div>
+    </div>
+  </aside>
+
+  <section class="panel chat" aria-label="Conversation">
+    <div class="chat-head">
+      <div>
+        <h2 id="chatName">Select a conversation</h2>
+        <div class="muted" id="chatStatus">
+          Your messages will appear here.
+        </div>
+      </div>
+
+      <div class="chat-actions">
+        <button class="btn danger hidden" id="blockButton"
+                type="button">Block</button>
+      </div>
+    </div>
+
+    <div class="messages" id="messages">
+      <div class="empty">
+        💗 Choose a conversation from your inbox.
+      </div>
+    </div>
+
+    <div id="requestActions" class="composer hidden">
+      <button class="btn primary" id="acceptRequest"
+              type="button">Accept Request</button>
+      <button class="btn" id="declineRequest"
+              type="button">Decline</button>
+    </div>
+
+    <form class="composer hidden" id="messageForm">
+      <textarea id="messageInput" maxlength="5000"
+        placeholder="Write something sweet, Baddie..."
+        required></textarea>
+      <button class="btn primary" id="sendButton"
+              type="submit">Send 💌</button>
+    </form>
+  </section>
+
+</div>
+
+<section class="settings">
+  <h2>🛡️ Messaging Preferences</h2>
+  <p class="muted">
+    Control who can request conversations with you.
+  </p>
+
+  <div class="setting-row">
+    <input type="checkbox" id="allowRequests">
+    <label for="allowRequests">
+      <strong>Allow message requests</strong>
+      <div class="muted">
+        Other eligible members may request a conversation.
+      </div>
+    </label>
+  </div>
+
+  <div class="setting-row hidden" id="juniorSetting">
+    <input type="checkbox" id="allowAdultRequests">
+    <label for="allowAdultRequests">
+      <strong>Allow adult message requests</strong>
+      <div class="muted">
+        Junior Baddies must explicitly opt in before adult
+        members can request conversations. You can turn
+        this off at any time.
+      </div>
+    </label>
+  </div>
+
+  <button class="btn primary" id="savePreferences"
+          type="button">Save Preferences 💗</button>
+
+  <p class="muted" id="preferencesStatus" role="status"></p>
+</section>
+
+</main>
+
+<script type="module">
+import { db, requireAccess, logout } from "./js/auth.js";
+
+const $ = id => document.getElementById(id);
+
+let user = null;
+let conversations = [];
+let activeConversation = null;
+let currentTab = "inbox";
+let ageGroup = "unverified";
+let inboxGeneration = 0;
+
+function notify(text,error=false) {
+  $("message").textContent = text;
+  $("message").className =
+    error ? "notice error" : "notice";
+}
+
+function shortDate(value) {
+  if (!value) return "";
+  return new Date(value).toLocaleString([],{
+    month:"short",day:"numeric",
+    hour:"numeric",minute:"2-digit"
+  });
+}
+
+function otherId(conversation) {
+  return conversation.member_a === user.id
+    ? conversation.member_b
+    : conversation.member_a;
+}
+
+async function getMemberNames(ids) {
+  const unique = [...new Set(ids.filter(Boolean))];
+  if (!unique.length) return new Map();
+
+  const {data,error} = await db
+    .from("tbb_profiles")
+    .select("user_id,display_name,username")
+    .in("user_id",unique);
+
+  if (error) {
+    console.warn("Could not load member names:",error.message);
+    return new Map();
+  }
+
+  return new Map((data || []).map(profile => [
+    profile.user_id,
+    profile.display_name ||
+      profile.username ||
+      "Baddie"
+  ]));
+}
+
+async function loadConversations() {
+  const generation = ++inboxGeneration;
+
+  const {data,error} = await db
+    .from("tbb_vm_conversations")
+    .select(`
+      id,
+      member_a,
+      member_b,
+      requested_by,
+      status,
+      created_at,
+      accepted_at
+    `)
+    .or(`member_a.eq.${user.id},member_b.eq.${user.id}`)
+    .order("created_at",{ascending:false});
+
+  if (error) throw error;
+  if (generation !== inboxGeneration) return;
+
+  conversations = data || [];
+
+  const names = await getMemberNames(
+    conversations.map(otherId)
+  );
+
+  if (generation !== inboxGeneration) return;
+
+  conversations.forEach(conversation => {
+    conversation.otherName =
+      names.get(otherId(conversation)) || "Baddie";
+  });
+
+  renderConversationList();
+
+  if (activeConversation) {
+    const updated = conversations.find(
+      item => item.id === activeConversation.id
+    );
+
+    if (updated) {
+      activeConversation = updated;
+    } else {
+      clearConversation();
+    }
+  }
+}
+
+function renderConversationList() {
+  const container = $("conversationList");
+  container.replaceChildren();
+
+  const visible = conversations.filter(item => {
+    if (currentTab === "requests") {
+      return item.status === "pending";
+    }
+    return item.status === "accepted";
+  });
+
+  if (!visible.length) {
+    const empty = document.createElement("div");
+    empty.className = "empty";
+    empty.textContent =
+      currentTab === "requests"
+        ? "No message requests right now. 💗"
+        : "No conversations yet, Baddie. 💌";
+    container.append(empty);
+    return;
+  }
+
+  visible.forEach(conversation => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "thread-item";
+
+    if (activeConversation?.id === conversation.id) {
+      button.classList.add("active");
+    }
+
+    const name = document.createElement("strong");
+    name.textContent = conversation.otherName;
+
+    const detail = document.createElement("small");
+
+    if (conversation.status === "pending") {
+      detail.textContent =
+        conversation.requested_by === user.id
+          ? "Request sent — waiting for approval"
+          : "New message request 💌";
+    } else {
+      detail.textContent = "Open conversation";
+    }
+
+    button.append(name,detail);
+
+    button.addEventListener("click",() => {
+      openConversation(conversation);
+    });
+
+    container.append(button);
+  });
+}
+
+function clearConversation() {
+  activeConversation = null;
+  $("chatName").textContent = "Select a conversation";
+  $("chatStatus").textContent =
+    "Your messages will appear here.";
+  $("messages").replaceChildren();
+
+  const empty = document.createElement("div");
+  empty.className = "empty";
+  empty.textContent = "💗 Choose a conversation from your inbox.";
+  $("messages").append(empty);
+
+  $("messageForm").classList.add("hidden");
+  $("requestActions").classList.add("hidden");
+  $("blockButton").classList.add("hidden");
+}
+
+async function openConversation(conversation) {
+  activeConversation = conversation;
+  $("chatName").textContent = conversation.otherName;
+  $("chatStatus").textContent =
+    conversation.status === "accepted"
+      ? "Private conversation 💌"
+      : "Pending message request";
+
+  $("messageForm").classList.toggle(
+    "hidden",
+    conversation.status !== "accepted"
+  );
+
+  const incomingRequest =
+    conversation.status === "pending" &&
+    conversation.requested_by !== user.id;
+
+  $("requestActions").classList.toggle(
+    "hidden",
+    !incomingRequest
+  );
+
+  $("blockButton").classList.remove("hidden");
+
+  renderConversationList();
+
+  if (conversation.status === "accepted") {
+    await loadMessages(conversation.id);
+  } else {
+    $("messages").replaceChildren();
+
+    const empty = document.createElement("div");
+    empty.className = "empty";
+    empty.textContent = incomingRequest
+      ? "This Baddie would like to start a conversation."
+      : "Your request is waiting for a response.";
+
+    $("messages").append(empty);
+  }
+}
+
+async function loadMessages(conversationId) {
+  const {data,error} = await db
+    .from("tbb_vm_messages")
+    .select("id,sender_id,body,created_at,read_at")
+    .eq("conversation_id",conversationId)
+    .order("created_at",{ascending:true})
+    .limit(200);
+
+  if (error) {
+    notify(error.message,true);
+    return;
+  }
+
+  if (activeConversation?.id !== conversationId) return;
+
+  const container = $("messages");
+  container.replaceChildren();
+
+  if (!data?.length) {
+    const empty = document.createElement("div");
+    empty.className = "empty";
+    empty.textContent =
+      "Your conversation is ready. Send the first message! 💗";
+    container.append(empty);
+  }
+
+  for (const item of data || []) {
+    const mine = item.sender_id === user.id;
+
+    const bubble = document.createElement("div");
+    bubble.className =
+      "bubble " + (mine ? "mine" : "theirs");
+
+    const body = document.createElement("div");
+    body.textContent = item.body;
+
+    const time = document.createElement("time");
+    time.textContent = shortDate(item.created_at);
+
+    bubble.append(body,time);
+
+    if (!mine) {
+      const report = document.createElement("button");
+      report.type = "button";
+      report.textContent = "Report message";
+      report.addEventListener("click",() => {
+        reportMessage(item.id);
+      });
+      bubble.append(report);
+    }
+
+    container.append(bubble);
+  }
+
+  container.scrollTop = container.scrollHeight;
+
+  const {error:readError} = await db.rpc(
+    "tbb_vm_mark_read",
+    {p_conversation_id:conversationId}
+  );
+
+  if (readError) {
+    console.warn("Could not mark messages read:",readError.message);
+  }
+}
+
+async function sendMessage(event) {
+  event.preventDefault();
+
+  if (!activeConversation ||
+      activeConversation.status !== "accepted") return;
+
+  const conversationId = activeConversation.id;
+  const body = $("messageInput").value.trim();
+
+  if (!body) return;
+
+  $("sendButton").disabled = true;
+
+  try {
+    const {error} = await db.rpc("tbb_vm_send",{
+      p_conversation_id:conversationId,
+      p_body:body
+    });
+
+    if (error) throw error;
+
+    $("messageInput").value = "";
+    await loadMessages(conversationId);
+
+  } catch (error) {
+    notify(error.message,true);
+  } finally {
+    $("sendButton").disabled = false;
+  }
+}
+
+async function respondToRequest(accept) {
+  if (!activeConversation) return;
+
+  const id = activeConversation.id;
+
+  $("acceptRequest").disabled = true;
+  $("declineRequest").disabled = true;
+
+  try {
+    const {error} = await db.rpc("tbb_vm_respond",{
+      p_conversation_id:id,
+      p_accept:accept
+    });
+
+    if (error) throw error;
+
+    clearConversation();
+    await loadConversations();
+
+    notify(
+      accept
+        ? "Message request accepted! 💗"
+        : "Message request declined."
+    );
+
+  } catch (error) {
+    notify(error.message,true);
+  } finally {
+    $("acceptRequest").disabled = false;
+    $("declineRequest").disabled = false;
+  }
+}
+
+async function blockMember() {
+  if (!activeConversation) return;
+
+  const recipientId = otherId(activeConversation);
+
+  if (!confirm(
+    "Block this member? They will no longer be able to message you."
+  )) return;
+
+  try {
+    const {error} = await db.rpc("tbb_vm_block",{
+      p_blocked_id:recipientId
+    });
+
+    if (error) throw error;
+
+    clearConversation();
+    await loadConversations();
+
+    notify("Member blocked. 🛡️");
+
+  } catch (error) {
+    notify(error.message,true);
+  }
+}
+
+async function reportMessage(messageId) {
+  const reason = prompt(
+    "Why are you reporting this message? Please describe the concern."
+  );
+
+  if (!reason?.trim()) return;
+
+  try {
+    const {error} = await db.rpc("tbb_vm_report",{
+      p_message_id:messageId,
+      p_reason:reason.trim()
+    });
+
+    if (error) throw error;
+
+    notify("Your report has been submitted to moderation. 🛡️");
+
+  } catch (error) {
+    notify(error.message,true);
+  }
+}
+
+async function loadPreferences() {
+  const {data:ageData,error:ageError} = await db
+    .from("tbb_member_age_groups")
+    .select("age_group")
+    .eq("user_id",user.id)
+    .maybeSingle();
+
+  if (ageError) throw ageError;
+
+  ageGroup = ageData?.age_group || "unverified";
+
+  const {data,error} = await db
+    .from("tbb_vm_preferences")
+    .select("allow_requests,allow_adult_requests")
+    .eq("user_id",user.id)
+    .maybeSingle();
+
+  if (error) throw error;
+
+  $("allowRequests").checked =
+    data?.allow_requests ?? true;
+
+  $("allowAdultRequests").checked =
+    data?.allow_adult_requests ?? false;
+
+  $("juniorSetting").classList.toggle(
+    "hidden",
+    ageGroup !== "junior"
+  );
+
+  if (ageGroup === "unverified") {
+    $("preferencesStatus").textContent =
+      "Your age-group verification is required before messaging.";
+    $("savePreferences").disabled = true;
+    $("allowRequests").disabled = true;
+  }
+}
+
+async function savePreferences() {
+  const button = $("savePreferences");
+  button.disabled = true;
+
+  try {
+    const {error} = await db.rpc(
+      "tbb_vm_set_preferences",
+      {
+        p_allow_requests:$("allowRequests").checked,
+        p_allow_adult_requests:
+          ageGroup === "junior"
+            ? $("allowAdultRequests").checked
+            : false
+      }
+    );
+
+    if (error) throw error;
+
+    $("preferencesStatus").textContent =
+      "Your messaging preferences are saved! 💗";
+
+  } catch (error) {
+    $("preferencesStatus").textContent = error.message;
+  } finally {
+    button.disabled = ageGroup === "unverified";
+  }
+}
+
+async function init() {
+  try {
+    const access = await requireAccess();
+    if (!access) return;
+
+    user = access.user;
+
+    await loadPreferences();
+    await loadConversations();
+
+  } catch (error) {
+    notify(error.message,true);
+  }
+}
+
+$("logout").addEventListener("click",logout);
+
+document.querySelectorAll(".tab").forEach(button => {
+  button.addEventListener("click",() => {
+    currentTab = button.dataset.tab;
+
+    document.querySelectorAll(".tab").forEach(tab => {
+      tab.setAttribute(
+        "aria-selected",
+        String(tab === button)
+      );
+    });
+
+    renderConversationList();
+  });
+});
+
+$("messageForm").addEventListener("submit",sendMessage);
+
+$("acceptRequest").addEventListener("click",() => {
+  respondToRequest(true);
+});
+
+$("declineRequest").addEventListener("click",() => {
+  respondToRequest(false);
+});
+
+$("blockButton").addEventListener("click",blockMember);
+
+$("savePreferences").addEventListener(
+  "click",savePreferences
+);
+
+// Refresh inbox and active conversation periodically.
+// This is polling, not Supabase Realtime.
+let refreshBusy = false;
+
+const refreshTimer = setInterval(async () => {
+  if (!user || document.hidden || refreshBusy) return;
+
+  refreshBusy = true;
+
+  try {
+    await loadConversations();
+
+    if (activeConversation?.status === "accepted") {
+      await loadMessages(activeConversation.id);
+    }
+  } catch (error) {
+    console.warn("Vanity Mail refresh:",error.message);
+  } finally {
+    refreshBusy = false;
+  }
+},15000);
+
+window.addEventListener("pagehide",() => {
+  clearInterval(refreshTimer);
+});
+
+init();
+</script>
+</body>
+</html>

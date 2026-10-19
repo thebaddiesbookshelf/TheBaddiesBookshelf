@@ -2,1063 +2,954 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>The Vanity™ | TBB 2.0</title>
-  <link rel="stylesheet" href="css/auth.css">
-
-  <style>
-    :root {
-      --accent: #ff4da6;
-      --accent-light: #ffb5da;
-      --background: #130d17;
-      --surface: #241727;
-      --surface-alt: #332036;
-      --text: #fff5fb;
-      --muted: #d4b9ca;
-      --border: #65415d;
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background:
-        radial-gradient(ellipse at top right,
-          color-mix(in srgb, var(--accent) 17%, transparent),
-          transparent 55%),
-        var(--background);
-      color: var(--text);
-      font-family: "Trebuchet MS", Arial, sans-serif;
-    }
-
-    button, input, textarea {
-      font: inherit;
-    }
-
-    button { cursor: pointer; }
-
-    .vanity-shell {
-      width: min(1200px, 94%);
-      margin: auto;
-      padding: 25px 0 65px;
-    }
-
-    .topbar, .top-actions, .profile-heading,
-    .section-heading, .theme-actions {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 15px;
-    }
-
-    .brand {
-      color: var(--accent-light);
-      font-weight: 900;
-      letter-spacing: 2px;
-      font-size: 18px;
-    }
-
-    .eyebrow {
-      text-transform: uppercase;
-      letter-spacing: 3px;
-      color: var(--accent-light);
-      font-size: 11px;
-      font-weight: bold;
-    }
-
-    h1 {
-      font-size: clamp(35px, 6vw, 64px);
-      margin: 12px 0;
-      line-height: 1;
-    }
-
-    h2 { margin: 0; font-size: 24px; }
-
-    h3 { margin: 0; font-size: 18px; }
-
-    p { line-height: 1.6; }
-
-    .muted { color: var(--muted); }
-
-    .hero {
-      padding: 38px;
-      margin-top: 25px;
-      border: 1px solid var(--border);
-      border-radius: 28px;
-      background: linear-gradient(
-        135deg,
-        color-mix(in srgb, var(--accent) 18%, var(--surface)),
-        var(--surface)
-      );
-    }
-
-    .hero p { max-width: 680px; }
-
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      border: 1px solid var(--border);
-      border-radius: 100px;
-      padding: 7px 13px;
-      color: var(--accent-light);
-      font-size: 12px;
-      font-weight: bold;
-    }
-
-    .btn {
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 11px 16px;
-      background: var(--surface-alt);
-      color: var(--text);
-      font-weight: bold;
-      text-decoration: none;
-      display: inline-block;
-    }
-
-    .btn-primary {
-      background: var(--accent);
-      color: #160c13;
-      border-color: var(--accent);
-    }
-
-    .btn:disabled {
-      opacity: .55;
-      cursor: not-allowed;
-    }
-
-    .section {
-      margin-top: 34px;
-    }
-
-    .section-heading {
-      margin-bottom: 16px;
-    }
-
-    .panel-card {
-      padding: 24px;
-      border-radius: 22px;
-      border: 1px solid var(--border);
-      background: var(--surface);
-      min-width: 0;
-    }
-
-    .dashboard-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 16px;
-    }
-
-    .dashboard-card {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .dashboard-card .symbol {
-      font-size: 28px;
-    }
-
-    .dashboard-card p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .dashboard-card .status {
-      margin-top: auto;
-      padding-top: 12px;
-      color: var(--accent-light);
-      font-size: 12px;
-      font-weight: bold;
-    }
-
-    .profile-avatar {
-      width: 78px;
-      height: 78px;
-      border-radius: 22px;
-      display: grid;
-      place-items: center;
-      font-size: 35px;
-      background: var(--surface-alt);
-      border: 2px solid var(--accent);
-      flex-shrink: 0;
-    }
-
-    .profile-heading {
-      justify-content: flex-start;
-      flex-wrap: wrap;
-    }
-
-    .profile-heading h2 { margin-bottom: 5px; }
-
-    .theme-grid {
-      display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 20px;
-    }
-
-    .theme-option {
-      background: var(--surface-alt);
-      color: var(--text);
-      border: 2px solid var(--border);
-      border-radius: 18px;
-      padding: 9px;
-      text-align: center;
-      transition: transform .15s, border-color .15s;
-      min-width: 0;
-    }
-
-    .theme-option:hover {
-      transform: translateY(-3px);
-    }
-
-    .theme-option[aria-pressed="true"] {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 2px
-        color-mix(in srgb, var(--accent) 25%, transparent);
-    }
-
-    .theme-option img {
-      width: 100%;
-      aspect-ratio: 3 / 4;
-      object-fit: cover;
-      object-position: top;
-      border-radius: 12px;
-      display: block;
-      background: #21141f;
-    }
-
-    .theme-option strong {
-      display: block;
-      margin-top: 10px;
-      font-size: 14px;
-    }
-
-    .theme-option small {
-      display: block;
-      color: var(--muted);
-      margin-top: 4px;
-      font-size: 11px;
-    }
-
-    .theme-actions {
-      justify-content: flex-end;
-      flex-wrap: wrap;
-      margin-top: 20px;
-    }
-
-    .edit-form {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 16px;
-      margin-top: 20px;
-    }
-
-    .field {
-      display: flex;
-      flex-direction: column;
-      gap: 7px;
-    }
-
-    .field.full {
-      grid-column: 1 / -1;
-    }
-
-    label {
-      font-size: 13px;
-      font-weight: bold;
-      color: var(--accent-light);
-    }
-
-    input, textarea {
-      width: 100%;
-      padding: 12px 13px;
-      background: var(--surface-alt);
-      border: 1px solid var(--border);
-      border-radius: 11px;
-      color: var(--text);
-    }
-
-    textarea {
-      min-height: 100px;
-      resize: vertical;
-    }
-
-    input:focus, textarea:focus {
-      outline: 2px solid var(--accent);
-      outline-offset: 2px;
-    }
-
-    .helper {
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    .notice {
-      padding: 12px 15px;
-      border-radius: 12px;
-      background: var(--surface-alt);
-      color: var(--accent-light);
-      margin-top: 16px;
-    }
-
-    .notice.error {
-      color: #ffaaaa;
-    }
-
-    .notice:empty {
-      display: none;
-    }
-
-    .announcement {
-      padding: 16px 0;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .announcement:last-child {
-      border-bottom: 0;
-    }
-
-    .announcement h3 {
-      margin-bottom: 7px;
-    }
-
-    .announcement p {
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
-      margin-bottom: 0;
-    }
-
-    .announcement time {
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .hidden { display: none !important; }
-
-    @media (max-width: 800px) {
-      .theme-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
-    }
-
-    @media (max-width: 600px) {
-      .hero { padding: 25px; }
-      .dashboard-grid, .edit-form {
-        grid-template-columns: 1fr;
-      }
-      .theme-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-      .topbar { align-items: flex-start; }
-      .section-heading { align-items: flex-start; }
-      .panel-card { padding: 18px; }
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Vanity™ | TBB 2.0</title>
+<link rel="stylesheet" href="css/auth.css">
+<style>
+:root {
+  --accent:#ff4da6;
+  --light:#ffb5da;
+  --bg:#130d17;
+  --surface:#241727;
+  --alt:#332036;
+  --border:#65415d;
+  --text:#fff5fb;
+  --muted:#d4b9ca;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0;
+  background:radial-gradient(ellipse at top right,
+    color-mix(in srgb,var(--accent) 17%,transparent),
+    transparent 55%),var(--bg);
+  color:var(--text);
+  font-family:"Trebuchet MS",Arial,sans-serif;
+  min-height:100vh;
+}
+button,input,textarea { font:inherit; }
+button { cursor:pointer; }
+a { color:inherit; }
+.shell { width:min(1200px,94%);margin:auto;padding:25px 0 65px; }
+.topbar,.actions,.section-head,.theme-actions {
+  display:flex;align-items:center;justify-content:space-between;
+  gap:14px;flex-wrap:wrap;
+}
+.brand { font-weight:900;letter-spacing:2px;color:var(--light); }
+.btn {
+  display:inline-block;padding:11px 17px;border-radius:12px;
+  border:1px solid var(--border);background:var(--alt);
+  color:var(--text);text-decoration:none;font-weight:bold;
+}
+.btn.primary { background:var(--accent);color:#170d15;border-color:var(--accent); }
+.btn:disabled { opacity:.55;cursor:not-allowed; }
+.hero,.panel {
+  border:1px solid var(--border);
+  background:var(--surface);
+  border-radius:24px;padding:25px;
+}
+.hero {
+  margin-top:24px;padding:38px;
+  background:linear-gradient(135deg,
+    color-mix(in srgb,var(--accent) 18%,var(--surface)),
+    var(--surface));
+}
+.eyebrow { font-size:11px;letter-spacing:3px;color:var(--light);font-weight:bold; }
+h1 { font-size:clamp(36px,6vw,64px);margin:12px 0; }
+h2 { margin:0;font-size:24px; }
+h3 { margin:0;font-size:18px; }
+p { line-height:1.6; }
+.muted,.helper { color:var(--muted); }
+.helper { font-size:12px; }
+.section { margin-top:34px; }
+.section-head { margin-bottom:16px; }
+.pill {
+  border:1px solid var(--border);border-radius:100px;
+  padding:7px 13px;color:var(--light);font-size:12px;font-weight:bold;
+}
+.notice {
+  margin-top:15px;padding:12px 15px;border-radius:12px;
+  background:var(--alt);color:var(--light);
+}
+.notice:empty { display:none; }
+.notice.error { color:#ffaaaa; }
+.library-layout {
+  display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  gap:20px;align-items:start;
+}
+.preview {
+  overflow:hidden;border:1px solid var(--border);
+  border-radius:22px;background:var(--alt);
+  position:sticky;top:15px;
+}
+.preview-banner {
+  height:115px;
+  background:linear-gradient(120deg,
+    var(--accent),var(--surface),var(--accent));
+  position:relative;
+}
+.preview-banner::after {
+  content:"✦ TBB LIBRARY CARD ✦";
+  position:absolute;right:15px;top:15px;
+  font-size:10px;letter-spacing:2px;font-weight:bold;
+}
+.preview-content { padding:18px 20px 24px; }
+.avatar-wrap {
+  width:110px;height:110px;border-radius:24px;
+  border:4px solid var(--surface);
+  margin-top:-60px;position:relative;
+  background:var(--surface);overflow:hidden;
+  display:grid;place-items:center;font-size:43px;
+}
+.avatar-wrap img {
+  width:100%;height:100%;object-fit:cover;
+  display:none;
+}
+.preview-name { margin:14px 0 3px;overflow-wrap:anywhere; }
+.preview-handle { color:var(--light);font-size:13px;overflow-wrap:anywhere; }
+.preview-bio { white-space:pre-wrap;overflow-wrap:anywhere; }
+.preview-label {
+  color:var(--light);font-size:11px;font-weight:bold;
+  text-transform:uppercase;letter-spacing:1px;
+  margin-top:18px;margin-bottom:5px;
+}
+.preview-value { margin:0;overflow-wrap:anywhere; }
+.genre-tags { display:flex;flex-wrap:wrap;gap:7px;margin-top:8px; }
+.genre-tags span {
+  border:1px solid var(--border);border-radius:20px;
+  padding:6px 10px;font-size:12px;
+  background:var(--surface);
+}
+.form-grid { display:grid;grid-template-columns:1fr 1fr;gap:15px; }
+.field { display:flex;flex-direction:column;gap:7px;min-width:0; }
+.field.full { grid-column:1/-1; }
+label { font-size:13px;color:var(--light);font-weight:bold; }
+input,textarea {
+  width:100%;padding:12px;background:var(--alt);
+  border:1px solid var(--border);border-radius:11px;color:var(--text);
+}
+textarea { min-height:105px;resize:vertical; }
+input:focus,textarea:focus,button:focus-visible {
+  outline:2px solid var(--accent);outline-offset:2px;
+}
+.avatar-actions { display:flex;flex-wrap:wrap;gap:9px;align-items:center; }
+.avatar-actions input { max-width:100%; }
+.theme-grid {
+  display:grid;grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:12px;margin-top:20px;
+}
+.theme-option {
+  padding:9px;border-radius:18px;border:2px solid var(--border);
+  background:var(--alt);color:var(--text);text-align:center;
+}
+.theme-option[aria-pressed="true"] { border-color:var(--accent); }
+.theme-option img {
+  width:100%;aspect-ratio:3/4;object-fit:cover;
+  object-position:top;border-radius:12px;display:block;
+}
+.theme-option strong { display:block;margin-top:9px; }
+.theme-option small { display:block;margin-top:4px;color:var(--muted); }
+.theme-actions { justify-content:flex-end;margin-top:20px; }
+.dashboard-grid {
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:16px;
+}
+.dashboard-card { display:flex;flex-direction:column;gap:10px; }
+.dashboard-card .symbol { font-size:28px; }
+.dashboard-card p { margin:0;color:var(--muted);font-size:14px; }
+.status { margin-top:auto;padding-top:10px;color:var(--light);font-size:12px;font-weight:bold; }
+.announcement { padding:16px 0;border-bottom:1px solid var(--border); }
+.announcement:last-child { border-bottom:0; }
+.announcement p { white-space:pre-wrap;overflow-wrap:anywhere; }
+.announcement time { color:var(--muted);font-size:12px; }
+@media(max-width:850px) {
+  .library-layout { grid-template-columns:1fr; }
+  .preview { position:static; }
+  .theme-grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
+}
+@media(max-width:600px) {
+  .hero { padding:25px; }
+  .dashboard-grid,.form-grid { grid-template-columns:1fr; }
+  .theme-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .panel { padding:18px; }
+}
+</style>
 </head>
-
 <body>
-  <main class="vanity-shell">
+<main class="shell">
 
-    <header class="topbar">
-      <div class="brand">TBB ✦ 2.0</div>
-      <div class="top-actions">
-        <a class="btn" href="home.html">Library Home</a>
-        <button class="btn" id="logout" type="button">
-          Sign Out
-        </button>
-      </div>
-    </header>
+<header class="topbar">
+  <div class="brand">TBB ✦ 2.0</div>
+  <div class="actions">
+    <a class="btn" href="home.html">Library Home</a>
+    <button class="btn" id="logout" type="button">Sign Out</button>
+  </div>
+</header>
 
-    <section class="hero">
-      <span class="eyebrow">
-        The Baddies Bookshelf Presents
-      </span>
-      <h1>The Vanity™</h1>
-      <p id="welcome">
-        Your personal corner of the TBB universe.
-      </p>
-      <span class="pill" id="currentTheme">
-        💗 Romi Era
-      </span>
-    </section>
+<section class="hero">
+  <span class="eyebrow">THE BADDIES BOOKSHELF PRESENTS</span>
+  <h1>The Vanity™</h1>
+  <p>Your profile, your people, your books, and your Baddie Era — all in one place.</p>
+  <span class="pill" id="currentTheme">💗 Romi Era</span>
+</section>
 
-    <p id="message" class="notice" role="status"></p>
+<p id="message" class="notice" role="status" aria-live="polite"></p>
 
-    <!-- MEMBER LIBRARY CARD -->
+<section class="section" id="libraryCard">
+  <div class="section-head">
+    <h2>💋 My Library Card</h2>
+    <span class="pill">My Profile</span>
+  </div>
 
-    <section class="section" id="libraryCard">
-      <div class="section-heading">
-        <h2>💋 My Library Card</h2>
-        <span class="pill">My Profile</span>
-      </div>
+  <div class="library-layout">
 
-      <div class="panel-card">
-        <div class="profile-heading">
-          <div class="profile-avatar" aria-hidden="true">
-            📚
-          </div>
-          <div>
-            <h2 id="cardName">Loading Baddie...</h2>
-            <div class="muted" id="cardUsername"></div>
-            <div class="muted" id="cardBio"></div>
-          </div>
+    <article class="preview" aria-label="Live Library Card preview">
+      <div class="preview-banner"></div>
+      <div class="preview-content">
+        <div class="avatar-wrap">
+          <span id="avatarFallback">📚</span>
+          <img id="avatarPreview" alt="Your profile picture">
         </div>
+        <h2 class="preview-name" id="cardName">Your Baddie Name</h2>
+        <div class="preview-handle" id="cardUsername">@username</div>
+        <p class="preview-bio muted" id="cardBio">Your bookish bio goes here.</p>
 
-        <form id="profileForm" class="edit-form">
+        <div class="preview-label">Favorite Genres</div>
+        <div class="genre-tags" id="cardGenres"></div>
 
-          <div class="field">
-            <label for="displayName">Display Name</label>
-            <input id="displayName"
-                   maxlength="80"
-                   required>
-          </div>
+        <div class="preview-label">Favorite Books</div>
+        <p class="preview-value" id="cardBooks">—</p>
 
-          <div class="field">
-            <label for="username">Username</label>
-            <input id="username"
-                   maxlength="30"
-                   placeholder="yourusername"
-                   pattern="[A-Za-z0-9_]+">
-            <span class="helper">
-              Letters, numbers and underscores only.
-            </span>
-          </div>
+        <div class="preview-label">Favorite Authors</div>
+        <p class="preview-value" id="cardAuthors">—</p>
 
-          <div class="field full">
-            <label for="bio">My Bio</label>
-            <textarea id="bio"
-                      maxlength="500"
-                      placeholder="Tell the Baddies about yourself..."></textarea>
-          </div>
+        <div class="preview-label">Currently Reading</div>
+        <p class="preview-value" id="cardReading">—</p>
 
-          <div class="field full">
-            <label for="genres">Favorite Genres</label>
-            <input id="genres"
-                   placeholder="Romance, Fantasy, Thriller">
-            <span class="helper">
-              Separate multiple genres with commas.
-            </span>
-          </div>
+        <p class="helper">✦ Your card updates as you type. Save to keep your changes.</p>
+      </div>
+    </article>
 
-          <div class="field">
-            <label for="books">Favorite Books</label>
-            <input id="books"
-                   placeholder="Fourth Wing, ...">
-          </div>
+    <div class="panel">
+      <h3>Edit My Library Card 🎀</h3>
+      <p class="muted">Make it yours, Baddie!</p>
 
-          <div class="field">
-            <label for="authors">Favorite Authors</label>
-            <input id="authors"
-                   placeholder="Your favorite authors">
-          </div>
+      <form id="profileForm" class="form-grid">
 
-          <div class="field full">
-            <label for="currentRead">Currently Reading</label>
-            <input id="currentRead"
-                   maxlength="200"
-                   placeholder="What's on your nightstand?">
-          </div>
-
-          <div class="field full">
-            <span class="helper">
-              Profile picture uploads and banner editing
-              will be connected when the profile storage
-              setup is ready.
-            </span>
-          </div>
-
-          <div class="field full">
-            <button type="submit"
-                    id="saveProfile"
-                    class="btn btn-primary">
-              Save My Library Card 💗
+        <div class="field full">
+          <label for="avatarFile">Profile Picture</label>
+          <input type="file" id="avatarFile"
+                 accept="image/jpeg,image/png,image/webp">
+          <span class="helper">JPG, PNG or WebP. Maximum 5 MB.</span>
+          <div class="avatar-actions">
+            <button class="btn" id="uploadAvatar" type="button">
+              Upload Picture 💗
+            </button>
+            <button class="btn" id="removeAvatar" type="button">
+              Remove Picture
             </button>
           </div>
-        </form>
-      </div>
-    </section>
-
-    <!-- CHARACTER THEME SELECTOR -->
-
-    <section class="section" id="baddieEra">
-      <div class="section-heading">
-        <h2>🎀 Choose Your Baddie Era™</h2>
-        <span class="pill">Personalize</span>
-      </div>
-
-      <div class="panel-card">
-        <p class="muted">
-          Five Baddies. Five aesthetics. One fabulous
-          reading universe. Choose the character who
-          matches your current era!
-        </p>
-
-        <div class="theme-grid" id="themeGrid">
-
-          <button class="theme-option"
-                  type="button"
-                  data-theme="romi"
-                  aria-pressed="false">
-            <img src="images/baddies/Romi_1.png"
-                 alt="Romi official character artwork">
-            <strong>Romi</strong>
-            <small>Pink Romance</small>
-          </button>
-
-          <button class="theme-option"
-                  type="button"
-                  data-theme="nyx"
-                  aria-pressed="false">
-            <img src="images/baddies/Nyx.png"
-                 alt="Nyx official character artwork">
-            <strong>Nyx</strong>
-            <small>Dark Romance</small>
-          </button>
-
-          <button class="theme-option"
-                  type="button"
-                  data-theme="nova"
-                  aria-pressed="false">
-            <img src="images/baddies/Nova.png"
-                 alt="Nova official character artwork">
-            <strong>Nova</strong>
-            <small>Fantasy</small>
-          </button>
-
-          <button class="theme-option"
-                  type="button"
-                  data-theme="sage"
-                  aria-pressed="false">
-            <img src="images/baddies/Sage.png"
-                 alt="Sage official character artwork">
-            <strong>Sage</strong>
-            <small>Cozy Reading</small>
-          </button>
-
-          <button class="theme-option"
-                  type="button"
-                  data-theme="scarlett"
-                  aria-pressed="false">
-            <img src="images/baddies/Scarlett.png"
-                 alt="Scarlett official character artwork">
-            <strong>Scarlett</strong>
-            <small>Thriller</small>
-          </button>
-
+          <span class="helper" id="avatarStatus" role="status"></span>
         </div>
 
-        <div class="theme-actions">
-          <span id="themeStatus" class="muted"
-                role="status"></span>
-          <button class="btn btn-primary"
-                  id="saveTheme"
-                  type="button">
-            Save My Baddie Era 💋
+        <div class="field">
+          <label for="displayName">Display Name</label>
+          <input id="displayName" maxlength="80" required>
+        </div>
+
+        <div class="field">
+          <label for="username">Username</label>
+          <input id="username" maxlength="30"
+                 pattern="[A-Za-z0-9_]+"
+                 placeholder="yourusername">
+        </div>
+
+        <div class="field full">
+          <label for="bio">My Bio</label>
+          <textarea id="bio" maxlength="500"
+            placeholder="Tell the Baddies about yourself..."></textarea>
+        </div>
+
+        <div class="field full">
+          <label for="genres">Favorite Genres</label>
+          <input id="genres" placeholder="Romance, Fantasy, Thriller">
+          <span class="helper">Separate genres with commas.</span>
+        </div>
+
+        <div class="field">
+          <label for="books">Favorite Books</label>
+          <input id="books" placeholder="Fourth Wing, ...">
+        </div>
+
+        <div class="field">
+          <label for="authors">Favorite Authors</label>
+          <input id="authors" placeholder="Favorite authors">
+        </div>
+
+        <div class="field full">
+          <label for="currentRead">Currently Reading</label>
+          <input id="currentRead" maxlength="200"
+                 placeholder="What's on your nightstand?">
+        </div>
+
+        <div class="field full">
+          <button class="btn primary" id="saveProfile" type="submit">
+            Save My Library Card 💗
           </button>
         </div>
+
+      </form>
+    </div>
+
+  </div>
+</section>
+
+<section class="section" id="baddieEra">
+  <div class="section-head">
+    <h2>🎀 Choose Your Baddie Era™</h2>
+    <span class="pill">Personalize</span>
+  </div>
+  <div class="panel">
+    <p class="muted">
+      Five Baddies. Five aesthetics. One fabulous reading universe.
+      Choose your character!
+    </p>
+
+    <div class="theme-grid">
+      <button class="theme-option" type="button"
+              data-theme="romi" aria-pressed="false">
+        <img src="images/baddies/Romi_1.png" alt="Official Romi artwork">
+        <strong>Romi</strong><small>Pink Romance</small>
+      </button>
+      <button class="theme-option" type="button"
+              data-theme="nyx" aria-pressed="false">
+        <img src="images/baddies/Nyx.png" alt="Official Nyx artwork">
+        <strong>Nyx</strong><small>Dark Romance</small>
+      </button>
+      <button class="theme-option" type="button"
+              data-theme="nova" aria-pressed="false">
+        <img src="images/baddies/Nova.png" alt="Official Nova artwork">
+        <strong>Nova</strong><small>Fantasy</small>
+      </button>
+      <button class="theme-option" type="button"
+              data-theme="sage" aria-pressed="false">
+        <img src="images/baddies/Sage.png" alt="Official Sage artwork">
+        <strong>Sage</strong><small>Cozy Reading</small>
+      </button>
+      <button class="theme-option" type="button"
+              data-theme="scarlett" aria-pressed="false">
+        <img src="images/baddies/Scarlett.png" alt="Official Scarlett artwork">
+        <strong>Scarlett</strong><small>Thriller</small>
+      </button>
+    </div>
+
+    <div class="theme-actions">
+      <span class="muted" id="themeStatus" role="status"></span>
+      <button class="btn primary" id="saveTheme" type="button">
+        Save My Baddie Era 💋
+      </button>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="campus">
+  <div class="section-head">
+    <h2>💗 My Baddie Universe</h2>
+  </div>
+
+  <div class="dashboard-grid">
+    <article class="panel dashboard-card">
+      <div class="symbol">💌</div>
+      <h3>Vanity Mail™</h3>
+      <p>Private Baddie-to-Baddie messages, replies, and message requests.</p>
+      <div class="status">Inbox integration coming next</div>
+    </article>
+
+    <article class="panel dashboard-card">
+      <div class="symbol">📣</div>
+      <h3>The Baddie Post™</h3>
+      <p>Official announcements and important TBB news.</p>
+      <div class="status">
+        <a href="#baddiePost">See announcements ↓</a>
       </div>
-    </section>
-
-    <!-- MEMBER DESTINATIONS -->
-
-    <section class="section" id="campus">
-      <div class="section-heading">
-        <h2>💗 My Baddie Universe</h2>
-      </div>
-
-      <div class="dashboard-grid">
-
-        <article class="panel-card dashboard-card">
-          <div class="symbol">💌</div>
-          <h3>Vanity Mail™</h3>
-          <p>
-            Private conversations, Baddie-to-Baddie
-            messages, and message requests.
-          </p>
-          <div class="status">
-            Inbox integration coming next
-          </div>
-        </article>
-
-        <article class="panel-card dashboard-card">
-          <div class="symbol">📣</div>
-          <h3>The Baddie Post™</h3>
-          <p>
-            Announcements, important updates, and
-            official news from TBB administration.
-          </p>
-          <div class="status">
-            Latest announcements below
-          </div>
-        </article>
-
-        <article class="panel-card dashboard-card">
-          <div class="symbol">💬</div>
-          <h3>The Commons™</h3>
-          <p>
-            Your community discussions, including
-            age-appropriate Commons spaces.
-          </p>
-          <div class="status">
-            Dashboard navigation pending
-          </div>
-        </article>
-
-        <article class="panel-card dashboard-card">
-          <div class="symbol">🎉</div>
-          <h3>Activity Hub™</h3>
-          <p>
-            Challenges, games, community activities,
-            and all the fun happening at TBB.
-          </p>
-          <div class="status">
-            Dashboard navigation pending
-          </div>
-        </article>
-
-        <article class="panel-card dashboard-card">
-          <div class="symbol">📚</div>
-          <h3>The Bookshelf™</h3>
-          <p>
-            Your personal reading collection,
-            favorites, and bookish life.
-          </p>
-          <div class="status">
-            Personal Bookshelf integration pending
-          </div>
-        </article>
-
-        <article class="panel-card dashboard-card">
-          <div class="symbol">🛡️</div>
-          <h3>Privacy & Settings</h3>
-          <p>
-            Control your profile visibility,
-            messages, and personal preferences.
-          </p>
-          <div class="status">
-            Settings integration pending
-          </div>
-        </article>
-
-      </div>
-    </section>
-
-    <!-- OFFICIAL ANNOUNCEMENTS -->
-
-    <section class="section" id="baddiePost">
-      <div class="section-heading">
-        <h2>📣 The Baddie Post™</h2>
-      </div>
-
-      <div class="panel-card">
-        <p class="muted">
-          Straight from the TBB administration desk.
-        </p>
-        <div id="announcements" aria-live="polite">
-          Loading announcements...
-        </div>
-      </div>
-    </section>
-
-  </main>
-
-  <script type="module">
-    import {
-      db,
-      requireAccess,
-      logout
-    } from "./js/auth.js";
-
-    const $ = id => document.getElementById(id);
-
-    const themes = {
-      romi: {
-        accent: "#ff4da6",
-        light: "#ffb5da",
-        background: "#130d17",
-        surface: "#241727",
-        alt: "#332036",
-        border: "#65415d",
-        label: "💗 Romi Era"
-      },
-      nyx: {
-        accent: "#ff319d",
-        light: "#ffa0d5",
-        background: "#09090d",
-        surface: "#1b1520",
-        alt: "#302034",
-        border: "#63365e",
-        label: "🖤 Nyx Era"
-      },
-      nova: {
-        accent: "#b77cff",
-        light: "#ddbdff",
-        background: "#120d23",
-        surface: "#241a3c",
-        alt: "#362650",
-        border: "#665087",
-        label: "🔮 Nova Era"
-      },
-      sage: {
-        accent: "#c99b69",
-        light: "#f1cba0",
-        background: "#17120e",
-        surface: "#30251e",
-        alt: "#46362a",
-        border: "#79604a",
-        label: "🍂 Sage Era"
-      },
-      scarlett: {
-        accent: "#f34a65",
-        light: "#ffabb7",
-        background: "#180c12",
-        surface: "#30171f",
-        alt: "#47232c",
-        border: "#85414e",
-        label: "❤️ Scarlett Era"
-      }
-    };
-
-    let currentUser = null;
-    let selectedTheme = "romi";
-    let savedTheme = "romi";
-
-    function notify(text, error = false) {
-      const element = $("message");
-      element.textContent = text;
-      element.className = error
-        ? "notice error"
-        : "notice";
-    }
-
-    function applyTheme(name) {
-      const theme = themes[name] || themes.romi;
-      const root = document.documentElement;
-
-      root.style.setProperty("--accent", theme.accent);
-      root.style.setProperty("--accent-light", theme.light);
-      root.style.setProperty("--background", theme.background);
-      root.style.setProperty("--surface", theme.surface);
-      root.style.setProperty("--surface-alt", theme.alt);
-      root.style.setProperty("--border", theme.border);
-
-      $("currentTheme").textContent = theme.label;
-
-      document.querySelectorAll(".theme-option")
-        .forEach(button => {
-          button.setAttribute(
-            "aria-pressed",
-            String(button.dataset.theme === name)
-          );
-        });
-    }
-
-    function selectTheme(name) {
-      if (!themes[name]) return;
-      selectedTheme = name;
-      applyTheme(name);
-
-      $("themeStatus").textContent =
-        selectedTheme === savedTheme
-          ? "Your current Baddie Era"
-          : "Previewing — save to keep this theme";
-    }
-
-    function listToText(value) {
-      return Array.isArray(value)
-        ? value.join(", ")
-        : "";
-    }
-
-    function textToList(value) {
-      return [...new Set(
-        value.split(",")
-          .map(item => item.trim())
-          .filter(Boolean)
-      )];
-    }
-
-    async function loadProfile() {
-      const { data, error } = await db
-        .from("tbb_profiles")
-        .select(`
-          display_name,
-          username,
-          bio,
-          favorite_genres,
-          favorite_books,
-          favorite_authors,
-          current_read,
-          vanity_theme
-        `)
-        .eq("user_id", currentUser.id)
-        .maybeSingle();
-
-      if (error) throw error;
-
-      if (!data) {
-        throw new Error(
-          "Your profile record could not be found."
-        );
-      }
-
-      $("displayName").value =
-        data.display_name || "";
-
-      $("username").value =
-        data.username || "";
-
-      $("bio").value =
-        data.bio || "";
-
-      $("genres").value =
-        listToText(data.favorite_genres);
-
-      $("books").value =
-        listToText(data.favorite_books);
-
-      $("authors").value =
-        listToText(data.favorite_authors);
-
-      $("currentRead").value =
-        data.current_read || "";
-
-      $("cardName").textContent =
-        data.display_name || "New Baddie";
-
-      $("cardUsername").textContent =
-        data.username ? `@${data.username}` : "";
-
-      $("cardBio").textContent =
-        data.bio || "";
-
-      savedTheme = themes[data.vanity_theme]
-        ? data.vanity_theme
-        : "romi";
-
-      selectTheme(savedTheme);
-    }
-
-    async function saveProfile(event) {
-      event.preventDefault();
-
-      if (!currentUser) return;
-
-      const button = $("saveProfile");
-      button.disabled = true;
-
-      try {
-        const displayName =
-          $("displayName").value.trim();
-
-        const username =
-          $("username").value.trim();
-
-        if (!displayName) {
-          throw new Error("Display name is required.");
-        }
-
-        if (
-          username &&
-          !/^[A-Za-z0-9_]+$/.test(username)
-        ) {
-          throw new Error(
-            "Username may contain only letters, " +
-            "numbers and underscores."
-          );
-        }
-
-        const updates = {
-          display_name: displayName,
-          username: username || null,
-          bio: $("bio").value.trim() || null,
-          favorite_genres:
-            textToList($("genres").value),
-          favorite_books:
-            textToList($("books").value),
-          favorite_authors:
-            textToList($("authors").value),
-          current_read:
-            $("currentRead").value.trim() || null
-        };
-
-        const { data, error } = await db
-          .from("tbb_profiles")
-          .update(updates)
-          .eq("user_id", currentUser.id)
-          .select("user_id");
-
-        if (error) throw error;
-
-        if (!data?.length) {
-          throw new Error(
-            "Profile was not updated. Check your " +
-            "Supabase profile permissions."
-          );
-        }
-
-        $("cardName").textContent = displayName;
-        $("cardUsername").textContent =
-          username ? `@${username}` : "";
-        $("cardBio").textContent =
-          updates.bio || "";
-
-        notify("Your Library Card was saved! 💗");
-      } catch (error) {
-        notify(error.message, true);
-      } finally {
-        button.disabled = false;
-      }
-    }
-
-    async function saveTheme() {
-      if (!currentUser) return;
-
-      const button = $("saveTheme");
-      button.disabled = true;
-
-      try {
-        const { data, error } = await db
-          .from("tbb_profiles")
-          .update({
-            vanity_theme: selectedTheme
-          })
-          .eq("user_id", currentUser.id)
-          .select("vanity_theme");
-
-        if (error) throw error;
-
-        if (!data?.length) {
-          throw new Error(
-            "Theme was not saved. Check your " +
-            "Supabase profile permissions."
-          );
-        }
-
-        savedTheme = selectedTheme;
-        $("themeStatus").textContent =
-          "Baddie Era saved! 💋";
-
-        notify(
-          `${themes[selectedTheme].label} saved successfully!`
-        );
-      } catch (error) {
-        notify(error.message, true);
-        selectedTheme = savedTheme;
-        applyTheme(savedTheme);
-      } finally {
-        button.disabled = false;
-      }
-    }
-
-    async function loadAnnouncements() {
-      const container = $("announcements");
-
-      const { data, error } = await db
-        .from("tbb_post_announcements")
-        .select(`
-          id,
-          title,
-          body,
-          is_pinned,
-          published_at
-        `)
-        .eq("status", "published")
-        .order("is_pinned", {
-          ascending: false
-        })
-        .order("published_at", {
-          ascending: false
-        })
-        .limit(10);
-
-      if (error) {
-        container.textContent =
-          "Announcements couldn't be loaded.";
-        return;
-      }
-
-      container.replaceChildren();
-
-      if (!data?.length) {
-        container.textContent =
-          "No announcements have been published yet.";
-        return;
-      }
-
-      for (const item of data) {
-        const article =
-          document.createElement("article");
-        article.className = "announcement";
-
-        const title = document.createElement("h3");
-        title.textContent =
-          `${item.is_pinned ? "📌 " : ""}${item.title}`;
-
-        const body = document.createElement("p");
-        body.textContent = item.body;
-
-        article.append(title);
-
-        if (item.published_at) {
-          const time = document.createElement("time");
-          time.dateTime = item.published_at;
-          time.textContent = new Date(
-            item.published_at
-          ).toLocaleDateString();
-
-          article.append(time);
-        }
-
-        article.append(body);
-        container.append(article);
-      }
-    }
-
-    async function init() {
-      try {
-        const access = await requireAccess();
-
-        if (!access) return;
-
-        currentUser = access.user;
-
-        $("welcome").textContent =
-          "Your profile, your people, your books, " +
-          "and your Baddie Era — all in one place.";
-
-        await loadProfile();
-        await loadAnnouncements();
-      } catch (error) {
-        notify(error.message, true);
-      }
-    }
-
-    $("logout").addEventListener("click", logout);
-
-    $("profileForm").addEventListener(
-      "submit",
-      saveProfile
+    </article>
+
+    <article class="panel dashboard-card">
+      <div class="symbol">💬</div>
+      <h3>The Commons™</h3>
+      <p>Community discussions and age-appropriate Commons spaces.</p>
+      <div class="status">Dashboard navigation pending</div>
+    </article>
+
+    <article class="panel dashboard-card">
+      <div class="symbol">🎉</div>
+      <h3>Activity Hub™</h3>
+      <p>Games, challenges, events, and community activities.</p>
+      <div class="status">Dashboard navigation pending</div>
+    </article>
+
+    <article class="panel dashboard-card">
+      <div class="symbol">📚</div>
+      <h3>The Bookshelf™</h3>
+      <p>Your personal reading collection and bookish favorites.</p>
+      <div class="status">Bookshelf integration pending</div>
+    </article>
+
+    <article class="panel dashboard-card">
+      <div class="symbol">🛡️</div>
+      <h3>Privacy & Settings</h3>
+      <p>Control profile visibility and messaging preferences.</p>
+      <div class="status">Settings integration pending</div>
+    </article>
+  </div>
+</section>
+
+<section class="section" id="baddiePost">
+  <div class="section-head">
+    <h2>📣 The Baddie Post™</h2>
+  </div>
+  <div class="panel">
+    <p class="muted">Straight from the TBB administration desk.</p>
+    <div id="announcements" aria-live="polite">
+      Loading announcements...
+    </div>
+  </div>
+</section>
+
+</main>
+
+<script type="module">
+import { db, requireAccess, logout } from "./js/auth.js";
+
+const $ = id => document.getElementById(id);
+const bucket = "tbb-avatars";
+
+const themes = {
+  romi:{
+    accent:"#ff4da6",light:"#ffb5da",bg:"#130d17",
+    surface:"#241727",alt:"#332036",border:"#65415d",
+    label:"💗 Romi Era"
+  },
+  nyx:{
+    accent:"#ff319d",light:"#ffa0d5",bg:"#09090d",
+    surface:"#1b1520",alt:"#302034",border:"#63365e",
+    label:"🖤 Nyx Era"
+  },
+  nova:{
+    accent:"#b77cff",light:"#ddbdff",bg:"#120d23",
+    surface:"#241a3c",alt:"#362650",border:"#665087",
+    label:"🔮 Nova Era"
+  },
+  sage:{
+    accent:"#c99b69",light:"#f1cba0",bg:"#17120e",
+    surface:"#30251e",alt:"#46362a",border:"#79604a",
+    label:"🍂 Sage Era"
+  },
+  scarlett:{
+    accent:"#f34a65",light:"#ffabb7",bg:"#180c12",
+    surface:"#30171f",alt:"#47232c",border:"#85414e",
+    label:"❤️ Scarlett Era"
+  }
+};
+
+let currentUser = null;
+let savedTheme = "romi";
+let selectedTheme = "romi";
+let savedAvatarPath = null;
+let previewObjectUrl = null;
+let avatarBusy = false;
+
+function notify(text, error = false) {
+  $("message").textContent = text;
+  $("message").className = error ? "notice error" : "notice";
+}
+
+function listToText(value) {
+  return Array.isArray(value) ? value.join(", ") : "";
+}
+
+function textToList(value) {
+  return [...new Set(
+    value.split(",").map(x => x.trim()).filter(Boolean)
+  )];
+}
+
+function updateCard() {
+  $("cardName").textContent =
+    $("displayName").value.trim() || "Your Baddie Name";
+
+  const username = $("username").value.trim();
+  $("cardUsername").textContent =
+    username ? "@" + username : "@username";
+
+  $("cardBio").textContent =
+    $("bio").value.trim() || "Your bookish bio goes here.";
+
+  $("cardBooks").textContent =
+    $("books").value.trim() || "—";
+
+  $("cardAuthors").textContent =
+    $("authors").value.trim() || "—";
+
+  $("cardReading").textContent =
+    $("currentRead").value.trim() || "—";
+
+  const tags = $("cardGenres");
+  tags.replaceChildren();
+
+  const genres = textToList($("genres").value);
+
+  if (!genres.length) {
+    const empty = document.createElement("span");
+    empty.textContent = "Your genres here";
+    tags.append(empty);
+  } else {
+    genres.forEach(genre => {
+      const tag = document.createElement("span");
+      tag.textContent = genre;
+      tags.append(tag);
+    });
+  }
+}
+
+function applyTheme(name) {
+  const theme = themes[name] || themes.romi;
+  const root = document.documentElement;
+
+  root.style.setProperty("--accent", theme.accent);
+  root.style.setProperty("--light", theme.light);
+  root.style.setProperty("--bg", theme.bg);
+  root.style.setProperty("--surface", theme.surface);
+  root.style.setProperty("--alt", theme.alt);
+  root.style.setProperty("--border", theme.border);
+
+  $("currentTheme").textContent = theme.label;
+
+  document.querySelectorAll(".theme-option").forEach(button => {
+    button.setAttribute(
+      "aria-pressed",
+      String(button.dataset.theme === name)
     );
+  });
+}
 
-    $("saveTheme").addEventListener(
-      "click",
-      saveTheme
-    );
+function selectTheme(name) {
+  if (!themes[name]) return;
 
-    document.querySelectorAll(".theme-option")
-      .forEach(button => {
-        button.addEventListener("click", () => {
-          selectTheme(button.dataset.theme);
-        });
+  selectedTheme = name;
+  applyTheme(name);
+
+  $("themeStatus").textContent =
+    selectedTheme === savedTheme
+      ? "Your current Baddie Era"
+      : "Previewing — save to keep this theme";
+}
+
+function displayAvatar(url) {
+  const img = $("avatarPreview");
+
+  if (url) {
+    img.src = url;
+    img.style.display = "block";
+    $("avatarFallback").style.display = "none";
+  } else {
+    img.removeAttribute("src");
+    img.style.display = "none";
+    $("avatarFallback").style.display = "block";
+  }
+}
+
+function releasePreviewUrl() {
+  if (previewObjectUrl) {
+    URL.revokeObjectURL(previewObjectUrl);
+    previewObjectUrl = null;
+  }
+}
+
+async function loadAvatar(path) {
+  releasePreviewUrl();
+
+  if (!path) {
+    displayAvatar(null);
+    return;
+  }
+
+  const { data, error } = await db.storage
+    .from(bucket)
+    .createSignedUrl(path, 3600);
+
+  if (error) {
+    displayAvatar(null);
+    $("avatarStatus").textContent =
+      "Your saved picture could not be loaded.";
+    return;
+  }
+
+  displayAvatar(data.signedUrl);
+}
+
+function validateAvatar(file) {
+  if (!file) throw new Error("Choose a picture first.");
+
+  const types = {
+    "image/jpeg":"jpg",
+    "image/png":"png",
+    "image/webp":"webp"
+  };
+
+  const extension = types[file.type];
+
+  if (!extension) {
+    throw new Error("Please choose a JPG, PNG or WebP image.");
+  }
+
+  if (file.size > 5 * 1024 * 1024) {
+    throw new Error("Picture must be 5 MB or smaller.");
+  }
+
+  if (!file.size) {
+    throw new Error("The selected picture is empty.");
+  }
+
+  return extension;
+}
+
+async function saveAvatarPath(path) {
+  const { data, error } = await db
+    .from("tbb_profiles")
+    .update({ avatar_path:path })
+    .eq("user_id",currentUser.id)
+    .select("user_id");
+
+  if (error) throw error;
+
+  if (!data?.length) {
+    throw new Error("Could not update your Library Card picture.");
+  }
+}
+
+async function uploadAvatar() {
+  if (!currentUser || avatarBusy) return;
+
+  const file = $("avatarFile").files?.[0];
+  let uploadedPath = null;
+  avatarBusy = true;
+  $("uploadAvatar").disabled = true;
+  $("removeAvatar").disabled = true;
+
+  try {
+    const extension = validateAvatar(file);
+    $("avatarStatus").textContent = "Uploading your picture...";
+
+    // A unique filename avoids overwriting cached images
+    // and preserves the existing avatar until save succeeds.
+    const path =
+      `${currentUser.id}/${crypto.randomUUID()}.${extension}`;
+
+    const { error:uploadError } = await db.storage
+      .from(bucket)
+      .upload(path,file,{
+        contentType:file.type,
+        upsert:false,
+        cacheControl:"3600"
       });
 
-    init();
-  </script>
+    if (uploadError) throw uploadError;
+
+    uploadedPath = path;
+
+    await saveAvatarPath(path);
+
+    const oldPath = savedAvatarPath;
+    savedAvatarPath = path;
+    uploadedPath = null;
+
+    await loadAvatar(path);
+
+    $("avatarFile").value = "";
+    $("avatarStatus").textContent = "Picture saved! 💗";
+    notify("Your new profile picture is saved! 💗");
+
+    // Clean up the old picture only after the new one
+    // is safely stored on the member's profile.
+    if (oldPath && oldPath !== path &&
+        oldPath.startsWith(currentUser.id + "/")) {
+      await db.storage.from(bucket).remove([oldPath]);
+    }
+
+  } catch (error) {
+    // Remove an uploaded file if profile saving failed.
+    if (uploadedPath) {
+      await db.storage.from(bucket).remove([uploadedPath]);
+    }
+    $("avatarStatus").textContent = error.message;
+    notify(error.message,true);
+  } finally {
+    avatarBusy = false;
+    $("uploadAvatar").disabled = false;
+    $("removeAvatar").disabled = false;
+  }
+}
+
+async function removeAvatar() {
+  if (!currentUser || avatarBusy) return;
+
+  avatarBusy = true;
+  $("uploadAvatar").disabled = true;
+  $("removeAvatar").disabled = true;
+
+  try {
+    // Clear the profile reference first.
+    await saveAvatarPath(null);
+
+    const oldPath = savedAvatarPath;
+    savedAvatarPath = null;
+
+    releasePreviewUrl();
+    displayAvatar(null);
+    $("avatarFile").value = "";
+
+    $("avatarStatus").textContent = "Profile picture removed.";
+    notify("Your profile picture was removed.");
+
+    if (oldPath &&
+        oldPath.startsWith(currentUser.id + "/")) {
+      await db.storage.from(bucket).remove([oldPath]);
+    }
+  } catch (error) {
+    notify(error.message,true);
+  } finally {
+    avatarBusy = false;
+    $("uploadAvatar").disabled = false;
+    $("removeAvatar").disabled = false;
+  }
+}
+
+async function loadProfile() {
+  const { data,error } = await db
+    .from("tbb_profiles")
+    .select(`
+      display_name,
+      username,
+      bio,
+      favorite_genres,
+      favorite_books,
+      favorite_authors,
+      current_read,
+      vanity_theme,
+      avatar_path
+    `)
+    .eq("user_id",currentUser.id)
+    .maybeSingle();
+
+  if (error) throw error;
+  if (!data) throw new Error("Your profile record was not found.");
+
+  $("displayName").value = data.display_name || "";
+  $("username").value = data.username || "";
+  $("bio").value = data.bio || "";
+  $("genres").value = listToText(data.favorite_genres);
+  $("books").value = listToText(data.favorite_books);
+  $("authors").value = listToText(data.favorite_authors);
+  $("currentRead").value = data.current_read || "";
+
+  savedTheme = themes[data.vanity_theme]
+    ? data.vanity_theme
+    : "romi";
+
+  savedAvatarPath = data.avatar_path || null;
+
+  selectTheme(savedTheme);
+  updateCard();
+  await loadAvatar(savedAvatarPath);
+}
+
+async function saveProfile(event) {
+  event.preventDefault();
+  if (!currentUser) return;
+
+  const button = $("saveProfile");
+  button.disabled = true;
+
+  try {
+    const displayName = $("displayName").value.trim();
+    const username = $("username").value.trim();
+
+    if (!displayName) {
+      throw new Error("Display name is required.");
+    }
+
+    if (username && !/^[A-Za-z0-9_]+$/.test(username)) {
+      throw new Error("Username may contain only letters, numbers and underscores.");
+    }
+
+    const updates = {
+      display_name:displayName,
+      username:username || null,
+      bio:$("bio").value.trim() || null,
+      favorite_genres:textToList($("genres").value),
+      favorite_books:textToList($("books").value),
+      favorite_authors:textToList($("authors").value),
+      current_read:$("currentRead").value.trim() || null
+    };
+
+    const { data,error } = await db
+      .from("tbb_profiles")
+      .update(updates)
+      .eq("user_id",currentUser.id)
+      .select("user_id");
+
+    if (error) throw error;
+
+    if (!data?.length) {
+      throw new Error("Profile was not updated. Check Supabase permissions.");
+    }
+
+    updateCard();
+    notify("Your Library Card was saved! 💗");
+
+  } catch (error) {
+    notify(error.message,true);
+  } finally {
+    button.disabled = false;
+  }
+}
+
+async function saveTheme() {
+  if (!currentUser) return;
+
+  const button = $("saveTheme");
+  button.disabled = true;
+
+  try {
+    const { data,error } = await db
+      .from("tbb_profiles")
+      .update({ vanity_theme:selectedTheme })
+      .eq("user_id",currentUser.id)
+      .select("vanity_theme");
+
+    if (error) throw error;
+
+    if (!data?.length) {
+      throw new Error("Theme was not saved.");
+    }
+
+    savedTheme = selectedTheme;
+    $("themeStatus").textContent = "Baddie Era saved! 💋";
+    notify(`${themes[selectedTheme].label} saved successfully!`);
+
+  } catch (error) {
+    notify(error.message,true);
+    selectedTheme = savedTheme;
+    applyTheme(savedTheme);
+  } finally {
+    button.disabled = false;
+  }
+}
+
+async function loadAnnouncements() {
+  const container = $("announcements");
+
+  const { data,error } = await db
+    .from("tbb_post_announcements")
+    .select("id,title,body,is_pinned,published_at")
+    .eq("status","published")
+    .order("is_pinned",{ascending:false})
+    .order("published_at",{ascending:false})
+    .limit(10);
+
+  if (error) {
+    container.textContent = "Announcements couldn't be loaded.";
+    return;
+  }
+
+  container.replaceChildren();
+
+  if (!data?.length) {
+    container.textContent = "No announcements have been published yet.";
+    return;
+  }
+
+  for (const item of data) {
+    const article = document.createElement("article");
+    article.className = "announcement";
+
+    const title = document.createElement("h3");
+    title.textContent =
+      `${item.is_pinned ? "📌 " : ""}${item.title}`;
+
+    const body = document.createElement("p");
+    body.textContent = item.body;
+
+    article.append(title);
+
+    if (item.published_at) {
+      const time = document.createElement("time");
+      time.dateTime = item.published_at;
+      time.textContent =
+        new Date(item.published_at).toLocaleDateString();
+      article.append(time);
+    }
+
+    article.append(body);
+    container.append(article);
+  }
+}
+
+async function init() {
+  try {
+    const access = await requireAccess();
+    if (!access) return;
+
+    currentUser = access.user;
+    await loadProfile();
+    await loadAnnouncements();
+
+  } catch (error) {
+    notify(error.message,true);
+  }
+}
+
+$("logout").addEventListener("click",logout);
+$("profileForm").addEventListener("submit",saveProfile);
+$("saveTheme").addEventListener("click",saveTheme);
+$("uploadAvatar").addEventListener("click",uploadAvatar);
+$("removeAvatar").addEventListener("click",removeAvatar);
+
+document.querySelectorAll(".theme-option").forEach(button => {
+  button.addEventListener("click",() => {
+    selectTheme(button.dataset.theme);
+  });
+});
+
+[
+  "displayName","username","bio","genres",
+  "books","authors","currentRead"
+].forEach(id => {
+  $(id).addEventListener("input",updateCard);
+});
+
+$("avatarFile").addEventListener("change",() => {
+  const file = $("avatarFile").files?.[0];
+  if (!file) return;
+
+  try {
+    validateAvatar(file);
+    releasePreviewUrl();
+    previewObjectUrl = URL.createObjectURL(file);
+    displayAvatar(previewObjectUrl);
+    $("avatarStatus").textContent =
+      "Previewing your picture — click Upload Picture to save.";
+  } catch (error) {
+    $("avatarFile").value = "";
+    $("avatarStatus").textContent = error.message;
+    loadAvatar(savedAvatarPath);
+  }
+});
+
+window.addEventListener("pagehide",releasePreviewUrl);
+
+init();
+</script>
 </body>
 </html>
