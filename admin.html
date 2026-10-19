@@ -1,1 +1,834 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Baddie Admin HQ</title><link rel="stylesheet" href="css/auth.css"></head><body><main class="panel"><h1>👑 Baddie Admin HQ</h1><p>Approve or reject pending membership requests.</p><p id="message" role="status"></p><section id="requests" aria-live="polite">Loading…</section><button id="refresh">Refresh Requests</button> <button id="logout">Sign Out</button><nav><a href="home.html">Public home</a></nav></main><script type="module">import {db,requireAccess,logout,$,message} from './js/auth.js';async function load(){try{const a=await requireAccess(true);if(!a)return;const {data,error}=await db.from('tbb_memberships').select('user_id,status,created_at').eq('status','pending').order('created_at',{ascending:true});if(error)throw error;const wrap=$('requests');wrap.replaceChildren();if(!data.length){wrap.textContent='No pending Baddies right now!';return;}for(const member of data){const div=document.createElement('div');div.className='item';const {data:profile}=await db.from('tbb_profiles').select('display_name,username').eq('user_id',member.user_id).maybeSingle();const name=document.createElement('strong');name.textContent=profile?.display_name||'New Baddie';div.append(name);const info=document.createElement('p');info.className='muted';info.textContent=`@${profile?.username||'username not set'} · Applied ${new Date(member.created_at).toLocaleDateString()}`;div.append(info);for(const [label,status] of [['Approve','approved'],['Reject','rejected']]){const button=document.createElement('button');button.textContent=label;button.onclick=async()=>{if(!confirm(`${label} this membership?`))return;button.disabled=true;const {error}=await db.from('tbb_memberships').update({status,approved_by:a.user.id,approved_at:status==='approved'?new Date().toISOString():null}).eq('user_id',member.user_id).eq('status','pending');if(error)message(error.message,true);else{message(`Membership ${status}.`);await load();}button.disabled=false;};div.append(button);}wrap.append(div);}}catch(e){message(e.message,true);}}$('refresh').onclick=load;$('logout').onclick=logout;load();</script></body></html>
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Baddie Admin HQ</title>
+  <link rel="stylesheet" href="css/auth.css">
+  <style>
+    .admin-shell {
+      max-width: 1000px;
+      margin: auto;
+      padding: 24px 16px 60px;
+    }
+    .admin-card {
+      background: #fff8fc;
+      color: #33202e;
+      border: 1px solid #efc5dc;
+      border-radius: 18px;
+      padding: 22px;
+      margin: 20px 0;
+    }
+    .admin-card h2 { margin-top: 0; }
+    .admin-card button {
+      margin: 5px;
+      cursor: pointer;
+    }
+    .admin-card input,
+    .admin-card select {
+      max-width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+    }
+    .admin-card select { width: 100%; }
+    .admin-card input[type=file] { width: 100%; }
+    .admin-card .item {
+      padding: 14px;
+      margin: 12px 0;
+      border: 1px solid #e8bed3;
+      border-radius: 12px;
+    }
+    .admin-card .muted { opacity: .75; }
+    .admin-card .notice { color: #276c43; }
+    .admin-card .error { color: #ad264b; }
+    .admin-card .stats {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin: 15px 0;
+    }
+    .admin-card .stat {
+      flex: 1;
+      min-width: 110px;
+      padding: 14px;
+      background: #fbe4f0;
+      border-radius: 12px;
+      text-align: center;
+    }
+    .admin-card .stat strong {
+      display: block;
+      font-size: 24px;
+    }
+    .admin-card progress {
+      width: 100%;
+      height: 20px;
+    }
+    .admin-card table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .admin-card th,
+    .admin-card td {
+      padding: 8px;
+      border-bottom: 1px solid #ebcbdc;
+      text-align: left;
+    }
+    .table-wrap { overflow-x: auto; }
+    #importLog {
+      max-height: 190px;
+      overflow: auto;
+      white-space: pre-wrap;
+      font-size: 13px;
+    }
+    [hidden] { display: none !important; }
+  </style>
+</head>
+
+<body>
+<main class="admin-shell">
+  <header class="admin-card">
+    <h1>👑 Baddie Admin HQ</h1>
+    <p>Your command center for The Baddies Bookshelf.</p>
+    <p id="message" role="status"></p>
+    <button id="logout">Sign Out</button>
+    <nav><a href="home.html">Public home</a></nav>
+  </header>
+
+  <section class="admin-card">
+    <h2>💗 Membership Management</h2>
+    <p>Approve or reject pending membership requests.</p>
+    <section id="requests" aria-live="polite">
+      Loading…
+    </section>
+    <button id="refresh">Refresh Requests</button>
+  </section>
+
+  <section class="admin-card">
+    <h2>📚 Library Management</h2>
+    <p>Manage the Supabase book catalog.</p>
+
+    <div class="stats">
+      <div class="stat">
+        <strong id="totalBooks">—</strong>
+        Total Books
+      </div>
+      <div class="stat">
+        <strong id="totalSeries">—</strong>
+        Series
+      </div>
+      <div class="stat">
+        <strong id="totalImports">—</strong>
+        Import Batches
+      </div>
+    </div>
+
+    <button id="refreshCatalog">Refresh Catalog Stats</button>
+  </section>
+
+  <section class="admin-card">
+    <h2>💋 CSV Import Studio</h2>
+    <p>
+      Import books from your four original CSV collections.
+      Preview the records before saving anything.
+    </p>
+
+    <label for="collection">
+      <strong>Choose Collection</strong>
+    </label>
+    <select id="collection">
+      <option value="standalones">Standalones</option>
+      <option value="series">Series</option>
+      <option value="adult-standalones">
+        18+ Standalones
+      </option>
+      <option value="adult-series">
+        18+ Series
+      </option>
+    </select>
+
+    <label for="csvFile">
+      <strong>Choose CSV File</strong>
+    </label>
+    <input
+      type="file"
+      id="csvFile"
+      accept=".csv,text/csv"
+    >
+
+    <button id="previewImport">Preview CSV</button>
+
+    <section id="previewArea" hidden>
+      <h3>✨ Import Preview</h3>
+      <p id="previewSummary"></p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Author</th>
+              <th>Series</th>
+              <th>Genre</th>
+            </tr>
+          </thead>
+          <tbody id="previewRows"></tbody>
+        </table>
+      </div>
+
+      <p class="muted">
+        Showing the first 10 valid rows.
+        Existing books will not be overwritten.
+      </p>
+
+      <button id="startImport">
+        💗 Import These Books
+      </button>
+    </section>
+
+    <section id="importProgress" hidden>
+      <h3>📖 Import Progress</h3>
+      <progress id="progressBar" value="0" max="100">
+      </progress>
+      <p id="progressText"></p>
+      <pre id="importLog"></pre>
+    </section>
+
+    <p id="importMessage" role="status"></p>
+  </section>
+</main>
+
+<script type="module">
+import {
+  db,
+  requireAccess,
+  logout,
+  $,
+  message
+} from './js/auth.js';
+
+let adminUser = null;
+let previewBooks = [];
+let previewFileName = '';
+let previewCollection = '';
+let importing = false;
+
+const collectionNames = [
+  'standalones',
+  'series',
+  'adult-standalones',
+  'adult-series'
+];
+
+const normalize = value =>
+  String(value ?? '').trim().toLowerCase()
+    .replace(/\s+/g, ' ');
+
+const bookKey = book =>
+  [
+    normalize(book.collection),
+    normalize(book.title),
+    normalize(book.author),
+    normalize(book.series_name || '')
+  ].join('|');
+
+function log(text) {
+  const element = $('importLog');
+  element.textContent += text + '\n';
+  element.scrollTop = element.scrollHeight;
+}
+
+function importMessage(text, isError = false) {
+  $('importMessage').textContent = text;
+  $('importMessage').className =
+    isError ? 'error' : 'notice';
+}
+
+function safeDate(value) {
+  return new Date(value).toLocaleDateString();
+}
+
+/* MEMBERSHIP MANAGEMENT */
+
+async function loadMembers() {
+  try {
+    const access = await requireAccess(true);
+    if (!access) return;
+
+    adminUser = access.user;
+
+    const { data, error } = await db
+      .from('tbb_memberships')
+      .select('user_id,status,created_at')
+      .eq('status', 'pending')
+      .order('created_at', { ascending: true });
+
+    if (error) throw error;
+
+    const wrap = $('requests');
+    wrap.replaceChildren();
+
+    if (!data.length) {
+      wrap.textContent = 'No pending Baddies right now!';
+      return;
+    }
+
+    for (const member of data) {
+      const div = document.createElement('div');
+      div.className = 'item';
+
+      const { data: profile } = await db
+        .from('tbb_profiles')
+        .select('display_name,username')
+        .eq('user_id', member.user_id)
+        .maybeSingle();
+
+      const name = document.createElement('strong');
+      name.textContent =
+        profile?.display_name || 'New Baddie';
+      div.append(name);
+
+      const info = document.createElement('p');
+      info.className = 'muted';
+      info.textContent =
+        `@${profile?.username || 'username not set'} · ` +
+        `Applied ${safeDate(member.created_at)}`;
+      div.append(info);
+
+      for (const [label, status] of [
+        ['Approve', 'approved'],
+        ['Reject', 'rejected']
+      ]) {
+        const button = document.createElement('button');
+        button.textContent = label;
+
+        button.onclick = async () => {
+          if (!confirm(`${label} this membership?`)) return;
+
+          button.disabled = true;
+
+          const { error } = await db
+            .from('tbb_memberships')
+            .update({
+              status,
+              approved_by: access.user.id,
+              approved_at:
+                status === 'approved'
+                  ? new Date().toISOString()
+                  : null
+            })
+            .eq('user_id', member.user_id)
+            .eq('status', 'pending');
+
+          if (error) {
+            message(error.message, true);
+          } else {
+            message(`Membership ${status}.`);
+            await loadMembers();
+          }
+
+          button.disabled = false;
+        };
+
+        div.append(button);
+      }
+
+      wrap.append(div);
+    }
+  } catch (error) {
+    message(error.message, true);
+  }
+}
+
+/* CATALOG STATISTICS */
+
+async function loadStats() {
+  try {
+    const results = await Promise.all([
+      db.from('tbb_books')
+        .select('*', { count: 'exact', head: true }),
+      db.from('tbb_book_series')
+        .select('*', { count: 'exact', head: true }),
+      db.from('tbb_book_import_batches')
+        .select('*', { count: 'exact', head: true })
+    ]);
+
+    for (const result of results) {
+      if (result.error) throw result.error;
+    }
+
+    $('totalBooks').textContent = results[0].count ?? 0;
+    $('totalSeries').textContent = results[1].count ?? 0;
+    $('totalImports').textContent = results[2].count ?? 0;
+  } catch (error) {
+    importMessage(error.message, true);
+  }
+}
+
+/* CSV PARSER — HANDLES QUOTED COMMAS AND NEWLINES */
+
+function parseCSV(text) {
+  const rows = [];
+  let row = [];
+  let field = '';
+  let quoted = false;
+
+  text = text.replace(/^\uFEFF/, '');
+
+  for (let i = 0; i < text.length; i++) {
+    const char = text[i];
+
+    if (char === '"') {
+      if (quoted && text[i + 1] === '"') {
+        field += '"';
+        i++;
+      } else {
+        quoted = !quoted;
+      }
+    } else if (char === ',' && !quoted) {
+      row.push(field);
+      field = '';
+    } else if (
+      (char === '\n' || char === '\r') && !quoted
+    ) {
+      if (char === '\r' && text[i + 1] === '\n') i++;
+      row.push(field);
+      rows.push(row);
+      row = [];
+      field = '';
+    } else {
+      field += char;
+    }
+  }
+
+  if (quoted) {
+    throw new Error('CSV contains an unclosed quoted field.');
+  }
+
+  if (field || row.length) {
+    row.push(field);
+    rows.push(row);
+  }
+
+  return rows;
+}
+
+function readBooks(rows, collection) {
+  const headerIndex = rows.findIndex(row =>
+    normalize(row[0]) === 'uploaded' &&
+    normalize(row[1]) === 'title' &&
+    normalize(row[2]) === 'author'
+  );
+
+  if (headerIndex < 0) {
+    throw new Error(
+      'CSV header not found. Expected Uploaded, Title, Author.'
+    );
+  }
+
+  const headers = rows[headerIndex].map(normalize);
+
+  const get = (row, column) => {
+    const index = headers.indexOf(normalize(column));
+    return index < 0 ? '' : String(row[index] ?? '').trim();
+  };
+
+  const isSeries =
+    collection === 'series' ||
+    collection === 'adult-series';
+
+  if (
+    !headers.includes('main tag') ||
+    !headers.includes('download link') ||
+    (isSeries && !headers.includes('series name'))
+  ) {
+    throw new Error(
+      'The CSV columns do not match the selected collection.'
+    );
+  }
+
+  const books = [];
+  let skipped = 0;
+  const seen = new Set();
+
+  for (let i = headerIndex + 1; i < rows.length; i++) {
+    const row = rows[i];
+
+    const title = get(row, 'Title');
+    const author = get(row, 'Author');
+    const seriesName = get(row, 'Series Name');
+
+    if (!title && !author) continue;
+
+    if (!title || !author || (isSeries && !seriesName)) {
+      skipped++;
+      continue;
+    }
+
+    const book = {
+      title,
+      author,
+      collection,
+      main_tag: get(row, 'Main Tag') || null,
+      download_url: get(row, 'Download Link') || null,
+      source_uploaded:
+        normalize(get(row, 'Uploaded')) === 'true',
+      source_status: get(row, 'Status') || null,
+      source_row_number: i + 1,
+      series_name: isSeries ? seriesName : null,
+      book_number:
+        isSeries ? get(row, 'Book #') || null : null
+    };
+
+    const key = bookKey(book);
+
+    if (seen.has(key)) {
+      skipped++;
+      continue;
+    }
+
+    seen.add(key);
+    books.push(book);
+  }
+
+  return { books, skipped };
+}
+
+/* CSV PREVIEW */
+
+async function previewImport() {
+  if (importing) return;
+
+  try {
+    importMessage('');
+    $('previewArea').hidden = true;
+
+    const file = $('csvFile').files[0];
+    const collection = $('collection').value;
+
+    if (!file) {
+      throw new Error('Choose a CSV file first.');
+    }
+
+    if (!collectionNames.includes(collection)) {
+      throw new Error('Invalid collection.');
+    }
+
+    const text = await file.text();
+    const rows = parseCSV(text);
+    const result = readBooks(rows, collection);
+
+    if (!result.books.length) {
+      throw new Error('No valid book records found.');
+    }
+
+    previewBooks = result.books;
+    previewFileName = file.name;
+    previewCollection = collection;
+
+    $('previewSummary').textContent =
+      `${result.books.length.toLocaleString()} valid books · ` +
+      `${result.skipped} incomplete or repeated rows skipped.`;
+
+    const tbody = $('previewRows');
+    tbody.replaceChildren();
+
+    for (const book of result.books.slice(0, 10)) {
+      const tr = document.createElement('tr');
+
+      for (const value of [
+        book.title,
+        book.author,
+        book.series_name || '—',
+        book.main_tag || '—'
+      ]) {
+        const td = document.createElement('td');
+        td.textContent = value;
+        tr.append(td);
+      }
+
+      tbody.append(tr);
+    }
+
+    $('previewArea').hidden = false;
+    importMessage('Preview ready. No books saved yet.');
+  } catch (error) {
+    importMessage(error.message, true);
+  }
+}
+
+/* READ EXISTING CATALOG WITH PAGINATION */
+
+async function readAll(table, columns) {
+  const results = [];
+  const pageSize = 500;
+
+  for (let offset = 0; ; offset += pageSize) {
+    const { data, error } = await db
+      .from(table)
+      .select(columns)
+      .range(offset, offset + pageSize - 1);
+
+    if (error) throw error;
+
+    results.push(...data);
+
+    if (data.length < pageSize) break;
+  }
+
+  return results;
+}
+
+/* SERIES MATCHING */
+
+async function prepareSeries(books) {
+  const existing = await readAll(
+    'tbb_book_series',
+    'id,name'
+  );
+
+  const seriesMap = new Map(
+    existing.map(item => [normalize(item.name), item.id])
+  );
+
+  const names = new Map();
+
+  for (const book of books) {
+    if (book.series_name) {
+      names.set(normalize(book.series_name), book.series_name);
+    }
+  }
+
+  let created = 0;
+
+  for (const [key, name] of names) {
+    if (seriesMap.has(key)) continue;
+
+    const { data, error } = await db
+      .from('tbb_book_series')
+      .upsert(
+        { name },
+        { onConflict: 'normalized_name' }
+      )
+      .select('id')
+      .single();
+
+    if (error) throw error;
+
+    seriesMap.set(key, data.id);
+    created++;
+  }
+
+  return { seriesMap, created };
+}
+
+/* IMPORT BOOKS */
+
+async function startImport() {
+  if (importing || !previewBooks.length) return;
+
+  if (!confirm(
+    `Import ${previewBooks.length} books into ` +
+    `${previewCollection}? Existing books will be skipped.`
+  )) return;
+
+  importing = true;
+  $('startImport').disabled = true;
+  $('previewImport').disabled = true;
+  $('csvFile').disabled = true;
+  $('collection').disabled = true;
+  $('importProgress').hidden = false;
+  $('progressBar').value = 0;
+  $('importLog').textContent = '';
+
+  let inserted = 0;
+  let skipped = 0;
+  let batchId = null;
+
+  try {
+    const access = await requireAccess(true);
+    if (!access) throw new Error('Admin access required.');
+
+    log('Checking existing catalog…');
+
+    const [existingBooks, existingSeries] =
+      await Promise.all([
+        readAll(
+          'tbb_books',
+          'title,author,collection,series_id'
+        ),
+        readAll('tbb_book_series', 'id,name')
+      ]);
+
+    const existingSeriesNames = new Map(
+      existingSeries.map(s => [s.id, s.name])
+    );
+
+    const existingKeys = new Set(
+      existingBooks.map(book => bookKey({
+        ...book,
+        series_name:
+          existingSeriesNames.get(book.series_id) || null
+      }))
+    );
+
+    const booksToInsert = previewBooks.filter(book => {
+      if (existingKeys.has(bookKey(book))) {
+        skipped++;
+        return false;
+      }
+      return true;
+    });
+
+    log(`${skipped} existing books skipped.`);
+    log(`${booksToInsert.length} new books to import.`);
+
+    if (!booksToInsert.length) {
+      log('No new books to import.');
+      $('progressBar').value = 100;
+      importMessage('All books already exist. Nothing changed.');
+      return;
+    }
+
+    const { data: batch, error: batchError } = await db
+      .from('tbb_book_import_batches')
+      .insert({
+        source_filename: previewFileName,
+        collection: previewCollection,
+        status: 'pending',
+        total_rows: previewBooks.length,
+        created_by: access.user.id
+      })
+      .select('id')
+      .single();
+
+    if (batchError) throw batchError;
+    batchId = batch.id;
+
+    const { seriesMap, created } =
+      await prepareSeries(booksToInsert);
+
+    log(`${created} new series created.`);
+
+    const chunkSize = 40;
+
+    for (
+      let start = 0;
+      start < booksToInsert.length;
+      start += chunkSize
+    ) {
+      const chunk = booksToInsert
+        .slice(start, start + chunkSize)
+        .map(book => ({
+          title: book.title,
+          author: book.author,
+          collection: book.collection,
+          main_tag: book.main_tag,
+          download_url: book.download_url,
+          source_uploaded: book.source_uploaded,
+          source_status: book.source_status,
+          source_row_number: book.source_row_number,
+          book_number: book.book_number,
+          series_id: book.series_name
+            ? seriesMap.get(normalize(book.series_name))
+            : null
+        }));
+
+      const { error } = await db
+        .from('tbb_books')
+        .insert(chunk);
+
+      if (error) throw error;
+
+      inserted += chunk.length;
+
+      const completed =
+        Math.min(start + chunk.length, booksToInsert.length);
+
+      const percent = Math.round(
+        completed / booksToInsert.length * 100
+      );
+
+      $('progressBar').value = percent;
+      $('progressText').textContent =
+        `${completed} / ${booksToInsert.length} processed`;
+
+      log(`Imported ${inserted} books…`);
+
+      await db.from('tbb_book_import_batches')
+        .update({ inserted_rows: inserted })
+        .eq('id', batchId);
+    }
+
+    const { error: finishError } = await db
+      .from('tbb_book_import_batches')
+      .update({
+        status: 'completed',
+        inserted_rows: inserted,
+        completed_at: new Date().toISOString()
+      })
+      .eq('id', batchId);
+
+    if (finishError) throw finishError;
+
+    log('✨ Import complete!');
+    importMessage(
+      `Success! ${inserted} imported, ${skipped} existing books skipped.`
+    );
+
+    await loadStats();
+
+    previewBooks = [];
+    $('previewArea').hidden = true;
+    $('csvFile').value = '';
+  } catch (error) {
+    log('ERROR: ' + error.message);
+    importMessage(error.message, true);
+
+    if (batchId) {
+      await db.from('tbb_book_import_batches')
+        .update({
+          status: 'failed',
+          inserted_rows: inserted,
+          error_details: { message: error.message }
+        })
+        .eq('id', batchId);
+    }
+  } finally {
+    importing = false;
+    $('startImport').disabled = false;
+    $('previewImport').disabled = false;
+    $('csvFile').disabled = false;
+    $('collection').disabled = false;
+  }
+}
+
+/* INITIALIZATION */
+
+$('refresh').onclick = loadMembers;
+$('logout').onclick = logout;
+$('refreshCatalog').onclick = loadStats;
+$('previewImport').onclick = previewImport;
+$('startImport').onclick = startImport;
+
+async function init() {
+  try {
+    const access = await requireAccess(true);
+    if (!access) return;
+
+    adminUser = access.user;
+
+    await Promise.all([
+      loadMembers(),
+      loadStats()
+    ]);
+  } catch (error) {
+    message(error.message, true);
+  }
+}
+
+init();
+</script>
+</body>
+</html>
