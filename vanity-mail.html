@@ -326,6 +326,29 @@ a { color:var(--pink-light); }
   .composer { flex-direction:column; }
   .composer button { align-self:stretch; }
 }
+
+/* Vanity Mail compose & thread polish */
+.inbox-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.compose-launch{width:54px;height:54px;flex:none;display:grid;place-items:center;border:1px solid #ffb5da;border-radius:19px;background:linear-gradient(145deg,#ff91cc,#ff319d 65%,#bb166b);color:#210b19;box-shadow:0 7px 0 #8c1957,0 12px 25px #ff319d50;transition:transform .15s,box-shadow .15s}
+.compose-launch:hover{transform:translateY(-2px);box-shadow:0 9px 0 #8c1957,0 15px 28px #ff319d55}
+.compose-launch:focus-visible,.member-result:focus-visible{outline:3px solid var(--pink-light);outline-offset:3px}
+.compose-launch svg{width:28px;height:28px}
+.thread-search{width:calc(100% - 24px);margin:0 12px 10px;padding:11px 14px;border:1px solid var(--border);border-radius:14px;background:var(--alt);color:var(--text)}
+.thread-item{display:flex;align-items:center;gap:12px}
+.thread-avatar,.result-avatar{display:grid;place-items:center;flex:none;width:45px;height:45px;border-radius:50%;background:linear-gradient(135deg,var(--pink),#723d8f);color:#fff;font-weight:900;font-size:18px;border:2px solid #ffffff30;overflow:hidden}
+.thread-avatar img,.result-avatar img{width:100%;height:100%;object-fit:cover}
+.thread-copy{min-width:0;flex:1}.thread-copy strong,.thread-copy small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.thread-date{font-size:10px;color:var(--muted);align-self:flex-start;white-space:nowrap}
+.compose-overlay{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;padding:16px;background:#0b0612d9;backdrop-filter:blur(8px)}
+.compose-dialog{width:min(520px,100%);max-height:min(680px,88vh);display:flex;flex-direction:column;overflow:hidden;border:1px solid #ff82c2;border-radius:26px;background:linear-gradient(150deg,#542144,var(--surface) 44%);box-shadow:0 20px 80px #000a,0 0 35px #ff319d35}
+.compose-top{display:flex;align-items:center;justify-content:space-between;padding:22px;border-bottom:1px solid var(--border)}
+.compose-top h2{margin:4px 0 0;font-size:24px}.compose-close{font-size:25px;background:transparent;color:var(--pink-light);border:0;padding:4px 10px}
+.compose-search{margin:18px 18px 8px;padding:14px 16px;width:calc(100% - 36px);border-radius:15px;border:1px solid var(--pink);background:#1b1221;color:#fff;font-size:16px}
+.compose-results{padding:8px 18px 20px;overflow-y:auto;min-height:120px}.member-result{display:flex;align-items:center;gap:13px;width:100%;padding:12px;margin:6px 0;text-align:left;color:var(--text);background:#ffffff0b;border:1px solid var(--border);border-radius:16px}
+.member-result:hover{border-color:var(--pink);background:#ff4da61b}.member-result .member-text{flex:1;min-width:0}.member-result strong,.member-result small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.member-result small{color:var(--muted);margin-top:3px}
+.compose-hint{padding:0 20px 16px;color:var(--muted);font-size:12px}.chat-head .chat-person{display:flex;align-items:center;gap:10px}
+@media(max-width:480px){.compose-launch{width:48px;height:48px}.compose-dialog{max-height:92vh}}
+
 </style>
 </head>
 
@@ -352,8 +375,12 @@ a { color:var(--pink-light); }
 
   <aside class="panel">
     <div class="panel-header">
-      <h2>My Inbox 💗</h2>
-      <span class="muted">Your conversations and requests</span>
+      <div class="inbox-heading">
+        <div><h2>My Inbox 💗</h2><span class="muted">Your conversations and requests</span></div>
+        <button class="compose-launch" id="newMessageButton" type="button" aria-label="New message" title="New message 💌">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11.5a8.5 8.5 0 0 1-8.5 8.5 9 9 0 0 1-4-.9L3 21l1.9-4.5a9 9 0 0 1-.9-4A8.5 8.5 0 0 1 12.5 4"/><path d="M18 2v7M14.5 5.5h7"/></svg>
+        </button>
+      </div>
     </div>
 
     <div class="tabs" role="tablist" aria-label="Mail folders">
@@ -363,6 +390,7 @@ a { color:var(--pink-light); }
               aria-selected="false">Requests</button>
     </div>
 
+    <input class="thread-search" id="threadSearch" type="search" placeholder="Search your chats..." aria-label="Search conversations">
     <div class="list" id="conversationList">
       <div class="empty">Loading your inbox...</div>
     </div>
@@ -443,6 +471,15 @@ a { color:var(--pink-light); }
 
 </main>
 
+<div class="compose-overlay hidden" id="composeOverlay">
+  <section class="compose-dialog" role="dialog" aria-modal="true" aria-labelledby="composeTitle">
+    <div class="compose-top"><div><span class="eyebrow">START SOMETHING SWEET ✦</span><h2 id="composeTitle">New Vanity Mail™ 💌</h2></div><button class="compose-close" id="closeCompose" type="button" aria-label="Close">×</button></div>
+    <input id="memberSearch" class="compose-search" type="search" placeholder="Search a Baddie's name or @username..." autocomplete="off" aria-label="Find a member">
+    <div class="compose-results" id="memberResults" aria-live="polite"><div class="empty">Start typing to find your Baddies 💗</div></div>
+    <p class="compose-hint">Existing chats open right away. New connections begin with a message request, subject to member privacy settings.</p>
+  </section>
+</div>
+
 <script type="module">
 import { db, requireAccess, logout } from "./js/auth.js";
 
@@ -454,6 +491,10 @@ let activeConversation = null;
 let currentTab = "inbox";
 let ageGroup = "unverified";
 let inboxGeneration = 0;
+let memberSearchGeneration = 0;
+let memberSearchTimer = null;
+let chatPreviews = new Map();
+let memberAvatarUrls = new Map();
 
 function notify(text,error=false) {
   $("message").textContent = text;
@@ -531,6 +572,7 @@ async function loadConversations() {
   });
 
   renderConversationList();
+  await refreshChatPreviews(generation);
 
   if (activeConversation) {
     const updated = conversations.find(
@@ -549,11 +591,15 @@ function renderConversationList() {
   const container = $("conversationList");
   container.replaceChildren();
 
+  const query = $("threadSearch").value.trim().toLowerCase();
   const visible = conversations.filter(item => {
-    if (currentTab === "requests") {
-      return item.status === "pending";
-    }
-    return item.status === "accepted";
+    const matchesTab = currentTab === "requests"
+      ? item.status === "pending" : item.status === "accepted";
+    return matchesTab && (!query || item.otherName.toLowerCase().includes(query));
+  }).sort((a,b) => {
+    const aDate = chatPreviews.get(a.id)?.created_at || a.accepted_at || a.created_at;
+    const bDate = chatPreviews.get(b.id)?.created_at || b.accepted_at || b.created_at;
+    return new Date(bDate) - new Date(aDate);
   });
 
   if (!visible.length) {
@@ -590,7 +636,23 @@ function renderConversationList() {
       detail.textContent = "Open conversation";
     }
 
-    button.append(name,detail);
+    const avatar = document.createElement("span");
+    avatar.className = "thread-avatar";
+    avatar.textContent = conversation.otherName.slice(0,1).toUpperCase();
+    const copy = document.createElement("span");
+    copy.className = "thread-copy";
+    const preview = chatPreviews.get(conversation.id);
+    if (conversation.status === "accepted" && preview) {
+      detail.textContent = (preview.sender_id === user.id ? "You: " : "") + preview.body;
+    }
+    copy.append(name,detail);
+    button.append(avatar,copy);
+    if (preview && conversation.status === "accepted") {
+      const date = document.createElement("span");
+      date.className = "thread-date";
+      date.textContent = shortDate(preview.created_at);
+      button.append(date);
+    }
 
     button.addEventListener("click",() => {
       openConversation(conversation);
@@ -598,6 +660,141 @@ function renderConversationList() {
 
     container.append(button);
   });
+}
+
+
+async function refreshChatPreviews(generation) {
+  const ids = conversations.filter(c => c.status === "accepted").map(c => c.id);
+  if (!ids.length) { chatPreviews.clear(); return; }
+  // Fetch recent visible messages. Server-side RLS continues to control access.
+  const {data,error} = await db.from("tbb_vm_messages")
+    .select("conversation_id,sender_id,body,created_at")
+    .in("conversation_id",ids)
+    .order("created_at",{ascending:false}).limit(500);
+  if (error) { console.warn("Thread previews:",error.message); return; }
+  if (generation !== inboxGeneration) return;
+  const next = new Map();
+  for (const row of data || []) if (!next.has(row.conversation_id)) next.set(row.conversation_id,row);
+  chatPreviews = next;
+  renderConversationList();
+}
+
+function openCompose() {
+  $("composeOverlay").classList.remove("hidden");
+  $("memberSearch").value = "";
+  $("memberResults").innerHTML = '<div class="empty">Start typing to find your Baddies 💗</div>';
+  $("memberSearch").focus();
+}
+function closeCompose() {
+  $("composeOverlay").classList.add("hidden");
+  ++memberSearchGeneration;
+  $("newMessageButton").focus();
+}
+function renderMemberResults(profiles,query) {
+  const root = $("memberResults");
+  root.replaceChildren();
+  if (!profiles.length) {
+    const empty = document.createElement("div");
+    empty.className = "empty";
+    empty.textContent = query ? "No visible Baddies match that search. 💗" : "Start typing to find your Baddies 💗";
+    root.append(empty);
+    return;
+  }
+  for (const profile of profiles) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "member-result";
+    const avatar = document.createElement("span");
+    avatar.className = "result-avatar";
+    avatar.textContent = (profile.display_name || profile.username || "B").slice(0,1).toUpperCase();
+    const copy = document.createElement("span");
+    copy.className = "member-text";
+    const name = document.createElement("strong");
+    name.textContent = profile.display_name || profile.username || "Baddie";
+    const sub = document.createElement("small");
+    sub.textContent = profile.username ? "@" + profile.username : "TBB member";
+    copy.append(name,sub);
+    const arrow = document.createElement("span");
+    arrow.textContent = "💌";
+    button.append(avatar,copy,arrow);
+    button.addEventListener("click",() => chooseMember(profile,button));
+    root.append(button);
+  }
+}
+async function searchMembers() {
+  const query = $("memberSearch").value.trim();
+  const generation = ++memberSearchGeneration;
+  if (query.length < 2) { renderMemberResults([],""); return; }
+  const root = $("memberResults");
+  root.replaceChildren();
+  const loading = document.createElement("div");
+  loading.className = "empty";
+  loading.textContent = "Finding your Baddies... 💗";
+  root.append(loading);
+  try {
+    // Privacy: the existing tbb_profiles SELECT policy decides who is visible.
+    // No age-group or email fields are queried.
+    const safe = query.replace(/[,%()]/g," ").trim();
+    if (safe.length < 2) { renderMemberResults([],query); return; }
+    const {data,error} = await db.from("tbb_profiles")
+      .select("user_id,display_name,username")
+      .neq("user_id",user.id)
+      .or(`display_name.ilike.%${safe}%,username.ilike.%${safe}%`)
+      .order("display_name",{ascending:true}).limit(30);
+    if (error) throw error;
+    if (generation !== memberSearchGeneration || $("composeOverlay").classList.contains("hidden")) return;
+    renderMemberResults(data || [],query);
+  } catch(error) {
+    if (generation !== memberSearchGeneration) return;
+    root.replaceChildren();
+    const msg = document.createElement("div");
+    msg.className = "empty";
+    msg.textContent = "Search unavailable: " + error.message;
+    root.append(msg);
+  }
+}
+async function chooseMember(profile,button) {
+  button.disabled = true;
+  const oldText = button.lastElementChild.textContent;
+  button.lastElementChild.textContent = "⏳";
+  try {
+    // Existing pending/accepted conversations must open without creating duplicates.
+    let existing = conversations.find(c => otherId(c) === profile.user_id);
+    if (!existing) {
+      const {data,error} = await db.from("tbb_vm_conversations")
+        .select("id,member_a,member_b,requested_by,status,created_at,accepted_at")
+        .or(`and(member_a.eq.${user.id},member_b.eq.${profile.user_id}),and(member_a.eq.${profile.user_id},member_b.eq.${user.id})`)
+        .maybeSingle();
+      if (error) throw error;
+      existing = data;
+    }
+    if (existing?.status === "declined") throw new Error("This request was previously declined. You cannot start a new request.");
+    if (!existing) {
+      if (!confirm(`Send ${profile.display_name || profile.username || "this Baddie"} a Vanity Mail™ request? They must accept before you can chat.`)) return;
+      const {data,error} = await db.rpc("tbb_vm_request",{p_recipient:profile.user_id});
+      if (error) throw error;
+      const {data:created,error:lookupError} = await db.from("tbb_vm_conversations")
+        .select("id,member_a,member_b,requested_by,status,created_at,accepted_at")
+        .eq("id",data).maybeSingle();
+      if (lookupError) throw lookupError;
+      if (!created) throw new Error("Request was sent, but the conversation could not be loaded. Refresh your inbox.");
+      existing = created;
+      notify("Message request sent! 💌 Waiting for their approval.");
+    }
+    closeCompose();
+    currentTab = existing.status === "pending" ? "requests" : "inbox";
+    document.querySelectorAll(".tab").forEach(tab => tab.setAttribute("aria-selected",String(tab.dataset.tab === currentTab)));
+    await loadConversations();
+    const selected = conversations.find(c => c.id === existing.id) || {
+      ...existing,otherName:profile.display_name || profile.username || "Baddie"
+    };
+    await openConversation(selected);
+  } catch(error) {
+    notify(error.message,true);
+  } finally {
+    button.disabled = false;
+    button.lastElementChild.textContent = oldText;
+  }
 }
 
 function clearConversation() {
@@ -713,6 +910,10 @@ async function loadMessages(conversationId) {
   }
 
   container.scrollTop = container.scrollHeight;
+  if (data?.length) {
+    chatPreviews.set(conversationId,data[data.length - 1]);
+    renderConversationList();
+  }
 
   const {error:readError} = await db.rpc(
     "tbb_vm_mark_read",
@@ -738,10 +939,12 @@ async function sendMessage(event) {
   $("sendButton").disabled = true;
 
   try {
+    
     const {error} = await db.rpc("tbb_vm_send",{
-      p_conversation_id:conversationId,
+      p_conversation:conversationId,
       p_body:body
     });
+
 
     if (error) throw error;
 
@@ -764,10 +967,12 @@ async function respondToRequest(accept) {
   $("declineRequest").disabled = true;
 
   try {
+    
     const {error} = await db.rpc("tbb_vm_respond",{
-      p_conversation_id:id,
+      p_conversation:id,
       p_accept:accept
     });
+
 
     if (error) throw error;
 
@@ -918,6 +1123,19 @@ async function init() {
 }
 
 $("logout").addEventListener("click",logout);
+$("newMessageButton").addEventListener("click",openCompose);
+$("closeCompose").addEventListener("click",closeCompose);
+$("composeOverlay").addEventListener("click",event => {
+  if (event.target === $("composeOverlay")) closeCompose();
+});
+document.addEventListener("keydown",event => {
+  if (event.key === "Escape" && !$("composeOverlay").classList.contains("hidden")) closeCompose();
+});
+$("memberSearch").addEventListener("input",() => {
+  clearTimeout(memberSearchTimer);
+  memberSearchTimer = setTimeout(searchMembers,250);
+});
+$("threadSearch").addEventListener("input",renderConversationList);
 
 document.querySelectorAll(".tab").forEach(button => {
   button.addEventListener("click",() => {
