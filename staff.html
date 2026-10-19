@@ -1,35 +1,461 @@
+
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Staff Moderation Desk™ | TBB</title>
-<link rel="stylesheet" href="css/auth.css"><style>
-:root{color-scheme:dark;--pink:#ff39b0}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 20% 0%,#542044,transparent 45%),#100913;color:#ffe6f4;font:16px system-ui,sans-serif}main{max-width:920px;margin:auto;padding:35px 18px 80px}.panel{background:#1b1021;border:1px solid #82436f;border-radius:22px;padding:24px;margin:20px 0}h1{font-size:clamp(2rem,6vw,3rem);margin:8px 0}h2{color:#ff8dd0}.muted{color:#d4afc8;line-height:1.6}.report{background:#28132a;border:1px solid #884573;border-radius:16px;padding:18px;margin:14px 0;overflow-wrap:anywhere}.body{white-space:pre-wrap;background:#110914;padding:14px;border-radius:10px;border-left:3px solid var(--pink)}button{border:0;border-radius:12px;background:#f02a9f;color:white;font-weight:750;padding:12px 15px;margin:6px 8px 6px 0;cursor:pointer}button:disabled{opacity:.55}a{color:#ff8dd0}#status{min-height:24px}small{color:#d4afc8}button:focus-visible,a:focus-visible{outline:3px solid #fff;outline-offset:3px}
-</style></head><body><main>
-<header class="panel"><small>THE BADDIES BOOKSHELF • STAFF ONLY</small><h1>🛡️ Staff Moderation Desk™</h1><p class="muted">Review reported comments in Baddie Central™. Junior Central™, After Dark™, private messages, and administrator tools are not available here.</p><a href="home.html">← Home</a> <button id="signout" type="button">Sign Out</button><p id="status" role="status" aria-live="polite">Verifying staff access…</p></header>
-<section class="panel" id="desk" hidden><h2>💌 Open Comment Reports</h2><button id="refresh" type="button">↻ Refresh Queue</button><div id="queue" aria-live="polite"></div></section>
-<section class="panel" id="historyPanel" hidden><h2>📋 My Moderation History</h2><div id="history"></div></section>
-</main><script type="module">
-import {db,logout,getAccess} from './js/auth.js';
-const $=id=>document.getElementById(id);
-const status=(text)=>{$('status').textContent=text;};
-const node=(tag,text,cls)=>{const el=document.createElement(tag);if(text!==undefined)el.textContent=text;if(cls)el.className=cls;return el;};
-const fmt=v=>v?new Date(v).toLocaleString():'—';
-let allowed=false;
-async function load(){if(!allowed)return;status('Loading reports…');$('queue').replaceChildren();
- const {data,error}=await db.rpc('tbb_staff_report_queue');if(error){status(error.message);return;}
- const reports=Array.isArray(data)?data:[];status(`${reports.length} open report(s) available for staff review.`);
- if(!reports.length)$('queue').append(node('p','No open eligible reports right now.','muted'));
- for(const r of reports){const card=node('article',undefined,'report');card.append(node('h3',`Report: ${r.reason}`),node('small',`Submitted ${fmt(r.reported_at)} · ${r.status}`),node('p',r.comment_hidden?'Comment already hidden':'Reported comment:','muted'),node('div',r.comment_body,'body'));
- const actions=node('div');for(const [label,action] of [['Hide comment & resolve','hide_comment'],['Resolve without hiding','resolve_report'],['Dismiss report','dismiss_report']]){
- const b=node('button',label);b.type='button';b.onclick=async()=>{if(!confirm(`${label}? This action is recorded.`))return;for(const x of actions.querySelectorAll('button'))x.disabled=true;
- const {error}=await db.rpc('tbb_staff_moderate_report',{target_report_id:r.report_id,moderation_action:action});if(error){status(error.message);for(const x of actions.querySelectorAll('button'))x.disabled=false;return;}await load();await loadHistory();};actions.append(b);}
- card.append(actions);$('queue').append(card);}
-}
-async function loadHistory(){if(!allowed)return;const {data,error}=await db.rpc('tbb_staff_my_history');$('history').replaceChildren();if(error){$('history').textContent=error.message;return;}
- if(!data?.length)$('history').append(node('p','No moderation actions yet.','muted'));
- for(const item of data||[])$('history').append(node('p',`${fmt(item.created_at)} · ${item.action.replaceAll('_',' ')}`,'muted'));
-}
-$('refresh').onclick=()=>{load();loadHistory();};$('signout').onclick=logout;
-try{const access=await getAccess();if(!access.user){location.replace('login.html');}else if(access.status!=='approved'){status('Your membership is not approved.');}else{
- const {data,error}=await db.rpc('tbb_is_staff_moderator');if(error)throw error;
- if(!data&&!access.admin){status('Staff role required. This page is not available to your account.');}else{allowed=true;$('desk').hidden=false;$('historyPanel').hidden=false;await load();await loadHistory();}
-}}catch(err){status(err.message||'Could not verify access.');}
-</script></body></html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Staff Moderation Desk™ | TBB</title>
+  <link rel="stylesheet" href="css/auth.css">
+
+  <style>
+    :root {
+      color-scheme: dark;
+      --pink: #ff39b0;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background:
+        radial-gradient(ellipse at 20% 0%, #542044, transparent 45%),
+        #100913;
+      color: #ffe6f4;
+      font: 16px system-ui, sans-serif;
+    }
+
+    main {
+      max-width: 920px;
+      margin: auto;
+      padding: 35px 18px 80px;
+    }
+
+    .panel {
+      background: #1b1021;
+      border: 1px solid #82436f;
+      border-radius: 22px;
+      padding: 24px;
+      margin: 20px 0;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 6vw, 3rem);
+      margin: 8px 0;
+    }
+
+    h2 { color: #ff8dd0; }
+
+    .muted {
+      color: #d4afc8;
+      line-height: 1.6;
+    }
+
+    .report {
+      background: #28132a;
+      border: 1px solid #884573;
+      border-radius: 16px;
+      padding: 18px;
+      margin: 14px 0;
+      overflow-wrap: anywhere;
+    }
+
+    .body {
+      white-space: pre-wrap;
+      background: #110914;
+      padding: 14px;
+      border-radius: 10px;
+      border-left: 3px solid var(--pink);
+    }
+
+    .commons-tag {
+      display: inline-block;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: #512044;
+      border: 1px solid #b65394;
+      color: #ffd4ed;
+      font-size: .85rem;
+      font-weight: 750;
+      margin-bottom: 8px;
+    }
+
+    .report-meta {
+      display: block;
+      margin: 8px 0 14px;
+    }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 16px 0;
+    }
+
+    button {
+      border: 0;
+      border-radius: 12px;
+      background: #f02a9f;
+      color: white;
+      font-weight: 750;
+      padding: 12px 15px;
+      margin: 6px 8px 6px 0;
+      cursor: pointer;
+    }
+
+    .filters button {
+      background: #39213d;
+      border: 1px solid #82436f;
+      margin: 0;
+    }
+
+    .filters button.active {
+      background: #f02a9f;
+      border-color: #ff8dd0;
+    }
+
+    button:disabled { opacity: .55; }
+
+    a { color: #ff8dd0; }
+
+    #status { min-height: 24px; }
+
+    small { color: #d4afc8; }
+
+    button:focus-visible,
+    a:focus-visible {
+      outline: 3px solid #fff;
+      outline-offset: 3px;
+    }
+  </style>
+</head>
+
+<body>
+<main>
+
+  <header class="panel">
+    <small>THE BADDIES BOOKSHELF • STAFF ONLY</small>
+
+    <h1>🛡️ Staff Moderation Desk™</h1>
+
+    <p class="muted">
+      Review reported comments across Baddie Central™,
+      Junior Central™, and After Dark™.
+      Staff access is limited to reported content and approved
+      moderation actions. Private messages, membership approvals,
+      role assignments, and administrator settings remain restricted.
+    </p>
+
+    <a href="home.html">← Home</a>
+
+    <button id="signout" type="button">Sign Out</button>
+
+    <p id="status" role="status" aria-live="polite">
+      Verifying staff access…
+    </p>
+  </header>
+
+  <section class="panel" id="desk" hidden>
+    <h2>💌 Open Comment Reports</h2>
+
+    <p class="muted">
+      Select a Commons to view its reports.
+    </p>
+
+    <div class="filters" id="filters">
+      <button type="button" data-filter="all" class="active">
+        ✨ All Commons
+      </button>
+
+      <button type="button" data-filter="baddie_central">
+        💗 Baddie Central
+      </button>
+
+      <button type="button" data-filter="junior_central">
+        🎀 Junior Central
+      </button>
+
+      <button type="button" data-filter="after_dark">
+        🖤 After Dark
+      </button>
+    </div>
+
+    <button id="refresh" type="button">
+      ↻ Refresh Queue
+    </button>
+
+    <div id="queue" aria-live="polite"></div>
+  </section>
+
+  <section class="panel" id="historyPanel" hidden>
+    <h2>📋 My Moderation History</h2>
+    <div id="history"></div>
+  </section>
+
+</main>
+
+<script type="module">
+  import { db, logout, getAccess } from './js/auth.js';
+
+  const $ = id => document.getElementById(id);
+
+  const status = text => {
+    $('status').textContent = text;
+  };
+
+  const node = (tag, text, cls) => {
+    const el = document.createElement(tag);
+
+    if (text !== undefined) {
+      el.textContent = text;
+    }
+
+    if (cls) {
+      el.className = cls;
+    }
+
+    return el;
+  };
+
+  const fmt = value =>
+    value ? new Date(value).toLocaleString() : '—';
+
+  const commonsNames = {
+    baddie_central: '💗 Baddie Central™',
+    junior_central: '🎀 Junior Central™',
+    after_dark: '🖤 After Dark™'
+  };
+
+  let allowed = false;
+  let reports = [];
+  let currentFilter = 'all';
+
+  function renderReports() {
+    const queue = $('queue');
+    queue.replaceChildren();
+
+    const visible = reports.filter(report =>
+      currentFilter === 'all' ||
+      report.commons_id === currentFilter
+    );
+
+    if (!visible.length) {
+      queue.append(
+        node(
+          'p',
+          'No open reports in this selection right now.',
+          'muted'
+        )
+      );
+      return;
+    }
+
+    for (const report of visible) {
+      const card = node('article', undefined, 'report');
+
+      const commons = node(
+        'span',
+        commonsNames[report.commons_id] || 'Unknown Commons',
+        'commons-tag'
+      );
+
+      const heading = node(
+        'h3',
+        `Report: ${report.reason}`
+      );
+
+      const meta = node(
+        'small',
+        `Submitted ${fmt(report.reported_at)} · ${report.status}`,
+        'report-meta'
+      );
+
+      const description = node(
+        'p',
+        report.comment_hidden
+          ? 'Comment already hidden'
+          : 'Reported comment:',
+        'muted'
+      );
+
+      const content = node(
+        'div',
+        report.comment_body,
+        'body'
+      );
+
+      const actions = node('div');
+
+      const options = [
+        ['Hide comment & resolve', 'hide_comment'],
+        ['Resolve without hiding', 'resolve_report'],
+        ['Dismiss report', 'dismiss_report']
+      ];
+
+      for (const [label, action] of options) {
+        const button = node('button', label);
+        button.type = 'button';
+
+        button.onclick = async () => {
+          if (!confirm(
+            `${label}?\n\nCommons: ${
+              commonsNames[report.commons_id]
+            }\n\nThis action is recorded.`
+          )) {
+            return;
+          }
+
+          for (const item of actions.querySelectorAll('button')) {
+            item.disabled = true;
+          }
+
+          const { error } = await db.rpc(
+            'tbb_staff_moderate_report',
+            {
+              target_report_id: report.report_id,
+              moderation_action: action
+            }
+          );
+
+          if (error) {
+            status(error.message);
+
+            for (const item of actions.querySelectorAll('button')) {
+              item.disabled = false;
+            }
+
+            return;
+          }
+
+          await load();
+          await loadHistory();
+        };
+
+        actions.append(button);
+      }
+
+      card.append(
+        commons,
+        heading,
+        meta,
+        description,
+        content,
+        actions
+      );
+
+      queue.append(card);
+    }
+  }
+
+  async function load() {
+    if (!allowed) return;
+
+    status('Loading reports…');
+
+    const { data, error } = await db.rpc(
+      'tbb_staff_report_queue'
+    );
+
+    if (error) {
+      status(error.message);
+      return;
+    }
+
+    reports = Array.isArray(data) ? data : [];
+
+    status(
+      `${reports.length} open report(s) available for staff review.`
+    );
+
+    renderReports();
+  }
+
+  async function loadHistory() {
+    if (!allowed) return;
+
+    const { data, error } = await db.rpc(
+      'tbb_staff_my_history'
+    );
+
+    const history = $('history');
+    history.replaceChildren();
+
+    if (error) {
+      history.textContent = error.message;
+      return;
+    }
+
+    if (!data?.length) {
+      history.append(
+        node('p', 'No moderation actions yet.', 'muted')
+      );
+      return;
+    }
+
+    for (const item of data) {
+      history.append(
+        node(
+          'p',
+          `${fmt(item.created_at)} · ${
+            item.action.replaceAll('_', ' ')
+          }`,
+          'muted'
+        )
+      );
+    }
+  }
+
+  $('filters').addEventListener('click', event => {
+    const button = event.target.closest('button[data-filter]');
+
+    if (!button) return;
+
+    currentFilter = button.dataset.filter;
+
+    for (const item of $('filters').querySelectorAll('button')) {
+      item.classList.toggle('active', item === button);
+    }
+
+    renderReports();
+  });
+
+  $('refresh').onclick = async () => {
+    await load();
+    await loadHistory();
+  };
+
+  $('signout').onclick = logout;
+
+  try {
+    const access = await getAccess();
+
+    if (!access.user) {
+      location.replace('login.html');
+    } else if (access.status !== 'approved') {
+      status('Your membership is not approved.');
+    } else {
+      const { data, error } = await db.rpc(
+        'tbb_is_staff_moderator'
+      );
+
+      if (error) throw error;
+
+      if (!data && !access.admin) {
+        status(
+          'Staff role required. This page is not available to your account.'
+        );
+      } else {
+        allowed = true;
+
+        $('desk').hidden = false;
+        $('historyPanel').hidden = false;
+
+        await load();
+        await loadHistory();
+      }
+    }
+  } catch (err) {
+    status(err.message || 'Could not verify access.');
+  }
+</script>
+</body>
+</html>
