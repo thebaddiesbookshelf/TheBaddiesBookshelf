@@ -4,11 +4,11 @@ import { db, requireAccess, logout } from './auth.js';
 const $ = id => document.getElementById(id);
 
 const themes = {
-  romi: { accent:'#ff4da6',light:'#ffb5da',bg:'#130d17',surface:'#241727',alt:'#332036',border:'#65415d',label:'💗 Romi Era' },
-  nyx: { accent:'#ff319d',light:'#ffa0d5',bg:'#09090d',surface:'#1b1520',alt:'#302034',border:'#63365e',label:'🖤 Nyx Era' },
-  nova: { accent:'#b77cff',light:'#ddbdff',bg:'#120d23',surface:'#241a3c',alt:'#362650',border:'#665087',label:'🔮 Nova Era' },
-  sage: { accent:'#c99b69',light:'#f1cba0',bg:'#17120e',surface:'#30251e',alt:'#46362a',border:'#79604a',label:'🍂 Sage Era' },
-  scarlet: { accent:'#f34a65',light:'#ffabb7',bg:'#180c12',surface:'#30171f',alt:'#47232c',border:'#85414e',label:'❤️ Scarlett Era' }
+  romi: {accent:'#ff4da6',light:'#ffb5da',bg:'#130d17',surface:'#241727',alt:'#332036',border:'#65415d',label:'💗 Romi Era'},
+  nyx: {accent:'#ff319d',light:'#ffa0d5',bg:'#09090d',surface:'#1b1520',alt:'#302034',border:'#63365e',label:'🖤 Nyx Era'},
+  nova: {accent:'#b77cff',light:'#ddbdff',bg:'#120d23',surface:'#241a3c',alt:'#362650',border:'#665087',label:'🔮 Nova Era'},
+  sage: {accent:'#c99b69',light:'#f1cba0',bg:'#17120e',surface:'#30251e',alt:'#46362a',border:'#79604a',label:'🍂 Sage Era'},
+  scarlet: {accent:'#f34a65',light:'#ffabb7',bg:'#180c12',surface:'#30171f',alt:'#47232c',border:'#85414e',label:'❤️ Scarlett Era'}
 };
 
 const statuses = {
@@ -19,9 +19,12 @@ const statuses = {
   dnf:'💔 DNF'
 };
 
-const entryCols = 'id,user_id,book_id,community_book_id,reading_status,book_format,total_pages,current_page,rating,started_at,finished_at';
+const entryCols =
+  'id,user_id,book_id,community_book_id,reading_status,book_format,total_pages,current_page,rating,started_at,finished_at';
+
 const officialCols = 'id,title,author,cover_url,is_archived';
-const communityCols = 'id,title,author,cover_url,is_archived,series_name,book_number';
+const communityCols =
+  'id,title,author,cover_url,is_archived,series_name,book_number';
 
 let user = null;
 let entries = [];
@@ -32,13 +35,19 @@ let submitBusy = false;
 let editBusy = false;
 let addBusy = false;
 
+// CUSTOM SHELVES™
+let shelves = [];
+let shelfAssignments = [];
+let activeShelfId = null;
+let shelfBusy = false;
+let assignmentBusy = false;
+
 const key = (source,id) => `${source}:${id}`;
 
-const entryKey = e =>
-  key(
-    e.community_book_id ? 'community' : 'official',
-    e.community_book_id || e.book_id
-  );
+const entryKey = e => key(
+  e.community_book_id ? 'community' : 'official',
+  e.community_book_id || e.book_id
+);
 
 const element = (tag,cls='',txt) => {
   const n = document.createElement(tag);
@@ -55,7 +64,9 @@ function notify(text,err=false) {
 }
 
 function empty(target,text) {
-  target.replaceChildren(element('div','library-empty-message',text));
+  target.replaceChildren(
+    element('div','library-empty-message',text)
+  );
 }
 
 function theme(name) {
@@ -94,7 +105,7 @@ async function count(table,status) {
 }
 
 async function stats() {
-  const [total,reading,finished,shelves] = await Promise.all([
+  const [total,reading,finished,shelvesCount] = await Promise.all([
     count('tbb_bookshelf_entries'),
     count('tbb_bookshelf_entries','currently_reading'),
     count('tbb_bookshelf_entries','finished'),
@@ -104,7 +115,7 @@ async function stats() {
   $('totalBooks').textContent = total;
   $('currentlyReading').textContent = reading;
   $('finishedBooks').textContent = finished;
-  $('customShelfCount').textContent = shelves;
+  $('customShelfCount').textContent = shelvesCount;
 }
 
 async function fetchBooks(source,ids) {
@@ -154,11 +165,13 @@ async function loadCollection() {
 
   renderCollection();
   renderResults();
+
+  if(activeShelfId) renderShelfDetail();
+  if($('shelfBooksDialog')?.open) renderShelfChoices();
 }
 
 function coverUrl(value) {
   if(!value) return null;
-
   try {
     const u = new URL(value,location.href);
     return ['https:','http:'].includes(u.protocol) ? u.href : null;
@@ -167,12 +180,20 @@ function coverUrl(value) {
   }
 }
 
+function bookForEntry(e) {
+  return catalog.get(entryKey(e)) || {
+    id:e.community_book_id || e.book_id,
+    title:'Catalog Book Unavailable',
+    author:'Reading record retained',
+    source:e.community_book_id ? 'community' : 'official'
+  };
+}
+
 function card(book,entry=null) {
   const c = element('article','library-book-card');
   const cover = element('div','library-book-cover');
   const fallback = element(
-    'div',
-    'library-cover-fallback',
+    'div','library-cover-fallback',
     `📚 ${book.title || 'Untitled'}`
   );
 
@@ -208,8 +229,7 @@ function card(book,entry=null) {
   if(entry) {
     info.append(
       element(
-        'span',
-        'library-book-status',
+        'span','library-book-status',
         statuses[entry.reading_status] || entry.reading_status
       )
     );
@@ -218,11 +238,9 @@ function card(book,entry=null) {
       const pct = Math.round(
         (entry.current_page ?? 0) / entry.total_pages * 100
       );
-
       info.append(
         element(
-          'p',
-          'library-book-progress',
+          'p','library-book-progress',
           `📖 ${entry.current_page ?? 0}/${entry.total_pages} pages (${pct}%)`
         )
       );
@@ -236,8 +254,7 @@ function card(book,entry=null) {
   }
 
   const btn = element(
-    'button',
-    '',
+    'button','',
     entry ? 'Edit My Book 💋' : 'Add to Library 💗'
   );
 
@@ -279,21 +296,13 @@ function renderCollection() {
   }
 
   for(const e of matching) {
-    const b = catalog.get(entryKey(e)) || {
-      id:e.community_book_id || e.book_id,
-      title:'Catalog Book Unavailable',
-      author:'Reading record retained',
-      source:e.community_book_id ? 'community' : 'official'
-    };
-
-    target.append(card(b,e));
+    target.append(card(bookForEntry(e),e));
   }
 }
 
 function renderResults() {
   const target = $('catalogResults');
   if(!results.length) return;
-
   target.replaceChildren();
 
   for(const b of results) {
@@ -319,7 +328,6 @@ async function search() {
   }
 
   searchBusy = true;
-
   const btn = $('searchCatalog');
   btn.disabled = true;
   btn.textContent = 'Searching...';
@@ -367,8 +375,7 @@ async function search() {
       if(queries.some(r=>(r.data || []).length === 40)) {
         target.append(
           element(
-            'p',
-            'library-helper',
+            'p','library-helper',
             'Showing up to 40 results per catalog. Refine your search for more.'
           )
         );
@@ -417,7 +424,6 @@ async function addBook(source,id) {
     if(error) throw error;
 
     await Promise.all([loadCollection(),stats()]);
-
     notify(`“${book.title}” was added to your Library! 💗`);
   } catch(e) {
     console.error(e);
@@ -427,7 +433,6 @@ async function addBook(source,id) {
         : e.message,
       true
     );
-
     await loadCollection().catch(console.error);
   } finally {
     addBusy = false;
@@ -447,7 +452,6 @@ function openEditor(source,id) {
 
   $('editingEntryId').value = e.id;
   $('bookEditorTitle').textContent = 'Edit My Reading Record 💋';
-
   $('bookEditorSubtitle').textContent = b
     ? `${b.title} — ${b.author || 'Unknown Author'}`
     : 'Update your reading details.';
@@ -465,25 +469,21 @@ function openEditor(source,id) {
 
 function posInt(v,label) {
   if(v === '') return null;
-
   const n = Number(v);
 
   if(!Number.isSafeInteger(n) || n <= 0) {
     throw Error(`${label} must be a positive whole number.`);
   }
-
   return n;
 }
 
 function nonneg(v) {
   if(v === '') return 0;
-
   const n = Number(v);
 
   if(!Number.isSafeInteger(n) || n < 0) {
     throw Error('Current page must be zero or a positive whole number.');
   }
-
   return n;
 }
 
@@ -503,10 +503,8 @@ function edits() {
   }
 
   const total_pages = posInt(
-    $('editTotalPages').value,
-    'Total pages'
+    $('editTotalPages').value,'Total pages'
   );
-
   const current_page = nonneg($('editCurrentPage').value);
 
   if(total_pages !== null && current_page > total_pages) {
@@ -532,13 +530,8 @@ function edits() {
   }
 
   return {
-    reading_status,
-    book_format,
-    total_pages,
-    current_page,
-    rating,
-    started_at,
-    finished_at
+    reading_status,book_format,total_pages,current_page,
+    rating,started_at,finished_at
   };
 }
 
@@ -554,7 +547,6 @@ async function saveEditor(ev) {
   }
 
   editBusy = true;
-
   const btn = $('saveBookEditor');
   btn.disabled = true;
   btn.textContent = 'Saving...';
@@ -569,15 +561,12 @@ async function saveEditor(ev) {
       .select('id');
 
     if(error) throw error;
-
     if(!data?.length) {
       throw Error('Reading record was not updated.');
     }
 
     $('bookEditor').close();
-
     await Promise.all([loadCollection(),stats()]);
-
     notify('Your reading record was saved! 💗');
   } catch(e) {
     console.error(e);
@@ -593,7 +582,6 @@ function actions(ev) {
   const btn = ev.target.closest(
     'button[data-action][data-book-id]'
   );
-
   if(!btn || btn.disabled) return;
 
   const {source,bookId,action} = btn.dataset;
@@ -604,7 +592,6 @@ function actions(ev) {
 
 function openCommunity() {
   if(!user) return;
-
   $('communityBookForm').reset();
   $('communityBookDialog').showModal();
 }
@@ -622,7 +609,6 @@ async function submitCommunity(ev) {
   }
 
   submitBusy = true;
-
   const btn = $('submitCommunityBook');
   btn.disabled = true;
   btn.textContent = 'Adding...';
@@ -640,13 +626,11 @@ async function submitCommunity(ev) {
     );
 
     if(error) throw error;
-
     if(!data) {
       throw Error('Community book submission returned no book ID.');
     }
 
     $('communityBookDialog').close();
-
     await Promise.all([loadCollection(),stats()]);
 
     notify(
@@ -658,10 +642,8 @@ async function submitCommunity(ev) {
     }
   } catch(e) {
     console.error('Community book submission:',e);
-
     notify(
-      e.message || 'Could not add this community book.',
-      true
+      e.message || 'Could not add this community book.',true
     );
   } finally {
     submitBusy = false;
@@ -669,6 +651,501 @@ async function submitCommunity(ev) {
     btn.textContent = 'Add to Community 💗';
   }
 }
+
+/* ==========================================
+   CUSTOM SHELVES™
+   PHASE 5 — STEP 4G.5
+   ========================================== */
+
+async function loadShelves() {
+  if(!user) return;
+
+  const allShelves = [];
+  const allAssignments = [];
+
+  for(let from=0;;from+=500) {
+    const {data,error} = await db.from('tbb_custom_shelves')
+      .select('id,user_id,name,description,cover_path,created_at,updated_at')
+      .eq('user_id',user.id)
+      .order('created_at',{ascending:false})
+      .order('id',{ascending:false})
+      .range(from,from+499);
+
+    if(error) throw error;
+
+    allShelves.push(...(data || []));
+    if(!data || data.length < 500) break;
+  }
+
+  for(let from=0;;from+=500) {
+    const {data,error} = await db.from('tbb_shelf_books')
+      .select('id,user_id,shelf_id,bookshelf_entry_id,created_at')
+      .eq('user_id',user.id)
+      .order('created_at',{ascending:false})
+      .order('id',{ascending:false})
+      .range(from,from+499);
+
+    if(error) throw error;
+
+    allAssignments.push(...(data || []));
+    if(!data || data.length < 500) break;
+  }
+
+  shelves = allShelves;
+  shelfAssignments = allAssignments;
+
+  renderShelves();
+
+  if(activeShelfId) {
+    if(shelves.some(s=>s.id === activeShelfId)) {
+      renderShelfDetail();
+    } else {
+      closeShelfDetail();
+    }
+  }
+
+  if($('shelfBooksDialog')?.open) renderShelfChoices();
+}
+
+function shelfBookCount(shelfId) {
+  return shelfAssignments.filter(a=>a.shelf_id === shelfId).length;
+}
+
+function renderShelves() {
+  const target = $('customShelvesList');
+  if(!target) return;
+
+  target.replaceChildren();
+
+  if(!shelves.length) {
+    empty(
+      target,
+      'No custom shelves yet! Create your first shelf, Baddie. 🎀'
+    );
+    return;
+  }
+
+  for(const shelf of shelves) {
+    const c = element('article','custom-shelf-card');
+    const art = element('div','custom-shelf-art');
+
+    // Cover upload will be added in a later step.
+    // Never interpret cover_path as an arbitrary public URL.
+
+    const info = element('div','custom-shelf-info');
+
+    const title = element('h3','',shelf.name);
+    const description = element(
+      'p','',
+      shelf.description || 'A whole bookish mood of your own. 💗'
+    );
+
+    const total = shelfBookCount(shelf.id);
+    const countLabel = element(
+      'span','custom-shelf-count',
+      `📚 ${total} ${total === 1 ? 'Book' : 'Books'}`
+    );
+
+    const btn = element('button','custom-shelf-open','Open Shelf 💗');
+    btn.type = 'button';
+    btn.dataset.shelfId = shelf.id;
+
+    info.append(title,description,countLabel,btn);
+    c.append(art,info);
+    target.append(c);
+  }
+}
+
+function openCreateShelf() {
+  if(!user || shelfBusy) return;
+
+  $('customShelfForm').reset();
+  $('editingShelfId').value = '';
+  $('customShelfDialogTitle').textContent = '🎀 Create a Shelf';
+  $('saveShelfButton').textContent = 'Create Shelf 💗';
+  $('deleteShelfButton').hidden = true;
+  $('customShelfDialog').showModal();
+}
+
+function openEditShelf() {
+  if(!user || shelfBusy || !activeShelfId) return;
+
+  const shelf = shelves.find(s=>s.id === activeShelfId);
+  if(!shelf) {
+    notify('Shelf not found.',true);
+    return;
+  }
+
+  $('customShelfForm').reset();
+  $('editingShelfId').value = shelf.id;
+  $('customShelfName').value = shelf.name;
+  $('customShelfDescriptionInput').value = shelf.description || '';
+  $('customShelfDialogTitle').textContent = '✏️ Edit My Shelf';
+  $('saveShelfButton').textContent = 'Save Changes 💗';
+  $('deleteShelfButton').hidden = false;
+  $('customShelfDialog').showModal();
+}
+
+async function saveShelf(ev) {
+  ev.preventDefault();
+  if(!user || shelfBusy) return;
+
+  const id = $('editingShelfId').value;
+  const name = $('customShelfName').value.trim();
+  const description =
+    $('customShelfDescriptionInput').value.trim() || null;
+
+  if(name.length < 1 || name.length > 60) {
+    notify('Shelf names must be between 1 and 60 characters.',true);
+    return;
+  }
+
+  if(description && description.length > 500) {
+    notify('Descriptions must be 500 characters or fewer.',true);
+    return;
+  }
+
+  if(id && !shelves.some(s=>s.id === id)) {
+    notify('This shelf no longer exists.',true);
+    return;
+  }
+
+  shelfBusy = true;
+  const btn = $('saveShelfButton');
+  btn.disabled = true;
+  btn.textContent = 'Saving...';
+
+  try {
+    if(id) {
+      const {data,error} = await db.from('tbb_custom_shelves')
+        .update({name,description})
+        .eq('id',id)
+        .eq('user_id',user.id)
+        .select('id');
+
+      if(error) throw error;
+      if(!data?.length) throw Error('Shelf could not be updated.');
+    } else {
+      const {data,error} = await db.from('tbb_custom_shelves')
+        .insert({
+          user_id:user.id,
+          name,
+          description
+        })
+        .select('id')
+        .single();
+
+      if(error) throw error;
+      if(!data?.id) throw Error('Shelf could not be created.');
+    }
+
+    $('customShelfDialog').close();
+
+    await Promise.all([loadShelves(),stats()]);
+
+    notify(
+      id
+        ? `“${name}” has been updated! 💗`
+        : `“${name}” is now on your Bookshelf! 🎀`
+    );
+  } catch(e) {
+    console.error('Save shelf:',e);
+    notify(e.message || 'Could not save your shelf.',true);
+  } finally {
+    shelfBusy = false;
+    btn.disabled = false;
+    btn.textContent = id ? 'Save Changes 💗' : 'Create Shelf 💗';
+  }
+}
+
+async function deleteShelf() {
+  if(!user || shelfBusy) return;
+
+  const id = $('editingShelfId').value;
+  const shelf = shelves.find(s=>s.id === id);
+  if(!shelf) return;
+
+  const confirmed = window.confirm(
+    `Delete “${shelf.name}”?\n\n` +
+    'This will remove the shelf and its book assignments. ' +
+    'Your books and reading records will stay in My Library™.'
+  );
+
+  if(!confirmed) return;
+
+  shelfBusy = true;
+  $('deleteShelfButton').disabled = true;
+  $('saveShelfButton').disabled = true;
+
+  try {
+    const {data,error} = await db.from('tbb_custom_shelves')
+      .delete()
+      .eq('id',id)
+      .eq('user_id',user.id)
+      .select('id');
+
+    if(error) throw error;
+    if(!data?.length) throw Error('Shelf was not deleted.');
+
+    $('customShelfDialog').close();
+    closeShelfDetail();
+
+    await Promise.all([loadShelves(),stats()]);
+    notify(`“${shelf.name}” was deleted. Your books are safe! 💗`);
+  } catch(e) {
+    console.error('Delete shelf:',e);
+    notify(e.message || 'Could not delete shelf.',true);
+  } finally {
+    shelfBusy = false;
+    $('deleteShelfButton').disabled = false;
+    $('saveShelfButton').disabled = false;
+  }
+}
+
+function openShelfDetail(id) {
+  const shelf = shelves.find(s=>s.id === id);
+  if(!shelf) {
+    notify('Shelf not found.',true);
+    return;
+  }
+
+  activeShelfId = id;
+  $('customShelfDetail').hidden = false;
+  renderShelfDetail();
+
+  $('customShelfDetail').scrollIntoView({
+    behavior:'smooth',
+    block:'start'
+  });
+}
+
+function closeShelfDetail() {
+  activeShelfId = null;
+  $('customShelfDetail').hidden = true;
+  $('customShelfTitle').textContent = 'My Shelf';
+  $('customShelfDescription').textContent = '';
+  $('customShelfBookCount').textContent = '';
+  $('customShelfBooks').replaceChildren();
+}
+
+function renderShelfDetail() {
+  if(!activeShelfId) return;
+
+  const shelf = shelves.find(s=>s.id === activeShelfId);
+  if(!shelf) return;
+
+  $('customShelfTitle').textContent = `🎀 ${shelf.name}`;
+  $('customShelfDescription').textContent =
+    shelf.description || 'Your personalized bookish collection. 💗';
+
+  const assignments = shelfAssignments.filter(
+    a=>a.shelf_id === activeShelfId
+  );
+
+  $('customShelfBookCount').textContent =
+    `${assignments.length} ${assignments.length === 1 ? 'book' : 'books'} on this shelf`;
+
+  const target = $('customShelfBooks');
+  target.replaceChildren();
+
+  if(!assignments.length) {
+    empty(
+      target,
+      'This shelf is waiting for its first obsession. Add a book! 📚'
+    );
+    return;
+  }
+
+  for(const assignment of assignments) {
+    const entry = entries.find(
+      e=>e.id === assignment.bookshelf_entry_id
+    );
+
+    if(!entry) continue;
+
+    const c = card(bookForEntry(entry),entry);
+
+    const info = c.querySelector('.library-book-info');
+    const remove = element(
+      'button','','Remove from Shelf 🗑️'
+    );
+
+    remove.type = 'button';
+    remove.dataset.assignmentId = assignment.id;
+
+    info.append(remove);
+    target.append(c);
+  }
+
+  if(!target.children.length) {
+    empty(target,'No available reading records found on this shelf.');
+  }
+}
+
+function openShelfBooks() {
+  if(!user || !activeShelfId) return;
+
+  const shelf = shelves.find(s=>s.id === activeShelfId);
+  if(!shelf) return;
+
+  $('shelfBookSearch').value = '';
+  $('shelfBooksDialogSubtitle').textContent =
+    `Choose books from My Library™ for “${shelf.name}”.`;
+
+  renderShelfChoices();
+  $('shelfBooksDialog').showModal();
+}
+
+function renderShelfChoices() {
+  if(!activeShelfId) return;
+
+  const target = $('shelfBookChoices');
+  target.replaceChildren();
+
+  const term = $('shelfBookSearch').value.trim().toLowerCase();
+
+  const matching = entries.filter(e=>{
+    const book = bookForEntry(e);
+    return !term ||
+      book.title.toLowerCase().includes(term) ||
+      (book.author || '').toLowerCase().includes(term);
+  });
+
+  if(!matching.length) {
+    empty(
+      target,
+      entries.length
+        ? 'No books match that search.'
+        : 'Add books to My Library™ first, then organize them here. 💗'
+    );
+    return;
+  }
+
+  for(const entry of matching) {
+    const book = bookForEntry(entry);
+
+    const assigned = shelfAssignments.some(
+      a=>a.shelf_id === activeShelfId &&
+         a.bookshelf_entry_id === entry.id
+    );
+
+    const c = element('article','shelf-book-choice');
+    c.append(
+      element('h4','',book.title),
+      element('p','',book.author || 'Unknown Author'),
+      element(
+        'p','',
+        statuses[entry.reading_status] || entry.reading_status
+      )
+    );
+
+    const btn = element(
+      'button','',
+      assigned ? '✓ On Shelf — Remove' : '+ Add to Shelf 💗'
+    );
+
+    btn.type = 'button';
+    btn.dataset.entryId = entry.id;
+    btn.dataset.assignmentAction = assigned ? 'remove' : 'add';
+    btn.setAttribute('aria-pressed',String(assigned));
+    btn.disabled = assignmentBusy;
+
+    c.append(btn);
+    target.append(c);
+  }
+}
+
+async function updateShelfAssignment(entryId,action) {
+  if(!user || !activeShelfId || assignmentBusy) return;
+
+  const shelfId = activeShelfId;
+
+  if(!shelves.some(s=>s.id === shelfId)) {
+    notify('Shelf not found.',true);
+    return;
+  }
+
+  if(!entries.some(e=>e.id === entryId)) {
+    notify('Book not found in My Library™.',true);
+    return;
+  }
+
+  assignmentBusy = true;
+  renderShelfChoices();
+
+  try {
+    if(action === 'add') {
+      const already = shelfAssignments.some(
+        a=>a.shelf_id === shelfId &&
+           a.bookshelf_entry_id === entryId
+      );
+
+      if(already) return;
+
+      const {error} = await db.from('tbb_shelf_books')
+        .insert({
+          user_id:user.id,
+          shelf_id:shelfId,
+          bookshelf_entry_id:entryId
+        });
+
+      if(error && error.code !== '23505') throw error;
+    } else if(action === 'remove') {
+      const assignment = shelfAssignments.find(
+        a=>a.shelf_id === shelfId &&
+           a.bookshelf_entry_id === entryId
+      );
+
+      if(!assignment) return;
+
+      const {data,error} = await db.from('tbb_shelf_books')
+        .delete()
+        .eq('id',assignment.id)
+        .eq('user_id',user.id)
+        .eq('shelf_id',shelfId)
+        .select('id');
+
+      if(error) throw error;
+      if(!data?.length) throw Error('Book could not be removed.');
+    } else {
+      throw Error('Unknown shelf action.');
+    }
+
+    await loadShelves();
+
+    notify(
+      action === 'add'
+        ? 'Book added to your shelf! 💗'
+        : 'Book removed from shelf. Your Library record is safe! 🎀'
+    );
+  } catch(e) {
+    console.error('Shelf assignment:',e);
+    notify(e.message || 'Could not update this shelf.',true);
+  } finally {
+    assignmentBusy = false;
+    renderShelfChoices();
+  }
+}
+
+async function removeFromShelf(assignmentId) {
+  if(!user || !activeShelfId || assignmentBusy) return;
+
+  const assignment = shelfAssignments.find(
+    a=>a.id === assignmentId &&
+       a.shelf_id === activeShelfId
+  );
+
+  if(!assignment) return;
+
+  await updateShelfAssignment(
+    assignment.bookshelf_entry_id,
+    'remove'
+  );
+}
+
+/* ==========================================
+   INITIALIZATION
+   ========================================== */
 
 async function init() {
   try {
@@ -681,6 +1158,7 @@ async function init() {
 
     await Promise.all([
       loadCollection(),
+      loadShelves(),
       stats()
     ]);
 
@@ -713,13 +1191,11 @@ $('catalogResults')?.addEventListener('click',actions);
 $('myBookCollection')?.addEventListener('click',actions);
 
 $('libraryStatusFilter')?.addEventListener(
-  'change',
-  renderCollection
+  'change',renderCollection
 );
 
 $('bookEditorForm')?.addEventListener(
-  'submit',
-  saveEditor
+  'submit',saveEditor
 );
 
 $('cancelBookEditor')?.addEventListener('click',()=>{
@@ -731,13 +1207,11 @@ $('bookEditor')?.addEventListener('cancel',e=>{
 });
 
 $('openCommunityBookForm')?.addEventListener(
-  'click',
-  openCommunity
+  'click',openCommunity
 );
 
 $('communityBookForm')?.addEventListener(
-  'submit',
-  submitCommunity
+  'submit',submitCommunity
 );
 
 $('cancelCommunityBook')?.addEventListener('click',()=>{
@@ -746,6 +1220,83 @@ $('cancelCommunityBook')?.addEventListener('click',()=>{
 
 $('communityBookDialog')?.addEventListener('cancel',e=>{
   if(submitBusy) e.preventDefault();
+});
+
+// CUSTOM SHELVES™ LISTENERS
+
+$('createShelfButton')?.addEventListener(
+  'click',openCreateShelf
+);
+
+$('customShelfForm')?.addEventListener(
+  'submit',saveShelf
+);
+
+$('cancelShelfForm')?.addEventListener('click',()=>{
+  if(!shelfBusy) $('customShelfDialog').close();
+});
+
+$('customShelfDialog')?.addEventListener('cancel',e=>{
+  if(shelfBusy) e.preventDefault();
+});
+
+$('deleteShelfButton')?.addEventListener(
+  'click',deleteShelf
+);
+
+$('customShelvesList')?.addEventListener('click',e=>{
+  const btn = e.target.closest('button[data-shelf-id]');
+  if(btn) openShelfDetail(btn.dataset.shelfId);
+});
+
+$('backToShelves')?.addEventListener(
+  'click',closeShelfDetail
+);
+
+$('editShelfButton')?.addEventListener(
+  'click',openEditShelf
+);
+
+$('addShelfBooksButton')?.addEventListener(
+  'click',openShelfBooks
+);
+
+$('closeShelfBooksDialog')?.addEventListener('click',()=>{
+  if(!assignmentBusy) $('shelfBooksDialog').close();
+});
+
+$('shelfBooksDialog')?.addEventListener('cancel',e=>{
+  if(assignmentBusy) e.preventDefault();
+});
+
+$('shelfBookSearch')?.addEventListener(
+  'input',renderShelfChoices
+);
+
+$('shelfBookChoices')?.addEventListener('click',e=>{
+  const btn = e.target.closest(
+    'button[data-entry-id][data-assignment-action]'
+  );
+
+  if(!btn || btn.disabled) return;
+
+  updateShelfAssignment(
+    btn.dataset.entryId,
+    btn.dataset.assignmentAction
+  );
+});
+
+$('customShelfBooks')?.addEventListener('click',e=>{
+  const remove = e.target.closest(
+    'button[data-assignment-id]'
+  );
+
+  if(remove) {
+    removeFromShelf(remove.dataset.assignmentId);
+    return;
+  }
+
+  actions(e);
 });
 
 init();
