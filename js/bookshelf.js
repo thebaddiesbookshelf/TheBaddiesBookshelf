@@ -1,874 +1,694 @@
 
-/* ==========================================
-   TBB 2.0 — THE BOOKSHELF™
-   PHASE 5 | STEP 4F.3
-   MY LIBRARY™ — LIVE SUPABASE
-   ========================================== */
-
-import {
-  db,
-  requireAccess,
-  logout
-} from "./auth.js";
+import { db, requireAccess, logout } from './auth.js';
 
 const $ = id => document.getElementById(id);
 
 const themes = {
-  romi: {
-    accent: "#ff4da6",
-    light: "#ffb5da",
-    bg: "#130d17",
-    surface: "#241727",
-    alt: "#332036",
-    border: "#65415d",
-    label: "💗 Romi Era"
-  },
-  nyx: {
-    accent: "#ff319d",
-    light: "#ffa0d5",
-    bg: "#09090d",
-    surface: "#1b1520",
-    alt: "#302034",
-    border: "#63365e",
-    label: "🖤 Nyx Era"
-  },
-  nova: {
-    accent: "#b77cff",
-    light: "#ddbdff",
-    bg: "#120d23",
-    surface: "#241a3c",
-    alt: "#362650",
-    border: "#665087",
-    label: "🔮 Nova Era"
-  },
-  sage: {
-    accent: "#c99b69",
-    light: "#f1cba0",
-    bg: "#17120e",
-    surface: "#30251e",
-    alt: "#46362a",
-    border: "#79604a",
-    label: "🍂 Sage Era"
-  },
-  scarlet: {
-    accent: "#f34a65",
-    light: "#ffabb7",
-    bg: "#180c12",
-    surface: "#30171f",
-    alt: "#47232c",
-    border: "#85414e",
-    label: "❤️ Scarlett Era"
-  }
+  romi: { accent:'#ff4da6',light:'#ffb5da',bg:'#130d17',surface:'#241727',alt:'#332036',border:'#65415d',label:'💗 Romi Era' },
+  nyx: { accent:'#ff319d',light:'#ffa0d5',bg:'#09090d',surface:'#1b1520',alt:'#302034',border:'#63365e',label:'🖤 Nyx Era' },
+  nova: { accent:'#b77cff',light:'#ddbdff',bg:'#120d23',surface:'#241a3c',alt:'#362650',border:'#665087',label:'🔮 Nova Era' },
+  sage: { accent:'#c99b69',light:'#f1cba0',bg:'#17120e',surface:'#30251e',alt:'#46362a',border:'#79604a',label:'🍂 Sage Era' },
+  scarlet: { accent:'#f34a65',light:'#ffabb7',bg:'#180c12',surface:'#30171f',alt:'#47232c',border:'#85414e',label:'❤️ Scarlett Era' }
 };
 
-const statusLabels = {
-  want_to_read: "💗 Want to Read",
-  currently_reading: "📖 Currently Reading",
-  finished: "✨ Finished",
-  on_hold: "⏸️ On Hold",
-  dnf: "💔 DNF"
+const statuses = {
+  want_to_read:'💗 Want to Read',
+  currently_reading:'📖 Currently Reading',
+  finished:'✨ Finished',
+  on_hold:'⏸️ On Hold',
+  dnf:'💔 DNF'
 };
 
-const ENTRY_COLUMNS = [
-  "id",
-  "user_id",
-  "book_id",
-  "reading_status",
-  "book_format",
-  "total_pages",
-  "current_page",
-  "rating",
-  "started_at",
-  "finished_at"
-].join(",");
+const entryCols = 'id,user_id,book_id,community_book_id,reading_status,book_format,total_pages,current_page,rating,started_at,finished_at';
+const officialCols = 'id,title,author,cover_url,is_archived';
+const communityCols = 'id,title,author,cover_url,is_archived,series_name,book_number';
 
-const BOOK_COLUMNS = [
-  "id",
-  "title",
-  "author",
-  "cover_url",
-  "cover_storage_path",
-  "is_archived"
-].join(",");
-
-let currentUser = null;
-let myEntries = [];
-let catalogBooks = new Map();
-let activeSearchResults = [];
+let user = null;
+let entries = [];
+let catalog = new Map();
+let results = [];
 let searchBusy = false;
-let editorBusy = false;
+let submitBusy = false;
+let editBusy = false;
 let addBusy = false;
 
-function notify(text, error = false) {
-  const element = $("message");
-  if (!element) return;
+const key = (source,id) => `${source}:${id}`;
 
-  element.textContent = text;
-  element.className = error
-    ? "bookshelf-notice error"
-    : "bookshelf-notice";
+const entryKey = e =>
+  key(
+    e.community_book_id ? 'community' : 'official',
+    e.community_book_id || e.book_id
+  );
+
+const element = (tag,cls='',txt) => {
+  const n = document.createElement(tag);
+  if(cls) n.className = cls;
+  if(txt !== undefined) n.textContent = txt;
+  return n;
+};
+
+function notify(text,err=false) {
+  const n = $('message');
+  if(!n) return;
+  n.textContent = text;
+  n.className = err ? 'bookshelf-notice error' : 'bookshelf-notice';
 }
 
-function applyTheme(name) {
-  const normalized =
-    name === "scarlett" ? "scarlet" : name;
+function empty(target,text) {
+  target.replaceChildren(element('div','library-empty-message',text));
+}
 
-  const theme = themes[normalized] || themes.romi;
-
-  for (const key of [
-    "accent",
-    "light",
-    "bg",
-    "surface",
-    "alt",
-    "border"
-  ]) {
-    document.documentElement.style.setProperty(
-      `--${key}`,
-      theme[key]
-    );
+function theme(name) {
+  const t = themes[name === 'scarlett' ? 'scarlet' : name] || themes.romi;
+  for(const k of ['accent','light','bg','surface','alt','border']) {
+    document.documentElement.style.setProperty(`--${k}`,t[k]);
   }
-
-  $("bookshelfTheme").textContent = theme.label;
+  $('bookshelfTheme').textContent = t.label;
 }
 
-async function loadOwnerProfile() {
-  const { data, error } = await db
-    .from("tbb_profiles")
-    .select("display_name,username,vanity_theme")
-    .eq("user_id", currentUser.id)
+async function owner() {
+  const {data,error} = await db.from('tbb_profiles')
+    .select('display_name,username,vanity_theme')
+    .eq('user_id',user.id)
     .maybeSingle();
 
-  if (error) throw error;
+  if(error) throw error;
+  if(!data) throw Error('Your Library Card was not found.');
 
-  if (!data) {
-    throw new Error("Your Library Card was not found.");
-  }
+  $('bookshelfOwner').textContent =
+    `📚 ${data.display_name || data.username || 'Baddie'}'s Bookshelf`;
 
-  const name =
-    data.display_name || data.username || "Baddie";
-
-  $("bookshelfOwner").textContent =
-    `📚 ${name}'s Bookshelf`;
-
-  applyTheme(data.vanity_theme);
+  theme(data.vanity_theme);
 }
 
-async function countRows(table, filters = []) {
-  let query = db
-    .from(table)
-    .select("id", { count: "exact", head: true })
-    .eq("user_id", currentUser.id);
+async function count(table,status) {
+  let q = db.from(table)
+    .select('id',{count:'exact',head:true})
+    .eq('user_id',user.id);
 
-  for (const [column, value] of filters) {
-    query = query.eq(column, value);
-  }
+  if(status) q = q.eq('reading_status',status);
 
-  const { count, error } = await query;
-
-  if (error) throw error;
-
+  const {count,error} = await q;
+  if(error) throw error;
   return count ?? 0;
 }
 
-async function loadReadingStats() {
-  const [
-    total,
-    reading,
-    finished,
-    shelves
-  ] = await Promise.all([
-    countRows("tbb_bookshelf_entries"),
-    countRows("tbb_bookshelf_entries", [
-      ["reading_status", "currently_reading"]
-    ]),
-    countRows("tbb_bookshelf_entries", [
-      ["reading_status", "finished"]
-    ]),
-    countRows("tbb_custom_shelves")
+async function stats() {
+  const [total,reading,finished,shelves] = await Promise.all([
+    count('tbb_bookshelf_entries'),
+    count('tbb_bookshelf_entries','currently_reading'),
+    count('tbb_bookshelf_entries','finished'),
+    count('tbb_custom_shelves')
   ]);
 
-  $("totalBooks").textContent = total;
-  $("currentlyReading").textContent = reading;
-  $("finishedBooks").textContent = finished;
-  $("customShelfCount").textContent = shelves;
+  $('totalBooks').textContent = total;
+  $('currentlyReading').textContent = reading;
+  $('finishedBooks').textContent = finished;
+  $('customShelfCount').textContent = shelves;
 }
 
-function createElement(tag, className, text) {
-  const element = document.createElement(tag);
+async function fetchBooks(source,ids) {
+  const missing = [...new Set(ids.filter(Boolean))]
+    .filter(id => !catalog.has(key(source,id)));
 
-  if (className) element.className = className;
-  if (text !== undefined) element.textContent = text;
+  const table = source === 'official'
+    ? 'tbb_books'
+    : 'tbb_community_books';
 
-  return element;
+  for(let i=0;i<missing.length;i+=100) {
+    const {data,error} = await db.from(table)
+      .select(source === 'official' ? officialCols : communityCols)
+      .in('id',missing.slice(i,i+100));
+
+    if(error) throw error;
+
+    for(const b of data || []) {
+      catalog.set(key(source,b.id),{...b,source});
+    }
+  }
 }
 
-function showEmpty(container, text) {
-  container.replaceChildren(
-    createElement("div", "library-empty-message", text)
-  );
-}
+async function loadCollection() {
+  const all = [];
 
-function safeCoverUrl(value) {
-  if (!value || typeof value !== "string") {
-    return null;
+  for(let from=0;;from+=500) {
+    const {data,error} = await db.from('tbb_bookshelf_entries')
+      .select(entryCols)
+      .eq('user_id',user.id)
+      .order('created_at',{ascending:false})
+      .order('id',{ascending:false})
+      .range(from,from+499);
+
+    if(error) throw error;
+
+    all.push(...(data || []));
+    if(!data || data.length < 500) break;
   }
 
+  entries = all;
+
+  await Promise.all([
+    fetchBooks('official',entries.map(e=>e.book_id)),
+    fetchBooks('community',entries.map(e=>e.community_book_id))
+  ]);
+
+  renderCollection();
+  renderResults();
+}
+
+function coverUrl(value) {
+  if(!value) return null;
+
   try {
-    const url = new URL(value, window.location.href);
-
-    if (!["https:", "http:"].includes(url.protocol)) {
-      return null;
-    }
-
-    return url.href;
+    const u = new URL(value,location.href);
+    return ['https:','http:'].includes(u.protocol) ? u.href : null;
   } catch {
     return null;
   }
 }
 
-function createCover(book) {
-  const wrapper = createElement(
-    "div",
-    "library-book-cover"
+function card(book,entry=null) {
+  const c = element('article','library-book-card');
+  const cover = element('div','library-book-cover');
+  const fallback = element(
+    'div',
+    'library-cover-fallback',
+    `📚 ${book.title || 'Untitled'}`
   );
 
-  const fallback = createElement(
-    "div",
-    "library-cover-fallback",
-    `📚 ${book.title || "Untitled"}`
-  );
+  const url = coverUrl(book.cover_url);
 
-  const url = safeCoverUrl(book.cover_url);
-
-  if (!url) {
-    wrapper.append(fallback);
-    return wrapper;
+  if(url) {
+    const img = element('img');
+    img.src = url;
+    img.alt = `Cover of ${book.title}`;
+    img.loading = 'lazy';
+    img.referrerPolicy = 'no-referrer';
+    img.addEventListener('error',()=>img.replaceWith(fallback));
+    cover.append(img);
+  } else {
+    cover.append(fallback);
   }
 
-  const img = document.createElement("img");
-  img.src = url;
-  img.alt = `Cover of ${book.title}`;
-  img.loading = "lazy";
-  img.referrerPolicy = "no-referrer";
+  c.append(cover);
 
-  img.addEventListener("error", () => {
-    img.replaceWith(fallback);
-  });
-
-  wrapper.append(img);
-  return wrapper;
-}
-
-function createBookCard(book, entry = null) {
-  const card = createElement(
-    "article",
-    "library-book-card"
-  );
-
-  card.append(createCover(book));
-
-  const info = createElement(
-    "div",
-    "library-book-info"
-  );
+  const info = element('div','library-book-info');
 
   info.append(
-    createElement(
-      "h4",
-      "",
-      book.title || "Untitled Book"
-    )
+    element('h4','',book.title || 'Untitled'),
+    element('p','library-book-author',book.author || 'Unknown Author')
   );
 
-  info.append(
-    createElement(
-      "p",
-      "library-book-author",
-      book.author || "Unknown Author"
-    )
-  );
-
-  if (entry) {
+  if(book.source === 'community') {
     info.append(
-      createElement(
-        "span",
-        "library-book-status",
-        statusLabels[entry.reading_status] ||
-          entry.reading_status
+      element('span','library-book-status','🎀 Community Book')
+    );
+  }
+
+  if(entry) {
+    info.append(
+      element(
+        'span',
+        'library-book-status',
+        statuses[entry.reading_status] || entry.reading_status
       )
     );
 
-    if (entry.total_pages) {
-      const current = entry.current_page ?? 0;
-      const percent = Math.round(
-        (current / entry.total_pages) * 100
+    if(entry.total_pages) {
+      const pct = Math.round(
+        (entry.current_page ?? 0) / entry.total_pages * 100
       );
 
       info.append(
-        createElement(
-          "p",
-          "library-book-progress",
-          `📖 ${current}/${entry.total_pages} pages (${percent}%)`
+        element(
+          'p',
+          'library-book-progress',
+          `📖 ${entry.current_page ?? 0}/${entry.total_pages} pages (${pct}%)`
         )
       );
     }
 
-    if (entry.rating !== null &&
-        entry.rating !== undefined) {
+    if(entry.rating != null) {
       info.append(
-        createElement(
-          "p",
-          "library-book-rating",
-          `⭐ ${entry.rating}/5`
-        )
+        element('p','library-book-rating',`⭐ ${entry.rating}/5`)
       );
     }
   }
 
-  const button = createElement(
-    "button",
-    "",
-    entry ? "Edit My Book 💋" : "Add to Library 💗"
+  const btn = element(
+    'button',
+    '',
+    entry ? 'Edit My Book 💋' : 'Add to Library 💗'
   );
 
-  button.type = "button";
-  button.dataset.bookId = book.id;
-  button.dataset.action = entry ? "edit" : "add";
+  btn.type = 'button';
+  btn.dataset.action = entry ? 'edit' : 'add';
+  btn.dataset.source = book.source;
+  btn.dataset.bookId = book.id;
 
-  if (!entry && myEntries.some(
-    item => item.book_id === book.id
-  )) {
-    button.textContent = "Already in My Library ✓";
-    button.disabled = true;
+  if(
+    !entry &&
+    entries.some(e=>entryKey(e) === key(book.source,book.id))
+  ) {
+    btn.disabled = true;
+    btn.textContent = 'Already in My Library ✓';
   }
 
-  info.append(button);
-  card.append(info);
-
-  return card;
+  info.append(btn);
+  c.append(info);
+  return c;
 }
 
-async function fetchCatalogBooks(ids) {
-  const uniqueIds = [...new Set(ids.filter(Boolean))];
-  const missing = uniqueIds.filter(
-    id => !catalogBooks.has(id)
+function renderCollection() {
+  const target = $('myBookCollection');
+  target.replaceChildren();
+
+  const filter = $('libraryStatusFilter').value;
+  const matching = entries.filter(
+    e => filter === 'all' || e.reading_status === filter
   );
 
-  for (let i = 0; i < missing.length; i += 100) {
-    const batch = missing.slice(i, i + 100);
-
-    const { data, error } = await db
-      .from("tbb_books")
-      .select(BOOK_COLUMNS)
-      .in("id", batch);
-
-    if (error) throw error;
-
-    for (const book of data || []) {
-      catalogBooks.set(book.id, book);
-    }
-  }
-}
-
-async function loadMyCollection() {
-  const allEntries = [];
-  const pageSize = 500;
-
-  for (let from = 0; ; from += pageSize) {
-    const { data, error } = await db
-      .from("tbb_bookshelf_entries")
-      .select(ENTRY_COLUMNS)
-      .eq("user_id", currentUser.id)
-      .order("created_at", { ascending: false })
-      .order("id", { ascending: false })
-      .range(from, from + pageSize - 1);
-
-    if (error) throw error;
-
-    allEntries.push(...(data || []));
-
-    if (!data || data.length < pageSize) break;
-  }
-
-  myEntries = allEntries;
-
-  await fetchCatalogBooks(
-    myEntries.map(entry => entry.book_id)
-  );
-
-  renderMyCollection();
-}
-
-function renderMyCollection() {
-  const container = $("myBookCollection");
-  const filter = $("libraryStatusFilter").value;
-
-  container.replaceChildren();
-
-  const entries = myEntries.filter(entry =>
-    filter === "all" ||
-    entry.reading_status === filter
-  );
-
-  if (!entries.length) {
-    showEmpty(
-      container,
-      filter === "all"
-        ? "Your Library is waiting for its first book! 💗"
-        : "No books match this reading status yet."
+  if(!matching.length) {
+    empty(
+      target,
+      filter === 'all'
+        ? 'Your Library is waiting for its first book! 💗'
+        : 'No books match this reading status yet.'
     );
     return;
   }
 
-  for (const entry of entries) {
-    const book = catalogBooks.get(entry.book_id);
+  for(const e of matching) {
+    const b = catalog.get(entryKey(e)) || {
+      id:e.community_book_id || e.book_id,
+      title:'Catalog Book Unavailable',
+      author:'Reading record retained',
+      source:e.community_book_id ? 'community' : 'official'
+    };
 
-    if (!book) {
-      const missingBook = {
-        id: entry.book_id,
-        title: "Catalog Book Unavailable",
-        author: "Reading record retained",
-        cover_url: null
-      };
-
-      container.append(
-        createBookCard(missingBook, entry)
-      );
-      continue;
-    }
-
-    container.append(
-      createBookCard(book, entry)
-    );
+    target.append(card(b,e));
   }
 }
 
-async function searchCatalog() {
-  if (!currentUser || searchBusy) return;
+function renderResults() {
+  const target = $('catalogResults');
+  if(!results.length) return;
 
-  const term = $("bookSearch").value.trim();
-  const container = $("catalogResults");
-  const button = $("searchCatalog");
+  target.replaceChildren();
 
-  if (term.length < 2) {
-    showEmpty(
-      container,
-      "Enter at least two characters to search."
-    );
+  for(const b of results) {
+    target.append(card(b));
+  }
+}
+
+function sanitizeSearch(s) {
+  return s.replace(/[\\%_(),.*"]/g,' ')
+    .replace(/\s+/g,' ')
+    .trim();
+}
+
+async function search() {
+  if(!user || searchBusy) return;
+
+  const term = sanitizeSearch($('bookSearch').value);
+  const target = $('catalogResults');
+
+  if(term.length < 2) {
+    empty(target,'Enter at least two letters or numbers to search.');
     return;
   }
 
   searchBusy = true;
-  button.disabled = true;
-  button.textContent = "Searching...";
+
+  const btn = $('searchCatalog');
+  btn.disabled = true;
+  btn.textContent = 'Searching...';
 
   try {
-    // Escape PostgREST filter punctuation before
-    // constructing the title/author OR expression.
-    const escaped = term
-      .replace(/[\\%_(),.*"]/g, " ")
-      .replace(/\s+/g, " ")
-      .trim();
+    const queries = await Promise.all([
+      db.from('tbb_books')
+        .select(officialCols)
+        .eq('is_archived',false)
+        .or(`title.ilike.%${term}%,author.ilike.%${term}%`)
+        .order('title')
+        .limit(40),
 
-    if (escaped.length < 2) {
-      throw new Error(
-        "Please search using at least two letters or numbers."
+      db.from('tbb_community_books')
+        .select(communityCols)
+        .eq('is_archived',false)
+        .or(`title.ilike.%${term}%,author.ilike.%${term}%`)
+        .order('title')
+        .limit(40)
+    ]);
+
+    for(const r of queries) {
+      if(r.error) throw r.error;
+    }
+
+    results = [
+      ...(queries[0].data || []).map(b=>({...b,source:'official'})),
+      ...(queries[1].data || []).map(b=>({...b,source:'community'}))
+    ];
+
+    results.sort((a,b)=>a.title.localeCompare(b.title));
+
+    for(const b of results) {
+      catalog.set(key(b.source,b.id),b);
+    }
+
+    if(!results.length) {
+      empty(
+        target,
+        'No matching books found. Try Add My Own Book 🎀!'
       );
+    } else {
+      renderResults();
+
+      if(queries.some(r=>(r.data || []).length === 40)) {
+        target.append(
+          element(
+            'p',
+            'library-helper',
+            'Showing up to 40 results per catalog. Refine your search for more.'
+          )
+        );
+      }
     }
-
-    const { data, error } = await db
-      .from("tbb_books")
-      .select(BOOK_COLUMNS)
-      .eq("is_archived", false)
-      .or(
-        `title.ilike.%${escaped}%,author.ilike.%${escaped}%`
-      )
-      .order("title", { ascending: true })
-      .limit(40);
-
-    if (error) throw error;
-
-    activeSearchResults = data || [];
-
-    container.replaceChildren();
-
-    if (!activeSearchResults.length) {
-      showEmpty(
-        container,
-        "No matching books found in the TBB catalog."
-      );
-      return;
-    }
-
-    for (const book of activeSearchResults) {
-      catalogBooks.set(book.id, book);
-      container.append(createBookCard(book));
-    }
-
-    if (activeSearchResults.length === 40) {
-      container.append(
-        createElement(
-          "p",
-          "library-helper",
-          "Showing up to 40 results. Refine your search for more specific matches."
-        )
-      );
-    }
-
-  } catch (error) {
-    console.error("Catalog search failed:", error);
-    showEmpty(
-      container,
-      "Catalog search couldn't be completed."
-    );
-    notify(error.message, true);
-
+  } catch(e) {
+    console.error(e);
+    empty(target,'Search could not be completed.');
+    notify(e.message,true);
   } finally {
     searchBusy = false;
-    button.disabled = false;
-    button.textContent = "Search Catalog 💗";
+    btn.disabled = false;
+    btn.textContent = 'Search Catalog 💗';
   }
 }
 
-async function addBook(bookId, button) {
-  if (!currentUser || addBusy) return;
+async function addBook(source,id) {
+  if(addBusy) return;
 
-  const book = catalogBooks.get(bookId);
+  const book = catalog.get(key(source,id));
 
-  if (!book || book.is_archived === true) {
-    notify(
-      "This book isn't available for new additions.",
-      true
-    );
+  if(!book || book.is_archived) {
+    notify('This book is unavailable.',true);
     return;
   }
 
-  if (myEntries.some(
-    entry => entry.book_id === bookId
-  )) {
-    notify(
-      "This book is already in your Library! 💗"
-    );
+  if(entries.some(e=>entryKey(e) === key(source,id))) {
+    notify('Already in your Library! 💗');
     return;
   }
 
   addBusy = true;
-  button.disabled = true;
-  button.textContent = "Adding...";
 
   try {
-    const { error } = await db
-      .from("tbb_bookshelf_entries")
-      .insert({
-        user_id: currentUser.id,
-        book_id: bookId,
-        reading_status: "want_to_read",
-        current_page: 0
-      });
+    const record = {
+      user_id:user.id,
+      book_id:source === 'official' ? id : null,
+      community_book_id:source === 'community' ? id : null,
+      reading_status:'want_to_read',
+      current_page:0
+    };
 
-    if (error) throw error;
+    const {error} = await db.from('tbb_bookshelf_entries')
+      .insert(record);
 
-    await Promise.all([
-      loadMyCollection(),
-      loadReadingStats()
-    ]);
+    if(error) throw error;
 
-    renderSearchResults();
+    await Promise.all([loadCollection(),stats()]);
 
+    notify(`“${book.title}” was added to your Library! 💗`);
+  } catch(e) {
+    console.error(e);
     notify(
-      `"${book.title}" was added to your Library! 💗`
+      e.code === '23505'
+        ? 'This book is already in your Library.'
+        : e.message,
+      true
     );
 
-  } catch (error) {
-    console.error("Add book failed:", error);
-
-    if (error.code === "23505") {
-      notify(
-        "That book is already in your Library.",
-        true
-      );
-
-      await loadMyCollection().catch(console.error);
-    } else {
-      notify(error.message, true);
-    }
-
+    await loadCollection().catch(console.error);
   } finally {
     addBusy = false;
-    button.disabled = false;
-    button.textContent = "Add to Library 💗";
-    renderSearchResults();
+    renderResults();
   }
 }
 
-function renderSearchResults() {
-  const container = $("catalogResults");
+function openEditor(source,id) {
+  const e = entries.find(x=>entryKey(x) === key(source,id));
 
-  if (!activeSearchResults.length) return;
-
-  container.replaceChildren();
-
-  for (const book of activeSearchResults) {
-    container.append(createBookCard(book));
-  }
-}
-
-function openBookEditor(bookId) {
-  const entry = myEntries.find(
-    item => item.book_id === bookId
-  );
-
-  if (!entry) {
-    notify("That reading record couldn't be found.", true);
+  if(!e) {
+    notify('Reading record not found.',true);
     return;
   }
 
-  const book = catalogBooks.get(bookId);
+  const b = catalog.get(key(source,id));
 
-  $("editingEntryId").value = entry.id;
+  $('editingEntryId').value = e.id;
+  $('bookEditorTitle').textContent = 'Edit My Reading Record 💋';
 
-  $("bookEditorTitle").textContent =
-    "Edit My Reading Record 💋";
+  $('bookEditorSubtitle').textContent = b
+    ? `${b.title} — ${b.author || 'Unknown Author'}`
+    : 'Update your reading details.';
 
-  $("bookEditorSubtitle").textContent =
-    book
-      ? `${book.title} — ${book.author || "Unknown Author"}`
-      : "Update your reading details.";
+  $('editReadingStatus').value = e.reading_status;
+  $('editBookFormat').value = e.book_format || '';
+  $('editTotalPages').value = e.total_pages ?? '';
+  $('editCurrentPage').value = e.current_page ?? 0;
+  $('editRating').value = e.rating ?? '';
+  $('editStartedAt').value = e.started_at || '';
+  $('editFinishedAt').value = e.finished_at || '';
 
-  $("editReadingStatus").value =
-    entry.reading_status;
-
-  $("editBookFormat").value =
-    entry.book_format || "";
-
-  $("editTotalPages").value =
-    entry.total_pages ?? "";
-
-  $("editCurrentPage").value =
-    entry.current_page ?? 0;
-
-  $("editRating").value =
-    entry.rating ?? "";
-
-  $("editStartedAt").value =
-    entry.started_at || "";
-
-  $("editFinishedAt").value =
-    entry.finished_at || "";
-
-  $("bookEditor").showModal();
+  $('bookEditor').showModal();
 }
 
-function optionalPositiveInteger(value, field) {
-  if (value === "") return null;
+function posInt(v,label) {
+  if(v === '') return null;
 
-  const number = Number(value);
+  const n = Number(v);
 
-  if (!Number.isSafeInteger(number) || number <= 0) {
-    throw new Error(
-      `${field} must be a positive whole number.`
-    );
+  if(!Number.isSafeInteger(n) || n <= 0) {
+    throw Error(`${label} must be a positive whole number.`);
   }
 
-  return number;
+  return n;
 }
 
-function nonnegativeInteger(value, field) {
-  if (value === "") return 0;
+function nonneg(v) {
+  if(v === '') return 0;
 
-  const number = Number(value);
+  const n = Number(v);
 
-  if (!Number.isSafeInteger(number) || number < 0) {
-    throw new Error(
-      `${field} must be zero or a positive whole number.`
-    );
+  if(!Number.isSafeInteger(n) || n < 0) {
+    throw Error('Current page must be zero or a positive whole number.');
   }
 
-  return number;
+  return n;
 }
 
-function getEditorUpdates() {
-  const readingStatus = $("editReadingStatus").value;
-  const bookFormat = $("editBookFormat").value || null;
+function edits() {
+  const reading_status = $('editReadingStatus').value;
+  const book_format = $('editBookFormat').value || null;
 
-  if (!Object.hasOwn(statusLabels, readingStatus)) {
-    throw new Error("Choose a valid reading status.");
+  if(!Object.hasOwn(statuses,reading_status)) {
+    throw Error('Invalid reading status.');
   }
 
-  if (
-    bookFormat &&
-    !["physical", "ebook", "audiobook"].includes(bookFormat)
+  if(
+    book_format &&
+    !['physical','ebook','audiobook'].includes(book_format)
   ) {
-    throw new Error("Choose a valid book format.");
+    throw Error('Invalid book format.');
   }
 
-  const totalPages = optionalPositiveInteger(
-    $("editTotalPages").value,
-    "Total pages"
+  const total_pages = posInt(
+    $('editTotalPages').value,
+    'Total pages'
   );
 
-  const currentPage = nonnegativeInteger(
-    $("editCurrentPage").value,
-    "Current page"
-  );
+  const current_page = nonneg($('editCurrentPage').value);
 
-  if (
-    totalPages !== null &&
-    currentPage > totalPages
-  ) {
-    throw new Error(
-      "Current page cannot exceed total pages."
-    );
+  if(total_pages !== null && current_page > total_pages) {
+    throw Error('Current page cannot exceed total pages.');
   }
 
-  const ratingValue = $("editRating").value;
-  const rating = ratingValue === ""
+  const rating = $('editRating').value === ''
     ? null
-    : Number(ratingValue);
+    : Number($('editRating').value);
 
-  if (
+  if(
     rating !== null &&
-    (
-      rating < 0.5 ||
-      rating > 5 ||
-      !Number.isInteger(rating * 2)
-    )
+    (rating < .5 || rating > 5 || !Number.isInteger(rating * 2))
   ) {
-    throw new Error(
-      "Rating must be between 0.5 and 5 stars."
-    );
+    throw Error('Rating must be 0.5 to 5 in half-star steps.');
   }
 
-  const startedAt =
-    $("editStartedAt").value || null;
+  const started_at = $('editStartedAt').value || null;
+  const finished_at = $('editFinishedAt').value || null;
 
-  const finishedAt =
-    $("editFinishedAt").value || null;
-
-  if (
-    startedAt &&
-    finishedAt &&
-    finishedAt < startedAt
-  ) {
-    throw new Error(
-      "Finish date cannot be earlier than start date."
-    );
+  if(started_at && finished_at && finished_at < started_at) {
+    throw Error('Finish date cannot precede start date.');
   }
 
   return {
-    reading_status: readingStatus,
-    book_format: bookFormat,
-    total_pages: totalPages,
-    current_page: currentPage,
+    reading_status,
+    book_format,
+    total_pages,
+    current_page,
     rating,
-    started_at: startedAt,
-    finished_at: finishedAt
+    started_at,
+    finished_at
   };
 }
 
-async function saveBookEditor(event) {
-  event.preventDefault();
+async function saveEditor(ev) {
+  ev.preventDefault();
+  if(editBusy) return;
 
-  if (!currentUser || editorBusy) return;
+  const id = $('editingEntryId').value;
 
-  const entryId = $("editingEntryId").value;
-  const entry = myEntries.find(
-    item => item.id === entryId
-  );
-
-  if (!entry) {
-    notify("Reading record not found.", true);
+  if(!entries.some(e=>e.id === id)) {
+    notify('Reading record not found.',true);
     return;
   }
 
-  editorBusy = true;
-  const button = $("saveBookEditor");
-  button.disabled = true;
-  button.textContent = "Saving...";
+  editBusy = true;
+
+  const btn = $('saveBookEditor');
+  btn.disabled = true;
+  btn.textContent = 'Saving...';
 
   try {
-    const updates = getEditorUpdates();
+    const changes = edits();
 
-    const { data, error } = await db
-      .from("tbb_bookshelf_entries")
-      .update(updates)
-      .eq("id", entryId)
-      .eq("user_id", currentUser.id)
-      .select("id");
+    const {data,error} = await db.from('tbb_bookshelf_entries')
+      .update(changes)
+      .eq('id',id)
+      .eq('user_id',user.id)
+      .select('id');
 
-    if (error) throw error;
+    if(error) throw error;
 
-    if (!data?.length) {
-      throw new Error(
-        "Your reading record wasn't updated. Check your permissions."
-      );
+    if(!data?.length) {
+      throw Error('Reading record was not updated.');
     }
 
-    $("bookEditor").close();
+    $('bookEditor').close();
 
-    await Promise.all([
-      loadMyCollection(),
-      loadReadingStats()
-    ]);
+    await Promise.all([loadCollection(),stats()]);
 
-    notify("Your reading record was saved! 💗");
-
-  } catch (error) {
-    console.error("Save reading record failed:", error);
-    notify(error.message, true);
-
+    notify('Your reading record was saved! 💗');
+  } catch(e) {
+    console.error(e);
+    notify(e.message,true);
   } finally {
-    editorBusy = false;
-    button.disabled = false;
-    button.textContent = "Save Reading Record 💗";
+    editBusy = false;
+    btn.disabled = false;
+    btn.textContent = 'Save Reading Record 💗';
   }
 }
 
-function handleBookAction(event) {
-  const button = event.target.closest(
-    "button[data-action][data-book-id]"
+function actions(ev) {
+  const btn = ev.target.closest(
+    'button[data-action][data-book-id]'
   );
 
-  if (!button) return;
+  if(!btn || btn.disabled) return;
 
-  const bookId = button.dataset.bookId;
+  const {source,bookId,action} = btn.dataset;
 
-  if (button.dataset.action === "add") {
-    addBook(bookId, button);
+  if(action === 'add') addBook(source,bookId);
+  if(action === 'edit') openEditor(source,bookId);
+}
+
+function openCommunity() {
+  if(!user) return;
+
+  $('communityBookForm').reset();
+  $('communityBookDialog').showModal();
+}
+
+async function submitCommunity(ev) {
+  ev.preventDefault();
+  if(!user || submitBusy) return;
+
+  const title = $('communityBookTitle').value.trim();
+  const author = $('communityBookAuthor').value.trim();
+
+  if(!title || !author) {
+    notify('Title and author are required.',true);
+    return;
   }
 
-  if (button.dataset.action === "edit") {
-    openBookEditor(bookId);
+  submitBusy = true;
+
+  const btn = $('submitCommunityBook');
+  btn.disabled = true;
+  btn.textContent = 'Adding...';
+
+  try {
+    const {data,error} = await db.rpc(
+      'tbb_submit_community_book',
+      {
+        p_title:title,
+        p_author:author,
+        p_cover_url:$('communityBookCover').value.trim() || null,
+        p_series_name:$('communityBookSeries').value.trim() || null,
+        p_book_number:$('communityBookNumber').value.trim() || null
+      }
+    );
+
+    if(error) throw error;
+
+    if(!data) {
+      throw Error('Community book submission returned no book ID.');
+    }
+
+    $('communityBookDialog').close();
+
+    await Promise.all([loadCollection(),stats()]);
+
+    notify(
+      `“${title}” is in your Library and the shared community catalog! 🎀`
+    );
+
+    if($('bookSearch').value.trim().length >= 2) {
+      await search();
+    }
+  } catch(e) {
+    console.error('Community book submission:',e);
+
+    notify(
+      e.message || 'Could not add this community book.',
+      true
+    );
+  } finally {
+    submitBusy = false;
+    btn.disabled = false;
+    btn.textContent = 'Add to Community 💗';
   }
 }
 
 async function init() {
   try {
     const access = await requireAccess();
+    if(!access) return;
 
-    if (!access) return;
+    user = access.user;
 
-    currentUser = access.user;
-
-    await loadOwnerProfile();
+    await owner();
 
     await Promise.all([
-      loadReadingStats(),
-      loadMyCollection()
+      loadCollection(),
+      stats()
     ]);
 
-    notify("Your Bookshelf is ready, Baddie! 💗");
-
-  } catch (error) {
-    console.error(
-      "Bookshelf initialization failed:",
-      error
-    );
-
+    notify('Your Bookshelf is ready, Baddie! 💗');
+  } catch(e) {
+    console.error('Bookshelf initialization:',e);
     notify(
-      error.message ||
-      "Your Bookshelf couldn't be loaded.",
+      e.message || 'Bookshelf could not be loaded.',
       true
     );
   }
@@ -878,59 +698,54 @@ async function init() {
    EVENT LISTENERS
    ========================================== */
 
-$("logout").addEventListener("click", logout);
+$('logout')?.addEventListener('click',logout);
 
-$("searchCatalog").addEventListener(
-  "click",
-  searchCatalog
-);
+$('searchCatalog')?.addEventListener('click',search);
 
-$("bookSearch").addEventListener(
-  "keydown",
-  event => {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      searchCatalog();
-    }
+$('bookSearch')?.addEventListener('keydown',e=>{
+  if(e.key === 'Enter') {
+    e.preventDefault();
+    search();
   }
+});
+
+$('catalogResults')?.addEventListener('click',actions);
+$('myBookCollection')?.addEventListener('click',actions);
+
+$('libraryStatusFilter')?.addEventListener(
+  'change',
+  renderCollection
 );
 
-$("catalogResults").addEventListener(
-  "click",
-  handleBookAction
+$('bookEditorForm')?.addEventListener(
+  'submit',
+  saveEditor
 );
 
-$("myBookCollection").addEventListener(
-  "click",
-  handleBookAction
+$('cancelBookEditor')?.addEventListener('click',()=>{
+  if(!editBusy) $('bookEditor').close();
+});
+
+$('bookEditor')?.addEventListener('cancel',e=>{
+  if(editBusy) e.preventDefault();
+});
+
+$('openCommunityBookForm')?.addEventListener(
+  'click',
+  openCommunity
 );
 
-$("libraryStatusFilter").addEventListener(
-  "change",
-  renderMyCollection
+$('communityBookForm')?.addEventListener(
+  'submit',
+  submitCommunity
 );
 
-$("bookEditorForm").addEventListener(
-  "submit",
-  saveBookEditor
-);
+$('cancelCommunityBook')?.addEventListener('click',()=>{
+  if(!submitBusy) $('communityBookDialog').close();
+});
 
-$("cancelBookEditor").addEventListener(
-  "click",
-  () => {
-    if (!editorBusy) {
-      $("bookEditor").close();
-    }
-  }
-);
-
-$("bookEditor").addEventListener(
-  "cancel",
-  event => {
-    if (editorBusy) {
-      event.preventDefault();
-    }
-  }
-);
+$('communityBookDialog')?.addEventListener('cancel',e=>{
+  if(submitBusy) e.preventDefault();
+});
 
 init();
