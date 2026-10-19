@@ -1,1394 +1,2222 @@
-
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Baddie Admin HQ</title>
   <link rel="stylesheet" href="css/auth.css">
   <style>
-    :root{color-scheme:dark;--bg:#09050b;--panel:#160c1b;--panel2:#24102a;--pink:#ff2ba6;--light:#ffe2f4;--muted:#c9a8c1;--line:#6b2859}
-    *{box-sizing:border-box}
-    body{margin:0;background:radial-gradient(ellipse at 15% 0%,#411337 0%,transparent 40%),radial-gradient(ellipse at 90% 20%,#281041 0%,transparent 35%),var(--bg);color:var(--light);font-family:system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
-    .admin-shell{max-width:1100px;margin:auto;padding:34px 18px 80px}
-    .admin-card{background:linear-gradient(140deg,rgba(38,17,43,.98),rgba(16,8,22,.98));color:var(--light);border:1px solid var(--line);border-radius:22px;padding:26px;margin:20px 0;box-shadow:0 12px 45px #0007}
-    .admin-card:first-child{border-color:var(--pink);box-shadow:0 0 45px #ff2ba622}
-    h1{font-size:clamp(2rem,5vw,3.2rem);margin:.2em 0;letter-spacing:-.04em}
-    h2{margin-top:0;color:#ff78c7}h3{color:#ffb0de}
-    p{line-height:1.6}a{color:#ff83cd}a:hover{color:white}
-    button{border:1px solid #ff64bc;border-radius:12px;background:linear-gradient(135deg,#ff2ba6,#b61882);color:white;font-weight:700;padding:11px 17px;cursor:pointer;margin:5px 7px 5px 0;transition:filter .15s,transform .15s}
-    button:hover:not(:disabled){filter:brightness(1.15);transform:translateY(-1px)}button:disabled{opacity:.5;cursor:not-allowed}
-    input,select{max-width:100%;padding:12px;margin:8px 0 16px;border:1px solid #8a477c;border-radius:12px;background:#160c1b;color:white;font:inherit}
-    select,input[type=file]{width:100%}input[type=file]::file-selector-button{background:#ff2ba6;border:0;color:white;padding:8px 12px;border-radius:8px;margin-right:12px}
-    label{display:block;margin-top:10px}.item{padding:17px;margin:12px 0;border:1px solid #683057;border-radius:14px;background:#220e24}
-    .muted{color:var(--muted)}.notice{color:#9bf0bd}.error{color:#ff8fae}
-    .stats{display:flex;gap:12px;flex-wrap:wrap;margin:18px 0}.stat{flex:1;min-width:140px;padding:19px;background:linear-gradient(145deg,#371336,#1c102a);border:1px solid #75305d;border-radius:16px;text-align:center;color:#f8c9e6}.stat strong{display:block;font-size:30px;color:#ff4db5}
-    progress{width:100%;height:22px;accent-color:var(--pink)}table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:10px;border-bottom:1px solid #56304b;text-align:left}th{color:#ff83cd}.table-wrap{overflow-x:auto}
-    #importLog{max-height:240px;overflow:auto;white-space:pre-wrap;font-size:13px;background:#0e0711;border:1px solid #5c2752;padding:15px;border-radius:12px;color:#fbd9ee}
-    [hidden]{display:none!important}button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:3px solid #ff9bda;outline-offset:3px}
+    :root {
+      color-scheme: dark;
+      --bg: #09050b;
+      --panel: #160c1b;
+      --panel2: #24102a;
+      --pink: #ff2ba6;
+      --light: #ffe2f4;
+      --muted: #c9a8c1;
+      --line: #6b2859
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    body {
+      margin: 0;
+      background: radial-gradient(ellipse at 15% 0%, #411337 0%, transparent 40%), radial-gradient(ellipse at 90% 20%, #281041 0%, transparent 35%), var(--bg);
+      color: var(--light);
+      font-family: system-ui, -apple-system, Segoe UI, sans-serif;
+      min-height: 100vh
+    }
+
+    .admin-shell {
+      max-width: 1100px;
+      margin: auto;
+      padding: 34px 18px 80px
+    }
+
+    .admin-card {
+      background: linear-gradient(140deg, rgba(38, 17, 43, .98), rgba(16, 8, 22, .98));
+      color: var(--light);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 26px;
+      margin: 20px 0;
+      box-shadow: 0 12px 45px #0007
+    }
+
+    .admin-card:first-child {
+      border-color: var(--pink);
+      box-shadow: 0 0 45px #ff2ba622
+    }
+
+    h1 {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      margin: .2em 0;
+      letter-spacing: -.04em
+    }
+
+    h2 {
+      margin-top: 0;
+      color: #ff78c7
+    }
+
+    h3 {
+      color: #ffb0de
+    }
+
+    p {
+      line-height: 1.6
+    }
+
+    a {
+      color: #ff83cd
+    }
+
+    a:hover {
+      color: white
+    }
+
+    button {
+      border: 1px solid #ff64bc;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #ff2ba6, #b61882);
+      color: white;
+      font-weight: 700;
+      padding: 11px 17px;
+      cursor: pointer;
+      margin: 5px 7px 5px 0;
+      transition: filter .15s, transform .15s
+    }
+
+    button:hover:not(:disabled) {
+      filter: brightness(1.15);
+      transform: translateY(-1px)
+    }
+
+    button:disabled {
+      opacity: .5;
+      cursor: not-allowed
+    }
+
+    input,
+    select {
+      max-width: 100%;
+      padding: 12px;
+      margin: 8px 0 16px;
+      border: 1px solid #8a477c;
+      border-radius: 12px;
+      background: #160c1b;
+      color: white;
+      font: inherit
+    }
+
+    select,
+    input[type=file] {
+      width: 100%
+    }
+
+    input[type=file]::file-selector-button {
+      background: #ff2ba6;
+      border: 0;
+      color: white;
+      padding: 8px 12px;
+      border-radius: 8px;
+      margin-right: 12px
+    }
+
+    label {
+      display: block;
+      margin-top: 10px
+    }
+
+    .item {
+      padding: 17px;
+      margin: 12px 0;
+      border: 1px solid #683057;
+      border-radius: 14px;
+      background: #220e24
+    }
+
+    .muted {
+      color: var(--muted)
+    }
+
+    .notice {
+      color: #9bf0bd
+    }
+
+    .error {
+      color: #ff8fae
+    }
+
+    .stats {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin: 18px 0
+    }
+
+    .stat {
+      flex: 1;
+      min-width: 140px;
+      padding: 19px;
+      background: linear-gradient(145deg, #371336, #1c102a);
+      border: 1px solid #75305d;
+      border-radius: 16px;
+      text-align: center;
+      color: #f8c9e6
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 30px;
+      color: #ff4db5
+    }
+
+    progress {
+      width: 100%;
+      height: 22px;
+      accent-color: var(--pink)
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px
+    }
+
+    th,
+    td {
+      padding: 10px;
+      border-bottom: 1px solid #56304b;
+      text-align: left
+    }
+
+    th {
+      color: #ff83cd
+    }
+
+    .table-wrap {
+      overflow-x: auto
+    }
+
+    #importLog {
+      max-height: 240px;
+      overflow: auto;
+      white-space: pre-wrap;
+      font-size: 13px;
+      background: #0e0711;
+      border: 1px solid #5c2752;
+      padding: 15px;
+      border-radius: 12px;
+      color: #fbd9ee
+    }
+
+    [hidden] {
+      display: none !important
+    }
+
+    button:focus-visible,
+    input:focus-visible,
+    select:focus-visible,
+    a:focus-visible {
+      outline: 3px solid #ff9bda;
+      outline-offset: 3px
+    }
 
     /* THE COVER CLOSET™ */
-    .closet-controls{display:grid;grid-template-columns:2fr 1fr auto;gap:12px;align-items:end}
-    .closet-controls label{margin:0}.closet-controls input,.closet-controls select{margin:7px 0 0;width:100%}
-    .closet-results{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px;margin:18px 0}
-    .closet-book{border:1px solid #71315e;border-radius:15px;background:#1c0d20;padding:13px;text-align:left;display:flex;gap:12px;align-items:center;min-width:0}
-    .closet-book:hover{border-color:#ff76ca}.closet-book.selected{outline:2px solid var(--pink)}
-    .closet-book img{width:55px;height:78px;object-fit:cover;border-radius:7px;background:#3c1c39;flex-shrink:0}
-    .closet-book span{min-width:0;overflow-wrap:anywhere}.closet-book small{display:block;color:#e5b4d4;margin-top:4px}
-    .closet-editor{border:1px solid #b7448d;background:#210f25;border-radius:17px;padding:20px;margin-top:20px}
-    .closet-editor-grid{display:grid;grid-template-columns:150px minmax(0,1fr);gap:20px}
-    .closet-cover{width:150px;height:215px;object-fit:cover;border:1px solid #864275;border-radius:12px;background:#130a17}
-    .closet-editor input[type=url]{width:100%}.closet-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-    .closet-actions button{margin:4px 0}.closet-pager{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
-    .closet-status{min-height:24px;overflow-wrap:anywhere}.closet-hint{font-size:13px;color:var(--muted)}
-    @media(max-width:700px){.closet-controls{grid-template-columns:1fr}.closet-editor-grid{grid-template-columns:1fr}.closet-cover{width:130px;height:185px}}
+    .closet-controls {
+      display: grid;
+      grid-template-columns: 2fr 1fr auto;
+      gap: 12px;
+      align-items: end
+    }
+
+    .closet-controls label {
+      margin: 0
+    }
+
+    .closet-controls input,
+    .closet-controls select {
+      margin: 7px 0 0;
+      width: 100%
+    }
+
+    .closet-results {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+      gap: 12px;
+      margin: 18px 0
+    }
+
+    .closet-book {
+      border: 1px solid #71315e;
+      border-radius: 15px;
+      background: #1c0d20;
+      padding: 13px;
+      text-align: left;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      min-width: 0
+    }
+
+    .closet-book:hover {
+      border-color: #ff76ca
+    }
+
+    .closet-book.selected {
+      outline: 2px solid var(--pink)
+    }
+
+    .closet-book img {
+      width: 55px;
+      height: 78px;
+      object-fit: cover;
+      border-radius: 7px;
+      background: #3c1c39;
+      flex-shrink: 0
+    }
+
+    .closet-book span {
+      min-width: 0;
+      overflow-wrap: anywhere
+    }
+
+    .closet-book small {
+      display: block;
+      color: #e5b4d4;
+      margin-top: 4px
+    }
+
+    .closet-editor {
+      border: 1px solid #b7448d;
+      background: #210f25;
+      border-radius: 17px;
+      padding: 20px;
+      margin-top: 20px
+    }
+
+    .closet-editor-grid {
+      display: grid;
+      grid-template-columns: 150px minmax(0, 1fr);
+      gap: 20px
+    }
+
+    .closet-cover {
+      width: 150px;
+      height: 215px;
+      object-fit: cover;
+      border: 1px solid #864275;
+      border-radius: 12px;
+      background: #130a17
+    }
+
+    .closet-editor input[type=url] {
+      width: 100%
+    }
+
+    .closet-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center
+    }
+
+    .closet-actions button {
+      margin: 4px 0
+    }
+
+    .closet-pager {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap
+    }
+
+    .closet-status {
+      min-height: 24px;
+      overflow-wrap: anywhere
+    }
+
+    .closet-hint {
+      font-size: 13px;
+      color: var(--muted)
+    }
+
+    @media(max-width:700px) {
+      .closet-controls {
+        grid-template-columns: 1fr
+      }
+
+      .closet-editor-grid {
+        grid-template-columns: 1fr
+      }
+
+      .closet-cover {
+        width: 130px;
+        height: 185px
+      }
+    }
 
     /* ADMIN HQ EXPANSION — original tools retained */
-    .hq-nav{display:flex;flex-wrap:wrap;gap:9px;margin-top:18px}
-    .hq-nav a{display:inline-block;padding:9px 13px;border:1px solid #963b78;border-radius:999px;text-decoration:none;background:#2c102b;font-size:13px;font-weight:700}
-    .hq-nav a:hover{background:#722451}
-    .hq-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:18px 0}
-    .hq-metric{border:1px solid #71315e;background:#210f25;border-radius:16px;padding:18px;text-align:left}
-    .hq-metric strong{display:block;font-size:30px;color:#ff64bc;margin:6px 0}
-    .hq-metric span{color:#d8b1cc;font-size:13px}
-    .hq-actions{display:flex;flex-wrap:wrap;gap:9px}
-    .hq-actions a{border:1px solid #c04491;border-radius:12px;padding:10px 13px;text-decoration:none;background:#391333}
-    .hq-report{padding:16px;border:1px solid #77335e;border-radius:14px;background:#200f23;margin:12px 0}
-    .hq-report-head{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
-    .hq-report p{overflow-wrap:anywhere}
-    .hq-report-body{padding:13px;background:#110a16;border-left:3px solid #ff4eb4;border-radius:8px;white-space:pre-wrap}
-    .hq-report select{max-width:240px;margin:4px 8px 4px 0}
-    .hq-small{font-size:13px;color:#d9b6cd}
-    .hq-chip{display:inline-block;padding:4px 9px;background:#492044;border:1px solid #a34c86;border-radius:999px;font-size:12px}
-    .hq-toolbar{display:flex;gap:12px;align-items:end;flex-wrap:wrap}
-    .hq-toolbar label{flex:1;min-width:190px}
-    .hq-toolbar select{margin-bottom:0}
-    .hq-note{padding:12px;border:1px dashed #934a7d;border-radius:12px;color:#e7c5d9}
-    section[id]{scroll-margin-top:22px}
-    .hq-form{padding:18px;background:#190d20;border:1px solid #79305e;border-radius:16px;margin:16px 0}
-    .hq-form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px 18px}
-    .hq-form input,.hq-form select,.hq-form textarea{width:100%;max-width:100%;margin:7px 0 12px}
-    .hq-form textarea,.hq-role-note{background:#160c1b;color:#fff;border:1px solid #8a477c;border-radius:12px;padding:12px;font:inherit;width:100%}
-    .hq-item-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-    .hq-item-actions button{margin:0}
-    .hq-role-note{margin:8px 0;min-height:70px}
-    section[id]{scroll-margin-top:22px}
+    .hq-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      margin-top: 18px
+    }
+
+    .hq-nav a {
+      display: inline-block;
+      padding: 9px 13px;
+      border: 1px solid #963b78;
+      border-radius: 999px;
+      text-decoration: none;
+      background: #2c102b;
+      font-size: 13px;
+      font-weight: 700
+    }
+
+    .hq-nav a:hover {
+      background: #722451
+    }
+
+    .hq-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 12px;
+      margin: 18px 0
+    }
+
+    .hq-metric {
+      border: 1px solid #71315e;
+      background: #210f25;
+      border-radius: 16px;
+      padding: 18px;
+      text-align: left
+    }
+
+    .hq-metric strong {
+      display: block;
+      font-size: 30px;
+      color: #ff64bc;
+      margin: 6px 0
+    }
+
+    .hq-metric span {
+      color: #d8b1cc;
+      font-size: 13px
+    }
+
+    .hq-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px
+    }
+
+    .hq-actions a {
+      border: 1px solid #c04491;
+      border-radius: 12px;
+      padding: 10px 13px;
+      text-decoration: none;
+      background: #391333
+    }
+
+    .hq-report {
+      padding: 16px;
+      border: 1px solid #77335e;
+      border-radius: 14px;
+      background: #200f23;
+      margin: 12px 0
+    }
+
+    .hq-report-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap
+    }
+
+    .hq-report p {
+      overflow-wrap: anywhere
+    }
+
+    .hq-report-body {
+      padding: 13px;
+      background: #110a16;
+      border-left: 3px solid #ff4eb4;
+      border-radius: 8px;
+      white-space: pre-wrap
+    }
+
+    .hq-report select {
+      max-width: 240px;
+      margin: 4px 8px 4px 0
+    }
+
+    .hq-small {
+      font-size: 13px;
+      color: #d9b6cd
+    }
+
+    .hq-chip {
+      display: inline-block;
+      padding: 4px 9px;
+      background: #492044;
+      border: 1px solid #a34c86;
+      border-radius: 999px;
+      font-size: 12px
+    }
+
+    .hq-toolbar {
+      display: flex;
+      gap: 12px;
+      align-items: end;
+      flex-wrap: wrap
+    }
+
+    .hq-toolbar label {
+      flex: 1;
+      min-width: 190px
+    }
+
+    .hq-toolbar select {
+      margin-bottom: 0
+    }
+
+    .hq-note {
+      padding: 12px;
+      border: 1px dashed #934a7d;
+      border-radius: 12px;
+      color: #e7c5d9
+    }
+
+    section[id] {
+      scroll-margin-top: 22px
+    }
+
+    .hq-form {
+      padding: 18px;
+      background: #190d20;
+      border: 1px solid #79305e;
+      border-radius: 16px;
+      margin: 16px 0
+    }
+
+    .hq-form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 10px 18px
+    }
+
+    .hq-form input,
+    .hq-form select,
+    .hq-form textarea {
+      width: 100%;
+      max-width: 100%;
+      margin: 7px 0 12px
+    }
+
+    .hq-form textarea,
+    .hq-role-note {
+      background: #160c1b;
+      color: #fff;
+      border: 1px solid #8a477c;
+      border-radius: 12px;
+      padding: 12px;
+      font: inherit;
+      width: 100%
+    }
+
+    .hq-item-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px
+    }
+
+    .hq-item-actions button {
+      margin: 0
+    }
+
+    .hq-role-note {
+      margin: 8px 0;
+      min-height: 70px
+    }
+
+    section[id] {
+      scroll-margin-top: 22px
+    }
   </style>
 </head>
 
 <body>
-<main class="admin-shell">
-  <header class="admin-card">
-    <h1>👑 Baddie Admin HQ</h1>
-    <p>Black velvet. Hot pink. All the books. Your Baddie command center.</p>
-    <p id="message" role="status"></p>
-    <button id="logout">Sign Out</button>
-    <nav class="hq-nav" aria-label="Admin HQ sections">
-      <a href="#controlRoom">👑 Control Room</a><a href="#memberships">💗 Guest List</a>
-      <a href="#moderationSuite">🛡️ Moderation</a><a href="staff.html">🛡️ Staff Desk</a><a href="#coverCloset">📚 Cover Closet</a>
-      <a href="#activitiesStudio">🎲 Activities</a><a href="#roleDesk">💌 Role Desk</a><a href="#baddiePost">💌 Baddie Post</a>
-      <a href="#emojiVault">💋 Emoji Vault</a><a href="#headquarters">⚙️ Headquarters</a>
-    </nav>
-  </header>
+  <main class="admin-shell">
+    <header class="admin-card">
+      <h1>👑 Baddie Admin HQ</h1>
+      <p>Black velvet. Hot pink. All the books. Your Baddie command center.</p>
+      <p id="message" role="status"></p>
+      <button id="logout">Sign Out</button>
+      <nav class="hq-nav" aria-label="Admin HQ sections">
+        <a href="#controlRoom">👑 Control Room</a><a href="#memberships">💗 Guest List</a>
+        <a href="#moderationSuite">🛡️ Moderation</a><a href="staff.html">🛡️ Staff Desk</a><a href="#coverCloset">📚
+          Cover Closet</a>
+        <a href="#activitiesStudio">🎲 Activities</a><a href="#roleDesk">💌 Role Desk</a><a href="#baddiePost">💌 Baddie
+          Post</a>
+        <a href="#emojiVault">💋 Emoji Vault</a><a href="#headquarters">⚙️ Headquarters</a>
+      </nav>
+    </header>
 
-  <section class="admin-card" id="controlRoom">
-    <h2>👑 The Control Room™</h2>
-    <p>Your live admin overview. Counts reflect records your signed-in admin account is permitted to read.</p>
-    <div class="hq-grid">
-      <div class="hq-metric"><span>Pending Memberships</span><strong id="hqPendingMembers">—</strong></div>
-      <div class="hq-metric"><span>Pending Reports</span><strong id="hqPendingReports">—</strong></div>
-      <div class="hq-metric"><span>Reports In Review</span><strong id="hqReviewingReports">—</strong></div>
-      <div class="hq-metric"><span>Missing Book Covers</span><strong id="hqMissingCovers">—</strong></div>
-    </div>
-    <div class="hq-actions"><a href="#memberships">Review applications →</a><a href="#moderationSuite">Review reports →</a><a href="#coverCloset">Open Cover Closet →</a><a href="#activitiesStudio">Activity planning →</a></div>
-    <p id="hqDashboardStatus" class="hq-small" role="status"></p>
-    <button id="hqRefresh">↻ Refresh Dashboard</button>
-  </section>
-
-  <section class="admin-card" id="memberships">
-    <h2>💗 Membership Management</h2>
-    <p>Approve or reject pending membership requests.</p>
-    <section id="requests" aria-live="polite">
-      Loading…
+    <section class="admin-card" id="controlRoom">
+      <h2>👑 The Control Room™</h2>
+      <p>Your live admin overview. Counts reflect records your signed-in admin account is permitted to read.</p>
+      <div class="hq-grid">
+        <div class="hq-metric"><span>Pending Memberships</span><strong id="hqPendingMembers">—</strong></div>
+        <div class="hq-metric"><span>Pending Reports</span><strong id="hqPendingReports">—</strong></div>
+        <div class="hq-metric"><span>Reports In Review</span><strong id="hqReviewingReports">—</strong></div>
+        <div class="hq-metric"><span>Missing Book Covers</span><strong id="hqMissingCovers">—</strong></div>
+      </div>
+      <div class="hq-actions"><a href="#memberships">Review applications →</a><a href="#moderationSuite">Review reports
+          →</a><a href="#coverCloset">Open Cover Closet →</a><a href="#activitiesStudio">Activity planning →</a></div>
+      <p id="hqDashboardStatus" class="hq-small" role="status"></p>
+      <button id="hqRefresh">↻ Refresh Dashboard</button>
     </section>
-    <button id="refresh">Refresh Requests</button>
-  </section>
 
-  <section class="admin-card" id="moderationSuite">
-    <h2>🛡️ The Moderation Suite™</h2>
-    <p>Review reports from Baddie Central™, Junior Central™, and After Dark™. Content details are retrieved through your existing admin-only review function.</p>
-    <div class="hq-toolbar">
-      <label><strong>Report status</strong><select id="hqReportFilter"><option value="pending">Pending</option><option value="reviewing">In review</option><option value="resolved">Resolved</option><option value="dismissed">Dismissed</option><option value="all">All reports</option></select></label>
-      <button id="hqLoadReports">Refresh Reports</button>
-    </div>
-    <p id="hqModerationStatus" role="status" class="hq-small"></p>
-    <div id="hqReports" aria-live="polite"></div>
-    <div class="closet-pager"><button id="hqReportsPrev" disabled>← Previous</button><span id="hqReportsPage" class="muted"></span><button id="hqReportsNext" disabled>Next →</button></div>
-    <h3>📋 Moderation History</h3>
-    <p class="hq-small">Latest hide, restore, pin and unpin actions.</p>
-    <button id="hqRefreshLog">Refresh History</button>
-    <div id="hqModLog" class="table-wrap"></div>
-  </section>
+    <section class="admin-card" id="memberships">
+      <h2>💗 Membership Management</h2>
+      <p>Approve or reject pending membership requests.</p>
+      <section id="requests" aria-live="polite">
+        Loading…
+      </section>
+      <button id="refresh">Refresh Requests</button>
+    </section>
 
-  <section class="admin-card">
-    <h2>📚 Library Management</h2>
-    <p>Manage the Supabase book catalog.</p>
-
-    <div class="stats">
-      <div class="stat">
-        <strong id="totalBooks">—</strong>
-        Total Books
+    <section class="admin-card" id="moderationSuite">
+      <h2>🛡️ The Moderation Suite™</h2>
+      <p>Review reports from Baddie Central™, Junior Central™, and After Dark™. Content details are retrieved through
+        your existing admin-only review function.</p>
+      <div class="hq-toolbar">
+        <label><strong>Report status</strong><select id="hqReportFilter">
+            <option value="pending">Pending</option>
+            <option value="reviewing">In review</option>
+            <option value="resolved">Resolved</option>
+            <option value="dismissed">Dismissed</option>
+            <option value="all">All reports</option>
+          </select></label>
+        <button id="hqLoadReports">Refresh Reports</button>
       </div>
-      <div class="stat">
-        <strong id="totalSeries">—</strong>
-        Series
-      </div>
-      <div class="stat">
-        <strong id="totalImports">—</strong>
-        Import Batches
-      </div>
-    </div>
+      <p id="hqModerationStatus" role="status" class="hq-small"></p>
+      <div id="hqReports" aria-live="polite"></div>
+      <div class="closet-pager"><button id="hqReportsPrev" disabled>← Previous</button><span id="hqReportsPage"
+          class="muted"></span><button id="hqReportsNext" disabled>Next →</button></div>
+      <h3>📋 Moderation History</h3>
+      <p class="hq-small">Latest hide, restore, pin and unpin actions.</p>
+      <button id="hqRefreshLog">Refresh History</button>
+      <div id="hqModLog" class="table-wrap"></div>
+    </section>
 
-    <button id="refreshCatalog">Refresh Catalog Stats</button>
-  </section>
+    <section class="admin-card">
+      <h2>📚 Library Management</h2>
+      <p>Manage the Supabase book catalog.</p>
 
-
-  <section class="admin-card" id="coverCloset">
-    <h2>💋 The Cover Closet™</h2>
-    <p>Find a book, preview its artwork, then paste a direct image link or upload a cover. Changes save to your existing Supabase book catalog.</p>
-    <div class="stats">
-      <div class="stat"><strong id="coversAssigned">—</strong>Books with Covers</div>
-      <div class="stat"><strong id="coversMissing">—</strong>Missing Covers</div>
-    </div>
-    <div class="closet-controls">
-      <label for="coverSearch"><strong>Search title or author</strong><input id="coverSearch" type="search" placeholder="Try Caraval, Raven Kennedy..." autocomplete="off"></label>
-      <label for="coverCollection"><strong>Collection</strong><select id="coverCollection"><option value="all">All collections</option><option value="standalones">Standalones</option><option value="series">Series</option><option value="adult-standalones">18+ Standalones</option><option value="adult-series">18+ Series</option></select></label>
-      <button id="coverFind">Find Books</button>
-    </div>
-    <label for="coverFilter"><strong>Cover status</strong></label>
-    <select id="coverFilter"><option value="all">All books</option><option value="missing">Missing covers only</option><option value="covered">Already covered</option></select>
-    <p id="coverListStatus" class="closet-status muted" role="status">Search or browse to get started.</p>
-    <div id="coverResults" class="closet-results"></div>
-    <div class="closet-pager"><button id="coverPrev" disabled>← Previous</button><span id="coverPageInfo" class="muted"></span><button id="coverNext" disabled>Next →</button></div>
-    <section id="coverEditor" class="closet-editor" hidden>
-      <h3 id="coverSelectedTitle">Selected Book</h3>
-      <p id="coverSelectedMeta" class="muted"></p>
-      <div class="closet-editor-grid">
-        <div><img id="coverCurrentPreview" class="closet-cover" alt="Current book cover"><p class="closet-hint">Current cover</p></div>
-        <div>
-          <div class="closet-actions"><a id="coverGoogleLink" href="https://images.google.com/" target="_blank" rel="noopener noreferrer">🔎 Find cover on Google Images ↗</a></div>
-          <label for="coverUrl"><strong>Option 1 — Paste a direct image URL</strong></label>
-          <input id="coverUrl" type="url" placeholder="https://example.com/book-cover.jpg" spellcheck="false">
-          <button id="coverPreviewUrl">Preview URL</button>
-          <p class="closet-hint">Use the actual image address, not a Google Images search-result page. Only use artwork you have permission to display.</p>
-          <label for="coverUpload"><strong>Option 2 — Upload an image</strong></label>
-          <input id="coverUpload" type="file" accept="image/jpeg,image/png,image/webp">
-          <p class="closet-hint">JPG, PNG, or WebP · 5 MB maximum. Choosing a file takes priority over the pasted URL.</p>
-          <div id="coverCandidateBox" hidden><h3>✨ New Cover Preview</h3><img id="coverCandidatePreview" class="closet-cover" alt="Proposed book cover"></div>
-          <p id="coverSaveStatus" class="closet-status" role="status"></p>
-          <div class="closet-actions"><button id="coverSave" disabled>💗 Save This Cover</button><button id="coverCancel" type="button">Close Editor</button></div>
+      <div class="stats">
+        <div class="stat">
+          <strong id="totalBooks">—</strong>
+          Total Books
+        </div>
+        <div class="stat">
+          <strong id="totalSeries">—</strong>
+          Series
+        </div>
+        <div class="stat">
+          <strong id="totalImports">—</strong>
+          Import Batches
         </div>
       </div>
+
+      <button id="refreshCatalog">Refresh Catalog Stats</button>
     </section>
-  </section>
 
-  <section class="admin-card">
-    <h2>💋 CSV Import Studio</h2>
-    <p>
-      Import books from your four original CSV collections.
-      Preview the records before saving anything.
-    </p>
 
-    <label for="collection">
-      <strong>Choose Collection</strong>
-    </label>
-    <select id="collection">
-      <option value="standalones">Standalones</option>
-      <option value="series">Series</option>
-      <option value="adult-standalones">
-        18+ Standalones
-      </option>
-      <option value="adult-series">
-        18+ Series
-      </option>
-    </select>
-
-    <label for="csvFile">
-      <strong>Choose CSV File</strong>
-    </label>
-    <input
-      type="file"
-      id="csvFile"
-      accept=".csv,text/csv"
-    >
-
-    <button id="previewImport">Preview CSV</button>
-
-    <section id="previewArea" hidden>
-      <h3>✨ Import Preview</h3>
-      <p id="previewSummary"></p>
-
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Title</th>
-              <th>Author</th>
-              <th>Series</th>
-              <th>Genre</th>
-            </tr>
-          </thead>
-          <tbody id="previewRows"></tbody>
-        </table>
+    <section class="admin-card" id="coverCloset">
+      <h2>💋 The Cover Closet™</h2>
+      <p>Find a book, preview its artwork, then paste a direct image link or upload a cover. Changes save to your
+        existing Supabase book catalog.</p>
+      <div class="stats">
+        <div class="stat"><strong id="coversAssigned">—</strong>Books with Covers</div>
+        <div class="stat"><strong id="coversMissing">—</strong>Missing Covers</div>
       </div>
+      <div class="closet-controls">
+        <label for="coverSearch"><strong>Search title or author</strong><input id="coverSearch" type="search"
+            placeholder="Try Caraval, Raven Kennedy..." autocomplete="off"></label>
+        <label for="coverCollection"><strong>Collection</strong><select id="coverCollection">
+            <option value="all">All collections</option>
+            <option value="standalones">Standalones</option>
+            <option value="series">Series</option>
+            <option value="adult-standalones">18+ Standalones</option>
+            <option value="adult-series">18+ Series</option>
+          </select></label>
+        <button id="coverFind">Find Books</button>
+      </div>
+      <label for="coverFilter"><strong>Cover status</strong></label>
+      <select id="coverFilter">
+        <option value="all">All books</option>
+        <option value="missing">Missing covers only</option>
+        <option value="covered">Already covered</option>
+      </select>
+      <p id="coverListStatus" class="closet-status muted" role="status">Search or browse to get started.</p>
+      <div id="coverResults" class="closet-results"></div>
+      <div class="closet-pager"><button id="coverPrev" disabled>← Previous</button><span id="coverPageInfo"
+          class="muted"></span><button id="coverNext" disabled>Next →</button></div>
+      <section id="coverEditor" class="closet-editor" hidden>
+        <h3 id="coverSelectedTitle">Selected Book</h3>
+        <p id="coverSelectedMeta" class="muted"></p>
+        <div class="closet-editor-grid">
+          <div><img id="coverCurrentPreview" class="closet-cover" alt="Current book cover">
+            <p class="closet-hint">Current cover</p>
+          </div>
+          <div>
+            <div class="closet-actions"><a id="coverGoogleLink" href="https://images.google.com/" target="_blank"
+                rel="noopener noreferrer">🔎 Find cover on Google Images ↗</a></div>
+            <label for="coverUrl"><strong>Option 1 — Paste a direct image URL</strong></label>
+            <input id="coverUrl" type="url" placeholder="https://example.com/book-cover.jpg" spellcheck="false">
+            <button id="coverPreviewUrl">Preview URL</button>
+            <p class="closet-hint">Use the actual image address, not a Google Images search-result page. Only use
+              artwork you have permission to display.</p>
+            <label for="coverUpload"><strong>Option 2 — Upload an image</strong></label>
+            <input id="coverUpload" type="file" accept="image/jpeg,image/png,image/webp">
+            <p class="closet-hint">JPG, PNG, or WebP · 5 MB maximum. Choosing a file takes priority over the pasted URL.
+            </p>
+            <div id="coverCandidateBox" hidden>
+              <h3>✨ New Cover Preview</h3><img id="coverCandidatePreview" class="closet-cover"
+                alt="Proposed book cover">
+            </div>
+            <p id="coverSaveStatus" class="closet-status" role="status"></p>
+            <div class="closet-actions"><button id="coverSave" disabled>💗 Save This Cover</button><button
+                id="coverCancel" type="button">Close Editor</button></div>
+          </div>
+        </div>
+      </section>
+    </section>
 
-      <p class="muted">
-        Showing the first 10 valid rows.
-        Existing books will not be overwritten.
+    <section class="admin-card">
+      <h2>💋 CSV Import Studio</h2>
+      <p>
+        Import books from your four original CSV collections.
+        Preview the records before saving anything.
       </p>
 
-      <button id="startImport">
-        💗 Import These Books
-      </button>
-    </section>
+      <label for="collection">
+        <strong>Choose Collection</strong>
+      </label>
+      <select id="collection">
+        <option value="standalones">Standalones</option>
+        <option value="series">Series</option>
+        <option value="adult-standalones">
+          18+ Standalones
+        </option>
+        <option value="adult-series">
+          18+ Series
+        </option>
+      </select>
 
-    <section id="importProgress" hidden>
-      <h3>📖 Import Progress</h3>
-      <progress id="progressBar" value="0" max="100">
-      </progress>
-      <p id="progressText"></p>
-      <pre id="importLog"></pre>
-    </section>
+      <label for="csvFile">
+        <strong>Choose CSV File</strong>
+      </label>
+      <input type="file" id="csvFile" accept=".csv,text/csv">
 
-    <p id="importMessage" role="status"></p>
-  </section>
-  <section class="admin-card" id="activitiesStudio">
-    <h2>🎲 The Activities Studio™</h2>
-    <p>Plan monthly, <strong>every-two-months</strong>, seasonal, annual and custom activities. Draft, publish or archive your plans; dates stay attached to each activity.</p>
-    <form id="activityForm" class="hq-form">
-      <input id="activityId" type="hidden">
-      <div class="hq-form-grid">
-        <label><strong>Activity name</strong><input id="activityTitle" required maxlength="160" placeholder="November–December Reading Bingo"></label>
-        <label><strong>Activity type</strong><select id="activityType"><option value="bingo">Monthly / themed bingo</option><option value="a_z">A–Z challenge</option><option value="annual">Annual challenge</option><option value="monthly_theme">Monthly theme</option><option value="buddy_read">Buddy read</option><option value="readathon">Readathon</option><option value="event">Event</option><option value="giveaway">Giveaway</option><option value="other">Other</option></select></label>
-        <label><strong>Frequency</strong><select id="activityFrequency"><option value="monthly">Monthly</option><option value="every_two_months">Every two months (bimonthly)</option><option value="annual">Annual</option><option value="seasonal">Seasonal</option><option value="custom">Custom / one-time</option></select></label>
-        <label><strong>Visibility</strong><select id="activityStatus"><option value="draft">Draft</option><option value="published">Published</option><option value="archived">Archived</option></select></label>
-        <label><strong>Start date</strong><input id="activityStart" type="date" required></label>
-        <label><strong>End date</strong><input id="activityEnd" type="date" required></label>
+      <button id="previewImport">Preview CSV</button>
+
+      <section id="previewArea" hidden>
+        <h3>✨ Import Preview</h3>
+        <p id="previewSummary"></p>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Series</th>
+                <th>Genre</th>
+              </tr>
+            </thead>
+            <tbody id="previewRows"></tbody>
+          </table>
+        </div>
+
+        <p class="muted">
+          Showing the first 10 valid rows.
+          Existing books will not be overwritten.
+        </p>
+
+        <button id="startImport">
+          💗 Import These Books
+        </button>
+      </section>
+
+      <section id="importProgress" hidden>
+        <h3>📖 Import Progress</h3>
+        <progress id="progressBar" value="0" max="100">
+        </progress>
+        <p id="progressText"></p>
+        <pre id="importLog"></pre>
+      </section>
+
+      <p id="importMessage" role="status"></p>
+    </section>
+    <section class="admin-card" id="activitiesStudio">
+      <h2>🎲 The Activities Studio™</h2>
+      <p>Plan monthly, <strong>every-two-months</strong>, seasonal, annual and custom activities. Draft, publish or
+        archive your plans; dates stay attached to each activity.</p>
+      <form id="activityForm" class="hq-form">
+        <input id="activityId" type="hidden">
+        <div class="hq-form-grid">
+          <label><strong>Activity name</strong><input id="activityTitle" required maxlength="160"
+              placeholder="November–December Reading Bingo"></label>
+          <label><strong>Activity type</strong><select id="activityType">
+              <option value="bingo">Monthly / themed bingo</option>
+              <option value="a_z">A–Z challenge</option>
+              <option value="annual">Annual challenge</option>
+              <option value="monthly_theme">Monthly theme</option>
+              <option value="buddy_read">Buddy read</option>
+              <option value="readathon">Readathon</option>
+              <option value="event">Event</option>
+              <option value="giveaway">Giveaway</option>
+              <option value="other">Other</option>
+            </select></label>
+          <label><strong>Frequency</strong><select id="activityFrequency">
+              <option value="monthly">Monthly</option>
+              <option value="every_two_months">Every two months (bimonthly)</option>
+              <option value="annual">Annual</option>
+              <option value="seasonal">Seasonal</option>
+              <option value="custom">Custom / one-time</option>
+            </select></label>
+          <label><strong>Visibility</strong><select id="activityStatus">
+              <option value="draft">Draft</option>
+              <option value="published">Published</option>
+              <option value="archived">Archived</option>
+            </select></label>
+          <label><strong>Start date</strong><input id="activityStart" type="date" required></label>
+          <label><strong>End date</strong><input id="activityEnd" type="date" required></label>
+        </div>
+        <label><strong>Description</strong><textarea id="activityDescription" maxlength="6000" rows="3"
+            placeholder="What is this activity about?"></textarea></label>
+        <label><strong>Rules / instructions</strong><textarea id="activityRules" maxlength="6000" rows="4"
+            placeholder="How members participate, win, or complete it"></textarea></label>
+        <div class="hq-actions"><button id="activitySave" type="submit">💗 Save Activity</button><button
+            id="activityClear" type="button">Clear Form</button></div>
+        <p id="activityFormStatus" role="status" class="hq-small"></p>
+      </form>
+      <h3>📅 Your Planned Activities</h3>
+      <div class="hq-toolbar"><label><strong>Show</strong><select id="activityListFilter">
+            <option value="all">All activities</option>
+            <option value="draft">Drafts</option>
+            <option value="published">Published</option>
+            <option value="archived">Archived</option>
+          </select></label><button id="activityRefresh">Refresh Activities</button></div>
+      <p id="activityListStatus" class="hq-small" role="status"></p>
+      <div id="activityList"></div>
+      <p class="hq-note">This version saves activity plans and publishing status. Interactive bingo boards, A–Z letter
+        completion, and member progress will be connected in the next activity build; saving a plan does not yet create
+        a playable board.</p>
+    </section>
+    <section class="admin-card" id="roleDesk">
+      <h2>💌 The Role Desk™</h2>
+      <p>Review requests for <strong>Golden Shelf™</strong> and <strong>TBB Team Member (Staff)</strong>. Staff means
+        actual TBB website staff, not reading league teams.</p>
+      <div class="hq-actions"><a href="role-requests.html">View the member application page ↗</a></div>
+      <div class="hq-toolbar"><label><strong>Request status</strong><select id="roleRequestFilter">
+            <option value="pending">Pending</option>
+            <option value="approved">Approved</option>
+            <option value="declined">Declined</option>
+            <option value="withdrawn">Withdrawn</option>
+            <option value="all">All requests</option>
+          </select></label><button id="roleRefresh">Refresh Requests</button></div>
+      <p id="roleListStatus" class="hq-small" role="status"></p>
+      <div id="roleRequestList"></div>
+      <h3>👑 Granted Roles</h3>
+      <p class="hq-small">Website role grants, separate from the existing admin accounts.</p>
+      <button id="roleRefreshGrants">Refresh Granted Roles</button>
+      <div id="roleGrantList"></div>
+      <p class="hq-note">Approving Team Member records the staff role only. Staff moderation access is deliberately
+        disabled until its limited, audited permissions are built. Salty's admin invitation can be handled later.</p>
+    </section>
+    <section class="admin-card" id="baddiePost">
+      <h2>💌 The Baddie Post™</h2>
+      <p>Official TBB announcements and private admin-to-member Vanity™ mail. Members cannot message one another.</p>
+      <h3>📣 Announcement Studio</h3>
+      <form id="postAnnouncementForm" class="hq-form">
+        <input id="postAnnouncementId" type="hidden">
+        <label for="postAnnouncementTitle"><strong>Announcement title</strong></label>
+        <input id="postAnnouncementTitle" required maxlength="160" placeholder="What's the tea, Baddies?" style="width:100%">
+        <label for="postAnnouncementBody"><strong>Announcement</strong></label>
+        <textarea id="postAnnouncementBody" required maxlength="10000" rows="5" placeholder="Share your official update..."></textarea>
+        <div class="hq-form-grid">
+          <label><strong>Status</strong><select id="postAnnouncementStatus">
+            <option value="draft">Draft — admins only</option>
+            <option value="published">Published — approved members</option>
+            <option value="archived">Archived — admins only</option>
+          </select></label>
+          <label><strong>Pin announcement</strong><select id="postAnnouncementPinned">
+            <option value="false">No</option><option value="true">Yes</option>
+          </select></label>
+        </div>
+        <button id="postAnnouncementSave" type="submit">💗 Save Announcement</button>
+        <button id="postAnnouncementClear" type="button">Clear Editor</button>
+        <p id="postAnnouncementStatusMessage" class="hq-small" role="status"></p>
+      </form>
+      <div class="hq-toolbar">
+        <label><strong>Show announcements</strong><select id="postAnnouncementFilter">
+          <option value="all">All statuses</option><option value="draft">Drafts</option>
+          <option value="published">Published</option><option value="archived">Archived</option>
+        </select></label>
+        <button id="postAnnouncementRefresh" type="button">↻ Refresh Announcements</button>
       </div>
-      <label><strong>Description</strong><textarea id="activityDescription" maxlength="6000" rows="3" placeholder="What is this activity about?"></textarea></label>
-      <label><strong>Rules / instructions</strong><textarea id="activityRules" maxlength="6000" rows="4" placeholder="How members participate, win, or complete it"></textarea></label>
-      <div class="hq-actions"><button id="activitySave" type="submit">💗 Save Activity</button><button id="activityClear" type="button">Clear Form</button></div>
-      <p id="activityFormStatus" role="status" class="hq-small"></p>
-    </form>
-    <h3>📅 Your Planned Activities</h3>
-    <div class="hq-toolbar"><label><strong>Show</strong><select id="activityListFilter"><option value="all">All activities</option><option value="draft">Drafts</option><option value="published">Published</option><option value="archived">Archived</option></select></label><button id="activityRefresh">Refresh Activities</button></div>
-    <p id="activityListStatus" class="hq-small" role="status"></p><div id="activityList"></div>
-    <p class="hq-note">This version saves activity plans and publishing status. Interactive bingo boards, A–Z letter completion, and member progress will be connected in the next activity build; saving a plan does not yet create a playable board.</p>
-  </section>
-  <section class="admin-card" id="roleDesk">
-    <h2>💌 The Role Desk™</h2>
-    <p>Review requests for <strong>Golden Shelf™</strong> and <strong>TBB Team Member (Staff)</strong>. Staff means actual TBB website staff, not reading league teams.</p>
-    <div class="hq-actions"><a href="role-requests.html">View the member application page ↗</a></div>
-    <div class="hq-toolbar"><label><strong>Request status</strong><select id="roleRequestFilter"><option value="pending">Pending</option><option value="approved">Approved</option><option value="declined">Declined</option><option value="withdrawn">Withdrawn</option><option value="all">All requests</option></select></label><button id="roleRefresh">Refresh Requests</button></div>
-    <p id="roleListStatus" class="hq-small" role="status"></p><div id="roleRequestList"></div>
-    <h3>👑 Granted Roles</h3><p class="hq-small">Website role grants, separate from the existing admin accounts.</p>
-    <button id="roleRefreshGrants">Refresh Granted Roles</button><div id="roleGrantList"></div>
-    <p class="hq-note">Approving Team Member records the staff role only. Staff moderation access is deliberately disabled until its limited, audited permissions are built. Salty's admin invitation can be handled later.</p>
-  </section>
-  <section class="admin-card" id="baddiePost"><h2>💌 The Baddie Post™</h2><p>Official website announcements and private admin-to-member Vanity™ mail will live here. Member-to-member direct messages are not part of this feature.</p><p class="hq-note">Announcement and mail tables are not yet connected. Existing posts and member data remain untouched.</p></section>
-  <section class="admin-card" id="emojiVault"><h2>💋 The Emoji Vault™</h2><p>View your existing published custom reactions and their storage assets. Publishing, ordering, and uploading will be connected in the dedicated Emoji Vault build.</p><button id="hqRefreshEmojis">Refresh Emoji Catalog</button><p id="hqEmojiStatus" class="hq-small" role="status"></p><div id="hqEmojiList" class="closet-results"></div></section>
-  <section class="admin-card" id="headquarters"><h2>⚙️ The Headquarters™</h2><p>Quick links and future homepage settings.</p><div class="hq-actions"><a href="home.html">🏠 Home</a><a href="commons.html">💬 The Commons™</a><a href="#coverCloset">📚 The Cover Closet™</a><a href="#memberships">💗 Memberships</a></div><p class="hq-small">Vanity™ and Bookshelf™ links will be added once their final page filenames are confirmed, so we don't send members to broken pages.</p></section>
-</main>
+      <div id="postAnnouncementList" aria-live="polite"></div>
+      <h3>✉️ Private Vanity Mail</h3>
+      <p class="hq-small">Select one approved member. Mail is private to its recipient and website administrators.</p>
+      <form id="postMailForm" class="hq-form">
+        <label for="postMailRecipient"><strong>Recipient</strong></label>
+        <select id="postMailRecipient" required><option value="">Loading approved members…</option></select>
+        <button id="postMailRefreshMembers" type="button">↻ Refresh Recipients</button>
+        <label for="postMailSubject"><strong>Subject</strong></label>
+        <input id="postMailSubject" required maxlength="160" placeholder="A little note from TBB 💋" style="width:100%">
+        <label for="postMailBody"><strong>Message</strong></label>
+        <textarea id="postMailBody" required maxlength="10000" rows="5" placeholder="Write your private message..."></textarea>
+        <button id="postMailSend" type="submit">💌 Send Private Mail</button>
+        <p id="postMailStatus" class="hq-small" role="status"></p>
+      </form>
+      <h3>📬 Recent Sent Mail</h3>
+      <button id="postMailRefresh" type="button">↻ Refresh Sent Mail</button>
+      <div id="postMailList" aria-live="polite"></div>
+      <p class="hq-note">Recipient inbox and read/unread controls will appear when The Vanity™ is built. Sending mail here stores it securely now.</p>
+    </section>
+    <section class="admin-card" id="emojiVault">
+      <h2>💋 The Emoji Vault™</h2>
+      <p>View your existing published custom reactions and their storage assets. Publishing, ordering, and uploading
+        will be connected in the dedicated Emoji Vault build.</p><button id="hqRefreshEmojis">Refresh Emoji
+        Catalog</button>
+      <p id="hqEmojiStatus" class="hq-small" role="status"></p>
+      <div id="hqEmojiList" class="closet-results"></div>
+    </section>
+    <section class="admin-card" id="headquarters">
+      <h2>⚙️ The Headquarters™</h2>
+      <p>Quick links and future homepage settings.</p>
+      <div class="hq-actions"><a href="home.html">🏠 Home</a><a href="commons.html">💬 The Commons™</a><a
+          href="#coverCloset">📚 The Cover Closet™</a><a href="#memberships">💗 Memberships</a></div>
+      <p class="hq-small">Vanity™ and Bookshelf™ links will be added once their final page filenames are confirmed, so
+        we don't send members to broken pages.</p>
+    </section>
+  </main>
 
-<script type="module">
-import {
-  db,
-  requireAccess,
-  logout,
-  $,
-  message
-} from './js/auth.js';
+  <script type="module">
+    import {
+      db,
+      requireAccess,
+      logout,
+      $,
+      message
+    } from './js/auth.js';
 
-let adminUser = null;
-let previewBooks = [];
-let previewFileName = '';
-let previewCollection = '';
-let importing = false;
+    let adminUser = null;
+    let previewBooks = [];
+    let previewFileName = '';
+    let previewCollection = '';
+    let importing = false;
 
-const collectionNames = [
-  'standalones',
-  'series',
-  'adult-standalones',
-  'adult-series'
-];
+    const collectionNames = [
+      'standalones',
+      'series',
+      'adult-standalones',
+      'adult-series'
+    ];
 
-const normalize = value =>
-  String(value ?? '').trim().toLowerCase()
-    .replace(/\s+/g, ' ');
+    const normalize = value =>
+      String(value ?? '').trim().toLowerCase()
+        .replace(/\s+/g, ' ');
 
-const bookKey = book =>
-  [
-    normalize(book.collection),
-    normalize(book.title),
-    normalize(book.author),
-    normalize(book.series_name || '')
-  ].join('|');
+    const bookKey = book =>
+      [
+        normalize(book.collection),
+        normalize(book.title),
+        normalize(book.author),
+        normalize(book.series_name || '')
+      ].join('|');
 
-function log(text) {
-  const element = $('importLog');
-  element.textContent += text + '\n';
-  element.scrollTop = element.scrollHeight;
-}
-
-function importMessage(text, isError = false) {
-  $('importMessage').textContent = text;
-  $('importMessage').className =
-    isError ? 'error' : 'notice';
-}
-
-function safeDate(value) {
-  return new Date(value).toLocaleDateString();
-}
-
-/* MEMBERSHIP MANAGEMENT */
-
-async function loadMembers() {
-  try {
-    const access = await requireAccess(true);
-    if (!access) return;
-
-    adminUser = access.user;
-
-    const { data, error } = await db
-      .from('tbb_memberships')
-      .select('user_id,status,created_at')
-      .eq('status', 'pending')
-      .order('created_at', { ascending: true });
-
-    if (error) throw error;
-
-    const wrap = $('requests');
-    wrap.replaceChildren();
-
-    if (!data.length) {
-      wrap.textContent = 'No pending Baddies right now!';
-      return;
+    function log(text) {
+      const element = $('importLog');
+      element.textContent += text + '\n';
+      element.scrollTop = element.scrollHeight;
     }
 
-    for (const member of data) {
-      const div = document.createElement('div');
-      div.className = 'item';
+    function importMessage(text, isError = false) {
+      $('importMessage').textContent = text;
+      $('importMessage').className =
+        isError ? 'error' : 'notice';
+    }
 
-      const { data: profile } = await db
-        .from('tbb_profiles')
-        .select('display_name,username')
-        .eq('user_id', member.user_id)
-        .maybeSingle();
+    function safeDate(value) {
+      return new Date(value).toLocaleDateString();
+    }
 
-      const name = document.createElement('strong');
-      name.textContent =
-        profile?.display_name || 'New Baddie';
-      div.append(name);
+    /* MEMBERSHIP MANAGEMENT */
 
-      const info = document.createElement('p');
-      info.className = 'muted';
-      info.textContent =
-        `@${profile?.username || 'username not set'} · ` +
-        `Applied ${safeDate(member.created_at)}`;
-      div.append(info);
+    async function loadMembers() {
+      try {
+        const access = await requireAccess(true);
+        if (!access) return;
 
-      for (const [label, status] of [
-        ['Approve', 'approved'],
-        ['Reject', 'rejected']
-      ]) {
-        const button = document.createElement('button');
-        button.textContent = label;
+        adminUser = access.user;
 
-        button.onclick = async () => {
-          if (!confirm(`${label} this membership?`)) return;
+        const { data, error } = await db
+          .from('tbb_memberships')
+          .select('user_id,status,created_at')
+          .eq('status', 'pending')
+          .order('created_at', { ascending: true });
 
-          button.disabled = true;
+        if (error) throw error;
 
-          const { error } = await db
-            .from('tbb_memberships')
-            .update({
-              status,
-              approved_by: access.user.id,
-              approved_at:
-                status === 'approved'
-                  ? new Date().toISOString()
-                  : null
-            })
+        const wrap = $('requests');
+        wrap.replaceChildren();
+
+        if (!data.length) {
+          wrap.textContent = 'No pending Baddies right now!';
+          return;
+        }
+
+        for (const member of data) {
+          const div = document.createElement('div');
+          div.className = 'item';
+
+          const { data: profile } = await db
+            .from('tbb_profiles')
+            .select('display_name,username')
             .eq('user_id', member.user_id)
-            .eq('status', 'pending');
+            .maybeSingle();
 
-          if (error) {
-            message(error.message, true);
-          } else {
-            message(`Membership ${status}.`);
-            await loadMembers();
+          const name = document.createElement('strong');
+          name.textContent =
+            profile?.display_name || 'New Baddie';
+          div.append(name);
+
+          const info = document.createElement('p');
+          info.className = 'muted';
+          info.textContent =
+            `@${profile?.username || 'username not set'} · ` +
+            `Applied ${safeDate(member.created_at)}`;
+          div.append(info);
+
+          for (const [label, status] of [
+            ['Approve', 'approved'],
+            ['Reject', 'rejected']
+          ]) {
+            const button = document.createElement('button');
+            button.textContent = label;
+
+            button.onclick = async () => {
+              if (!confirm(`${label} this membership?`)) return;
+
+              button.disabled = true;
+
+              const { error } = await db
+                .from('tbb_memberships')
+                .update({
+                  status,
+                  approved_by: access.user.id,
+                  approved_at:
+                    status === 'approved'
+                      ? new Date().toISOString()
+                      : null
+                })
+                .eq('user_id', member.user_id)
+                .eq('status', 'pending');
+
+              if (error) {
+                message(error.message, true);
+              } else {
+                message(`Membership ${status}.`);
+                await loadMembers();
+              }
+
+              button.disabled = false;
+            };
+
+            div.append(button);
           }
 
-          button.disabled = false;
+          wrap.append(div);
+        }
+      } catch (error) {
+        message(error.message, true);
+      }
+    }
+
+    /* CATALOG STATISTICS */
+
+    async function loadStats() {
+      try {
+        const results = await Promise.all([
+          db.from('tbb_books')
+            .select('*', { count: 'exact', head: true }),
+          db.from('tbb_book_series')
+            .select('*', { count: 'exact', head: true }),
+          db.from('tbb_book_import_batches')
+            .select('*', { count: 'exact', head: true })
+        ]);
+
+        for (const result of results) {
+          if (result.error) throw result.error;
+        }
+
+        $('totalBooks').textContent = results[0].count ?? 0;
+        $('totalSeries').textContent = results[1].count ?? 0;
+        $('totalImports').textContent = results[2].count ?? 0;
+      } catch (error) {
+        importMessage(error.message, true);
+      }
+    }
+
+    /* CSV PARSER — HANDLES QUOTED COMMAS AND NEWLINES */
+
+    function parseCSV(text) {
+      const rows = [];
+      let row = [];
+      let field = '';
+      let quoted = false;
+
+      text = text.replace(/^\uFEFF/, '');
+
+      for (let i = 0; i < text.length; i++) {
+        const char = text[i];
+
+        if (char === '"') {
+          if (quoted && text[i + 1] === '"') {
+            field += '"';
+            i++;
+          } else {
+            quoted = !quoted;
+          }
+        } else if (char === ',' && !quoted) {
+          row.push(field);
+          field = '';
+        } else if (
+          (char === '\n' || char === '\r') && !quoted
+        ) {
+          if (char === '\r' && text[i + 1] === '\n') i++;
+          row.push(field);
+          rows.push(row);
+          row = [];
+          field = '';
+        } else {
+          field += char;
+        }
+      }
+
+      if (quoted) {
+        throw new Error('CSV contains an unclosed quoted field.');
+      }
+
+      if (field || row.length) {
+        row.push(field);
+        rows.push(row);
+      }
+
+      return rows;
+    }
+
+    function readBooks(rows, collection) {
+      const headerIndex = rows.findIndex(row =>
+        normalize(row[0]) === 'uploaded' &&
+        normalize(row[1]) === 'title' &&
+        normalize(row[2]) === 'author'
+      );
+
+      if (headerIndex < 0) {
+        throw new Error(
+          'CSV header not found. Expected Uploaded, Title, Author.'
+        );
+      }
+
+      const headers = rows[headerIndex].map(normalize);
+
+      const get = (row, column) => {
+        const index = headers.indexOf(normalize(column));
+        return index < 0 ? '' : String(row[index] ?? '').trim();
+      };
+
+      const isSeries =
+        collection === 'series' ||
+        collection === 'adult-series';
+
+      if (
+        !headers.includes('main tag') ||
+        !headers.includes('download link') ||
+        (isSeries && !headers.includes('series name'))
+      ) {
+        throw new Error(
+          'The CSV columns do not match the selected collection.'
+        );
+      }
+
+      const books = [];
+      let skipped = 0;
+      const seen = new Set();
+
+      for (let i = headerIndex + 1; i < rows.length; i++) {
+        const row = rows[i];
+
+        const title = get(row, 'Title');
+        const author = get(row, 'Author');
+        const seriesName = get(row, 'Series Name');
+
+        if (!title && !author) continue;
+
+        if (!title || !author || (isSeries && !seriesName)) {
+          skipped++;
+          continue;
+        }
+
+        const book = {
+          title,
+          author,
+          collection,
+          main_tag: get(row, 'Main Tag') || null,
+          download_url: get(row, 'Download Link') || null,
+          source_uploaded:
+            normalize(get(row, 'Uploaded')) === 'true',
+          source_status: get(row, 'Status') || null,
+          source_row_number: i + 1,
+          series_name: isSeries ? seriesName : null,
+          book_number:
+            isSeries ? get(row, 'Book #') || null : null
         };
 
-        div.append(button);
-      }
-
-      wrap.append(div);
-    }
-  } catch (error) {
-    message(error.message, true);
-  }
-}
-
-/* CATALOG STATISTICS */
-
-async function loadStats() {
-  try {
-    const results = await Promise.all([
-      db.from('tbb_books')
-        .select('*', { count: 'exact', head: true }),
-      db.from('tbb_book_series')
-        .select('*', { count: 'exact', head: true }),
-      db.from('tbb_book_import_batches')
-        .select('*', { count: 'exact', head: true })
-    ]);
-
-    for (const result of results) {
-      if (result.error) throw result.error;
-    }
-
-    $('totalBooks').textContent = results[0].count ?? 0;
-    $('totalSeries').textContent = results[1].count ?? 0;
-    $('totalImports').textContent = results[2].count ?? 0;
-  } catch (error) {
-    importMessage(error.message, true);
-  }
-}
-
-/* CSV PARSER — HANDLES QUOTED COMMAS AND NEWLINES */
-
-function parseCSV(text) {
-  const rows = [];
-  let row = [];
-  let field = '';
-  let quoted = false;
-
-  text = text.replace(/^\uFEFF/, '');
-
-  for (let i = 0; i < text.length; i++) {
-    const char = text[i];
-
-    if (char === '"') {
-      if (quoted && text[i + 1] === '"') {
-        field += '"';
-        i++;
-      } else {
-        quoted = !quoted;
-      }
-    } else if (char === ',' && !quoted) {
-      row.push(field);
-      field = '';
-    } else if (
-      (char === '\n' || char === '\r') && !quoted
-    ) {
-      if (char === '\r' && text[i + 1] === '\n') i++;
-      row.push(field);
-      rows.push(row);
-      row = [];
-      field = '';
-    } else {
-      field += char;
-    }
-  }
-
-  if (quoted) {
-    throw new Error('CSV contains an unclosed quoted field.');
-  }
-
-  if (field || row.length) {
-    row.push(field);
-    rows.push(row);
-  }
-
-  return rows;
-}
-
-function readBooks(rows, collection) {
-  const headerIndex = rows.findIndex(row =>
-    normalize(row[0]) === 'uploaded' &&
-    normalize(row[1]) === 'title' &&
-    normalize(row[2]) === 'author'
-  );
-
-  if (headerIndex < 0) {
-    throw new Error(
-      'CSV header not found. Expected Uploaded, Title, Author.'
-    );
-  }
-
-  const headers = rows[headerIndex].map(normalize);
-
-  const get = (row, column) => {
-    const index = headers.indexOf(normalize(column));
-    return index < 0 ? '' : String(row[index] ?? '').trim();
-  };
-
-  const isSeries =
-    collection === 'series' ||
-    collection === 'adult-series';
-
-  if (
-    !headers.includes('main tag') ||
-    !headers.includes('download link') ||
-    (isSeries && !headers.includes('series name'))
-  ) {
-    throw new Error(
-      'The CSV columns do not match the selected collection.'
-    );
-  }
-
-  const books = [];
-  let skipped = 0;
-  const seen = new Set();
-
-  for (let i = headerIndex + 1; i < rows.length; i++) {
-    const row = rows[i];
-
-    const title = get(row, 'Title');
-    const author = get(row, 'Author');
-    const seriesName = get(row, 'Series Name');
-
-    if (!title && !author) continue;
-
-    if (!title || !author || (isSeries && !seriesName)) {
-      skipped++;
-      continue;
-    }
-
-    const book = {
-      title,
-      author,
-      collection,
-      main_tag: get(row, 'Main Tag') || null,
-      download_url: get(row, 'Download Link') || null,
-      source_uploaded:
-        normalize(get(row, 'Uploaded')) === 'true',
-      source_status: get(row, 'Status') || null,
-      source_row_number: i + 1,
-      series_name: isSeries ? seriesName : null,
-      book_number:
-        isSeries ? get(row, 'Book #') || null : null
-    };
-
-    const key = bookKey(book);
-
-    if (seen.has(key)) {
-      skipped++;
-      continue;
-    }
-
-    seen.add(key);
-    books.push(book);
-  }
-
-  return { books, skipped };
-}
-
-/* CSV PREVIEW */
-
-async function previewImport() {
-  if (importing) return;
-
-  try {
-    importMessage('');
-    $('previewArea').hidden = true;
-
-    const file = $('csvFile').files[0];
-    const collection = $('collection').value;
-
-    if (!file) {
-      throw new Error('Choose a CSV file first.');
-    }
-
-    if (!collectionNames.includes(collection)) {
-      throw new Error('Invalid collection.');
-    }
-
-    const text = await file.text();
-    const rows = parseCSV(text);
-    const result = readBooks(rows, collection);
-
-    if (!result.books.length) {
-      throw new Error('No valid book records found.');
-    }
-
-    previewBooks = result.books;
-    previewFileName = file.name;
-    previewCollection = collection;
-
-    $('previewSummary').textContent =
-      `${result.books.length.toLocaleString()} valid books · ` +
-      `${result.skipped} incomplete or repeated rows skipped.`;
-
-    const tbody = $('previewRows');
-    tbody.replaceChildren();
-
-    for (const book of result.books.slice(0, 10)) {
-      const tr = document.createElement('tr');
-
-      for (const value of [
-        book.title,
-        book.author,
-        book.series_name || '—',
-        book.main_tag || '—'
-      ]) {
-        const td = document.createElement('td');
-        td.textContent = value;
-        tr.append(td);
-      }
-
-      tbody.append(tr);
-    }
-
-    $('previewArea').hidden = false;
-    importMessage('Preview ready. No books saved yet.');
-  } catch (error) {
-    importMessage(error.message, true);
-  }
-}
-
-/* READ EXISTING CATALOG WITH PAGINATION */
-
-async function readAll(table, columns) {
-  const results = [];
-  const pageSize = 500;
-
-  for (let offset = 0; ; offset += pageSize) {
-    const { data, error } = await db
-      .from(table)
-      .select(columns)
-      .order('id', { ascending: true })
-      .range(offset, offset + pageSize - 1);
-
-    if (error) throw error;
-
-    results.push(...data);
-
-    if (data.length < pageSize) break;
-  }
-
-  return results;
-}
-
-/* SERIES MATCHING */
-
-async function prepareSeries(books) {
-  const existing = await readAll(
-    'tbb_book_series',
-    'id,name'
-  );
-
-  const seriesMap = new Map(
-    existing.map(item => [normalize(item.name), item.id])
-  );
-
-  const names = new Map();
-
-  for (const book of books) {
-    if (book.series_name) {
-      names.set(normalize(book.series_name), book.series_name);
-    }
-  }
-
-  let created = 0;
-
-  for (const [key, name] of names) {
-    if (seriesMap.has(key)) continue;
-
-    const { data, error } = await db
-      .from('tbb_book_series')
-      .upsert(
-        { name },
-        { onConflict: 'normalized_name' }
-      )
-      .select('id')
-      .single();
-
-    if (error) throw error;
-
-    seriesMap.set(key, data.id);
-    created++;
-  }
-
-  return { seriesMap, created };
-}
-
-/* IMPORT BOOKS */
-
-async function startImport() {
-  if (importing || !previewBooks.length) return;
-  if (!confirm(`Import ${previewBooks.length} books into ${previewCollection}? Existing records will not be overwritten.`)) return;
-
-  importing = true;
-  for (const id of ['startImport','previewImport','csvFile','collection']) $(id).disabled = true;
-  $('importProgress').hidden = false;
-  $('progressBar').value = 0;
-  $('progressText').textContent = 'Preparing import…';
-  $('importLog').textContent = '';
-  importMessage('');
-
-  let inserted = 0, skipped = 0, processed = 0, batchId = null;
-  const failures = [];
-
-  async function updateBatch(fields) {
-    if (!batchId) return;
-    const { error } = await db.from('tbb_book_import_batches').update(fields).eq('id', batchId);
-    if (error) log('Batch tracking warning: ' + error.message);
-  }
-
-  try {
-    const access = await requireAccess(true);
-    if (!access) throw new Error('Admin access required.');
-
-    log('Loading existing catalog and series…');
-    const [existingBooks, existingSeries] = await Promise.all([
-      readAll('tbb_books', 'id,title,author,collection,series_id'),
-      readAll('tbb_book_series', 'id,name')
-    ]);
-    const seriesMap = new Map(existingSeries.map(s => [normalize(s.name), s.id]));
-    const namesToCreate = new Map();
-    for (const book of previewBooks) {
-      if (book.series_name && !seriesMap.has(normalize(book.series_name))) {
-        namesToCreate.set(normalize(book.series_name), book.series_name);
-      }
-    }
- 
-    // Resolve series before comparing books: the unique database index uses series_id.
-    for (const [key, name] of namesToCreate) {
-      const { data, error } = await db.from('tbb_book_series')
-        .upsert({ name }, { onConflict: 'normalized_name' })
-        .select('id').single();
-      if (error) throw new Error(`Cannot resolve series "${name}": ${error.message}`);
-      seriesMap.set(key, data.id);
-    }
-    log(`${namesToCreate.size} series names resolved or created.`);
-
-    const resolved = previewBooks.map(book => {
-      const seriesId = book.series_name ? seriesMap.get(normalize(book.series_name)) : null;
-      if (book.series_name && !seriesId) throw new Error(`Series ID missing for ${book.series_name}`);
-      return { ...book, series_id: seriesId };
-    });
-    const keyOf = b => [normalize(b.collection), normalize(b.title), normalize(b.author), b.series_id || ''].join('|');
-    const known = new Set(existingBooks.map(keyOf));
-    const newBooks = [];
-    for (const book of resolved) {
-      const key = keyOf(book);
-      if (known.has(key)) { skipped++; continue; }
-      known.add(key);
-      newBooks.push(book);
-    }
-    log(`${skipped} books already in catalog; ${newBooks.length} candidates.`);
-
-    if (!newBooks.length) {
-      $('progressBar').value = 100;
-      $('progressText').textContent = 'All records already exist.';
-      importMessage(`Nothing to import. ${skipped} existing books skipped.`);
-      return;
-    }
-
-    const { data: batch, error: batchError } = await db.from('tbb_book_import_batches')
-      .insert({ source_filename: previewFileName, collection: previewCollection,
-        status: 'pending', total_rows: previewBooks.length, created_by: access.user.id })
-      .select('id').single();
-    if (batchError) throw batchError;
-    batchId = batch.id;
-
-    const toRecord = book => ({
-      title: book.title, author: book.author, collection: book.collection,
-      main_tag: book.main_tag, download_url: book.download_url,
-      source_uploaded: book.source_uploaded, source_status: book.source_status,
-      source_row_number: book.source_row_number, book_number: book.book_number,
-      series_id: book.series_id
-    });
-
-    // Chunk first for speed. On a unique violation, retry each book individually
-    // so a single duplicate does not roll back 39 valid books in the same chunk.
-    const chunkSize = 40;
-    for (let i = 0; i < newBooks.length; i += chunkSize) {
-      const chunk = newBooks.slice(i, i + chunkSize);
-      const { error } = await db.from('tbb_books').insert(chunk.map(toRecord));
-      if (!error) {
-        inserted += chunk.length;
-      } else if (error.code === '23505') {
-        log(`Duplicate encountered in chunk ${Math.floor(i / chunkSize) + 1}; checking individual books…`);
-        for (const book of chunk) {
-          const { error: rowError } = await db.from('tbb_books').insert(toRecord(book));
-          if (!rowError) inserted++;
-          else if (rowError.code === '23505') skipped++;
-          else failures.push(`CSV row ${book.source_row_number}: ${rowError.message}`);
+        const key = bookKey(book);
+
+        if (seen.has(key)) {
+          skipped++;
+          continue;
         }
-      } else {
-        // Non-duplicate errors can also be row-specific. Diagnose per row.
-        log(`Chunk error: ${error.message}. Checking individual books…`);
-        for (const book of chunk) {
-          const { error: rowError } = await db.from('tbb_books').insert(toRecord(book));
-          if (!rowError) inserted++;
-          else if (rowError.code === '23505') skipped++;
-          else failures.push(`CSV row ${book.source_row_number}: ${rowError.message}`);
+
+        seen.add(key);
+        books.push(book);
+      }
+
+      return { books, skipped };
+    }
+
+    /* CSV PREVIEW */
+
+    async function previewImport() {
+      if (importing) return;
+
+      try {
+        importMessage('');
+        $('previewArea').hidden = true;
+
+        const file = $('csvFile').files[0];
+        const collection = $('collection').value;
+
+        if (!file) {
+          throw new Error('Choose a CSV file first.');
+        }
+
+        if (!collectionNames.includes(collection)) {
+          throw new Error('Invalid collection.');
+        }
+
+        const text = await file.text();
+        const rows = parseCSV(text);
+        const result = readBooks(rows, collection);
+
+        if (!result.books.length) {
+          throw new Error('No valid book records found.');
+        }
+
+        previewBooks = result.books;
+        previewFileName = file.name;
+        previewCollection = collection;
+
+        $('previewSummary').textContent =
+          `${result.books.length.toLocaleString()} valid books · ` +
+          `${result.skipped} incomplete or repeated rows skipped.`;
+
+        const tbody = $('previewRows');
+        tbody.replaceChildren();
+
+        for (const book of result.books.slice(0, 10)) {
+          const tr = document.createElement('tr');
+
+          for (const value of [
+            book.title,
+            book.author,
+            book.series_name || '—',
+            book.main_tag || '—'
+          ]) {
+            const td = document.createElement('td');
+            td.textContent = value;
+            tr.append(td);
+          }
+
+          tbody.append(tr);
+        }
+
+        $('previewArea').hidden = false;
+        importMessage('Preview ready. No books saved yet.');
+      } catch (error) {
+        importMessage(error.message, true);
+      }
+    }
+
+    /* READ EXISTING CATALOG WITH PAGINATION */
+
+    async function readAll(table, columns) {
+      const results = [];
+      const pageSize = 500;
+
+      for (let offset = 0; ; offset += pageSize) {
+        const { data, error } = await db
+          .from(table)
+          .select(columns)
+          .order('id', { ascending: true })
+          .range(offset, offset + pageSize - 1);
+
+        if (error) throw error;
+
+        results.push(...data);
+
+        if (data.length < pageSize) break;
+      }
+
+      return results;
+    }
+
+    /* SERIES MATCHING */
+
+    async function prepareSeries(books) {
+      const existing = await readAll(
+        'tbb_book_series',
+        'id,name'
+      );
+
+      const seriesMap = new Map(
+        existing.map(item => [normalize(item.name), item.id])
+      );
+
+      const names = new Map();
+
+      for (const book of books) {
+        if (book.series_name) {
+          names.set(normalize(book.series_name), book.series_name);
         }
       }
-      processed += chunk.length;
-      $('progressBar').value = Math.round(processed / newBooks.length * 100);
-      $('progressText').textContent = `${processed} / ${newBooks.length} candidates processed`;
-      log(`${processed} checked · ${inserted} inserted · ${skipped} skipped · ${failures.length} errors`);
-      await updateBatch({ inserted_rows: inserted });
-    }
 
-    for (const failure of failures.slice(0, 30)) log('ERROR: ' + failure);
-    if (failures.length > 30) log(`…and ${failures.length - 30} additional errors.`);
-    await updateBatch({
-      status: failures.length ? 'failed' : 'completed',
-      inserted_rows: inserted,
-      completed_at: failures.length ? null : new Date().toISOString(),
-      ...(failures.length ? { error_details: { count: failures.length, examples: failures.slice(0, 20) } } : {})
-    });
-    await loadStats();
-    if (failures.length) {
-      importMessage(`Partial import: ${inserted} imported, ${skipped} skipped, ${failures.length} errors. See log; you may safely retry.`, true);
-    } else {
-      importMessage(`Success! ${inserted} imported, ${skipped} existing books skipped.`);
-      previewBooks = [];
-      $('previewArea').hidden = true;
-      $('csvFile').value = '';
-    }
-  } catch (error) {
-    log('ERROR: ' + error.message);
-    importMessage(error.message, true);
-    await updateBatch({ status: 'failed', inserted_rows: inserted, error_details: { message: error.message } });
-  } finally {
-    importing = false;
-    for (const id of ['startImport','previewImport','csvFile','collection']) $(id).disabled = false;
-  }
-}
+      let created = 0;
 
+      for (const [key, name] of names) {
+        if (seriesMap.has(key)) continue;
 
-/* THE COVER CLOSET™ — keep book imports and membership management untouched */
-const coverBucket = 'tbb-book-covers';
-const coverPageSize = 18;
-let coverPage = 0;
-let coverTotal = 0;
-let coverSelected = null;
-let coverCandidate = null;
-let coverObjectUrl = null;
-let coverBusy = false;
-let coverSearchSerial = 0;
+        const { data, error } = await db
+          .from('tbb_book_series')
+          .upsert(
+            { name },
+            { onConflict: 'normalized_name' }
+          )
+          .select('id')
+          .single();
 
-const coverHasArtwork = 'cover_url.not.is.null,cover_storage_path.not.is.null';
-const coverPlaceholder = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="150" height="215"><rect width="100%" height="100%" fill="#30152f"/><text x="50%" y="49%" fill="#ff9cda" text-anchor="middle" font-family="sans-serif" font-size="14">No Cover</text></svg>');
-function coverPublicUrl(path) {
-  return path ? db.storage.from(coverBucket).getPublicUrl(path).data.publicUrl : '';
-}
-function coverDisplayUrl(book) {
-  return book.cover_storage_path ? coverPublicUrl(book.cover_storage_path) : (book.cover_url || '');
-}
-function coverStatus(text, error = false, target = 'coverSaveStatus') {
-  $(target).textContent = text;
-  $(target).className = 'closet-status ' + (error ? 'error' : 'notice');
-}
-function clearCoverCandidate() {
-  if (coverObjectUrl) URL.revokeObjectURL(coverObjectUrl);
-  coverObjectUrl = null;
-  coverCandidate = null;
-  $('coverCandidateBox').hidden = true;
-  $('coverCandidatePreview').removeAttribute('src');
-  $('coverSave').disabled = true;
-}
-function coverValidateFile(file) {
-  if (!['image/jpeg','image/png','image/webp'].includes(file.type)) throw new Error('Choose a JPG, PNG, or WebP image.');
-  if (file.size > 5 * 1024 * 1024) throw new Error('Cover exceeds the 5 MB limit.');
-  if (!file.size) throw new Error('This image file is empty.');
-}
-function coverValidateUrl(raw) {
-  let url;
-  try { url = new URL(raw); } catch { throw new Error('Paste a complete HTTPS image URL.'); }
-  if (url.protocol !== 'https:') throw new Error('Cover URLs must start with https://');
-  return url.href;
-}
-function coverTestImage(src) {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    const timer = setTimeout(() => { img.onload = img.onerror = null; reject(new Error('Image preview timed out. Try another image.')); }, 12000);
-    img.onload = () => { clearTimeout(timer); resolve(); };
-    img.onerror = () => { clearTimeout(timer); reject(new Error('This link does not load as an image. Try the direct image address or upload a file.')); };
-    img.src = src;
-  });
-}
-async function loadCoverCounts() {
-  const [all, covered] = await Promise.all([
-    db.from('tbb_books').select('id', { count: 'exact', head: true }),
-    db.from('tbb_books').select('id', { count: 'exact', head: true }).or(coverHasArtwork)
-  ]);
-  if (all.error) throw all.error;
-  if (covered.error) throw covered.error;
-  $('coversAssigned').textContent = (covered.count ?? 0).toLocaleString();
-  $('coversMissing').textContent = ((all.count ?? 0) - (covered.count ?? 0)).toLocaleString();
-}
-async function loadCoverBooks() {
-  const serial = ++coverSearchSerial;
-  const search = $('coverSearch').value.trim();
-  const collection = $('coverCollection').value;
-  const filter = $('coverFilter').value;
-  coverStatus('Finding your books…', false, 'coverListStatus');
-  $('coverResults').replaceChildren();
-  $('coverPrev').disabled = $('coverNext').disabled = true;
-  try {
-    let query = db.from('tbb_books')
-      .select('id,title,author,collection,cover_url,cover_storage_path', { count: 'exact' });
-    if (collection !== 'all') query = query.eq('collection', collection);
-    if (filter === 'covered') query = query.or(coverHasArtwork);
-    if (filter === 'missing') query = query.is('cover_url', null).is('cover_storage_path', null);
-    if (search) {
-      // Escape PostgREST filter delimiters and LIKE wildcards before searching.
-      const term = search.replace(/[%,()]/g, ' ').trim();
-      if (term) query = query.or(`title.ilike.%${term}%,author.ilike.%${term}%`);
-    }
-    const { data, count, error } = await query.order('title', { ascending: true })
-      .order('id', { ascending: true }).range(coverPage * coverPageSize, (coverPage + 1) * coverPageSize - 1);
-    if (serial !== coverSearchSerial) return;
-    if (error) throw error;
-    coverTotal = count ?? 0;
-    coverStatus(`${coverTotal.toLocaleString()} matching books`, false, 'coverListStatus');
-    for (const book of data || []) {
-      const btn = document.createElement('button');
-      btn.type = 'button'; btn.className = 'closet-book';
-      if (coverSelected?.id === book.id) btn.classList.add('selected');
-      const img = document.createElement('img');
-      img.alt = ''; img.loading = 'lazy'; img.src = coverDisplayUrl(book) || coverPlaceholder;
-      img.onerror = () => { img.onerror = null; img.src = coverPlaceholder; };
-      const details = document.createElement('span');
-      const title = document.createElement('strong'); title.textContent = book.title;
-      const meta = document.createElement('small'); meta.textContent = `${book.author} · ${book.collection}`;
-      const status = document.createElement('small'); status.textContent = coverDisplayUrl(book) ? '💗 Cover assigned' : '○ Missing cover';
-      details.append(title, meta, status); btn.append(img, details);
-      btn.onclick = () => selectCoverBook(book);
-      $('coverResults').append(btn);
-    }
-    $('coverPageInfo').textContent = coverTotal ? `Page ${coverPage + 1} of ${Math.ceil(coverTotal / coverPageSize)}` : 'No matches';
-    $('coverPrev').disabled = coverPage === 0;
-    $('coverNext').disabled = (coverPage + 1) * coverPageSize >= coverTotal;
-  } catch (error) { if (serial === coverSearchSerial) coverStatus(error.message, true, 'coverListStatus'); }
-}
-function selectCoverBook(book) {
-  coverSelected = book;
-  clearCoverCandidate();
-  $('coverEditor').hidden = false;
-  $('coverSelectedTitle').textContent = book.title;
-  $('coverSelectedMeta').textContent = `${book.author} · ${book.collection}`;
-  $('coverCurrentPreview').src = coverDisplayUrl(book) || coverPlaceholder;
-  $('coverCurrentPreview').onerror = () => { $('coverCurrentPreview').onerror = null; $('coverCurrentPreview').src = coverPlaceholder; };
-  $('coverGoogleLink').href = 'https://www.google.com/search?tbm=isch&q=' + encodeURIComponent(`${book.title} ${book.author} book cover`);
-  $('coverUrl').value = '';
-  $('coverUpload').value = '';
-  coverStatus('Choose an image file or paste and preview a URL.');
-  $('coverEditor').scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
-async function previewCoverUrl() {
-  if (!coverSelected || coverBusy) return;
-  clearCoverCandidate();
-  try {
-    const url = coverValidateUrl($('coverUrl').value.trim());
-    coverStatus('Checking image…');
-    await coverTestImage(url);
-    coverCandidate = { type: 'url', url };
-    $('coverCandidatePreview').src = url;
-    $('coverCandidateBox').hidden = false;
-    $('coverSave').disabled = false;
-    coverStatus('Preview ready! Check the artwork, then save.');
-  } catch (error) { coverStatus(error.message, true); }
-}
-async function previewCoverFile() {
-  if (!coverSelected || coverBusy) return;
-  clearCoverCandidate();
-  const file = $('coverUpload').files[0];
-  if (!file) return;
-  try {
-    coverValidateFile(file);
-    coverObjectUrl = URL.createObjectURL(file);
-    await coverTestImage(coverObjectUrl);
-    coverCandidate = { type: 'file', file };
-    $('coverCandidatePreview').src = coverObjectUrl;
-    $('coverCandidateBox').hidden = false;
-    $('coverSave').disabled = false;
-    coverStatus('Upload preview ready! Check the artwork, then save.');
-  } catch (error) { clearCoverCandidate(); coverStatus(error.message, true); }
-}
-async function saveCover() {
-  if (!coverSelected || !coverCandidate || coverBusy) return;
-  coverBusy = true; $('coverSave').disabled = true;
-  let newStoragePath = null;
-  try {
-    const access = await requireAccess(true);
-    if (!access) throw new Error('Admin access required.');
-    const bookId = coverSelected.id;
-    const candidate = coverCandidate;
-    let fields;
-    if (candidate.type === 'file') {
-      coverValidateFile(candidate.file);
-      const extension = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp' }[candidate.file.type];
-      newStoragePath = `${access.user.id}/${bookId}/${crypto.randomUUID()}.${extension}`;
-      coverStatus('Uploading cover…');
-      const { error: uploadError } = await db.storage.from(coverBucket).upload(newStoragePath, candidate.file, { contentType: candidate.file.type, upsert: false });
-      if (uploadError) throw uploadError;
-      fields = { cover_storage_path: newStoragePath, cover_url: coverPublicUrl(newStoragePath) };
-    } else {
-      fields = { cover_storage_path: null, cover_url: coverValidateUrl(candidate.url) };
-    }
-    coverStatus('Saving cover to your catalog…');
-    const { data, error } = await db.from('tbb_books').update(fields).eq('id', bookId)
-      .select('id,cover_url,cover_storage_path').single();
-    if (error) throw error;
-    // Avoid removing previously uploaded files: other references may still use them.
-    coverSelected = { ...coverSelected, ...data };
-    clearCoverCandidate();
-    $('coverUpload').value = ''; $('coverUrl').value = '';
-    $('coverCurrentPreview').src = coverDisplayUrl(coverSelected) || coverPlaceholder;
-    coverStatus('💗 Cover saved successfully!');
-    await Promise.allSettled([loadCoverCounts(), loadCoverBooks()]);
-  } catch (error) {
-    if (newStoragePath) {
-      // Roll back a newly uploaded object if the book record was not saved.
-      await db.storage.from(coverBucket).remove([newStoragePath]);
-    }
-    coverStatus(error.message || 'Could not save cover.', true);
-    $('coverSave').disabled = !coverCandidate;
-  } finally { coverBusy = false; }
-}
-$('coverFind').onclick = () => { coverPage = 0; loadCoverBooks(); };
-$('coverSearch').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); coverPage = 0; loadCoverBooks(); } });
-for (const id of ['coverCollection','coverFilter']) $(id).addEventListener('change', () => { coverPage = 0; loadCoverBooks(); });
-$('coverPrev').onclick = () => { if (coverPage > 0) { coverPage--; loadCoverBooks(); } };
-$('coverNext').onclick = () => { if ((coverPage + 1) * coverPageSize < coverTotal) { coverPage++; loadCoverBooks(); } };
-$('coverPreviewUrl').onclick = previewCoverUrl;
-$('coverUpload').addEventListener('change', () => { $('coverUrl').value = ''; previewCoverFile(); });
-$('coverUrl').addEventListener('input', () => { if (!coverBusy) { clearCoverCandidate(); $('coverUpload').value = ''; } });
-$('coverSave').onclick = saveCover;
-$('coverCancel').onclick = () => { if (coverBusy) return; clearCoverCandidate(); coverSelected = null; $('coverEditor').hidden = true; };
+        if (error) throw error;
 
-
-/* ADMIN HQ EXPANSION — preserves original member, import and cover handlers */
-const hqReportPageSize = 12;
-let hqReportPage = 0;
-let hqReportTotal = 0;
-let hqReportSerial = 0;
-const hqEscapeDate = value => value ? new Date(value).toLocaleString() : '—';
-function hqSetStatus(id, text, isError = false) {
-  $(id).textContent = text;
-  $(id).className = isError ? 'error' : 'hq-small';
-}
-async function hqCount(table, apply = query => query) {
-  const { count, error } = await apply(db.from(table).select('*', { count: 'exact', head: true }));
-  if (error) throw error;
-  return count ?? 0;
-}
-async function hqLoadDashboard() {
-  const metrics = [
-    ['hqPendingMembers', 'tbb_memberships', q => q.eq('status', 'pending')],
-    ['hqPendingReports', 'tbb_commons_reports', q => q.eq('status', 'pending')],
-    ['hqReviewingReports', 'tbb_commons_reports', q => q.eq('status', 'reviewing')],
-    ['hqMissingCovers', 'tbb_books', q => q.is('cover_url', null).is('cover_storage_path', null)]
-  ];
-  hqSetStatus('hqDashboardStatus', 'Refreshing live counts…');
-  const results = await Promise.allSettled(metrics.map(async ([id, table, filter]) => {
-    const count = await hqCount(table, filter);
-    $(id).textContent = count.toLocaleString();
-  }));
-  const failed = results.filter(r => r.status === 'rejected');
-  hqSetStatus('hqDashboardStatus', failed.length ? `${failed.length} dashboard count(s) unavailable. Check admin RLS permissions.` : 'Dashboard counts updated.', !!failed.length);
-}
-function hqElement(tag, text, className) {
-  const node = document.createElement(tag);
-  if (text !== undefined) node.textContent = text;
-  if (className) node.className = className;
-  return node;
-}
-function hqActionButton(text, handler) {
-  const button = hqElement('button', text);
-  button.type = 'button';
-  button.onclick = async () => {
-    button.disabled = true;
-    try { await handler(); } catch (error) { hqSetStatus('hqModerationStatus', error.message, true); }
-    finally { button.disabled = false; }
-  };
-  return button;
-}
-async function hqLoadReports() {
-  const serial = ++hqReportSerial;
-  const wrap = $('hqReports');
-  wrap.replaceChildren();
-  hqSetStatus('hqModerationStatus', 'Loading reports…');
-  const filter = $('hqReportFilter').value;
-  let query = db.from('tbb_commons_reports').select('id,status,reason,details,created_at,post_id,comment_id', { count: 'exact' });
-  if (filter !== 'all') query = query.eq('status', filter);
-  const { data, count, error } = await query.order('created_at', { ascending: false })
-    .range(hqReportPage * hqReportPageSize, (hqReportPage + 1) * hqReportPageSize - 1);
-  if (serial !== hqReportSerial) return;
-  if (error) { hqSetStatus('hqModerationStatus', error.message, true); return; }
-  hqReportTotal = count ?? 0;
-  $('hqReportsPage').textContent = hqReportTotal ? `Page ${hqReportPage + 1} of ${Math.ceil(hqReportTotal / hqReportPageSize)}` : 'No reports';
-  $('hqReportsPrev').disabled = hqReportPage === 0;
-  $('hqReportsNext').disabled = (hqReportPage + 1) * hqReportPageSize >= hqReportTotal;
-  if (!data?.length) wrap.append(hqElement('p', 'No reports match this filter. 💗', 'muted'));
-  for (const report of data || []) {
-    const card = hqElement('article', undefined, 'hq-report');
-    const heading = hqElement('div', undefined, 'hq-report-head');
-    heading.append(hqElement('strong', `${report.comment_id ? 'Comment' : 'Post'} · ${report.reason.replaceAll('_', ' ')}`), hqElement('span', report.status, 'hq-chip'));
-    card.append(heading, hqElement('p', `Reported ${hqEscapeDate(report.created_at)}`, 'hq-small'));
-    if (report.details) card.append(hqElement('p', `Report notes: ${report.details}`));
-    const detailArea = hqElement('div');
-    const controls = hqElement('div', undefined, 'closet-actions');
-    controls.append(hqActionButton('🔎 View reported content', async () => {
-      hqSetStatus('hqModerationStatus', 'Loading protected report details…');
-      const { data: raw, error: detailError } = await db.rpc('tbb_admin_get_report_details', { target_report_id: report.id });
-      if (detailError) throw detailError;
-      const detail = Array.isArray(raw) ? raw[0] : raw;
-      if (!detail) throw new Error('Report details were not returned.');
-      detailArea.replaceChildren();
-      detailArea.append(hqElement('p', `Commons: ${detail.commons_id || 'Unknown'} · Author ID: ${detail.author_id || 'Unknown'}`, 'hq-small'));
-      detailArea.append(hqElement('div', detail.body || '[No content text available]', 'hq-report-body'));
-      detailArea.append(hqElement('p', detail.is_deleted ? 'Content is currently hidden.' : 'Content is currently visible.', 'hq-small'));
-      const moderation = hqElement('div', undefined, 'closet-actions');
-      const targetType = detail.content_type || (report.comment_id ? 'comment' : 'post');
-      const targetId = detail.content_id || report.comment_id || report.post_id;
-      for (const [label, action] of [[detail.is_deleted ? '↩ Restore content' : '🚫 Hide content', detail.is_deleted ? 'restore' : 'hide'], ...(targetType === 'post' ? [['📌 Pin post', 'pin'], ['Unpin post', 'unpin']] : [])]) {
-        moderation.append(hqActionButton(label, async () => {
-          if (!confirm(`${label}? This changes the live Commons content.`)) return;
-          const { error: moderationError } = await db.rpc('tbb_moderate_commons_content', { target_type: targetType, target_id: targetId, moderation_action: action });
-          if (moderationError) throw moderationError;
-          hqSetStatus('hqModerationStatus', `${action} successful. Reload report details to see the latest content status.`);
-          await hqLoadModLog();
-        }));
+        seriesMap.set(key, data.id);
+        created++;
       }
-      detailArea.append(moderation);
-      hqSetStatus('hqModerationStatus', 'Report details loaded.');
-    }));
-    for (const [label, status] of [['Start Review', 'reviewing'], ['Resolve', 'resolved'], ['Dismiss', 'dismissed']]) {
-      if (report.status === status) continue;
-      controls.append(hqActionButton(label, async () => {
-        if (!confirm(`Mark this report as ${status}?`)) return;
-        const { error: reviewError } = await db.rpc('tbb_review_commons_report', { target_report_id: report.id, new_status: status });
-        if (reviewError) throw reviewError;
-        await Promise.all([hqLoadReports(), hqLoadDashboard()]);
-        hqSetStatus('hqModerationStatus', `Report marked ${status}.`);
+
+      return { seriesMap, created };
+    }
+
+    /* IMPORT BOOKS */
+
+    async function startImport() {
+      if (importing || !previewBooks.length) return;
+      if (!confirm(`Import ${previewBooks.length} books into ${previewCollection}? Existing records will not be overwritten.`)) return;
+
+      importing = true;
+      for (const id of ['startImport', 'previewImport', 'csvFile', 'collection']) $(id).disabled = true;
+      $('importProgress').hidden = false;
+      $('progressBar').value = 0;
+      $('progressText').textContent = 'Preparing import…';
+      $('importLog').textContent = '';
+      importMessage('');
+
+      let inserted = 0, skipped = 0, processed = 0, batchId = null;
+      const failures = [];
+
+      async function updateBatch(fields) {
+        if (!batchId) return;
+        const { error } = await db.from('tbb_book_import_batches').update(fields).eq('id', batchId);
+        if (error) log('Batch tracking warning: ' + error.message);
+      }
+
+      try {
+        const access = await requireAccess(true);
+        if (!access) throw new Error('Admin access required.');
+
+        log('Loading existing catalog and series…');
+        const [existingBooks, existingSeries] = await Promise.all([
+          readAll('tbb_books', 'id,title,author,collection,series_id'),
+          readAll('tbb_book_series', 'id,name')
+        ]);
+        const seriesMap = new Map(existingSeries.map(s => [normalize(s.name), s.id]));
+        const namesToCreate = new Map();
+        for (const book of previewBooks) {
+          if (book.series_name && !seriesMap.has(normalize(book.series_name))) {
+            namesToCreate.set(normalize(book.series_name), book.series_name);
+          }
+        }
+
+        // Resolve series before comparing books: the unique database index uses series_id.
+        for (const [key, name] of namesToCreate) {
+          const { data, error } = await db.from('tbb_book_series')
+            .upsert({ name }, { onConflict: 'normalized_name' })
+            .select('id').single();
+          if (error) throw new Error(`Cannot resolve series "${name}": ${error.message}`);
+          seriesMap.set(key, data.id);
+        }
+        log(`${namesToCreate.size} series names resolved or created.`);
+
+        const resolved = previewBooks.map(book => {
+          const seriesId = book.series_name ? seriesMap.get(normalize(book.series_name)) : null;
+          if (book.series_name && !seriesId) throw new Error(`Series ID missing for ${book.series_name}`);
+          return { ...book, series_id: seriesId };
+        });
+        const keyOf = b => [normalize(b.collection), normalize(b.title), normalize(b.author), b.series_id || ''].join('|');
+        const known = new Set(existingBooks.map(keyOf));
+        const newBooks = [];
+        for (const book of resolved) {
+          const key = keyOf(book);
+          if (known.has(key)) { skipped++; continue; }
+          known.add(key);
+          newBooks.push(book);
+        }
+        log(`${skipped} books already in catalog; ${newBooks.length} candidates.`);
+
+        if (!newBooks.length) {
+          $('progressBar').value = 100;
+          $('progressText').textContent = 'All records already exist.';
+          importMessage(`Nothing to import. ${skipped} existing books skipped.`);
+          return;
+        }
+
+        const { data: batch, error: batchError } = await db.from('tbb_book_import_batches')
+          .insert({
+            source_filename: previewFileName, collection: previewCollection,
+            status: 'pending', total_rows: previewBooks.length, created_by: access.user.id
+          })
+          .select('id').single();
+        if (batchError) throw batchError;
+        batchId = batch.id;
+
+        const toRecord = book => ({
+          title: book.title, author: book.author, collection: book.collection,
+          main_tag: book.main_tag, download_url: book.download_url,
+          source_uploaded: book.source_uploaded, source_status: book.source_status,
+          source_row_number: book.source_row_number, book_number: book.book_number,
+          series_id: book.series_id
+        });
+
+        // Chunk first for speed. On a unique violation, retry each book individually
+        // so a single duplicate does not roll back 39 valid books in the same chunk.
+        const chunkSize = 40;
+        for (let i = 0; i < newBooks.length; i += chunkSize) {
+          const chunk = newBooks.slice(i, i + chunkSize);
+          const { error } = await db.from('tbb_books').insert(chunk.map(toRecord));
+          if (!error) {
+            inserted += chunk.length;
+          } else if (error.code === '23505') {
+            log(`Duplicate encountered in chunk ${Math.floor(i / chunkSize) + 1}; checking individual books…`);
+            for (const book of chunk) {
+              const { error: rowError } = await db.from('tbb_books').insert(toRecord(book));
+              if (!rowError) inserted++;
+              else if (rowError.code === '23505') skipped++;
+              else failures.push(`CSV row ${book.source_row_number}: ${rowError.message}`);
+            }
+          } else {
+            // Non-duplicate errors can also be row-specific. Diagnose per row.
+            log(`Chunk error: ${error.message}. Checking individual books…`);
+            for (const book of chunk) {
+              const { error: rowError } = await db.from('tbb_books').insert(toRecord(book));
+              if (!rowError) inserted++;
+              else if (rowError.code === '23505') skipped++;
+              else failures.push(`CSV row ${book.source_row_number}: ${rowError.message}`);
+            }
+          }
+          processed += chunk.length;
+          $('progressBar').value = Math.round(processed / newBooks.length * 100);
+          $('progressText').textContent = `${processed} / ${newBooks.length} candidates processed`;
+          log(`${processed} checked · ${inserted} inserted · ${skipped} skipped · ${failures.length} errors`);
+          await updateBatch({ inserted_rows: inserted });
+        }
+
+        for (const failure of failures.slice(0, 30)) log('ERROR: ' + failure);
+        if (failures.length > 30) log(`…and ${failures.length - 30} additional errors.`);
+        await updateBatch({
+          status: failures.length ? 'failed' : 'completed',
+          inserted_rows: inserted,
+          completed_at: failures.length ? null : new Date().toISOString(),
+          ...(failures.length ? { error_details: { count: failures.length, examples: failures.slice(0, 20) } } : {})
+        });
+        await loadStats();
+        if (failures.length) {
+          importMessage(`Partial import: ${inserted} imported, ${skipped} skipped, ${failures.length} errors. See log; you may safely retry.`, true);
+        } else {
+          importMessage(`Success! ${inserted} imported, ${skipped} existing books skipped.`);
+          previewBooks = [];
+          $('previewArea').hidden = true;
+          $('csvFile').value = '';
+        }
+      } catch (error) {
+        log('ERROR: ' + error.message);
+        importMessage(error.message, true);
+        await updateBatch({ status: 'failed', inserted_rows: inserted, error_details: { message: error.message } });
+      } finally {
+        importing = false;
+        for (const id of ['startImport', 'previewImport', 'csvFile', 'collection']) $(id).disabled = false;
+      }
+    }
+
+
+    /* THE COVER CLOSET™ — keep book imports and membership management untouched */
+    const coverBucket = 'tbb-book-covers';
+    const coverPageSize = 18;
+    let coverPage = 0;
+    let coverTotal = 0;
+    let coverSelected = null;
+    let coverCandidate = null;
+    let coverObjectUrl = null;
+    let coverBusy = false;
+    let coverSearchSerial = 0;
+
+    const coverHasArtwork = 'cover_url.not.is.null,cover_storage_path.not.is.null';
+    const coverPlaceholder = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="150" height="215"><rect width="100%" height="100%" fill="#30152f"/><text x="50%" y="49%" fill="#ff9cda" text-anchor="middle" font-family="sans-serif" font-size="14">No Cover</text></svg>');
+    function coverPublicUrl(path) {
+      return path ? db.storage.from(coverBucket).getPublicUrl(path).data.publicUrl : '';
+    }
+    function coverDisplayUrl(book) {
+      return book.cover_storage_path ? coverPublicUrl(book.cover_storage_path) : (book.cover_url || '');
+    }
+    function coverStatus(text, error = false, target = 'coverSaveStatus') {
+      $(target).textContent = text;
+      $(target).className = 'closet-status ' + (error ? 'error' : 'notice');
+    }
+    function clearCoverCandidate() {
+      if (coverObjectUrl) URL.revokeObjectURL(coverObjectUrl);
+      coverObjectUrl = null;
+      coverCandidate = null;
+      $('coverCandidateBox').hidden = true;
+      $('coverCandidatePreview').removeAttribute('src');
+      $('coverSave').disabled = true;
+    }
+    function coverValidateFile(file) {
+      if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) throw new Error('Choose a JPG, PNG, or WebP image.');
+      if (file.size > 5 * 1024 * 1024) throw new Error('Cover exceeds the 5 MB limit.');
+      if (!file.size) throw new Error('This image file is empty.');
+    }
+    function coverValidateUrl(raw) {
+      let url;
+      try { url = new URL(raw); } catch { throw new Error('Paste a complete HTTPS image URL.'); }
+      if (url.protocol !== 'https:') throw new Error('Cover URLs must start with https://');
+      return url.href;
+    }
+    function coverTestImage(src) {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        const timer = setTimeout(() => { img.onload = img.onerror = null; reject(new Error('Image preview timed out. Try another image.')); }, 12000);
+        img.onload = () => { clearTimeout(timer); resolve(); };
+        img.onerror = () => { clearTimeout(timer); reject(new Error('This link does not load as an image. Try the direct image address or upload a file.')); };
+        img.src = src;
+      });
+    }
+    async function loadCoverCounts() {
+      const [all, covered] = await Promise.all([
+        db.from('tbb_books').select('id', { count: 'exact', head: true }),
+        db.from('tbb_books').select('id', { count: 'exact', head: true }).or(coverHasArtwork)
+      ]);
+      if (all.error) throw all.error;
+      if (covered.error) throw covered.error;
+      $('coversAssigned').textContent = (covered.count ?? 0).toLocaleString();
+      $('coversMissing').textContent = ((all.count ?? 0) - (covered.count ?? 0)).toLocaleString();
+    }
+    async function loadCoverBooks() {
+      const serial = ++coverSearchSerial;
+      const search = $('coverSearch').value.trim();
+      const collection = $('coverCollection').value;
+      const filter = $('coverFilter').value;
+      coverStatus('Finding your books…', false, 'coverListStatus');
+      $('coverResults').replaceChildren();
+      $('coverPrev').disabled = $('coverNext').disabled = true;
+      try {
+        let query = db.from('tbb_books')
+          .select('id,title,author,collection,cover_url,cover_storage_path', { count: 'exact' });
+        if (collection !== 'all') query = query.eq('collection', collection);
+        if (filter === 'covered') query = query.or(coverHasArtwork);
+        if (filter === 'missing') query = query.is('cover_url', null).is('cover_storage_path', null);
+        if (search) {
+          // Escape PostgREST filter delimiters and LIKE wildcards before searching.
+          const term = search.replace(/[%,()]/g, ' ').trim();
+          if (term) query = query.or(`title.ilike.%${term}%,author.ilike.%${term}%`);
+        }
+        const { data, count, error } = await query.order('title', { ascending: true })
+          .order('id', { ascending: true }).range(coverPage * coverPageSize, (coverPage + 1) * coverPageSize - 1);
+        if (serial !== coverSearchSerial) return;
+        if (error) throw error;
+        coverTotal = count ?? 0;
+        coverStatus(`${coverTotal.toLocaleString()} matching books`, false, 'coverListStatus');
+        for (const book of data || []) {
+          const btn = document.createElement('button');
+          btn.type = 'button'; btn.className = 'closet-book';
+          if (coverSelected?.id === book.id) btn.classList.add('selected');
+          const img = document.createElement('img');
+          img.alt = ''; img.loading = 'lazy'; img.src = coverDisplayUrl(book) || coverPlaceholder;
+          img.onerror = () => { img.onerror = null; img.src = coverPlaceholder; };
+          const details = document.createElement('span');
+          const title = document.createElement('strong'); title.textContent = book.title;
+          const meta = document.createElement('small'); meta.textContent = `${book.author} · ${book.collection}`;
+          const status = document.createElement('small'); status.textContent = coverDisplayUrl(book) ? '💗 Cover assigned' : '○ Missing cover';
+          details.append(title, meta, status); btn.append(img, details);
+          btn.onclick = () => selectCoverBook(book);
+          $('coverResults').append(btn);
+        }
+        $('coverPageInfo').textContent = coverTotal ? `Page ${coverPage + 1} of ${Math.ceil(coverTotal / coverPageSize)}` : 'No matches';
+        $('coverPrev').disabled = coverPage === 0;
+        $('coverNext').disabled = (coverPage + 1) * coverPageSize >= coverTotal;
+      } catch (error) { if (serial === coverSearchSerial) coverStatus(error.message, true, 'coverListStatus'); }
+    }
+    function selectCoverBook(book) {
+      coverSelected = book;
+      clearCoverCandidate();
+      $('coverEditor').hidden = false;
+      $('coverSelectedTitle').textContent = book.title;
+      $('coverSelectedMeta').textContent = `${book.author} · ${book.collection}`;
+      $('coverCurrentPreview').src = coverDisplayUrl(book) || coverPlaceholder;
+      $('coverCurrentPreview').onerror = () => { $('coverCurrentPreview').onerror = null; $('coverCurrentPreview').src = coverPlaceholder; };
+      $('coverGoogleLink').href = 'https://www.google.com/search?tbm=isch&q=' + encodeURIComponent(`${book.title} ${book.author} book cover`);
+      $('coverUrl').value = '';
+      $('coverUpload').value = '';
+      coverStatus('Choose an image file or paste and preview a URL.');
+      $('coverEditor').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    async function previewCoverUrl() {
+      if (!coverSelected || coverBusy) return;
+      clearCoverCandidate();
+      try {
+        const url = coverValidateUrl($('coverUrl').value.trim());
+        coverStatus('Checking image…');
+        await coverTestImage(url);
+        coverCandidate = { type: 'url', url };
+        $('coverCandidatePreview').src = url;
+        $('coverCandidateBox').hidden = false;
+        $('coverSave').disabled = false;
+        coverStatus('Preview ready! Check the artwork, then save.');
+      } catch (error) { coverStatus(error.message, true); }
+    }
+    async function previewCoverFile() {
+      if (!coverSelected || coverBusy) return;
+      clearCoverCandidate();
+      const file = $('coverUpload').files[0];
+      if (!file) return;
+      try {
+        coverValidateFile(file);
+        coverObjectUrl = URL.createObjectURL(file);
+        await coverTestImage(coverObjectUrl);
+        coverCandidate = { type: 'file', file };
+        $('coverCandidatePreview').src = coverObjectUrl;
+        $('coverCandidateBox').hidden = false;
+        $('coverSave').disabled = false;
+        coverStatus('Upload preview ready! Check the artwork, then save.');
+      } catch (error) { clearCoverCandidate(); coverStatus(error.message, true); }
+    }
+    async function saveCover() {
+      if (!coverSelected || !coverCandidate || coverBusy) return;
+      coverBusy = true; $('coverSave').disabled = true;
+      let newStoragePath = null;
+      try {
+        const access = await requireAccess(true);
+        if (!access) throw new Error('Admin access required.');
+        const bookId = coverSelected.id;
+        const candidate = coverCandidate;
+        let fields;
+        if (candidate.type === 'file') {
+          coverValidateFile(candidate.file);
+          const extension = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp' }[candidate.file.type];
+          newStoragePath = `${access.user.id}/${bookId}/${crypto.randomUUID()}.${extension}`;
+          coverStatus('Uploading cover…');
+          const { error: uploadError } = await db.storage.from(coverBucket).upload(newStoragePath, candidate.file, { contentType: candidate.file.type, upsert: false });
+          if (uploadError) throw uploadError;
+          fields = { cover_storage_path: newStoragePath, cover_url: coverPublicUrl(newStoragePath) };
+        } else {
+          fields = { cover_storage_path: null, cover_url: coverValidateUrl(candidate.url) };
+        }
+        coverStatus('Saving cover to your catalog…');
+        const { data, error } = await db.from('tbb_books').update(fields).eq('id', bookId)
+          .select('id,cover_url,cover_storage_path').single();
+        if (error) throw error;
+        // Avoid removing previously uploaded files: other references may still use them.
+        coverSelected = { ...coverSelected, ...data };
+        clearCoverCandidate();
+        $('coverUpload').value = ''; $('coverUrl').value = '';
+        $('coverCurrentPreview').src = coverDisplayUrl(coverSelected) || coverPlaceholder;
+        coverStatus('💗 Cover saved successfully!');
+        await Promise.allSettled([loadCoverCounts(), loadCoverBooks()]);
+      } catch (error) {
+        if (newStoragePath) {
+          // Roll back a newly uploaded object if the book record was not saved.
+          await db.storage.from(coverBucket).remove([newStoragePath]);
+        }
+        coverStatus(error.message || 'Could not save cover.', true);
+        $('coverSave').disabled = !coverCandidate;
+      } finally { coverBusy = false; }
+    }
+    $('coverFind').onclick = () => { coverPage = 0; loadCoverBooks(); };
+    $('coverSearch').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); coverPage = 0; loadCoverBooks(); } });
+    for (const id of ['coverCollection', 'coverFilter']) $(id).addEventListener('change', () => { coverPage = 0; loadCoverBooks(); });
+    $('coverPrev').onclick = () => { if (coverPage > 0) { coverPage--; loadCoverBooks(); } };
+    $('coverNext').onclick = () => { if ((coverPage + 1) * coverPageSize < coverTotal) { coverPage++; loadCoverBooks(); } };
+    $('coverPreviewUrl').onclick = previewCoverUrl;
+    $('coverUpload').addEventListener('change', () => { $('coverUrl').value = ''; previewCoverFile(); });
+    $('coverUrl').addEventListener('input', () => { if (!coverBusy) { clearCoverCandidate(); $('coverUpload').value = ''; } });
+    $('coverSave').onclick = saveCover;
+    $('coverCancel').onclick = () => { if (coverBusy) return; clearCoverCandidate(); coverSelected = null; $('coverEditor').hidden = true; };
+
+
+    /* ADMIN HQ EXPANSION — preserves original member, import and cover handlers */
+    const hqReportPageSize = 12;
+    let hqReportPage = 0;
+    let hqReportTotal = 0;
+    let hqReportSerial = 0;
+    const hqEscapeDate = value => value ? new Date(value).toLocaleString() : '—';
+    function hqSetStatus(id, text, isError = false) {
+      $(id).textContent = text;
+      $(id).className = isError ? 'error' : 'hq-small';
+    }
+    async function hqCount(table, apply = query => query) {
+      const { count, error } = await apply(db.from(table).select('*', { count: 'exact', head: true }));
+      if (error) throw error;
+      return count ?? 0;
+    }
+    async function hqLoadDashboard() {
+      const metrics = [
+        ['hqPendingMembers', 'tbb_memberships', q => q.eq('status', 'pending')],
+        ['hqPendingReports', 'tbb_commons_reports', q => q.eq('status', 'pending')],
+        ['hqReviewingReports', 'tbb_commons_reports', q => q.eq('status', 'reviewing')],
+        ['hqMissingCovers', 'tbb_books', q => q.is('cover_url', null).is('cover_storage_path', null)]
+      ];
+      hqSetStatus('hqDashboardStatus', 'Refreshing live counts…');
+      const results = await Promise.allSettled(metrics.map(async ([id, table, filter]) => {
+        const count = await hqCount(table, filter);
+        $(id).textContent = count.toLocaleString();
       }));
+      const failed = results.filter(r => r.status === 'rejected');
+      hqSetStatus('hqDashboardStatus', failed.length ? `${failed.length} dashboard count(s) unavailable. Check admin RLS permissions.` : 'Dashboard counts updated.', !!failed.length);
     }
-    card.append(controls, detailArea);
-    wrap.append(card);
-  }
-  hqSetStatus('hqModerationStatus', `${hqReportTotal.toLocaleString()} matching report(s).`);
-}
-async function hqLoadModLog() {
-  const wrap = $('hqModLog');
-  wrap.replaceChildren();
-  const { data, error } = await db.from('tbb_commons_moderation_log').select('*').order('created_at', { ascending: false }).limit(25);
-  if (error) { wrap.textContent = `History unavailable: ${error.message}`; return; }
-  if (!data?.length) { wrap.textContent = 'No moderation actions logged yet.'; return; }
-  const table = hqElement('table');
-  const head = hqElement('thead');
-  const tr = hqElement('tr');
-  for (const col of ['When', 'Action', 'Content', 'Moderator']) tr.append(hqElement('th', col));
-  head.append(tr); table.append(head);
-  const body = hqElement('tbody');
-  for (const row of data) {
-    const tr = hqElement('tr');
-    for (const val of [hqEscapeDate(row.created_at), row.action, `${row.content_type || 'Content'} · ${row.content_id || '—'}`, row.actor_id || '—']) tr.append(hqElement('td', val));
-    body.append(tr);
-  }
-  table.append(body); wrap.append(table);
-}
-async function hqLoadEmojis() {
-  const wrap = $('hqEmojiList');
-  wrap.replaceChildren();
-  hqSetStatus('hqEmojiStatus', 'Loading emoji catalog…');
-  const { data, error } = await db.from('tbb_custom_emojis').select('id,name,shortcode,storage_path,status,display_order').order('display_order', { ascending: true });
-  if (error) { hqSetStatus('hqEmojiStatus', error.message, true); return; }
-  for (const emoji of data || []) {
-    const card = hqElement('div', undefined, 'closet-book');
-    if (emoji.storage_path) {
-      const img = document.createElement('img');
-      img.src = db.storage.from('tbb-custom-emojis').getPublicUrl(emoji.storage_path).data.publicUrl;
-      img.alt = emoji.name;
-      img.onerror = () => { img.remove(); };
-      card.append(img);
+    function hqElement(tag, text, className) {
+      const node = document.createElement(tag);
+      if (text !== undefined) node.textContent = text;
+      if (className) node.className = className;
+      return node;
     }
-    const info = hqElement('span');
-    info.append(hqElement('strong', emoji.name), hqElement('small', `:${emoji.shortcode}: · ${emoji.status}`));
-    card.append(info); wrap.append(card);
-  }
-  hqSetStatus('hqEmojiStatus', `${data?.length || 0} emoji(s) in your catalog.`);
-}
-$('hqRefresh').onclick = hqLoadDashboard;
-$('hqLoadReports').onclick = () => { hqReportPage = 0; hqLoadReports(); };
-$('hqReportFilter').onchange = () => { hqReportPage = 0; hqLoadReports(); };
-$('hqReportsPrev').onclick = () => { if (hqReportPage > 0) { hqReportPage--; hqLoadReports(); } };
-$('hqReportsNext').onclick = () => { if ((hqReportPage + 1) * hqReportPageSize < hqReportTotal) { hqReportPage++; hqLoadReports(); } };
-$('hqRefreshLog').onclick = hqLoadModLog;
-$('hqRefreshEmojis').onclick = hqLoadEmojis;
-
-/* ACTIVITIES STUDIO + ROLE DESK — dedicated new tables, no changes to legacy tools */
-const activityFields = ['Title','Type','Frequency','Status','Start','End','Description','Rules'];
-function studioSetStatus(id, value, error=false) { const el=$(id); el.textContent=value; el.className='hq-small '+(error?'error':'notice'); }
-function hqLabelRole(role) { return role==='golden_shelf'?'📚 Golden Shelf™':'💗 TBB Team Member (Staff)'; }
-function hqLabelFrequency(f) { return ({monthly:'Monthly',every_two_months:'Every two months',annual:'Annual',seasonal:'Seasonal',custom:'Custom'})[f]||f; }
-function studioElement(tag, value, className='') { const el=document.createElement(tag); el.textContent=value; if(className) el.className=className; return el; }
-function activityReset() {
-  $('activityForm').reset(); $('activityId').value=''; $('activitySave').textContent='💗 Save Activity';
-  studioSetStatus('activityFormStatus','');
-}
-async function activityLoad() {
-  studioSetStatus('activityListStatus','Loading activities…'); $('activityList').replaceChildren();
-  try {
-    let q=db.from('tbb_activities').select('id,title,activity_type,frequency,starts_on,ends_on,description,rules,status,created_at').order('starts_on',{ascending:false}).limit(200);
-    if($('activityListFilter').value!=='all') q=q.eq('status',$('activityListFilter').value);
-    const {data,error}=await q; if(error) throw error;
-    studioSetStatus('activityListStatus',`${data.length} activities shown (newest 200 maximum).`);
-    for(const item of data) {
-      const card=document.createElement('article'); card.className='item';
-      card.append(studioElement('h3',item.title),studioElement('p',`${item.activity_type.replaceAll('_',' ')} · ${hqLabelFrequency(item.frequency)} · ${item.starts_on} → ${item.ends_on} · ${item.status}`,'muted'));
-      if(item.description) card.append(studioElement('p',item.description));
-      const actions=document.createElement('div');actions.className='hq-item-actions';
-      const edit=document.createElement('button');edit.type='button';edit.textContent='✏️ Edit';
-      edit.onclick=()=>{
-        $('activityId').value=item.id;
-        for(const [id,value] of [['Title',item.title],['Type',item.activity_type],['Frequency',item.frequency],['Status',item.status],['Start',item.starts_on],['End',item.ends_on],['Description',item.description],['Rules',item.rules]]) $('activity'+id).value=value||'';
-        $('activitySave').textContent='💗 Update Activity'; $('activityForm').scrollIntoView({behavior:'smooth',block:'start'});
-      };actions.append(edit);
-      if(item.status!=='archived') {
-        const archive=document.createElement('button');archive.type='button';archive.textContent='Archive';
-        archive.onclick=async()=>{if(!confirm(`Archive ${item.title}?`))return;archive.disabled=true;
-          const {error}=await db.from('tbb_activities').update({status:'archived',updated_by:adminUser.id,updated_at:new Date().toISOString()}).eq('id',item.id);
-          if(error){studioSetStatus('activityListStatus',error.message,true);archive.disabled=false;}else{if($('activityId').value===item.id)activityReset();await activityLoad();}
-        };actions.append(archive);
+    function hqActionButton(text, handler) {
+      const button = hqElement('button', text);
+      button.type = 'button';
+      button.onclick = async () => {
+        button.disabled = true;
+        try { await handler(); } catch (error) { hqSetStatus('hqModerationStatus', error.message, true); }
+        finally { button.disabled = false; }
+      };
+      return button;
+    }
+    async function hqLoadReports() {
+      const serial = ++hqReportSerial;
+      const wrap = $('hqReports');
+      wrap.replaceChildren();
+      hqSetStatus('hqModerationStatus', 'Loading reports…');
+      const filter = $('hqReportFilter').value;
+      let query = db.from('tbb_commons_reports').select('id,status,reason,details,created_at,post_id,comment_id', { count: 'exact' });
+      if (filter !== 'all') query = query.eq('status', filter);
+      const { data, count, error } = await query.order('created_at', { ascending: false })
+        .range(hqReportPage * hqReportPageSize, (hqReportPage + 1) * hqReportPageSize - 1);
+      if (serial !== hqReportSerial) return;
+      if (error) { hqSetStatus('hqModerationStatus', error.message, true); return; }
+      hqReportTotal = count ?? 0;
+      $('hqReportsPage').textContent = hqReportTotal ? `Page ${hqReportPage + 1} of ${Math.ceil(hqReportTotal / hqReportPageSize)}` : 'No reports';
+      $('hqReportsPrev').disabled = hqReportPage === 0;
+      $('hqReportsNext').disabled = (hqReportPage + 1) * hqReportPageSize >= hqReportTotal;
+      if (!data?.length) wrap.append(hqElement('p', 'No reports match this filter. 💗', 'muted'));
+      for (const report of data || []) {
+        const card = hqElement('article', undefined, 'hq-report');
+        const heading = hqElement('div', undefined, 'hq-report-head');
+        heading.append(hqElement('strong', `${report.comment_id ? 'Comment' : 'Post'} · ${report.reason.replaceAll('_', ' ')}`), hqElement('span', report.status, 'hq-chip'));
+        card.append(heading, hqElement('p', `Reported ${hqEscapeDate(report.created_at)}`, 'hq-small'));
+        if (report.details) card.append(hqElement('p', `Report notes: ${report.details}`));
+        const detailArea = hqElement('div');
+        const controls = hqElement('div', undefined, 'closet-actions');
+        controls.append(hqActionButton('🔎 View reported content', async () => {
+          hqSetStatus('hqModerationStatus', 'Loading protected report details…');
+          const { data: raw, error: detailError } = await db.rpc('tbb_admin_get_report_details', { target_report_id: report.id });
+          if (detailError) throw detailError;
+          const detail = Array.isArray(raw) ? raw[0] : raw;
+          if (!detail) throw new Error('Report details were not returned.');
+          detailArea.replaceChildren();
+          detailArea.append(hqElement('p', `Commons: ${detail.commons_id || 'Unknown'} · Author ID: ${detail.author_id || 'Unknown'}`, 'hq-small'));
+          detailArea.append(hqElement('div', detail.body || '[No content text available]', 'hq-report-body'));
+          detailArea.append(hqElement('p', detail.is_deleted ? 'Content is currently hidden.' : 'Content is currently visible.', 'hq-small'));
+          const moderation = hqElement('div', undefined, 'closet-actions');
+          const targetType = detail.content_type || (report.comment_id ? 'comment' : 'post');
+          const targetId = detail.content_id || report.comment_id || report.post_id;
+          for (const [label, action] of [[detail.is_deleted ? '↩ Restore content' : '🚫 Hide content', detail.is_deleted ? 'restore' : 'hide'], ...(targetType === 'post' ? [['📌 Pin post', 'pin'], ['Unpin post', 'unpin']] : [])]) {
+            moderation.append(hqActionButton(label, async () => {
+              if (!confirm(`${label}? This changes the live Commons content.`)) return;
+              const { error: moderationError } = await db.rpc('tbb_moderate_commons_content', { target_type: targetType, target_id: targetId, moderation_action: action });
+              if (moderationError) throw moderationError;
+              hqSetStatus('hqModerationStatus', `${action} successful. Reload report details to see the latest content status.`);
+              await hqLoadModLog();
+            }));
+          }
+          detailArea.append(moderation);
+          hqSetStatus('hqModerationStatus', 'Report details loaded.');
+        }));
+        for (const [label, status] of [['Start Review', 'reviewing'], ['Resolve', 'resolved'], ['Dismiss', 'dismissed']]) {
+          if (report.status === status) continue;
+          controls.append(hqActionButton(label, async () => {
+            if (!confirm(`Mark this report as ${status}?`)) return;
+            const { error: reviewError } = await db.rpc('tbb_review_commons_report', { target_report_id: report.id, new_status: status });
+            if (reviewError) throw reviewError;
+            await Promise.all([hqLoadReports(), hqLoadDashboard()]);
+            hqSetStatus('hqModerationStatus', `Report marked ${status}.`);
+          }));
+        }
+        card.append(controls, detailArea);
+        wrap.append(card);
       }
-      card.append(actions);$('activityList').append(card);
+      hqSetStatus('hqModerationStatus', `${hqReportTotal.toLocaleString()} matching report(s).`);
     }
-    if(!data.length)$('activityList').append(studioElement('p','No activities match this filter.'));
-  }catch(e){studioSetStatus('activityListStatus',e.message,true);}
-}
-async function activitySave(e) {
-  e.preventDefault();const btn=$('activitySave');btn.disabled=true;
-  try {
-    if(!adminUser)throw new Error('Admin login required.');
-    const start=$('activityStart').value,end=$('activityEnd').value;
-    if(!start||!end||end<start)throw new Error('End date must be on or after the start date.');
-    const payload={title:$('activityTitle').value.trim(),activity_type:$('activityType').value,frequency:$('activityFrequency').value,
-      status:$('activityStatus').value,starts_on:start,ends_on:end,description:$('activityDescription').value.trim(),rules:$('activityRules').value.trim(),
-      updated_by:adminUser.id,updated_at:new Date().toISOString()};
-    const id=$('activityId').value;
-    const result=id?await db.from('tbb_activities').update(payload).eq('id',id).select('id').single():
-      await db.from('tbb_activities').insert({...payload,created_by:adminUser.id}).select('id').single();
-    if(result.error)throw result.error;
-    activityReset();studioSetStatus('activityFormStatus','💗 Activity saved!');await activityLoad();
-  }catch(e){studioSetStatus('activityFormStatus',e.message,true);}finally{btn.disabled=false;}
-}
-async function roleLoadRequests() {
-  $('roleRequestList').replaceChildren();studioSetStatus('roleListStatus','Loading role requests…');
-  try {
-    let q=db.from('tbb_role_requests').select('id,user_id,requested_role,statement,status,admin_notes,created_at,reviewed_at').order('created_at',{ascending:false}).limit(100);
-    if($('roleRequestFilter').value!=='all')q=q.eq('status',$('roleRequestFilter').value);
-    const {data,error}=await q;if(error)throw error;
-    const ids=[...new Set(data.map(x=>x.user_id))];
-    const names=new Map();
-    if(ids.length){const p=await db.from('tbb_profiles').select('user_id,display_name,username').in('user_id',ids);
-      if(!p.error)for(const row of p.data)names.set(row.user_id,`${row.display_name||'Baddie'}${row.username?' (@'+row.username+')':''}`);
+    async function hqLoadModLog() {
+      const wrap = $('hqModLog');
+      wrap.replaceChildren();
+      const { data, error } = await db.from('tbb_commons_moderation_log').select('*').order('created_at', { ascending: false }).limit(25);
+      if (error) { wrap.textContent = `History unavailable: ${error.message}`; return; }
+      if (!data?.length) { wrap.textContent = 'No moderation actions logged yet.'; return; }
+      const table = hqElement('table');
+      const head = hqElement('thead');
+      const tr = hqElement('tr');
+      for (const col of ['When', 'Action', 'Content', 'Moderator']) tr.append(hqElement('th', col));
+      head.append(tr); table.append(head);
+      const body = hqElement('tbody');
+      for (const row of data) {
+        const tr = hqElement('tr');
+        for (const val of [hqEscapeDate(row.created_at), row.action, `${row.content_type || 'Content'} · ${row.content_id || '—'}`, row.actor_id || '—']) tr.append(hqElement('td', val));
+        body.append(tr);
+      }
+      table.append(body); wrap.append(table);
     }
-    studioSetStatus('roleListStatus',`${data.length} requests shown (newest 100 maximum).`);
-    for(const r of data) {
-      const card=document.createElement('article');card.className='item';
-      card.append(studioElement('h3',hqLabelRole(r.requested_role)),studioElement('p',`${names.get(r.user_id)||'Member '+r.user_id} · ${r.status} · ${new Date(r.created_at).toLocaleDateString()}`,'muted'),studioElement('p',r.statement));
-      if(r.admin_notes)card.append(studioElement('p',`Admin note: ${r.admin_notes}`,'muted'));
-      if(r.status==='pending'){
-        const note=document.createElement('textarea');note.className='hq-role-note';note.maxLength=2000;note.placeholder='Optional private admin note';card.append(note);
-        const actions=document.createElement('div');actions.className='hq-item-actions';
-        for(const [label,decision] of [['Approve','approved'],['Decline','declined']]){
-          const btn=document.createElement('button');btn.textContent=label;btn.type='button';
-          btn.onclick=async()=>{
-            if(!confirm(`${label} this ${hqLabelRole(r.requested_role)} request?`))return;
-            btn.disabled=true;
-            const {error}=await db.rpc('tbb_admin_review_role_request',{target_request_id:r.id,decision,note:note.value});
-            if(error){studioSetStatus('roleListStatus',error.message,true);btn.disabled=false;return;}
-            await Promise.all([roleLoadRequests(),roleLoadGrants()]);
-          };actions.append(btn);
-        }card.append(actions);
-      }$('roleRequestList').append(card);
+    async function hqLoadEmojis() {
+      const wrap = $('hqEmojiList');
+      wrap.replaceChildren();
+      hqSetStatus('hqEmojiStatus', 'Loading emoji catalog…');
+      const { data, error } = await db.from('tbb_custom_emojis').select('id,name,shortcode,storage_path,status,display_order').order('display_order', { ascending: true });
+      if (error) { hqSetStatus('hqEmojiStatus', error.message, true); return; }
+      for (const emoji of data || []) {
+        const card = hqElement('div', undefined, 'closet-book');
+        if (emoji.storage_path) {
+          const img = document.createElement('img');
+          img.src = db.storage.from('tbb-custom-emojis').getPublicUrl(emoji.storage_path).data.publicUrl;
+          img.alt = emoji.name;
+          img.onerror = () => { img.remove(); };
+          card.append(img);
+        }
+        const info = hqElement('span');
+        info.append(hqElement('strong', emoji.name), hqElement('small', `:${emoji.shortcode}: · ${emoji.status}`));
+        card.append(info); wrap.append(card);
+      }
+      hqSetStatus('hqEmojiStatus', `${data?.length || 0} emoji(s) in your catalog.`);
     }
-    if(!data.length)$('roleRequestList').append(studioElement('p','No requests match this filter.'));
-  }catch(e){studioSetStatus('roleListStatus',e.message,true);}
-}
-async function roleLoadGrants(){
-  $('roleGrantList').replaceChildren();
-  try{
-    const {data,error}=await db.from('tbb_role_grants').select('user_id,role,granted_at').order('granted_at',{ascending:false}).limit(100);
-    if(error)throw error;
-    const ids=[...new Set(data.map(r=>r.user_id))];const names=new Map();
-    if(ids.length){const p=await db.from('tbb_profiles').select('user_id,display_name,username').in('user_id',ids);
-      if(!p.error)for(const row of p.data)names.set(row.user_id,`${row.display_name||'Baddie'}${row.username?' (@'+row.username+')':''}`);
+    $('hqRefresh').onclick = hqLoadDashboard;
+    $('hqLoadReports').onclick = () => { hqReportPage = 0; hqLoadReports(); };
+    $('hqReportFilter').onchange = () => { hqReportPage = 0; hqLoadReports(); };
+    $('hqReportsPrev').onclick = () => { if (hqReportPage > 0) { hqReportPage--; hqLoadReports(); } };
+    $('hqReportsNext').onclick = () => { if ((hqReportPage + 1) * hqReportPageSize < hqReportTotal) { hqReportPage++; hqLoadReports(); } };
+    $('hqRefreshLog').onclick = hqLoadModLog;
+    $('hqRefreshEmojis').onclick = hqLoadEmojis;
+
+    /* ACTIVITIES STUDIO + ROLE DESK — dedicated new tables, no changes to legacy tools */
+    const activityFields = ['Title', 'Type', 'Frequency', 'Status', 'Start', 'End', 'Description', 'Rules'];
+    function studioSetStatus(id, value, error = false) { const el = $(id); el.textContent = value; el.className = 'hq-small ' + (error ? 'error' : 'notice'); }
+    function hqLabelRole(role) { return role === 'golden_shelf' ? '📚 Golden Shelf™' : '💗 TBB Team Member (Staff)'; }
+    function hqLabelFrequency(f) { return ({ monthly: 'Monthly', every_two_months: 'Every two months', annual: 'Annual', seasonal: 'Seasonal', custom: 'Custom' })[f] || f; }
+    function studioElement(tag, value, className = '') { const el = document.createElement(tag); el.textContent = value; if (className) el.className = className; return el; }
+    function activityReset() {
+      $('activityForm').reset(); $('activityId').value = ''; $('activitySave').textContent = '💗 Save Activity';
+      studioSetStatus('activityFormStatus', '');
     }
-    for(const g of data)$('roleGrantList').append(studioElement('p',`${hqLabelRole(g.role)} — ${names.get(g.user_id)||g.user_id} · ${new Date(g.granted_at).toLocaleDateString()}`,'item'));
-    if(!data.length)$('roleGrantList').append(studioElement('p','No granted roles yet.'));
-  }catch(e){$('roleGrantList').append(studioElement('p',e.message,'error'));}
-}
-$('activityForm').addEventListener('submit',activitySave);
-$('activityClear').onclick=activityReset;
-$('activityRefresh').onclick=activityLoad;
-$('activityListFilter').onchange=activityLoad;
-$('roleRefresh').onclick=roleLoadRequests;
-$('roleRequestFilter').onchange=roleLoadRequests;
-$('roleRefreshGrants').onclick=roleLoadGrants;
+    async function activityLoad() {
+      studioSetStatus('activityListStatus', 'Loading activities…'); $('activityList').replaceChildren();
+      try {
+        let q = db.from('tbb_activities').select('id,title,activity_type,frequency,starts_on,ends_on,description,rules,status,created_at').order('starts_on', { ascending: false }).limit(200);
+        if ($('activityListFilter').value !== 'all') q = q.eq('status', $('activityListFilter').value);
+        const { data, error } = await q; if (error) throw error;
+        studioSetStatus('activityListStatus', `${data.length} activities shown (newest 200 maximum).`);
+        for (const item of data) {
+          const card = document.createElement('article'); card.className = 'item';
+          card.append(studioElement('h3', item.title), studioElement('p', `${item.activity_type.replaceAll('_', ' ')} · ${hqLabelFrequency(item.frequency)} · ${item.starts_on} → ${item.ends_on} · ${item.status}`, 'muted'));
+          if (item.description) card.append(studioElement('p', item.description));
+          const actions = document.createElement('div'); actions.className = 'hq-item-actions';
+          const edit = document.createElement('button'); edit.type = 'button'; edit.textContent = '✏️ Edit';
+          edit.onclick = () => {
+            $('activityId').value = item.id;
+            for (const [id, value] of [['Title', item.title], ['Type', item.activity_type], ['Frequency', item.frequency], ['Status', item.status], ['Start', item.starts_on], ['End', item.ends_on], ['Description', item.description], ['Rules', item.rules]]) $('activity' + id).value = value || '';
+            $('activitySave').textContent = '💗 Update Activity'; $('activityForm').scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }; actions.append(edit);
+          if (item.status !== 'archived') {
+            const archive = document.createElement('button'); archive.type = 'button'; archive.textContent = 'Archive';
+            archive.onclick = async () => {
+              if (!confirm(`Archive ${item.title}?`)) return; archive.disabled = true;
+              const { error } = await db.from('tbb_activities').update({ status: 'archived', updated_by: adminUser.id, updated_at: new Date().toISOString() }).eq('id', item.id);
+              if (error) { studioSetStatus('activityListStatus', error.message, true); archive.disabled = false; } else { if ($('activityId').value === item.id) activityReset(); await activityLoad(); }
+            }; actions.append(archive);
+          }
+          card.append(actions); $('activityList').append(card);
+        }
+        if (!data.length) $('activityList').append(studioElement('p', 'No activities match this filter.'));
+      } catch (e) { studioSetStatus('activityListStatus', e.message, true); }
+    }
+    async function activitySave(e) {
+      e.preventDefault(); const btn = $('activitySave'); btn.disabled = true;
+      try {
+        if (!adminUser) throw new Error('Admin login required.');
+        const start = $('activityStart').value, end = $('activityEnd').value;
+        if (!start || !end || end < start) throw new Error('End date must be on or after the start date.');
+        const payload = {
+          title: $('activityTitle').value.trim(), activity_type: $('activityType').value, frequency: $('activityFrequency').value,
+          status: $('activityStatus').value, starts_on: start, ends_on: end, description: $('activityDescription').value.trim(), rules: $('activityRules').value.trim(),
+          updated_by: adminUser.id, updated_at: new Date().toISOString()
+        };
+        const id = $('activityId').value;
+        const result = id ? await db.from('tbb_activities').update(payload).eq('id', id).select('id').single() :
+          await db.from('tbb_activities').insert({ ...payload, created_by: adminUser.id }).select('id').single();
+        if (result.error) throw result.error;
+        activityReset(); studioSetStatus('activityFormStatus', '💗 Activity saved!'); await activityLoad();
+      } catch (e) { studioSetStatus('activityFormStatus', e.message, true); } finally { btn.disabled = false; }
+    }
+    async function roleLoadRequests() {
+      $('roleRequestList').replaceChildren(); studioSetStatus('roleListStatus', 'Loading role requests…');
+      try {
+        let q = db.from('tbb_role_requests').select('id,user_id,requested_role,statement,status,admin_notes,created_at,reviewed_at').order('created_at', { ascending: false }).limit(100);
+        if ($('roleRequestFilter').value !== 'all') q = q.eq('status', $('roleRequestFilter').value);
+        const { data, error } = await q; if (error) throw error;
+        const ids = [...new Set(data.map(x => x.user_id))];
+        const names = new Map();
+        if (ids.length) {
+          const p = await db.from('tbb_profiles').select('user_id,display_name,username').in('user_id', ids);
+          if (!p.error) for (const row of p.data) names.set(row.user_id, `${row.display_name || 'Baddie'}${row.username ? ' (@' + row.username + ')' : ''}`);
+        }
+        studioSetStatus('roleListStatus', `${data.length} requests shown (newest 100 maximum).`);
+        for (const r of data) {
+          const card = document.createElement('article'); card.className = 'item';
+          card.append(studioElement('h3', hqLabelRole(r.requested_role)), studioElement('p', `${names.get(r.user_id) || 'Member ' + r.user_id} · ${r.status} · ${new Date(r.created_at).toLocaleDateString()}`, 'muted'), studioElement('p', r.statement));
+          if (r.admin_notes) card.append(studioElement('p', `Admin note: ${r.admin_notes}`, 'muted'));
+          if (r.status === 'pending') {
+            const note = document.createElement('textarea'); note.className = 'hq-role-note'; note.maxLength = 2000; note.placeholder = 'Optional private admin note'; card.append(note);
+            const actions = document.createElement('div'); actions.className = 'hq-item-actions';
+            for (const [label, decision] of [['Approve', 'approved'], ['Decline', 'declined']]) {
+              const btn = document.createElement('button'); btn.textContent = label; btn.type = 'button';
+              btn.onclick = async () => {
+                if (!confirm(`${label} this ${hqLabelRole(r.requested_role)} request?`)) return;
+                btn.disabled = true;
+                const { error } = await db.rpc('tbb_admin_review_role_request', { target_request_id: r.id, decision, note: note.value });
+                if (error) { studioSetStatus('roleListStatus', error.message, true); btn.disabled = false; return; }
+                await Promise.all([roleLoadRequests(), roleLoadGrants()]);
+              }; actions.append(btn);
+            } card.append(actions);
+          } $('roleRequestList').append(card);
+        }
+        if (!data.length) $('roleRequestList').append(studioElement('p', 'No requests match this filter.'));
+      } catch (e) { studioSetStatus('roleListStatus', e.message, true); }
+    }
+    async function roleLoadGrants() {
+      $('roleGrantList').replaceChildren();
+      try {
+        const { data, error } = await db.from('tbb_role_grants').select('user_id,role,granted_at').order('granted_at', { ascending: false }).limit(100);
+        if (error) throw error;
+        const ids = [...new Set(data.map(r => r.user_id))]; const names = new Map();
+        if (ids.length) {
+          const p = await db.from('tbb_profiles').select('user_id,display_name,username').in('user_id', ids);
+          if (!p.error) for (const row of p.data) names.set(row.user_id, `${row.display_name || 'Baddie'}${row.username ? ' (@' + row.username + ')' : ''}`);
+        }
+        for (const g of data) $('roleGrantList').append(studioElement('p', `${hqLabelRole(g.role)} — ${names.get(g.user_id) || g.user_id} · ${new Date(g.granted_at).toLocaleDateString()}`, 'item'));
+        if (!data.length) $('roleGrantList').append(studioElement('p', 'No granted roles yet.'));
+      } catch (e) { $('roleGrantList').append(studioElement('p', e.message, 'error')); }
+    }
+    $('activityForm').addEventListener('submit', activitySave);
+    $('activityClear').onclick = activityReset;
+    $('activityRefresh').onclick = activityLoad;
+    $('activityListFilter').onchange = activityLoad;
+    $('roleRefresh').onclick = roleLoadRequests;
+    $('roleRequestFilter').onchange = roleLoadRequests;
+    $('roleRefreshGrants').onclick = roleLoadGrants;
 
-/* INITIALIZATION */
+    /* THE BADDIE POST™ — admin announcement + private mail tools */
+    const postText = (tag, text, cls = '') => {
+      const el = document.createElement(tag);
+      el.textContent = text ?? '';
+      if (cls) el.className = cls;
+      return el;
+    };
+    const postNotice = (id, text, error = false) => {
+      const el = $(id);
+      el.textContent = text;
+      el.className = 'hq-small ' + (error ? 'error' : 'notice');
+    };
+    const postDate = value => value ? new Date(value).toLocaleString() : '—';
+    let postAnnouncementBusy = false;
+    let postMailBusy = false;
+    let postRecipients = new Map();
 
-$('refresh').onclick = loadMembers;
-$('logout').onclick = logout;
-$('refreshCatalog').onclick = loadStats;
-$('previewImport').onclick = previewImport;
-$('startImport').onclick = startImport;
+    function postClearEditor() {
+      $('postAnnouncementForm').reset();
+      $('postAnnouncementId').value = '';
+      $('postAnnouncementSave').textContent = '💗 Save Announcement';
+      postNotice('postAnnouncementStatusMessage', 'Editor cleared.');
+    }
 
-function clearPreview() {
-  if (importing) return;
-  previewBooks = [];
-  previewFileName = '';
-  previewCollection = '';
-  $('previewArea').hidden = true;
-  importMessage('Selection changed. Preview your CSV before importing.');
-}
-$('csvFile').addEventListener('change', clearPreview);
-$('collection').addEventListener('change', clearPreview);
+    async function postLoadAnnouncements() {
+      const wrap = $('postAnnouncementList');
+      wrap.replaceChildren();
+      try {
+        let q = db.from('tbb_post_announcements')
+          .select('id,title,body,status,is_pinned,created_at,published_at,updated_at')
+          .order('created_at', { ascending: false }).limit(100);
+        const filter = $('postAnnouncementFilter').value;
+        if (filter !== 'all') q = q.eq('status', filter);
+        const { data, error } = await q;
+        if (error) throw error;
+        if (!data.length) wrap.append(postText('p', 'No announcements in this selection yet.', 'muted'));
+        for (const item of data) {
+          const card = document.createElement('article'); card.className = 'item';
+          card.append(
+            postText('h3', `${item.is_pinned ? '📌 ' : ''}${item.title}`),
+            postText('p', `${item.status.toUpperCase()} · Created ${postDate(item.created_at)}${item.published_at ? ' · Published ' + postDate(item.published_at) : ''}`, 'hq-small'),
+            postText('p', item.body)
+          );
+          const buttons = document.createElement('div'); buttons.className = 'hq-item-actions';
+          const edit = postText('button', '✏️ Edit'); edit.type = 'button';
+          edit.onclick = () => {
+            $('postAnnouncementId').value = item.id;
+            $('postAnnouncementTitle').value = item.title;
+            $('postAnnouncementBody').value = item.body;
+            $('postAnnouncementStatus').value = item.status;
+            $('postAnnouncementPinned').value = String(item.is_pinned);
+            $('postAnnouncementSave').textContent = '💗 Update Announcement';
+            $('postAnnouncementForm').scrollIntoView({ behavior: 'smooth', block: 'start' });
+          };
+          buttons.append(edit);
+          if (item.status !== 'archived') {
+            const archive = postText('button', '🗄️ Archive'); archive.type = 'button';
+            archive.onclick = async () => {
+              if (!confirm(`Archive “${item.title}”? It will no longer be visible to members.`)) return;
+              archive.disabled = true;
+              const { error } = await db.from('tbb_post_announcements')
+                .update({ status: 'archived' }).eq('id', item.id);
+              if (error) { postNotice('postAnnouncementStatusMessage', error.message, true); archive.disabled = false; return; }
+              if ($('postAnnouncementId').value === item.id) postClearEditor();
+              await postLoadAnnouncements();
+            };
+            buttons.append(archive);
+          }
+          card.append(buttons); wrap.append(card);
+        }
+      } catch (e) {
+        wrap.append(postText('p', e.message, 'error'));
+      }
+    }
+
+    async function postSaveAnnouncement(event) {
+      event.preventDefault();
+      if (postAnnouncementBusy || !adminUser) return;
+      const title = $('postAnnouncementTitle').value.trim();
+      const body = $('postAnnouncementBody').value.trim();
+      if (!title || !body) return postNotice('postAnnouncementStatusMessage', 'Title and announcement are required.', true);
+      postAnnouncementBusy = true;
+      $('postAnnouncementSave').disabled = true;
+      try {
+        const id = $('postAnnouncementId').value;
+        const fields = {
+          title, body,
+          status: $('postAnnouncementStatus').value,
+          is_pinned: $('postAnnouncementPinned').value === 'true'
+        };
+        const result = id
+          ? await db.from('tbb_post_announcements').update(fields).eq('id', id).select('id').single()
+          : await db.from('tbb_post_announcements').insert({ ...fields, created_by: adminUser.id }).select('id').single();
+        if (result.error) throw result.error;
+        postClearEditor();
+        postNotice('postAnnouncementStatusMessage', 'Announcement saved successfully! 💗');
+        await postLoadAnnouncements();
+      } catch (e) {
+        postNotice('postAnnouncementStatusMessage', e.message, true);
+      } finally {
+        postAnnouncementBusy = false;
+        $('postAnnouncementSave').disabled = false;
+      }
+    }
+
+    async function postLoadRecipients() {
+      const select = $('postMailRecipient');
+      const previous = select.value;
+      select.replaceChildren(new Option('Choose an approved member…', ''));
+      try {
+        // Fetch all approved memberships in pages, not just the first 1,000.
+        const members = [];
+        for (let offset = 0; ; offset += 500) {
+          const { data, error } = await db.from('tbb_memberships')
+            .select('user_id').eq('status', 'approved')
+            .order('user_id').range(offset, offset + 499);
+          if (error) throw error;
+          members.push(...data);
+          if (data.length < 500) break;
+        }
+        const ids = members.map(m => m.user_id).filter(id => id !== adminUser?.id);
+        const names = new Map();
+        for (let i = 0; i < ids.length; i += 100) {
+          const { data, error } = await db.from('tbb_profiles')
+            .select('user_id,display_name,username').in('user_id', ids.slice(i, i + 100));
+          if (error) throw error;
+          for (const p of data) names.set(p.user_id,
+            `${p.display_name || 'Baddie'}${p.username ? ' (@' + p.username + ')' : ''}`);
+        }
+        postRecipients = new Map(ids.map(id => [id, names.get(id) || `Member ${id.slice(0, 8)}`]));
+        for (const [id, name] of [...postRecipients].sort((a, b) => a[1].localeCompare(b[1]))) {
+          select.add(new Option(name, id));
+        }
+        if (postRecipients.has(previous)) select.value = previous;
+        postNotice('postMailStatus', `${postRecipients.size} approved recipient(s) available.`);
+      } catch (e) {
+        postNotice('postMailStatus', `Could not load recipients: ${e.message}`, true);
+      }
+    }
+
+    async function postSendMail(event) {
+      event.preventDefault();
+      if (postMailBusy || !adminUser) return;
+      const target_recipient = $('postMailRecipient').value;
+      const mail_subject = $('postMailSubject').value.trim();
+      const mail_body = $('postMailBody').value.trim();
+      if (!postRecipients.has(target_recipient)) {
+        return postNotice('postMailStatus', 'Select an approved member.', true);
+      }
+      if (!mail_subject || !mail_body) {
+        return postNotice('postMailStatus', 'Subject and message are required.', true);
+      }
+      if (!confirm(`Send private mail to ${postRecipients.get(target_recipient)}?`)) return;
+      postMailBusy = true;
+      $('postMailSend').disabled = true;
+      try {
+        const { error } = await db.rpc('tbb_post_send_mail', {
+          target_recipient, mail_subject, mail_body
+        });
+        if (error) throw error;
+        $('postMailSubject').value = '';
+        $('postMailBody').value = '';
+        postNotice('postMailStatus', 'Private mail sent successfully! 💌');
+        await postLoadSentMail();
+      } catch (e) {
+        postNotice('postMailStatus', e.message, true);
+      } finally {
+        postMailBusy = false;
+        $('postMailSend').disabled = false;
+      }
+    }
+
+    async function postLoadSentMail() {
+      const wrap = $('postMailList');
+      wrap.replaceChildren();
+      try {
+        const { data, error } = await db.from('tbb_vanity_mail')
+          .select('id,recipient_id,subject,body,created_at,read_at')
+          .eq('sender_id', adminUser.id)
+          .order('created_at', { ascending: false }).limit(30);
+        if (error) throw error;
+        if (!data.length) wrap.append(postText('p', 'No mail sent from this admin account yet.', 'muted'));
+        for (const item of data) {
+          const card = document.createElement('article'); card.className = 'item';
+          card.append(
+            postText('h3', item.subject),
+            postText('p', `To: ${postRecipients.get(item.recipient_id) || 'Member ' + item.recipient_id.slice(0, 8)} · ${postDate(item.created_at)} · ${item.read_at ? 'Read' : 'Unread'}`, 'hq-small'),
+            postText('p', item.body)
+          );
+          wrap.append(card);
+        }
+      } catch (e) {
+        wrap.append(postText('p', e.message, 'error'));
+      }
+    }
+
+    $('postAnnouncementForm').addEventListener('submit', postSaveAnnouncement);
+    $('postAnnouncementClear').onclick = postClearEditor;
+    $('postAnnouncementFilter').onchange = postLoadAnnouncements;
+    $('postAnnouncementRefresh').onclick = postLoadAnnouncements;
+    $('postMailForm').addEventListener('submit', postSendMail);
+    $('postMailRefreshMembers').onclick = postLoadRecipients;
+    $('postMailRefresh').onclick = postLoadSentMail;
+
+    /* INITIALIZATION */
+
+    $('refresh').onclick = loadMembers;
+    $('logout').onclick = logout;
+    $('refreshCatalog').onclick = loadStats;
+    $('previewImport').onclick = previewImport;
+    $('startImport').onclick = startImport;
+
+    function clearPreview() {
+      if (importing) return;
+      previewBooks = [];
+      previewFileName = '';
+      previewCollection = '';
+      $('previewArea').hidden = true;
+      importMessage('Selection changed. Preview your CSV before importing.');
+    }
+    $('csvFile').addEventListener('change', clearPreview);
+    $('collection').addEventListener('change', clearPreview);
 
 
-async function init() {
-  try {
-    const access = await requireAccess(true);
-    if (!access) return;
+    async function init() {
+      try {
+        const access = await requireAccess(true);
+        if (!access) return;
 
-    adminUser = access.user;
+        adminUser = access.user;
 
-    await Promise.all([
-      loadMembers(),
-      loadStats(),
-      loadCoverCounts(),
-      loadCoverBooks(),
-      activityLoad(),
-      roleLoadRequests(),
-      roleLoadGrants()
-    ]);
-  } catch (error) {
-    message(error.message, true);
-  }
-}
+        await Promise.all([
+          loadMembers(),
+          loadStats(),
+          loadCoverCounts(),
+          loadCoverBooks(),
+          activityLoad(),
+          roleLoadRequests(),
+          roleLoadGrants(),
+          postLoadAnnouncements(),
+          postLoadRecipients()
+        ]);
+        await postLoadSentMail();
+      } catch (error) {
+        message(error.message, true);
+      }
+    }
 
-init();
-</script>
+    init();
+  </script>
 </body>
+
 </html>
