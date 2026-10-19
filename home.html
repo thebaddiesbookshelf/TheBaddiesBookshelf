@@ -29,6 +29,20 @@
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
     >
+    <style>
+        /* TBB 2.0 account access: scoped so existing styles remain unchanged */
+        .tbb-header-access { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+        .tbb-header-access a { display:inline-flex; align-items:center; justify-content:center;
+            padding:9px 12px; border-radius:999px; font:700 12px "DM Sans",sans-serif;
+            text-decoration:none; white-space:nowrap; transition:transform .2s,background .2s; }
+        .tbb-header-login { background:#ff2fa8; color:#fff; }
+        .tbb-header-admin { background:#231125; color:#ffd2ee; border:1px solid #f76ac1; }
+        .tbb-header-access a:hover { transform:translateY(-2px); }
+        .hero-buttons .tbb-access-btn { text-align:center; }
+        @media(max-width:1050px) {
+            .tbb-header-access { display:none; }
+        }
+    </style>
 </head>
 
 <body>
@@ -95,6 +109,11 @@
                     <a href="joinus.html">Join Us</a>
                 </li>
             </ul>
+
+            <div class="tbb-header-access" aria-label="Account access">
+                <a href="login.html" class="tbb-header-login">Baddie Login</a>
+                <a href="login.html?portal=admin" class="tbb-header-admin">Admin Login</a>
+            </div>
 
             <a
                 href="https://discord.gg/KQ6Qhhpx6z"
@@ -181,6 +200,15 @@
                         Join The Bulletin
                     </a>
 
+                    <!-- TBB 2.0 Member and Admin Access -->
+                    <a href="login.html" class="btn btn-primary tbb-access-btn">
+                        <i class="fa-solid fa-user-heart"></i>
+                        Baddie Login
+                    </a>
+                    <a href="login.html?portal=admin" class="btn btn-outline tbb-access-btn">
+                        <i class="fa-solid fa-user-shield"></i>
+                        Admin Login
+                    </a>
                 </div>
             </div>
 
