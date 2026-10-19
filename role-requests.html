@@ -1,44 +1,202 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>The Role Request Center™ | TBB</title><link rel="stylesheet" href="css/auth.css">
-<style>
-:root{color-scheme:dark;--pink:#ff2ba6}*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 12% 0%,#401234,transparent 42%),#09050b;color:#ffe2f4;font:16px/1.55 system-ui,sans-serif}.wrap{max-width:850px;margin:auto;padding:35px 18px 80px}.panel{background:#1a0d21;border:1px solid #7a3462;border-radius:20px;padding:24px;margin:20px 0;box-shadow:0 15px 40px #0005}h1{font-size:clamp(2rem,6vw,3rem);margin:10px 0}h2{color:#ff84cd}p{overflow-wrap:anywhere}a{color:#ff9bd9}button{border:1px solid #ff73c2;border-radius:11px;background:linear-gradient(120deg,#ff2ba6,#a91d76);padding:11px 17px;color:white;font-weight:700;cursor:pointer}button:disabled{opacity:.5;cursor:wait}select,textarea{width:100%;background:#100914;color:white;border:1px solid #925078;border-radius:12px;padding:12px;font:inherit;margin:8px 0 17px}label{display:block;font-weight:700}.muted{color:#dbb9cf}.item{padding:15px;border:1px solid #74335d;border-radius:13px;margin:10px 0;background:#260f2a}.notice{color:#a8f1bd}.error{color:#ffa2bc}.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}button:focus-visible,a:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #ffb2df;outline-offset:3px}
-</style></head><body><main class="wrap"><nav class="row"><a href="home.html">← TBB Home</a><a href="member.html">My Member Portal</a></nav><header class="panel"><h1>💌 The Role Request Center™</h1><p>Ready to take on something extra in The Baddies Bookshelf? Apply for Golden Shelf™ or a TBB Team Member position. All requests are reviewed by the admin team.</p><p id="message" role="status"></p></header>
-<section class="panel"><h2>✨ Send a Role Request</h2><form id="requestForm"><label for="requestedRole">Which role?</label><select id="requestedRole" required><option value="golden_shelf">📚 Golden Shelf™</option><option value="team_member">💗 TBB Team Member (Staff)</option></select><p id="roleDescription" class="muted"></p><label for="statement">Tell the admins why you're interested</label><textarea id="statement" minlength="10" maxlength="2000" rows="6" required placeholder="Why would you like this role? What would you bring to the community?"></textarea><button id="submitRequest" type="submit">💌 Submit My Request</button><p id="submitStatus" role="status"></p></form></section>
-<section class="panel"><h2>📋 My Requests</h2><button id="refreshRequests" type="button">Refresh My Requests</button><p id="requestStatus" role="status"></p><div id="myRequests"></div></section>
-<section class="panel"><h2>👑 My Approved Roles</h2><div id="myRoles"></div><p class="muted">TBB Staff website moderation privileges will be activated separately once the Staff Moderation Desk™ is ready.</p></section></main>
-<script type="module">
-import {db,requireAccess,$,message} from './js/auth.js';
-let member=null;
-const roleLabel=r=>r==='golden_shelf'?'📚 Golden Shelf™':'💗 TBB Team Member (Staff)';
-function status(id,text,error=false){$(id).textContent=text;$(id).className=error?'error':'notice';}
-function textEl(tag,text){const el=document.createElement(tag);el.textContent=text;return el;}
-function description(){ $('roleDescription').textContent=$('requestedRole').value==='team_member'?'TBB Staff is a website moderation position for comments and messages, separate from Admin HQ. Applying does not grant admin permissions.':'Golden Shelf™ is a special TBB community membership reviewed by the admins.'; }
-$('requestedRole').onchange=description;description();
-async function load(){
- if(!member)return;
- $('myRequests').replaceChildren();$('myRoles').replaceChildren();
- const [requests,grants]=await Promise.all([
-   db.from('tbb_role_requests').select('id,requested_role,statement,status,created_at,admin_notes').eq('user_id',member.id).order('created_at',{ascending:false}),
-   db.from('tbb_role_grants').select('role,granted_at').eq('user_id',member.id)
- ]);
- if(requests.error){status('requestStatus',requests.error.message,true);return;}
- status('requestStatus',`${requests.data.length} request(s) found.`);
- for(const r of requests.data){const card=textEl('article','');card.className='item';card.append(textEl('strong',`${roleLabel(r.requested_role)} — ${r.status}`),textEl('p',r.statement),textEl('small',new Date(r.created_at).toLocaleDateString()));
-  if(r.status==='pending'){const b=textEl('button','Withdraw Request');b.type='button';b.onclick=async()=>{if(!confirm('Withdraw this request?'))return;b.disabled=true;const {error}=await db.rpc('tbb_withdraw_role_request',{target_request_id:r.id});if(error){status('requestStatus',error.message,true);b.disabled=false;}else await load();};card.append(textEl('p',''),b);}
-  $('myRequests').append(card);
- }
- if(!requests.data.length)$('myRequests').append(textEl('p','You have not submitted any requests yet.'));
- if(grants.error){$('myRoles').append(textEl('p',grants.error.message));return;}
- for(const g of grants.data)$('myRoles').append(textEl('p',`${roleLabel(g.role)} · Approved ${new Date(g.granted_at).toLocaleDateString()}`));
- if(!grants.data.length)$('myRoles').append(textEl('p','No approved roles yet.'));
-}
-$('requestForm').onsubmit=async e=>{e.preventDefault();const btn=$('submitRequest');btn.disabled=true;
- try{if(!member)throw new Error('Please sign in first.');const statement=$('statement').value.trim();if(statement.length<10)throw new Error('Please write at least 10 characters.');
- const {error}=await db.from('tbb_role_requests').insert({user_id:member.id,requested_role:$('requestedRole').value,statement});if(error)throw error;
- $('statement').value='';status('submitStatus','💗 Your request has been submitted!');await load();
- }catch(err){status('submitStatus',err.message,true);}finally{btn.disabled=false;}
-};
-$('refreshRequests').onclick=load;
-(async()=>{try{const access=await requireAccess(false);if(!access)return;member=access.user;await load();}catch(e){message(e.message,true);}})();
-</script></body></html>
- 
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>The Role Request Center™ | TBB</title>
+  <link rel="stylesheet" href="css/auth.css">
+  <style>
+    :root {
+      color-scheme: dark;
+      --pink: #ff2ba6
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(ellipse at 12% 0%, #401234, transparent 42%), #09050b;
+      color: #ffe2f4;
+      font: 16px/1.55 system-ui, sans-serif
+    }
+
+    .wrap {
+      max-width: 850px;
+      margin: auto;
+      padding: 35px 18px 80px
+    }
+
+    .panel {
+      background: #1a0d21;
+      border: 1px solid #7a3462;
+      border-radius: 20px;
+      padding: 24px;
+      margin: 20px 0;
+      box-shadow: 0 15px 40px #0005
+    }
+
+    h1 {
+      font-size: clamp(2rem, 6vw, 3rem);
+      margin: 10px 0
+    }
+
+    h2 {
+      color: #ff84cd
+    }
+
+    p {
+      overflow-wrap: anywhere
+    }
+
+    a {
+      color: #ff9bd9
+    }
+
+    button {
+      border: 1px solid #ff73c2;
+      border-radius: 11px;
+      background: linear-gradient(120deg, #ff2ba6, #a91d76);
+      padding: 11px 17px;
+      color: white;
+      font-weight: 700;
+      cursor: pointer
+    }
+
+    button:disabled {
+      opacity: .5;
+      cursor: wait
+    }
+
+    select,
+    textarea {
+      width: 100%;
+      background: #100914;
+      color: white;
+      border: 1px solid #925078;
+      border-radius: 12px;
+      padding: 12px;
+      font: inherit;
+      margin: 8px 0 17px
+    }
+
+    label {
+      display: block;
+      font-weight: 700
+    }
+
+    .muted {
+      color: #dbb9cf
+    }
+
+    .item {
+      padding: 15px;
+      border: 1px solid #74335d;
+      border-radius: 13px;
+      margin: 10px 0;
+      background: #260f2a
+    }
+
+    .notice {
+      color: #a8f1bd
+    }
+
+    .error {
+      color: #ffa2bc
+    }
+
+    .row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center
+    }
+
+    button:focus-visible,
+    a:focus-visible,
+    select:focus-visible,
+    textarea:focus-visible {
+      outline: 3px solid #ffb2df;
+      outline-offset: 3px
+    }
+  </style>
+</head>
+
+<body>
+  <main class="wrap">
+    <nav class="row"><a href="home.html">← TBB Home</a><a href="member.html">My Member Portal</a></nav>
+    <header class="panel">
+      <h1>💌 The Role Request Center™</h1>
+      <p>Ready to take on something extra in The Baddies Bookshelf? Apply for Golden Shelf™ or a TBB Team Member
+        position. All requests are reviewed by the admin team.</p>
+      <p id="message" role="status"></p>
+    </header>
+    <section class="panel">
+      <h2>✨ Send a Role Request</h2>
+      <form id="requestForm"><label for="requestedRole">Which role?</label><select id="requestedRole" required>
+          <option value="golden_shelf">📚 Golden Shelf™</option>
+          <option value="team_member">💗 TBB Team Member (Staff)</option>
+        </select>
+        <p id="roleDescription" class="muted"></p><label for="statement">Tell the admins why you're
+          interested</label><textarea id="statement" minlength="10" maxlength="2000" rows="6" required
+          placeholder="Why would you like this role? What would you bring to the community?"></textarea><button
+          id="submitRequest" type="submit">💌 Submit My Request</button>
+        <p id="submitStatus" role="status"></p>
+      </form>
+    </section>
+    <section class="panel">
+      <h2>📋 My Requests</h2><button id="refreshRequests" type="button">Refresh My Requests</button>
+      <p id="requestStatus" role="status"></p>
+      <div id="myRequests"></div>
+    </section>
+    <section class="panel">
+      <h2>👑 My Approved Roles</h2>
+      <div id="myRoles"></div>
+      <p class="muted">TBB Staff website moderation privileges will be activated separately once the Staff Moderation
+        Desk™ is ready.</p>
+    </section>
+  </main>
+  <script type="module">
+    import { db, requireAccess, $, message } from './js/auth.js';
+    let member = null;
+    const roleLabel = r => r === 'golden_shelf' ? '📚 Golden Shelf™' : '💗 TBB Team Member (Staff)';
+    function status(id, text, error = false) { $(id).textContent = text; $(id).className = error ? 'error' : 'notice'; }
+    function textEl(tag, text) { const el = document.createElement(tag); el.textContent = text; return el; }
+    function description() { $('roleDescription').textContent = $('requestedRole').value === 'team_member' ? 'TBB Staff is a website moderation position for comments and messages, separate from Admin HQ. Applying does not grant admin permissions.' : 'Golden Shelf™ is a special TBB community membership reviewed by the admins.'; }
+    $('requestedRole').onchange = description; description();
+    async function load() {
+      if (!member) return;
+      $('myRequests').replaceChildren(); $('myRoles').replaceChildren();
+      const [requests, grants] = await Promise.all([
+        db.from('tbb_role_requests').select('id,requested_role,statement,status,created_at,admin_notes').eq('user_id', member.id).order('created_at', { ascending: false }),
+        db.from('tbb_role_grants').select('role,granted_at').eq('user_id', member.id)
+      ]);
+      if (requests.error) { status('requestStatus', requests.error.message, true); return; }
+      status('requestStatus', `${requests.data.length} request(s) found.`);
+      for (const r of requests.data) {
+        const card = textEl('article', ''); card.className = 'item'; card.append(textEl('strong', `${roleLabel(r.requested_role)} — ${r.status}`), textEl('p', r.statement), textEl('small', new Date(r.created_at).toLocaleDateString()));
+        if (r.status === 'pending') { const b = textEl('button', 'Withdraw Request'); b.type = 'button'; b.onclick = async () => { if (!confirm('Withdraw this request?')) return; b.disabled = true; const { error } = await db.rpc('tbb_withdraw_role_request', { target_request_id: r.id }); if (error) { status('requestStatus', error.message, true); b.disabled = false; } else await load(); }; card.append(textEl('p', ''), b); }
+        $('myRequests').append(card);
+      }
+      if (!requests.data.length) $('myRequests').append(textEl('p', 'You have not submitted any requests yet.'));
+      if (grants.error) { $('myRoles').append(textEl('p', grants.error.message)); return; }
+      for (const g of grants.data) $('myRoles').append(textEl('p', `${roleLabel(g.role)} · Approved ${new Date(g.granted_at).toLocaleDateString()}`));
+      if (!grants.data.length) $('myRoles').append(textEl('p', 'No approved roles yet.'));
+    }
+    $('requestForm').onsubmit = async e => {
+      e.preventDefault(); const btn = $('submitRequest'); btn.disabled = true;
+      try {
+        if (!member) throw new Error('Please sign in first.'); const statement = $('statement').value.trim(); if (statement.length < 10) throw new Error('Please write at least 10 characters.');
+        const { error } = await db.from('tbb_role_requests').insert({ user_id: member.id, requested_role: $('requestedRole').value, statement }); if (error) throw error;
+        $('statement').value = ''; status('submitStatus', '💗 Your request has been submitted!'); await load();
+      } catch (err) { status('submitStatus', err.message, true); } finally { btn.disabled = false; }
+    };
+    $('refreshRequests').onclick = load;
+    (async () => { try { const access = await requireAccess(false); if (!access) return; member = access.user; await load(); } catch (e) { message(e.message, true); } })();
+  </script>
+</body>
+
+</html>
