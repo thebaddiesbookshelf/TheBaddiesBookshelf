@@ -7,82 +7,41 @@
   <title>Baddie Admin HQ</title>
   <link rel="stylesheet" href="css/auth.css">
   <style>
-    .admin-shell {
-      max-width: 1000px;
-      margin: auto;
-      padding: 24px 16px 60px;
-    }
-    .admin-card {
-      background: #fff8fc;
-      color: #33202e;
-      border: 1px solid #efc5dc;
-      border-radius: 18px;
-      padding: 22px;
-      margin: 20px 0;
-    }
-    .admin-card h2 { margin-top: 0; }
-    .admin-card button {
-      margin: 5px;
-      cursor: pointer;
-    }
-    .admin-card input,
-    .admin-card select {
-      max-width: 100%;
-      padding: 10px;
-      margin: 8px 0;
-    }
-    .admin-card select { width: 100%; }
-    .admin-card input[type=file] { width: 100%; }
-    .admin-card .item {
-      padding: 14px;
-      margin: 12px 0;
-      border: 1px solid #e8bed3;
-      border-radius: 12px;
-    }
-    .admin-card .muted { opacity: .75; }
-    .admin-card .notice { color: #276c43; }
-    .admin-card .error { color: #ad264b; }
-    .admin-card .stats {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin: 15px 0;
-    }
-    .admin-card .stat {
-      flex: 1;
-      min-width: 110px;
-      padding: 14px;
-      background: #fbe4f0;
-      border-radius: 12px;
-      text-align: center;
-    }
-    .admin-card .stat strong {
-      display: block;
-      font-size: 24px;
-    }
-    .admin-card progress {
-      width: 100%;
-      height: 20px;
-    }
-    .admin-card table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 13px;
-    }
-    .admin-card th,
-    .admin-card td {
-      padding: 8px;
-      border-bottom: 1px solid #ebcbdc;
-      text-align: left;
-    }
-    .table-wrap { overflow-x: auto; }
-    #importLog {
-      max-height: 190px;
-      overflow: auto;
-      white-space: pre-wrap;
-      font-size: 13px;
-    }
-    [hidden] { display: none !important; }
+    :root{color-scheme:dark;--bg:#09050b;--panel:#160c1b;--panel2:#24102a;--pink:#ff2ba6;--light:#ffe2f4;--muted:#c9a8c1;--line:#6b2859}
+    *{box-sizing:border-box}
+    body{margin:0;background:radial-gradient(ellipse at 15% 0%,#411337 0%,transparent 40%),radial-gradient(ellipse at 90% 20%,#281041 0%,transparent 35%),var(--bg);color:var(--light);font-family:system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
+    .admin-shell{max-width:1100px;margin:auto;padding:34px 18px 80px}
+    .admin-card{background:linear-gradient(140deg,rgba(38,17,43,.98),rgba(16,8,22,.98));color:var(--light);border:1px solid var(--line);border-radius:22px;padding:26px;margin:20px 0;box-shadow:0 12px 45px #0007}
+    .admin-card:first-child{border-color:var(--pink);box-shadow:0 0 45px #ff2ba622}
+    h1{font-size:clamp(2rem,5vw,3.2rem);margin:.2em 0;letter-spacing:-.04em}
+    h2{margin-top:0;color:#ff78c7}h3{color:#ffb0de}
+    p{line-height:1.6}a{color:#ff83cd}a:hover{color:white}
+    button{border:1px solid #ff64bc;border-radius:12px;background:linear-gradient(135deg,#ff2ba6,#b61882);color:white;font-weight:700;padding:11px 17px;cursor:pointer;margin:5px 7px 5px 0;transition:filter .15s,transform .15s}
+    button:hover:not(:disabled){filter:brightness(1.15);transform:translateY(-1px)}button:disabled{opacity:.5;cursor:not-allowed}
+    input,select{max-width:100%;padding:12px;margin:8px 0 16px;border:1px solid #8a477c;border-radius:12px;background:#160c1b;color:white;font:inherit}
+    select,input[type=file]{width:100%}input[type=file]::file-selector-button{background:#ff2ba6;border:0;color:white;padding:8px 12px;border-radius:8px;margin-right:12px}
+    label{display:block;margin-top:10px}.item{padding:17px;margin:12px 0;border:1px solid #683057;border-radius:14px;background:#220e24}
+    .muted{color:var(--muted)}.notice{color:#9bf0bd}.error{color:#ff8fae}
+    .stats{display:flex;gap:12px;flex-wrap:wrap;margin:18px 0}.stat{flex:1;min-width:140px;padding:19px;background:linear-gradient(145deg,#371336,#1c102a);border:1px solid #75305d;border-radius:16px;text-align:center;color:#f8c9e6}.stat strong{display:block;font-size:30px;color:#ff4db5}
+    progress{width:100%;height:22px;accent-color:var(--pink)}table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:10px;border-bottom:1px solid #56304b;text-align:left}th{color:#ff83cd}.table-wrap{overflow-x:auto}
+    #importLog{max-height:240px;overflow:auto;white-space:pre-wrap;font-size:13px;background:#0e0711;border:1px solid #5c2752;padding:15px;border-radius:12px;color:#fbd9ee}
+    [hidden]{display:none!important}button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:3px solid #ff9bda;outline-offset:3px}
+
+    /* THE COVER CLOSET™ */
+    .closet-controls{display:grid;grid-template-columns:2fr 1fr auto;gap:12px;align-items:end}
+    .closet-controls label{margin:0}.closet-controls input,.closet-controls select{margin:7px 0 0;width:100%}
+    .closet-results{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px;margin:18px 0}
+    .closet-book{border:1px solid #71315e;border-radius:15px;background:#1c0d20;padding:13px;text-align:left;display:flex;gap:12px;align-items:center;min-width:0}
+    .closet-book:hover{border-color:#ff76ca}.closet-book.selected{outline:2px solid var(--pink)}
+    .closet-book img{width:55px;height:78px;object-fit:cover;border-radius:7px;background:#3c1c39;flex-shrink:0}
+    .closet-book span{min-width:0;overflow-wrap:anywhere}.closet-book small{display:block;color:#e5b4d4;margin-top:4px}
+    .closet-editor{border:1px solid #b7448d;background:#210f25;border-radius:17px;padding:20px;margin-top:20px}
+    .closet-editor-grid{display:grid;grid-template-columns:150px minmax(0,1fr);gap:20px}
+    .closet-cover{width:150px;height:215px;object-fit:cover;border:1px solid #864275;border-radius:12px;background:#130a17}
+    .closet-editor input[type=url]{width:100%}.closet-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+    .closet-actions button{margin:4px 0}.closet-pager{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+    .closet-status{min-height:24px;overflow-wrap:anywhere}.closet-hint{font-size:13px;color:var(--muted)}
+    @media(max-width:700px){.closet-controls{grid-template-columns:1fr}.closet-editor-grid{grid-template-columns:1fr}.closet-cover{width:130px;height:185px}}
   </style>
 </head>
 
@@ -90,7 +49,7 @@
 <main class="admin-shell">
   <header class="admin-card">
     <h1>👑 Baddie Admin HQ</h1>
-    <p>Your command center for The Baddies Bookshelf.</p>
+    <p>Black velvet. Hot pink. All the books. Your Baddie command center.</p>
     <p id="message" role="status"></p>
     <button id="logout">Sign Out</button>
     <nav><a href="home.html">Public home</a></nav>
@@ -125,6 +84,46 @@
     </div>
 
     <button id="refreshCatalog">Refresh Catalog Stats</button>
+  </section>
+
+
+  <section class="admin-card" id="coverCloset">
+    <h2>💋 The Cover Closet™</h2>
+    <p>Find a book, preview its artwork, then paste a direct image link or upload a cover. Changes save to your existing Supabase book catalog.</p>
+    <div class="stats">
+      <div class="stat"><strong id="coversAssigned">—</strong>Books with Covers</div>
+      <div class="stat"><strong id="coversMissing">—</strong>Missing Covers</div>
+    </div>
+    <div class="closet-controls">
+      <label for="coverSearch"><strong>Search title or author</strong><input id="coverSearch" type="search" placeholder="Try Caraval, Raven Kennedy..." autocomplete="off"></label>
+      <label for="coverCollection"><strong>Collection</strong><select id="coverCollection"><option value="all">All collections</option><option value="standalones">Standalones</option><option value="series">Series</option><option value="adult-standalones">18+ Standalones</option><option value="adult-series">18+ Series</option></select></label>
+      <button id="coverFind">Find Books</button>
+    </div>
+    <label for="coverFilter"><strong>Cover status</strong></label>
+    <select id="coverFilter"><option value="all">All books</option><option value="missing">Missing covers only</option><option value="covered">Already covered</option></select>
+    <p id="coverListStatus" class="closet-status muted" role="status">Search or browse to get started.</p>
+    <div id="coverResults" class="closet-results"></div>
+    <div class="closet-pager"><button id="coverPrev" disabled>← Previous</button><span id="coverPageInfo" class="muted"></span><button id="coverNext" disabled>Next →</button></div>
+    <section id="coverEditor" class="closet-editor" hidden>
+      <h3 id="coverSelectedTitle">Selected Book</h3>
+      <p id="coverSelectedMeta" class="muted"></p>
+      <div class="closet-editor-grid">
+        <div><img id="coverCurrentPreview" class="closet-cover" alt="Current book cover"><p class="closet-hint">Current cover</p></div>
+        <div>
+          <div class="closet-actions"><a id="coverGoogleLink" href="https://images.google.com/" target="_blank" rel="noopener noreferrer">🔎 Find cover on Google Images ↗</a></div>
+          <label for="coverUrl"><strong>Option 1 — Paste a direct image URL</strong></label>
+          <input id="coverUrl" type="url" placeholder="https://example.com/book-cover.jpg" spellcheck="false">
+          <button id="coverPreviewUrl">Preview URL</button>
+          <p class="closet-hint">Use the actual image address, not a Google Images search-result page. Only use artwork you have permission to display.</p>
+          <label for="coverUpload"><strong>Option 2 — Upload an image</strong></label>
+          <input id="coverUpload" type="file" accept="image/jpeg,image/png,image/webp">
+          <p class="closet-hint">JPG, PNG, or WebP · 5 MB maximum. Choosing a file takes priority over the pasted URL.</p>
+          <div id="coverCandidateBox" hidden><h3>✨ New Cover Preview</h3><img id="coverCandidatePreview" class="closet-cover" alt="Proposed book cover"></div>
+          <p id="coverSaveStatus" class="closet-status" role="status"></p>
+          <div class="closet-actions"><button id="coverSave" disabled>💗 Save This Cover</button><button id="coverCancel" type="button">Close Editor</button></div>
+        </div>
+      </div>
+    </section>
   </section>
 
   <section class="admin-card">
@@ -568,6 +567,7 @@ async function readAll(table, columns) {
     const { data, error } = await db
       .from(table)
       .select(columns)
+      .order('id', { ascending: true })
       .range(offset, offset + pageSize - 1);
 
     if (error) throw error;
@@ -627,182 +627,352 @@ async function prepareSeries(books) {
 
 async function startImport() {
   if (importing || !previewBooks.length) return;
-
-  if (!confirm(
-    `Import ${previewBooks.length} books into ` +
-    `${previewCollection}? Existing books will be skipped.`
-  )) return;
+  if (!confirm(`Import ${previewBooks.length} books into ${previewCollection}? Existing records will not be overwritten.`)) return;
 
   importing = true;
-  $('startImport').disabled = true;
-  $('previewImport').disabled = true;
-  $('csvFile').disabled = true;
-  $('collection').disabled = true;
+  for (const id of ['startImport','previewImport','csvFile','collection']) $(id).disabled = true;
   $('importProgress').hidden = false;
   $('progressBar').value = 0;
+  $('progressText').textContent = 'Preparing import…';
   $('importLog').textContent = '';
+  importMessage('');
 
-  let inserted = 0;
-  let skipped = 0;
-  let batchId = null;
+  let inserted = 0, skipped = 0, processed = 0, batchId = null;
+  const failures = [];
+
+  async function updateBatch(fields) {
+    if (!batchId) return;
+    const { error } = await db.from('tbb_book_import_batches').update(fields).eq('id', batchId);
+    if (error) log('Batch tracking warning: ' + error.message);
+  }
 
   try {
     const access = await requireAccess(true);
     if (!access) throw new Error('Admin access required.');
 
-    log('Checking existing catalog…');
-
-    const [existingBooks, existingSeries] =
-      await Promise.all([
-        readAll(
-          'tbb_books',
-          'title,author,collection,series_id'
-        ),
-        readAll('tbb_book_series', 'id,name')
-      ]);
-
-    const existingSeriesNames = new Map(
-      existingSeries.map(s => [s.id, s.name])
-    );
-
-    const existingKeys = new Set(
-      existingBooks.map(book => bookKey({
-        ...book,
-        series_name:
-          existingSeriesNames.get(book.series_id) || null
-      }))
-    );
-
-    const booksToInsert = previewBooks.filter(book => {
-      if (existingKeys.has(bookKey(book))) {
-        skipped++;
-        return false;
+    log('Loading existing catalog and series…');
+    const [existingBooks, existingSeries] = await Promise.all([
+      readAll('tbb_books', 'id,title,author,collection,series_id'),
+      readAll('tbb_book_series', 'id,name')
+    ]);
+    const seriesMap = new Map(existingSeries.map(s => [normalize(s.name), s.id]));
+    const namesToCreate = new Map();
+    for (const book of previewBooks) {
+      if (book.series_name && !seriesMap.has(normalize(book.series_name))) {
+        namesToCreate.set(normalize(book.series_name), book.series_name);
       }
-      return true;
+    }
+
+    // Resolve series before comparing books: the unique database index uses series_id.
+    for (const [key, name] of namesToCreate) {
+      const { data, error } = await db.from('tbb_book_series')
+        .upsert({ name }, { onConflict: 'normalized_name' })
+        .select('id').single();
+      if (error) throw new Error(`Cannot resolve series "${name}": ${error.message}`);
+      seriesMap.set(key, data.id);
+    }
+    log(`${namesToCreate.size} series names resolved or created.`);
+
+    const resolved = previewBooks.map(book => {
+      const seriesId = book.series_name ? seriesMap.get(normalize(book.series_name)) : null;
+      if (book.series_name && !seriesId) throw new Error(`Series ID missing for ${book.series_name}`);
+      return { ...book, series_id: seriesId };
     });
+    const keyOf = b => [normalize(b.collection), normalize(b.title), normalize(b.author), b.series_id || ''].join('|');
+    const known = new Set(existingBooks.map(keyOf));
+    const newBooks = [];
+    for (const book of resolved) {
+      const key = keyOf(book);
+      if (known.has(key)) { skipped++; continue; }
+      known.add(key);
+      newBooks.push(book);
+    }
+    log(`${skipped} books already in catalog; ${newBooks.length} candidates.`);
 
-    log(`${skipped} existing books skipped.`);
-    log(`${booksToInsert.length} new books to import.`);
-
-    if (!booksToInsert.length) {
-      log('No new books to import.');
+    if (!newBooks.length) {
       $('progressBar').value = 100;
-      importMessage('All books already exist. Nothing changed.');
+      $('progressText').textContent = 'All records already exist.';
+      importMessage(`Nothing to import. ${skipped} existing books skipped.`);
       return;
     }
 
-    const { data: batch, error: batchError } = await db
-      .from('tbb_book_import_batches')
-      .insert({
-        source_filename: previewFileName,
-        collection: previewCollection,
-        status: 'pending',
-        total_rows: previewBooks.length,
-        created_by: access.user.id
-      })
-      .select('id')
-      .single();
-
+    const { data: batch, error: batchError } = await db.from('tbb_book_import_batches')
+      .insert({ source_filename: previewFileName, collection: previewCollection,
+        status: 'pending', total_rows: previewBooks.length, created_by: access.user.id })
+      .select('id').single();
     if (batchError) throw batchError;
     batchId = batch.id;
 
-    const { seriesMap, created } =
-      await prepareSeries(booksToInsert);
+    const toRecord = book => ({
+      title: book.title, author: book.author, collection: book.collection,
+      main_tag: book.main_tag, download_url: book.download_url,
+      source_uploaded: book.source_uploaded, source_status: book.source_status,
+      source_row_number: book.source_row_number, book_number: book.book_number,
+      series_id: book.series_id
+    });
 
-    log(`${created} new series created.`);
-
+    // Chunk first for speed. On a unique violation, retry each book individually
+    // so a single duplicate does not roll back 39 valid books in the same chunk.
     const chunkSize = 40;
-
-    for (
-      let start = 0;
-      start < booksToInsert.length;
-      start += chunkSize
-    ) {
-      const chunk = booksToInsert
-        .slice(start, start + chunkSize)
-        .map(book => ({
-          title: book.title,
-          author: book.author,
-          collection: book.collection,
-          main_tag: book.main_tag,
-          download_url: book.download_url,
-          source_uploaded: book.source_uploaded,
-          source_status: book.source_status,
-          source_row_number: book.source_row_number,
-          book_number: book.book_number,
-          series_id: book.series_name
-            ? seriesMap.get(normalize(book.series_name))
-            : null
-        }));
-
-      const { error } = await db
-        .from('tbb_books')
-        .insert(chunk);
-
-      if (error) throw error;
-
-      inserted += chunk.length;
-
-      const completed =
-        Math.min(start + chunk.length, booksToInsert.length);
-
-      const percent = Math.round(
-        completed / booksToInsert.length * 100
-      );
-
-      $('progressBar').value = percent;
-      $('progressText').textContent =
-        `${completed} / ${booksToInsert.length} processed`;
-
-      log(`Imported ${inserted} books…`);
-
-      await db.from('tbb_book_import_batches')
-        .update({ inserted_rows: inserted })
-        .eq('id', batchId);
+    for (let i = 0; i < newBooks.length; i += chunkSize) {
+      const chunk = newBooks.slice(i, i + chunkSize);
+      const { error } = await db.from('tbb_books').insert(chunk.map(toRecord));
+      if (!error) {
+        inserted += chunk.length;
+      } else if (error.code === '23505') {
+        log(`Duplicate encountered in chunk ${Math.floor(i / chunkSize) + 1}; checking individual books…`);
+        for (const book of chunk) {
+          const { error: rowError } = await db.from('tbb_books').insert(toRecord(book));
+          if (!rowError) inserted++;
+          else if (rowError.code === '23505') skipped++;
+          else failures.push(`CSV row ${book.source_row_number}: ${rowError.message}`);
+        }
+      } else {
+        // Non-duplicate errors can also be row-specific. Diagnose per row.
+        log(`Chunk error: ${error.message}. Checking individual books…`);
+        for (const book of chunk) {
+          const { error: rowError } = await db.from('tbb_books').insert(toRecord(book));
+          if (!rowError) inserted++;
+          else if (rowError.code === '23505') skipped++;
+          else failures.push(`CSV row ${book.source_row_number}: ${rowError.message}`);
+        }
+      }
+      processed += chunk.length;
+      $('progressBar').value = Math.round(processed / newBooks.length * 100);
+      $('progressText').textContent = `${processed} / ${newBooks.length} candidates processed`;
+      log(`${processed} checked · ${inserted} inserted · ${skipped} skipped · ${failures.length} errors`);
+      await updateBatch({ inserted_rows: inserted });
     }
 
-    const { error: finishError } = await db
-      .from('tbb_book_import_batches')
-      .update({
-        status: 'completed',
-        inserted_rows: inserted,
-        completed_at: new Date().toISOString()
-      })
-      .eq('id', batchId);
-
-    if (finishError) throw finishError;
-
-    log('✨ Import complete!');
-    importMessage(
-      `Success! ${inserted} imported, ${skipped} existing books skipped.`
-    );
-
+    for (const failure of failures.slice(0, 30)) log('ERROR: ' + failure);
+    if (failures.length > 30) log(`…and ${failures.length - 30} additional errors.`);
+    await updateBatch({
+      status: failures.length ? 'failed' : 'completed',
+      inserted_rows: inserted,
+      completed_at: failures.length ? null : new Date().toISOString(),
+      ...(failures.length ? { error_details: { count: failures.length, examples: failures.slice(0, 20) } } : {})
+    });
     await loadStats();
-
-    previewBooks = [];
-    $('previewArea').hidden = true;
-    $('csvFile').value = '';
+    if (failures.length) {
+      importMessage(`Partial import: ${inserted} imported, ${skipped} skipped, ${failures.length} errors. See log; you may safely retry.`, true);
+    } else {
+      importMessage(`Success! ${inserted} imported, ${skipped} existing books skipped.`);
+      previewBooks = [];
+      $('previewArea').hidden = true;
+      $('csvFile').value = '';
+    }
   } catch (error) {
     log('ERROR: ' + error.message);
     importMessage(error.message, true);
-
-    if (batchId) {
-      await db.from('tbb_book_import_batches')
-        .update({
-          status: 'failed',
-          inserted_rows: inserted,
-          error_details: { message: error.message }
-        })
-        .eq('id', batchId);
-    }
+    await updateBatch({ status: 'failed', inserted_rows: inserted, error_details: { message: error.message } });
   } finally {
     importing = false;
-    $('startImport').disabled = false;
-    $('previewImport').disabled = false;
-    $('csvFile').disabled = false;
-    $('collection').disabled = false;
+    for (const id of ['startImport','previewImport','csvFile','collection']) $(id).disabled = false;
   }
 }
+
+
+/* THE COVER CLOSET™ — keep book imports and membership management untouched */
+const coverBucket = 'tbb-book-covers';
+const coverPageSize = 18;
+let coverPage = 0;
+let coverTotal = 0;
+let coverSelected = null;
+let coverCandidate = null;
+let coverObjectUrl = null;
+let coverBusy = false;
+let coverSearchSerial = 0;
+
+const coverHasArtwork = 'cover_url.not.is.null,cover_storage_path.not.is.null';
+const coverPlaceholder = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="150" height="215"><rect width="100%" height="100%" fill="#30152f"/><text x="50%" y="49%" fill="#ff9cda" text-anchor="middle" font-family="sans-serif" font-size="14">No Cover</text></svg>');
+function coverPublicUrl(path) {
+  return path ? db.storage.from(coverBucket).getPublicUrl(path).data.publicUrl : '';
+}
+function coverDisplayUrl(book) {
+  return book.cover_storage_path ? coverPublicUrl(book.cover_storage_path) : (book.cover_url || '');
+}
+function coverStatus(text, error = false, target = 'coverSaveStatus') {
+  $(target).textContent = text;
+  $(target).className = 'closet-status ' + (error ? 'error' : 'notice');
+}
+function clearCoverCandidate() {
+  if (coverObjectUrl) URL.revokeObjectURL(coverObjectUrl);
+  coverObjectUrl = null;
+  coverCandidate = null;
+  $('coverCandidateBox').hidden = true;
+  $('coverCandidatePreview').removeAttribute('src');
+  $('coverSave').disabled = true;
+}
+function coverValidateFile(file) {
+  if (!['image/jpeg','image/png','image/webp'].includes(file.type)) throw new Error('Choose a JPG, PNG, or WebP image.');
+  if (file.size > 5 * 1024 * 1024) throw new Error('Cover exceeds the 5 MB limit.');
+  if (!file.size) throw new Error('This image file is empty.');
+}
+function coverValidateUrl(raw) {
+  let url;
+  try { url = new URL(raw); } catch { throw new Error('Paste a complete HTTPS image URL.'); }
+  if (url.protocol !== 'https:') throw new Error('Cover URLs must start with https://');
+  return url.href;
+}
+function coverTestImage(src) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const timer = setTimeout(() => { img.onload = img.onerror = null; reject(new Error('Image preview timed out. Try another image.')); }, 12000);
+    img.onload = () => { clearTimeout(timer); resolve(); };
+    img.onerror = () => { clearTimeout(timer); reject(new Error('This link does not load as an image. Try the direct image address or upload a file.')); };
+    img.src = src;
+  });
+}
+async function loadCoverCounts() {
+  const [all, covered] = await Promise.all([
+    db.from('tbb_books').select('id', { count: 'exact', head: true }),
+    db.from('tbb_books').select('id', { count: 'exact', head: true }).or(coverHasArtwork)
+  ]);
+  if (all.error) throw all.error;
+  if (covered.error) throw covered.error;
+  $('coversAssigned').textContent = (covered.count ?? 0).toLocaleString();
+  $('coversMissing').textContent = ((all.count ?? 0) - (covered.count ?? 0)).toLocaleString();
+}
+async function loadCoverBooks() {
+  const serial = ++coverSearchSerial;
+  const search = $('coverSearch').value.trim();
+  const collection = $('coverCollection').value;
+  const filter = $('coverFilter').value;
+  coverStatus('Finding your books…', false, 'coverListStatus');
+  $('coverResults').replaceChildren();
+  $('coverPrev').disabled = $('coverNext').disabled = true;
+  try {
+    let query = db.from('tbb_books')
+      .select('id,title,author,collection,cover_url,cover_storage_path', { count: 'exact' });
+    if (collection !== 'all') query = query.eq('collection', collection);
+    if (filter === 'covered') query = query.or(coverHasArtwork);
+    if (filter === 'missing') query = query.is('cover_url', null).is('cover_storage_path', null);
+    if (search) {
+      // Escape PostgREST filter delimiters and LIKE wildcards before searching.
+      const term = search.replace(/[%,()]/g, ' ').trim();
+      if (term) query = query.or(`title.ilike.%${term}%,author.ilike.%${term}%`);
+    }
+    const { data, count, error } = await query.order('title', { ascending: true })
+      .order('id', { ascending: true }).range(coverPage * coverPageSize, (coverPage + 1) * coverPageSize - 1);
+    if (serial !== coverSearchSerial) return;
+    if (error) throw error;
+    coverTotal = count ?? 0;
+    coverStatus(`${coverTotal.toLocaleString()} matching books`, false, 'coverListStatus');
+    for (const book of data || []) {
+      const btn = document.createElement('button');
+      btn.type = 'button'; btn.className = 'closet-book';
+      if (coverSelected?.id === book.id) btn.classList.add('selected');
+      const img = document.createElement('img');
+      img.alt = ''; img.loading = 'lazy'; img.src = coverDisplayUrl(book) || coverPlaceholder;
+      img.onerror = () => { img.onerror = null; img.src = coverPlaceholder; };
+      const details = document.createElement('span');
+      const title = document.createElement('strong'); title.textContent = book.title;
+      const meta = document.createElement('small'); meta.textContent = `${book.author} · ${book.collection}`;
+      const status = document.createElement('small'); status.textContent = coverDisplayUrl(book) ? '💗 Cover assigned' : '○ Missing cover';
+      details.append(title, meta, status); btn.append(img, details);
+      btn.onclick = () => selectCoverBook(book);
+      $('coverResults').append(btn);
+    }
+    $('coverPageInfo').textContent = coverTotal ? `Page ${coverPage + 1} of ${Math.ceil(coverTotal / coverPageSize)}` : 'No matches';
+    $('coverPrev').disabled = coverPage === 0;
+    $('coverNext').disabled = (coverPage + 1) * coverPageSize >= coverTotal;
+  } catch (error) { if (serial === coverSearchSerial) coverStatus(error.message, true, 'coverListStatus'); }
+}
+function selectCoverBook(book) {
+  coverSelected = book;
+  clearCoverCandidate();
+  $('coverEditor').hidden = false;
+  $('coverSelectedTitle').textContent = book.title;
+  $('coverSelectedMeta').textContent = `${book.author} · ${book.collection}`;
+  $('coverCurrentPreview').src = coverDisplayUrl(book) || coverPlaceholder;
+  $('coverCurrentPreview').onerror = () => { $('coverCurrentPreview').onerror = null; $('coverCurrentPreview').src = coverPlaceholder; };
+  $('coverGoogleLink').href = 'https://www.google.com/search?tbm=isch&q=' + encodeURIComponent(`${book.title} ${book.author} book cover`);
+  $('coverUrl').value = '';
+  $('coverUpload').value = '';
+  coverStatus('Choose an image file or paste and preview a URL.');
+  $('coverEditor').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+async function previewCoverUrl() {
+  if (!coverSelected || coverBusy) return;
+  clearCoverCandidate();
+  try {
+    const url = coverValidateUrl($('coverUrl').value.trim());
+    coverStatus('Checking image…');
+    await coverTestImage(url);
+    coverCandidate = { type: 'url', url };
+    $('coverCandidatePreview').src = url;
+    $('coverCandidateBox').hidden = false;
+    $('coverSave').disabled = false;
+    coverStatus('Preview ready! Check the artwork, then save.');
+  } catch (error) { coverStatus(error.message, true); }
+}
+async function previewCoverFile() {
+  if (!coverSelected || coverBusy) return;
+  clearCoverCandidate();
+  const file = $('coverUpload').files[0];
+  if (!file) return;
+  try {
+    coverValidateFile(file);
+    coverObjectUrl = URL.createObjectURL(file);
+    await coverTestImage(coverObjectUrl);
+    coverCandidate = { type: 'file', file };
+    $('coverCandidatePreview').src = coverObjectUrl;
+    $('coverCandidateBox').hidden = false;
+    $('coverSave').disabled = false;
+    coverStatus('Upload preview ready! Check the artwork, then save.');
+  } catch (error) { clearCoverCandidate(); coverStatus(error.message, true); }
+}
+async function saveCover() {
+  if (!coverSelected || !coverCandidate || coverBusy) return;
+  coverBusy = true; $('coverSave').disabled = true;
+  let newStoragePath = null;
+  try {
+    const access = await requireAccess(true);
+    if (!access) throw new Error('Admin access required.');
+    const bookId = coverSelected.id;
+    const candidate = coverCandidate;
+    let fields;
+    if (candidate.type === 'file') {
+      coverValidateFile(candidate.file);
+      const extension = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp' }[candidate.file.type];
+      newStoragePath = `${access.user.id}/${bookId}/${crypto.randomUUID()}.${extension}`;
+      coverStatus('Uploading cover…');
+      const { error: uploadError } = await db.storage.from(coverBucket).upload(newStoragePath, candidate.file, { contentType: candidate.file.type, upsert: false });
+      if (uploadError) throw uploadError;
+      fields = { cover_storage_path: newStoragePath, cover_url: coverPublicUrl(newStoragePath) };
+    } else {
+      fields = { cover_storage_path: null, cover_url: coverValidateUrl(candidate.url) };
+    }
+    coverStatus('Saving cover to your catalog…');
+    const { data, error } = await db.from('tbb_books').update(fields).eq('id', bookId)
+      .select('id,cover_url,cover_storage_path').single();
+    if (error) throw error;
+    // Avoid removing previously uploaded files: other references may still use them.
+    coverSelected = { ...coverSelected, ...data };
+    clearCoverCandidate();
+    $('coverUpload').value = ''; $('coverUrl').value = '';
+    $('coverCurrentPreview').src = coverDisplayUrl(coverSelected) || coverPlaceholder;
+    coverStatus('💗 Cover saved successfully!');
+    await Promise.allSettled([loadCoverCounts(), loadCoverBooks()]);
+  } catch (error) {
+    if (newStoragePath) {
+      // Roll back a newly uploaded object if the book record was not saved.
+      await db.storage.from(coverBucket).remove([newStoragePath]);
+    }
+    coverStatus(error.message || 'Could not save cover.', true);
+    $('coverSave').disabled = !coverCandidate;
+  } finally { coverBusy = false; }
+}
+$('coverFind').onclick = () => { coverPage = 0; loadCoverBooks(); };
+$('coverSearch').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); coverPage = 0; loadCoverBooks(); } });
+for (const id of ['coverCollection','coverFilter']) $(id).addEventListener('change', () => { coverPage = 0; loadCoverBooks(); });
+$('coverPrev').onclick = () => { if (coverPage > 0) { coverPage--; loadCoverBooks(); } };
+$('coverNext').onclick = () => { if ((coverPage + 1) * coverPageSize < coverTotal) { coverPage++; loadCoverBooks(); } };
+$('coverPreviewUrl').onclick = previewCoverUrl;
+$('coverUpload').addEventListener('change', () => { $('coverUrl').value = ''; previewCoverFile(); });
+$('coverUrl').addEventListener('input', () => { if (!coverBusy) { clearCoverCandidate(); $('coverUpload').value = ''; } });
+$('coverSave').onclick = saveCover;
+$('coverCancel').onclick = () => { if (coverBusy) return; clearCoverCandidate(); coverSelected = null; $('coverEditor').hidden = true; };
 
 /* INITIALIZATION */
 
@@ -811,6 +981,18 @@ $('logout').onclick = logout;
 $('refreshCatalog').onclick = loadStats;
 $('previewImport').onclick = previewImport;
 $('startImport').onclick = startImport;
+
+function clearPreview() {
+  if (importing) return;
+  previewBooks = [];
+  previewFileName = '';
+  previewCollection = '';
+  $('previewArea').hidden = true;
+  importMessage('Selection changed. Preview your CSV before importing.');
+}
+$('csvFile').addEventListener('change', clearPreview);
+$('collection').addEventListener('change', clearPreview);
+
 
 async function init() {
   try {
@@ -821,7 +1003,9 @@ async function init() {
 
     await Promise.all([
       loadMembers(),
-      loadStats()
+      loadStats(),
+      loadCoverCounts(),
+      loadCoverBooks()
     ]);
   } catch (error) {
     message(error.message, true);
