@@ -798,3 +798,36 @@ a {
     grid-template-columns: 1fr;
   }
 }
+
+
+/* ==========================================
+   BRING YOUR OWN BOOK™
+   ========================================== */
+
+.library-search-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.library-secondary-btn {
+  background: var(--surface);
+  color: var(--light);
+  border: 1px solid var(--accent);
+}
+
+.library-secondary-btn:hover {
+  background: var(--alt);
+}
+
+@media (max-width: 600px) {
+  .library-search-actions {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .library-search-actions button {
+    width: 100%;
+  }
+}

@@ -209,12 +209,23 @@
       >
     </div>
 
+    
+    <div class="library-search-actions">
     <button
-      class="library-action-btn"
-      id="searchCatalog"
-      type="button">
-      Search Catalog 💗
+        class="library-action-btn"
+        id="searchCatalog"
+        type="button">
+        Search Catalog 💗
     </button>
+
+    <button
+        class="library-action-btn library-secondary-btn"
+        id="openCommunityBookForm"
+        type="button">
+        Add My Own Book 🎀
+    </button>
+    </div>
+
 
   </div>
 
@@ -255,6 +266,103 @@
     class="library-book-grid"
     aria-live="polite">
   </div>
+
+  
+<!-- BRING YOUR OWN BOOK™ -->
+<dialog
+  id="communityBookDialog"
+  class="library-dialog">
+
+  <form id="communityBookForm">
+
+    <h3>🎀 Add My Own Book™</h3>
+
+    <p class="library-helper">
+      Can't find your book in the TBB catalog?
+      Add it to our shared community collection!
+    </p>
+
+    <div class="library-form-grid">
+
+      <label>
+        Book Title *
+        <input
+          id="communityBookTitle"
+          type="text"
+          maxlength="250"
+          required
+          placeholder="Enter book title"
+        >
+      </label>
+
+      <label>
+        Author *
+        <input
+          id="communityBookAuthor"
+          type="text"
+          maxlength="200"
+          required
+          placeholder="Enter author"
+        >
+      </label>
+
+      <label>
+        Cover Image URL
+        <input
+          id="communityBookCover"
+          type="url"
+          maxlength="2000"
+          placeholder="https://..."
+        >
+      </label>
+
+      <label>
+        Series Name
+        <input
+          id="communityBookSeries"
+          type="text"
+          maxlength="200"
+          placeholder="Optional"
+        >
+      </label>
+
+      <label>
+        Book Number
+        <input
+          id="communityBookNumber"
+          type="text"
+          maxlength="30"
+          placeholder="Optional"
+        >
+      </label>
+
+    </div>
+
+    <p class="library-helper">
+      💗 Community books are shared with approved
+      TBB members. Your personal reading progress
+      and ratings remain separate.
+    </p>
+
+    <div class="library-dialog-actions">
+
+      <button
+        type="button"
+        id="cancelCommunityBook">
+        Cancel
+      </button>
+
+      <button
+        type="submit"
+        id="submitCommunityBook">
+        Add to Community 💗
+      </button>
+
+    </div>
+
+  </form>
+
+</dialog>
 
   <!-- EDIT READING RECORD -->
   <dialog id="bookEditor" class="library-dialog">
