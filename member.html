@@ -649,8 +649,15 @@ input:focus,textarea:focus,button:focus-visible {
           <button class="btn primary" id="saveProfile" type="submit">
             Save My Library Card 💗
           </button>
-        </div>
 
+          <p
+            id="profileSaveStatus"
+            class="notice"
+            role="status"
+            aria-live="polite"
+          ></p>
+        </div>
+        
       </form>
     </div>
 
@@ -1351,12 +1358,22 @@ async function loadProfile() {
   await loadAvatar(savedAvatarPath);
 }
 
+
 async function saveProfile(event) {
   event.preventDefault();
-  if (!currentUser) return;
 
+  const status = $("profileSaveStatus");
   const button = $("saveProfile");
+
+  if (!currentUser) {
+    status.textContent = "Please sign in before saving.";
+    status.className = "notice error";
+    return;
+  }
+
   button.disabled = true;
+  status.className = "notice";
+  status.textContent = "Saving your Library Card... 💗";
 
   try {
     const displayName = $("displayName").value.trim();
@@ -1367,40 +1384,84 @@ async function saveProfile(event) {
     }
 
     if (username && !/^[A-Za-z0-9_]+$/.test(username)) {
-      throw new Error("Username may contain only letters, numbers and underscores.");
+      throw new Error(
+        "Username may contain only letters, numbers and underscores."
+      );
     }
 
     const updates = {
-      display_name:displayName,
-      username:username || null,
-      bio:$("bio").value.trim() || null,
-      favorite_genres:textToList($("genres").value),
-      favorite_books:textToList($("books").value),
-      favorite_authors:textToList($("authors").value),
-      current_read:$("currentRead").value.trim() || null
+      display_name: displayName,
+      username: username || null,
+      bio: $("bio").value.trim() || null,
+      favorite_genres: textToList($("genres").value),
+      favorite_books: textToList($("books").value),
+      favorite_authors: textToList($("authors").value),
+      current_read: $("currentRead").value.trim() || null
     };
 
-    const { data,error } = await db
+    const { data, error } = await db
       .from("tbb_profiles")
       .update(updates)
-      .eq("user_id",currentUser.id)
-      .select("user_id");
+      .eq("user_id", currentUser.id)
+      .select(`
+        user_id,
+        display_name,
+        username,
+        bio,
+        favorite_genres,
+        favorite_books,
+        favorite_authors,
+        current_read
+      `)
+      .single();
 
     if (error) throw error;
 
-    if (!data?.length) {
-      throw new Error("Profile was not updated. Check Supabase permissions.");
+    if (!data || data.user_id !== currentUser.id) {
+      throw new Error("Supabase did not confirm your profile update.");
+    }
+
+    const sameList = (a, b) =>
+      JSON.stringify(a || []) === JSON.stringify(b || []);
+
+    const matches =
+      data.display_name === updates.display_name &&
+      data.username === updates.username &&
+      data.bio === updates.bio &&
+      data.current_read === updates.current_read &&
+      sameList(data.favorite_genres, updates.favorite_genres) &&
+      sameList(data.favorite_books, updates.favorite_books) &&
+      sameList(data.favorite_authors, updates.favorite_authors);
+
+    if (!matches) {
+      throw new Error(
+        "Your saved profile does not match your changes. Please try again."
+      );
     }
 
     updateCard();
+
+    status.textContent = "Your Library Card was saved! 💗";
+    status.className = "notice";
+
     notify("Your Library Card was saved! 💗");
 
   } catch (error) {
-    notify(error.message,true);
+    console.error("Library Card save failed:", error);
+
+    const message =
+      error?.message || "Your Library Card could not be saved.";
+
+    status.textContent = "❌ " + message;
+    status.className = "notice error";
+
+    notify(message, true);
+
   } finally {
     button.disabled = false;
   }
 }
+
 
 async function saveTheme() {
   if (!currentUser) return;
@@ -1516,21 +1577,7 @@ async function init() {
 }
 
 $("logout").addEventListener("click",logout);
-$("profileForm").addEventListener("submit", async event => {
-  event.preventDefault();
-
-  notify("Saving your Library Card... 💗");
-
-  try {
-    await saveProfile(event);
-  } catch (error) {
-    console.error("Library Card save failed:", error);
-    notify(
-      error?.message || "Something went wrong while saving your Library Card.",
-      true
-    );
-  }
-});
+$("profileForm").addEventListener("submit", saveProfile);
 $("saveTheme").addEventListener("click",saveTheme);
   
 $("friendRequestsEnabled").addEventListener(
