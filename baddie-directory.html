@@ -736,6 +736,7 @@ a{color:inherit;text-decoration:none}
 </div>
 
 <script type="module">
+
 import {db,requireAccess,logout} from "./js/auth.js";
 import {loadVanityDiary} from "./js/vanity-diary.js";
 import {loadVanityQuotes} from "./js/vanity-quotes.js";
@@ -745,6 +746,8 @@ import {
   loadDirectoryFriendship,
   clearDirectoryFriendship
 } from "./js/directory-friends.js";
+
+import {initializeFriendBadge} from "./js/friends-badge.js";
 
 
 const $ = id => document.getElementById(id);
