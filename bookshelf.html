@@ -92,8 +92,11 @@
       <article class="bookshelf-feature">
         <div class="feature-icon">✍🏽</div>
         <h3>Reading Diary™</h3>
-        <p>Journal your thoughts, reviews, and favorite reading moments.</p>
-        <span>Coming next ✦</span>
+        <p>
+          Your thoughts, your fictional heartbreaks, your reading memories.
+          Every story deserves a little ink.
+        </p>
+        <a href="#readingDiary">Open My Diary ✦</a>
       </article>
       <article class="bookshelf-feature">
         <div class="feature-icon">💌</div>
@@ -515,6 +518,510 @@
     </div>
   </dialog>
 
+  <!-- ==========================================
+     TBB 2.0 — READING DIARY™
+     STEP 2A — THE WRITING DESK™
+     ========================================== -->
+
+<section
+  class="bookshelf-section reading-diary-section"
+  id="readingDiary"
+  aria-labelledby="readingDiaryHeading"
+>
+
+  <!-- DIARY HEADING -->
+
+  <div class="bookshelf-section-heading">
+    <h2 id="readingDiaryHeading">💌 Reading Diary™</h2>
+    <span>YOUR STORIES, YOUR WORDS</span>
+  </div>
+
+  <!-- DIARY INTRODUCTION -->
+
+  <div class="diary-welcome">
+
+    <div class="diary-welcome-decoration" aria-hidden="true">
+      📖 ✦ 💌
+    </div>
+
+    <p class="diary-eyebrow">
+      THE BADDIES BOOKSHELF PRESENTS
+    </p>
+
+    <h3>Dear Baddie, <em>write your heart out.</em></h3>
+
+    <p>
+      Some stories live between the pages.
+      Others live inside of us.
+
+      This is your little corner of the bookish universe
+      to spill your thoughts, capture your reading memories,
+      and romanticize every chapter of your journey.
+    </p>
+
+    <div class="diary-welcome-actions">
+
+      <button
+        id="createDearDiary"
+        class="library-action-btn"
+        type="button"
+      >
+        💗 Dear Diary™
+      </button>
+
+      <button
+        id="createBetweenPages"
+        class="library-action-btn library-secondary-btn"
+        type="button"
+      >
+        📖 Between the Pages™
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- DIARY STATISTICS -->
+
+  <div class="diary-stats">
+
+    <article class="diary-stat-card">
+      <span>💌</span>
+      <strong id="diaryTotalEntries">0</strong>
+      <p>Total Entries</p>
+    </article>
+
+    <article class="diary-stat-card">
+      <span>💗</span>
+      <strong id="diaryDearCount">0</strong>
+      <p>Dear Diary™</p>
+    </article>
+
+    <article class="diary-stat-card">
+      <span>📖</span>
+      <strong id="diaryPagesCount">0</strong>
+      <p>Between the Pages™</p>
+    </article>
+
+    <article class="diary-stat-card">
+      <span>🔒</span>
+      <strong id="diaryPrivateCount">0</strong>
+      <p>Private Entries</p>
+    </article>
+
+  </div>
+
+
+  <!-- DIARY COLLECTION -->
+
+  <div class="diary-collection">
+
+    <div class="library-collection-heading">
+
+      <h3>🎀 My Diary Collection</h3>
+
+      <div class="diary-collection-controls">
+
+        <label for="diarySearch">
+          <span>Search</span>
+          <input
+            id="diarySearch"
+            type="search"
+            maxlength="150"
+            placeholder="Find a memory..."
+            autocomplete="off"
+          >
+        </label>
+
+        <label for="diaryTypeFilter">
+          <span>Diary Type</span>
+          <select id="diaryTypeFilter">
+            <option value="all">All Entries</option>
+            <option value="dear_diary">Dear Diary™</option>
+            <option value="between_the_pages">
+              Between the Pages™
+            </option>
+          </select>
+        </label>
+
+        <label for="diaryVisibilityFilter">
+          <span>Visibility</span>
+          <select id="diaryVisibilityFilter">
+            <option value="all">All Visibility</option>
+            <option value="private">🔒 Private</option>
+            <option value="public">🌎 Public</option>
+          </select>
+        </label>
+
+      </div>
+
+    </div>
+
+
+    <!-- SAVED DIARY ENTRIES -->
+
+    <div
+      id="diaryEntries"
+      class="diary-entry-grid"
+      aria-live="polite"
+    >
+
+      <div class="library-empty-message">
+
+        💌 Your diary is waiting for its first entry.
+
+        Every unforgettable story starts somewhere, Baddie.
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ==========================================
+     THE WRITING DESK™
+     CREATE / EDIT DIARY ENTRIES
+     ========================================== -->
+
+<dialog
+  id="diaryEditorDialog"
+  class="library-dialog diary-editor-dialog"
+  aria-labelledby="diaryEditorHeading"
+>
+
+  <form id="diaryEditorForm">
+
+    <div class="diary-editor-header">
+
+      <p class="diary-eyebrow">
+        YOUR PRIVATE LITTLE WRITING CORNER
+      </p>
+
+      <h3 id="diaryEditorHeading">
+        💌 The Writing Desk™
+      </h3>
+
+      <p class="library-helper">
+        Every thought deserves a place to land.
+      </p>
+
+    </div>
+
+
+    <!-- EDITING IDENTIFIER -->
+
+    <input
+      id="diaryEditingId"
+      type="hidden"
+    >
+
+
+    <!-- ENTRY TYPE -->
+
+    <div class="diary-editor-field">
+
+      <label for="diaryEntryType">
+        ✨ What are we writing today?
+      </label>
+
+      <select id="diaryEntryType" required>
+
+        <option value="dear_diary">
+          💗 Dear Diary™
+        </option>
+
+        <option value="between_the_pages">
+          📖 Between the Pages™
+        </option>
+
+      </select>
+
+    </div>
+
+
+    <!-- BOOK SELECTION -->
+
+    <div
+      class="diary-editor-field"
+      id="diaryBookField"
+      hidden
+    >
+
+      <label for="diaryBookSelect">
+        📚 Choose a Book from My Library™
+      </label>
+
+      <select id="diaryBookSelect">
+
+        <option value="">
+          Select your book...
+        </option>
+
+      </select>
+
+      <p class="library-helper">
+        Between the Pages™ entries are connected
+        to books already saved in My Library™.
+      </p>
+
+    </div>
+
+
+    <!-- ENTRY TITLE -->
+
+    <div class="diary-editor-field">
+
+      <label for="diaryEntryTitle">
+        💌 Give This Memory a Title
+      </label>
+
+      <input
+        id="diaryEntryTitle"
+        type="text"
+        maxlength="150"
+        required
+        placeholder="Dear Diary, you will NOT believe..."
+      >
+
+    </div>
+
+
+    <!-- MOOD SELECTOR -->
+
+    <div class="diary-editor-field">
+
+      <label for="diaryMood">
+        🎭 What's the Mood, Baddie?
+      </label>
+
+      <select id="diaryMood">
+
+        <option value="">Choose your mood...</option>
+        <option value="🥰">🥰 In My Feels</option>
+        <option value="😭">😭 Emotionally Destroyed</option>
+        <option value="😍">😍 Absolutely Obsessed</option>
+        <option value="😡">😡 I Need to Rant</option>
+        <option value="🥹">🥹 Soft Girl Hours</option>
+        <option value="🤭">🤭 Kicking My Feet</option>
+        <option value="😱">😱 Plot Twist Victim</option>
+        <option value="💔">💔 Heartbroken</option>
+        <option value="✨">✨ Main Character Energy</option>
+        <option value="☕">☕ Cozy & Content</option>
+        <option value="🫣">🫣 Speechless</option>
+        <option value="💗">💗 Feeling Everything</option>
+
+      </select>
+
+    </div>
+
+
+    <!-- WRITING TOOLS -->
+
+    <div class="diary-editor-field">
+
+      <label id="diaryContentLabel">
+        🖋️ Spill the Ink
+      </label>
+
+      <div
+        class="diary-format-toolbar"
+        role="toolbar"
+        aria-label="Diary text formatting"
+      >
+
+        <button
+          type="button"
+          data-diary-command="bold"
+          aria-label="Bold text"
+          title="Bold"
+        >
+          <strong>B</strong>
+        </button>
+
+        <button
+          type="button"
+          data-diary-command="italic"
+          aria-label="Italic text"
+          title="Italic"
+        >
+          <em>I</em>
+        </button>
+
+        <button
+          type="button"
+          data-diary-command="underline"
+          aria-label="Underline text"
+          title="Underline"
+        >
+          <u>U</u>
+        </button>
+
+        <button
+          type="button"
+          data-diary-command="insertUnorderedList"
+          aria-label="Bullet list"
+          title="Bullet List"
+        >
+          ☷
+        </button>
+
+        <button
+          type="button"
+          data-diary-command="removeFormat"
+          aria-label="Remove formatting"
+          title="Clear Formatting"
+        >
+          ✕
+        </button>
+
+        <label for="diaryFontFamily">
+          Font
+          <select id="diaryFontFamily">
+            <option value="Trebuchet MS">Classic</option>
+            <option value="Georgia">Storybook</option>
+            <option value="Times New Roman">Literary</option>
+            <option value="Arial">Modern</option>
+            <option value="Courier New">Typewriter</option>
+          </select>
+        </label>
+
+        <label for="diaryInkColor">
+          Ink
+          <input
+            id="diaryInkColor"
+            type="color"
+            value="#FFB5DA"
+          >
+        </label>
+
+      </div>
+
+
+      <!-- RICH TEXT EDITOR -->
+
+      <div
+        id="diaryContentEditor"
+        class="diary-rich-editor"
+        contenteditable="true"
+        role="textbox"
+        aria-labelledby="diaryContentLabel"
+        aria-multiline="true"
+        data-placeholder="Dear Diary... today I have THOUGHTS. 💌"
+      ></div>
+
+      <p class="library-helper">
+        Write as much as your heart desires.
+        Format your words and make this page yours.
+      </p>
+
+    </div>
+
+
+    <!-- MEDIA UPLOAD -->
+
+    <div class="diary-editor-field">
+
+      <label for="diaryMediaFile">
+        🖼️ Add a Photo or GIF
+      </label>
+
+      <input
+        id="diaryMediaFile"
+        type="file"
+        accept="image/jpeg,image/png,image/webp,image/gif"
+        multiple
+      >
+
+      <p class="library-helper">
+        JPG, PNG, WebP, or GIF. Maximum 10 MB per image.
+      </p>
+
+      <div
+        id="diaryMediaPreview"
+        class="diary-media-preview"
+        aria-live="polite"
+      ></div>
+
+    </div>
+
+
+    <!-- PRIVACY -->
+
+    <div class="diary-editor-field">
+
+      <label for="diaryVisibility">
+        🔐 Who Gets to Read This?
+      </label>
+
+      <select id="diaryVisibility">
+
+        <option value="private">
+          🔒 Just Me — Private
+        </option>
+
+        <option value="public">
+          🌎 My Vanity™ — Public
+        </option>
+
+      </select>
+
+      <p class="library-helper">
+        Your entries are private by default.
+
+        Public entries can appear on your Vanity™ profile
+        once diary timeline integration is enabled.
+      </p>
+
+    </div>
+
+
+    <!-- EDITOR STATUS -->
+
+    <p
+      id="diaryEditorStatus"
+      class="library-helper"
+      role="status"
+      aria-live="polite"
+    ></p>
+
+
+    <!-- EDITOR ACTIONS -->
+
+    <div class="library-dialog-actions diary-editor-actions">
+
+      <button
+        id="deleteDiaryEntry"
+        type="button"
+        hidden
+      >
+        🗑️ Delete Entry
+      </button>
+
+      <button
+        id="cancelDiaryEditor"
+        type="button"
+      >
+        Cancel
+      </button>
+
+      <button
+        id="saveDiaryEntry"
+        type="submit"
+      >
+        Save My Entry 💗
+      </button>
+
+    </div>
+
+  </form>
+
+</dialog>
+
+<!-- END READING DIARY™ -->
   <footer class="bookshelf-footer">
     THE BADDIES BOOKSHELF ✦ YOUR STORY, YOUR ERA.
   </footer>
@@ -522,6 +1029,7 @@
 </main>
 
 <script type="module" src="js/bookshelf.js"></script>
+<script type="module" src="js/reading-diary.js"></script>
 <script src="js/back-to-top.js" defer></script>
 </body>
 </html>
