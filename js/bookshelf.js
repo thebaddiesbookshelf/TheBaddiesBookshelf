@@ -280,8 +280,8 @@ function card(book,entry=null) {
     btn.textContent = 'Already in My Library ✓';
   }
 
-  if (entry) {
-      info.append(btn);
+  
+  info.append(btn);
 
   if (entry) {
     info.append(makeReadingEntryTags(entry.id));
@@ -2298,4 +2298,4 @@ window.addEventListener('beforeunload',()=>{
    START THE BOOKSHELF™
    ========================================== */
 
-init();}
+init();
