@@ -1504,6 +1504,336 @@ async function removeFromShelf(assignmentId) {
   );
 }
 
+
+
+/* ==========================================
+   MY BOOK TAGS™
+   PHASE 5 — STEP 4G.7 | PART 1
+   CUSTOM TAG MANAGEMENT
+   ========================================== */
+
+let bookTags = [];
+let bookTagBusy = false;
+
+const DEFAULT_BOOK_TAG_COLOR = '#F8BFDC';
+
+function normalizeBookTagColor(value) {
+  const color = String(value || '').trim().toUpperCase();
+
+  if (!/^#[0-9A-F]{6}$/.test(color)) {
+    throw Error('Please choose a valid tag color.');
+  }
+
+  return color;
+}
+
+function bookTagError(error) {
+  if (error?.code === '23505') {
+    return 'That tag name or color is already in your collection. Choose something different! 💗';
+  }
+
+  return error?.message || 'Something went wrong with your book tags.';
+}
+
+async function loadBookTags() {
+  if (!user) return;
+
+  const all = [];
+
+  for (let from = 0; ; from += 500) {
+    const { data, error } = await db
+      .from('tbb_book_tags')
+      .select('id,user_id,name,color,created_at')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: true })
+      .order('id', { ascending: true })
+      .range(from, from + 499);
+
+    if (error) throw error;
+
+    all.push(...(data || []));
+
+    if (!data || data.length < 500) break;
+  }
+
+  bookTags = all;
+
+  renderBookTags();
+}
+
+function makeBookTagChip(tag) {
+  const chip = element('span', 'book-tag-chip', `🏷️ ${tag.name}`);
+
+  chip.style.setProperty('--tag-color', tag.color);
+
+  return chip;
+}
+
+function renderBookTags() {
+  const target = $('myBookTagsList');
+  if (!target) return;
+
+  target.replaceChildren();
+
+  if (!bookTags.length) {
+    empty(
+      target,
+      'No custom tags yet! Create your first colorful book tag. 🌈💗'
+    );
+    return;
+  }
+
+  for (const tag of bookTags) {
+    const card = element('article', 'book-tag-card');
+
+    const chip = makeBookTagChip(tag);
+
+    const actions = element('div', 'book-tag-card-actions');
+
+    const editButton = element('button', '', 'Edit Tag ✏️');
+    editButton.type = 'button';
+    editButton.dataset.editBookTagId = tag.id;
+
+    actions.append(editButton);
+    card.append(chip, actions);
+    target.append(card);
+  }
+}
+
+function openCreateBookTag() {
+  if (!user || bookTagBusy) return;
+
+  $('bookTagForm').reset();
+  $('editingBookTagId').value = '';
+  $('bookTagName').value = '';
+  $('bookTagColor').value = DEFAULT_BOOK_TAG_COLOR;
+
+  $('bookTagDialogTitle').textContent = '🎀 Create a Book Tag';
+  $('saveBookTagButton').textContent = 'Create Tag 💗';
+  $('deleteBookTagButton').hidden = true;
+
+  $('bookTagDialog').showModal();
+}
+
+function openEditBookTag(id) {
+  if (!user || bookTagBusy) return;
+
+  const tag = bookTags.find(item => item.id === id);
+
+  if (!tag) {
+    notify('That book tag could not be found.', true);
+    return;
+  }
+
+  $('bookTagForm').reset();
+  $('editingBookTagId').value = tag.id;
+  $('bookTagName').value = tag.name;
+  $('bookTagColor').value = tag.color;
+
+  $('bookTagDialogTitle').textContent = '✏️ Edit My Book Tag';
+  $('saveBookTagButton').textContent = 'Save Changes 💗';
+  $('deleteBookTagButton').hidden = false;
+
+  $('bookTagDialog').showModal();
+}
+
+async function saveBookTag(event) {
+  event.preventDefault();
+
+  if (!user || bookTagBusy) return;
+
+  const id = $('editingBookTagId').value;
+  const name = $('bookTagName').value.trim();
+
+  if (name.length < 1 || name.length > 40) {
+    notify('Tag names must be between 1 and 40 characters.', true);
+    return;
+  }
+
+  if (id && !bookTags.some(tag => tag.id === id)) {
+    notify('That book tag no longer exists.', true);
+    return;
+  }
+
+  let color;
+
+  try {
+    color = normalizeBookTagColor($('bookTagColor').value);
+  } catch (error) {
+    notify(error.message, true);
+    return;
+  }
+
+  const duplicateColor = bookTags.some(
+    tag => tag.id !== id &&
+      tag.color.toUpperCase() === color
+  );
+
+  if (duplicateColor) {
+    notify(
+      'Another one of your tags already uses that color. Pick a different shade! 🌈',
+      true
+    );
+    return;
+  }
+
+  const duplicateName = bookTags.some(
+    tag => tag.id !== id &&
+      tag.name.trim().toLowerCase() === name.toLowerCase()
+  );
+
+  if (duplicateName) {
+    notify('You already have a tag with that name! 💗', true);
+    return;
+  }
+
+  bookTagBusy = true;
+
+  const button = $('saveBookTagButton');
+  button.disabled = true;
+  $('deleteBookTagButton').disabled = true;
+  button.textContent = 'Saving...';
+
+  try {
+    if (id) {
+      const { data, error } = await db
+        .from('tbb_book_tags')
+        .update({ name, color })
+        .eq('id', id)
+        .eq('user_id', user.id)
+        .select('id');
+
+      if (error) throw error;
+
+      if (!data?.length) {
+        throw Error('Your tag could not be updated.');
+      }
+    } else {
+      const { data, error } = await db
+        .from('tbb_book_tags')
+        .insert({
+          user_id: user.id,
+          name,
+          color
+        })
+        .select('id');
+
+      if (error) throw error;
+
+      if (!data?.length) {
+        throw Error('Your tag could not be created.');
+      }
+    }
+
+    $('bookTagDialog').close();
+
+    await loadBookTags();
+
+    notify(
+      id
+        ? `“${name}” has been updated! 💗`
+        : `“${name}” is officially in your tag collection! 🌈`
+    );
+  } catch (error) {
+    console.error('Save book tag:', error);
+    notify(bookTagError(error), true);
+  } finally {
+    bookTagBusy = false;
+    button.disabled = false;
+    $('deleteBookTagButton').disabled = false;
+    button.textContent = id ? 'Save Changes 💗' : 'Create Tag 💗';
+  }
+}
+
+async function deleteBookTag() {
+  if (!user || bookTagBusy) return;
+
+  const id = $('editingBookTagId').value;
+  const tag = bookTags.find(item => item.id === id);
+
+  if (!tag) return;
+
+  const confirmed = window.confirm(
+    `Delete “${tag.name}”?\n\n` +
+    'This removes the tag from every book it is assigned to. ' +
+    'Your books and reading records will NOT be deleted.'
+  );
+
+  if (!confirmed) return;
+
+  bookTagBusy = true;
+
+  $('deleteBookTagButton').disabled = true;
+  $('saveBookTagButton').disabled = true;
+
+  try {
+    const { data, error } = await db
+      .from('tbb_book_tags')
+      .delete()
+      .eq('id', id)
+      .eq('user_id', user.id)
+      .select('id');
+
+    if (error) throw error;
+
+    if (!data?.length) {
+      throw Error('Your tag could not be deleted.');
+    }
+
+    $('bookTagDialog').close();
+
+    await loadBookTags();
+
+    notify(
+      `“${tag.name}” was deleted. Your books are safe! 💗`
+    );
+  } catch (error) {
+    console.error('Delete book tag:', error);
+    notify(bookTagError(error), true);
+  } finally {
+    bookTagBusy = false;
+    $('deleteBookTagButton').disabled = false;
+    $('saveBookTagButton').disabled = false;
+  }
+}
+
+/* ==========================================
+   BOOK TAGS™ EVENT LISTENERS
+   ========================================== */
+
+$('createBookTagButton')?.addEventListener(
+  'click',
+  openCreateBookTag
+);
+
+$('myBookTagsList')?.addEventListener('click', event => {
+  const button = event.target.closest(
+    'button[data-edit-book-tag-id]'
+  );
+
+  if (!button) return;
+
+  openEditBookTag(button.dataset.editBookTagId);
+});
+
+$('bookTagForm')?.addEventListener(
+  'submit',
+  saveBookTag
+);
+
+$('cancelBookTagButton')?.addEventListener('click', () => {
+  if (!bookTagBusy) $('bookTagDialog').close();
+});
+
+$('deleteBookTagButton')?.addEventListener(
+  'click',
+  deleteBookTag
+);
+
+$('bookTagDialog')?.addEventListener('cancel', event => {
+  if (bookTagBusy) event.preventDefault();
+});
+
 /* ==========================================
    INITIALIZATION
    ========================================== */
@@ -1520,9 +1850,10 @@ async function init() {
     await Promise.all([
       loadCollection(),
       loadShelves(),
+      loadBookTags(),
       stats()
     ]);
-
+    
     notify('Your Bookshelf is ready, Baddie! 💗');
   } catch(e) {
     console.error('Bookshelf initialization:',e);

@@ -317,16 +317,26 @@
       <input type="hidden" id="editingBookTagId">
       <div class="library-form-grid">
         <label for="bookTagName">Tag Name *</label>
-        <input id="bookTagName" type="text" maxlength="60" required placeholder="e.g., Morally Gray MMC">
-        <fieldset class="book-tag-color-options">
-          <legend>Choose Your Tag Color</legend>
-          <label><input type="radio" name="bookTagColor" value="#F8BFDC" checked> 💗 Pink</label>
-          <label><input type="radio" name="bookTagColor" value="#E2C6F4"> 💜 Lilac</label>
-          <label><input type="radio" name="bookTagColor" value="#C8DFBD"> 🌿 Sage</label>
-          <label><input type="radio" name="bookTagColor" value="#EED1A9"> 🍯 Honey</label>
-          <label><input type="radio" name="bookTagColor" value="#E9A5AE"> 🌹 Rose</label>
-          <label><input type="radio" name="bookTagColor" value="#C7C4C8"> 🩶 Silver</label>
-        </fieldset>
+        <input id="bookTagName" type="text" maxlength="40" required placeholder="e.g., Morally Gray MMC">
+        <!-- MY BOOK TAGS™ — CUSTOM COLOR PICKER -->
+        <div class="book-tag-color-options">
+          <label for="bookTagColor">
+            🎨 Choose Your Tag Color
+          </label>
+
+          <input
+            id="bookTagColor"
+            name="bookTagColor"
+            type="color"
+            value="#F8BFDC"
+            aria-describedby="bookTagColorHelp"
+          >
+
+          <p id="bookTagColorHelp" class="library-helper">
+            Every tag gets its own color! Choose any shade
+            that matches your bookish vibe. 🌈💗
+          </p>
+        </div>
       </div>
       <div class="library-dialog-actions">
         <button id="cancelBookTagButton" type="button">Cancel</button>
