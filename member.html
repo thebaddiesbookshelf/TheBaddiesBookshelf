@@ -612,9 +612,16 @@ input:focus,textarea:focus,button:focus-visible {
 
         <div class="field">
           <label for="username">Username</label>
-          <input id="username" maxlength="30"
-                 pattern="[A-Za-z0-9_]+"
-                 placeholder="yourusername">
+          <input
+            id="username"
+            minlength="3"
+            maxlength="30"
+            pattern="[a-z0-9_]{3,30}"
+            placeholder="yourusername"
+            autocapitalize="none"
+            autocomplete="off"
+            spellcheck="false"
+          >
         </div>
 
         <div class="field full">
@@ -1072,7 +1079,7 @@ function updateCard() {
   $("cardName").textContent =
     $("displayName").value.trim() || "Your Baddie Name";
 
-  const username = $("username").value.trim();
+  const username = $("username").value.trim().toLowerCase();
   $("cardUsername").textContent =
     username ? "@" + username : "@username";
 
@@ -1375,19 +1382,19 @@ async function saveProfile(event) {
   status.className = "notice";
   status.textContent = "Saving your Library Card... 💗";
 
-  try {
-    const displayName = $("displayName").value.trim();
-    const username = $("username").value.trim();
+  const username = $("username").value.trim().toLowerCase();
 
-    if (!displayName) {
-      throw new Error("Display name is required.");
-    }
+      $("username").value = username;
 
-    if (username && !/^[A-Za-z0-9_]+$/.test(username)) {
-      throw new Error(
-        "Username may contain only letters, numbers and underscores."
-      );
-    }
+      if (!displayName) {
+        throw new Error("Display name is required.");
+      }
+
+      if (username && !/^[a-z0-9_]{3,30}$/.test(username)) {
+        throw new Error(
+          "Username must be 3–30 characters and contain only lowercase letters, numbers, or underscores."
+        );
+      }
 
     const updates = {
       display_name: displayName,
