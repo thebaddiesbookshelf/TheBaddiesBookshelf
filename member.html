@@ -587,7 +587,7 @@ input:focus,textarea:focus,button:focus-visible {
       <h3>Edit My Library Card 🎀</h3>
       <p class="muted">Make it yours, Baddie!</p>
 
-      <form id="profileForm" class="form-grid">
+      <form id="profileForm" class="form-grid" novalidate>
 
         <div class="field full">
           <label for="avatarFile">Profile Picture</label>
@@ -1516,7 +1516,21 @@ async function init() {
 }
 
 $("logout").addEventListener("click",logout);
-$("profileForm").addEventListener("submit",saveProfile);
+$("profileForm").addEventListener("submit", async event => {
+  event.preventDefault();
+
+  notify("Saving your Library Card... 💗");
+
+  try {
+    await saveProfile(event);
+  } catch (error) {
+    console.error("Library Card save failed:", error);
+    notify(
+      error?.message || "Something went wrong while saving your Library Card.",
+      true
+    );
+  }
+});
 $("saveTheme").addEventListener("click",saveTheme);
   
 $("friendRequestsEnabled").addEventListener(
