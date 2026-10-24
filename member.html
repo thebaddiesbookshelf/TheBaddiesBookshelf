@@ -1366,6 +1366,7 @@ async function loadProfile() {
 }
 
 
+
 async function saveProfile(event) {
   event.preventDefault();
 
@@ -1382,19 +1383,22 @@ async function saveProfile(event) {
   status.className = "notice";
   status.textContent = "Saving your Library Card... 💗";
 
-  const username = $("username").value.trim().toLowerCase();
+  try {
+    const displayName = $("displayName").value.trim();
+    const username = $("username").value.trim().toLowerCase();
 
-      $("username").value = username;
+    $("username").value = username;
 
-      if (!displayName) {
-        throw new Error("Display name is required.");
-      }
+    if (!displayName) {
+      throw new Error("Display name is required.");
+    }
 
-      if (username && !/^[a-z0-9_]{3,30}$/.test(username)) {
-        throw new Error(
-          "Username must be 3–30 characters and contain only lowercase letters, numbers, or underscores."
-        );
-      }
+    if (username && !/^[a-z0-9_]{3,30}$/.test(username)) {
+      throw new Error(
+        "Username must be 3–30 characters and contain only lowercase letters, numbers, or underscores."
+      );
+    }
+
 
     const updates = {
       display_name: displayName,
