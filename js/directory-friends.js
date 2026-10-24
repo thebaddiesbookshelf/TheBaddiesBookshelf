@@ -2,6 +2,17 @@
 /* =====================================================
    TBB 2.0 — PHASE 6: FRIENDS™
    BADDIE DIRECTORY™ INTEGRATION
+
+   Handles:
+   - Add Bestie requests
+   - Pending sent requests
+   - Incoming requests
+   - Accept / decline / cancel
+   - Remove Bestie
+   - Mutual Besties
+
+   Friendship permissions are enforced by
+   the existing Supabase friendship RPCs.
    ===================================================== */
 
 import { db } from './auth.js';
@@ -20,18 +31,29 @@ const $ = id => document.getElementById(id);
 
 let generation = 0;
 let busy = false;
+let activeMemberId = null;
+
+/* =====================================================
+   ELEMENT HELPERS
+   ===================================================== */
 
 function element(tag, className, text) {
   const node = document.createElement(tag);
 
-  if (className) node.className = className;
-  if (text !== undefined) node.textContent = text;
+  if (className) {
+    node.className = className;
+  }
+
+  if (text !== undefined) {
+    node.textContent = text;
+  }
 
   return node;
 }
 
 function setStatus(text, error = false) {
   const node = $('directoryFriendStatus');
+
   if (!node) return;
 
   node.textContent = text;
@@ -41,6 +63,10 @@ function setStatus(text, error = false) {
 function setActions(...buttons) {
   $('directoryFriendActions')?.replaceChildren(...buttons);
 }
+
+/* =====================================================
+   FRIENDSHIP ACTION BUTTON
+   ===================================================== */
 
 function actionButton(label, style, callback) {
   const button = element(
@@ -63,8 +89,19 @@ function actionButton(label, style, callback) {
       if (changed !== false) {
         await refreshFriendship();
       }
+
     } catch (error) {
-      setStatus(error.message, true);
+      console.error(
+        'Directory friendship action failed:',
+        error
+      );
+
+      setStatus(
+        error?.message ||
+          'Something went wrong. Please try again.',
+        true
+      );
+
     } finally {
       busy = false;
       button.disabled = false;
@@ -74,32 +111,34 @@ function actionButton(label, style, callback) {
   return button;
 }
 
-async function recipientAllowsRequests(userId) {
-  const { data, error } = await db
-    .from('tbb_vanity_settings')
-    .select('friend_requests_enabled')
-    .eq('user_id', userId)
-    .maybeSingle();
+/* =====================================================
+   RENDER FRIENDSHIP RELATIONSHIP
 
-  if (error) {
-    // Fail closed if settings cannot be checked.
-    console.warn(
-      'Friend request preference unavailable:',
-      error.message
-    );
-    return false;
-  }
+   IMPORTANT:
+   Do not query another member's private
+   tbb_vanity_settings row here.
 
-  return data?.friend_requests_enabled === true;
-}
+   Supabase RLS may hide that row even when
+   friend_requests_enabled is true.
+
+   The existing sendFriendRequest() RPC
+   must enforce the recipient's preferences,
+   blocks, and friendship permissions.
+   ===================================================== */
 
 async function renderRelationship(memberId, token) {
   const status = await getFriendshipStatus(memberId);
 
   if (token !== generation) return;
 
+  /* ---------------------------------------------
+     ALREADY OFFICIAL BESTIES
+     --------------------------------------------- */
+
   if (status.status === 'friends') {
-    setStatus('💗 You two are officially Besties!');
+    setStatus(
+      '💗 You two are officially Besties!'
+    );
 
     setActions(
       actionButton(
@@ -110,67 +149,110 @@ async function renderRelationship(memberId, token) {
             'Remove this Baddie from your friends?'
           );
 
-          if (!confirmed) return false;
+          if (!confirmed) {
+            return false;
+          }
 
           await removeFriend(memberId);
+
           return true;
         }
       )
     );
+
     return;
   }
 
+  /* ---------------------------------------------
+     REQUEST ALREADY SENT
+     --------------------------------------------- */
+
   if (status.status === 'sent') {
-    setStatus('💌 Your friend request is awaiting a response.');
+    setStatus(
+      '💌 Your Bestie request is awaiting a response.'
+    );
 
     setActions(
       actionButton(
         'Cancel Request',
         '',
         async () => {
-          await cancelFriendRequest(status.requestId);
+          if (!status.requestId) {
+            throw new Error(
+              'The pending request could not be found.'
+            );
+          }
+
+          await cancelFriendRequest(
+            status.requestId
+          );
+
           return true;
         }
       )
     );
+
     return;
   }
 
+  /* ---------------------------------------------
+     INCOMING BESTIE REQUEST
+     --------------------------------------------- */
+
   if (status.status === 'received') {
-    setStatus('👀 This Baddie wants to be your Bestie!');
+    setStatus(
+      '👀 This Baddie wants to be your Bestie!'
+    );
 
     setActions(
       actionButton(
         '💗 Accept Request',
         'primary',
         async () => {
-          await acceptFriendRequest(status.requestId);
+          if (!status.requestId) {
+            throw new Error(
+              'The incoming request could not be found.'
+            );
+          }
+
+          await acceptFriendRequest(
+            status.requestId
+          );
+
           return true;
         }
       ),
+
       actionButton(
         'Decline',
         '',
         async () => {
-          await declineFriendRequest(status.requestId);
+          if (!status.requestId) {
+            throw new Error(
+              'The incoming request could not be found.'
+            );
+          }
+
+          await declineFriendRequest(
+            status.requestId
+          );
+
           return true;
         }
       )
     );
+
     return;
   }
 
-  const enabled = await recipientAllowsRequests(memberId);
+  /* ---------------------------------------------
+     NO EXISTING FRIENDSHIP
 
-  if (token !== generation) return;
+     Display Add Bestie.
 
-  if (!enabled) {
-    setStatus(
-      '💗 This Baddie is not accepting friend requests right now.'
-    );
-    setActions();
-    return;
-  }
+     The server validates whether the
+     recipient can accept requests.
+     --------------------------------------------- */
 
   setStatus(
     'Not Besties yet? Send a request and make it official! 💌'
@@ -182,14 +264,20 @@ async function renderRelationship(memberId, token) {
       'primary',
       async () => {
         await sendFriendRequest(memberId);
+
         return true;
       }
     )
   );
 }
 
+/* =====================================================
+   MUTUAL BESTIES
+   ===================================================== */
+
 async function renderMutualFriends(memberId, token) {
   const container = $('directoryMutualList');
+
   if (!container) return;
 
   const mutualIds = await getMutualFriends(memberId);
@@ -206,15 +294,19 @@ async function renderMutualFriends(memberId, token) {
         'No mutual Besties to show yet. 💗'
       )
     );
+
     return;
   }
 
   const { data, error } = await db
     .from('tbb_profiles')
-    .select('user_id,display_name,username')
+    .select(
+      'user_id,display_name,username'
+    )
     .in('user_id', mutualIds);
 
   if (token !== generation) return;
+
   if (error) throw error;
 
   const byId = new Map(
@@ -244,8 +336,10 @@ async function renderMutualFriends(memberId, token) {
       element(
         'div',
         'directory-mutual-name',
-        profile?.display_name || 'TBB Baddie'
+        profile?.display_name ||
+          'TBB Baddie'
       ),
+
       element(
         'div',
         'directory-mutual-handle',
@@ -255,72 +349,151 @@ async function renderMutualFriends(memberId, token) {
       )
     );
 
-    card.append(icon, details);
+    card.append(
+      icon,
+      details
+    );
+
     container.append(card);
   }
 }
 
+/* =====================================================
+   REFRESH FRIENDSHIP STATUS
+   ===================================================== */
+
 async function refreshFriendship() {
   const memberId = activeMemberId;
+
   if (!memberId) return;
 
   const token = ++generation;
 
-  setStatus('Checking your friendship... 💗');
+  setStatus(
+    'Checking your friendship... 💗'
+  );
+
   setActions();
 
   try {
-    await renderRelationship(memberId, token);
+    await renderRelationship(
+      memberId,
+      token
+    );
+
   } catch (error) {
     if (token !== generation) return;
 
+    console.error(
+      'Friendship refresh failed:',
+      error
+    );
+
     setStatus(
-      `Friendship information unavailable: ${error.message}`,
+      `Friendship information unavailable: ${
+        error?.message ||
+        'Please try again.'
+      }`,
       true
     );
+
     setActions();
   }
 }
 
-let activeMemberId = null;
+/* =====================================================
+   LOAD DIRECTORY FRIENDSHIP
+
+   Called when viewing another Baddie's
+   profile in the Baddie Directory™.
+   ===================================================== */
 
 export async function loadDirectoryFriendship(memberId) {
   activeMemberId = memberId;
 
   const token = ++generation;
 
-  setStatus('Checking your friendship... 💗');
+  setStatus(
+    'Checking your friendship... 💗'
+  );
+
   setActions();
 
-  const mutualContainer = $('directoryMutualList');
+  const mutualContainer = $(
+    'directoryMutualList'
+  );
 
   if (mutualContainer) {
     mutualContainer.textContent =
       'Finding your mutual Besties...';
   }
 
-  // Keep relationship actions and mutual connections
-  // independent so one error cannot break both sections.
-  void renderRelationship(memberId, token).catch(error => {
+  /* Relationship and mutual Besties load
+     independently so one failure does
+     not break the other. */
+
+  void renderRelationship(
+    memberId,
+    token
+  ).catch(error => {
     if (token !== generation) return;
-    setStatus(error.message, true);
+
+    console.error(
+      'Directory relationship failed:',
+      error
+    );
+
+    setStatus(
+      error?.message ||
+        'Friendship information unavailable.',
+      true
+    );
+
     setActions();
   });
 
-  void renderMutualFriends(memberId, token).catch(error => {
+  void renderMutualFriends(
+    memberId,
+    token
+  ).catch(error => {
     if (token !== generation) return;
+
+    console.warn(
+      'Mutual Besties unavailable:',
+      error?.message
+    );
 
     if (mutualContainer) {
       mutualContainer.textContent =
         'Mutual Besties could not be loaded.';
     }
-
-    console.warn('Mutual friends:', error.message);
   });
 }
 
+/* =====================================================
+   CLEAR DIRECTORY FRIENDSHIP
+
+   Called when leaving or switching
+   another Baddie's profile.
+   ===================================================== */
+
 export function clearDirectoryFriendship() {
   activeMemberId = null;
+
   ++generation;
+
+  setStatus('');
   setActions();
+
+  const mutualContainer = $(
+    'directoryMutualList'
+  );
+
+  if (mutualContainer) {
+    mutualContainer.replaceChildren();
+  }
 }
+
+/* =====================================================
+   END — DIRECTORY FRIENDS™
+   ===================================================== */
