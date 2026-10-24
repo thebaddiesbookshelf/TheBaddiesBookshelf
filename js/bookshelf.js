@@ -280,7 +280,24 @@ function card(book,entry=null) {
     btn.textContent = 'Already in My Library ✓';
   }
 
-  info.append(btn);
+  if (entry) {
+      info.append(btn);
+
+  if (entry) {
+    info.append(makeReadingEntryTags(entry.id));
+
+    const tagButton = element(
+      'button',
+      '',
+      '🏷️ Tag This Book'
+    );
+
+    tagButton.type = 'button';
+    tagButton.dataset.tagEntryId = entry.id;
+
+    info.append(tagButton);
+  }
+
   c.append(info);
   return c;
 }
@@ -588,15 +605,27 @@ async function saveEditor(ev) {
 }
 
 function actions(ev) {
+  const tagButton = ev.target.closest(
+    'button[data-tag-entry-id]'
+  );
+
+  if (tagButton) {
+    if (!tagButton.disabled) {
+      openBookTagAssignment(tagButton.dataset.tagEntryId);
+    }
+    return;
+  }
+
   const btn = ev.target.closest(
     'button[data-action][data-book-id]'
   );
-  if(!btn || btn.disabled) return;
 
-  const {source,bookId,action} = btn.dataset;
+  if (!btn || btn.disabled) return;
 
-  if(action === 'add') addBook(source,bookId);
-  if(action === 'edit') openEditor(source,bookId);
+  const { source, bookId, action } = btn.dataset;
+
+  if (action === 'add') addBook(source, bookId);
+  if (action === 'edit') openEditor(source, bookId);
 }
 
 function openCommunity() {
@@ -1559,6 +1588,13 @@ async function loadBookTags() {
   bookTags = all;
 
   renderBookTags();
+  renderCollection();
+
+  if (activeShelfId) renderShelfDetail();
+
+    if ($('bookTagAssignmentDialog')?.open) {
+    renderBookTagAssignmentChoices();
+  }
 }
 
 function makeBookTagChip(tag) {
@@ -1834,6 +1870,236 @@ $('bookTagDialog')?.addEventListener('cancel', event => {
   if (bookTagBusy) event.preventDefault();
 });
 
+
+/* ==========================================
+   BOOK TAGS™ — PART 2
+   ASSIGN TAGS TO READING RECORDS
+   ========================================== */
+
+let entryTagAssignments = [];
+let bookTagAssignmentBusy = false;
+
+async function loadEntryTagAssignments() {
+  if (!user) return;
+
+  const all = [];
+
+  for (let from = 0; ; from += 500) {
+    const { data, error } = await db
+      .from('tbb_entry_tags')
+      .select('id,user_id,bookshelf_entry_id,tag_id,created_at')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: true })
+      .order('id', { ascending: true })
+      .range(from, from + 499);
+
+    if (error) throw error;
+
+    all.push(...(data || []));
+
+    if (!data || data.length < 500) break;
+  }
+
+  entryTagAssignments = all;
+
+  renderCollection();
+
+  if (activeShelfId) renderShelfDetail();
+
+  if ($('bookTagAssignmentDialog')?.open) {
+    renderBookTagAssignmentChoices();
+  }
+}
+
+function tagsForReadingEntry(entryId) {
+  const assignedIds = new Set(
+    entryTagAssignments
+      .filter(a => a.bookshelf_entry_id === entryId)
+      .map(a => a.tag_id)
+  );
+
+  return bookTags.filter(tag => assignedIds.has(tag.id));
+}
+
+function makeReadingEntryTags(entryId) {
+  const tags = tagsForReadingEntry(entryId);
+
+  const wrapper = element('div', 'library-book-tags');
+
+  for (const tag of tags) {
+    wrapper.append(makeBookTagChip(tag));
+  }
+
+  return wrapper;
+}
+
+function openBookTagAssignment(entryId) {
+  if (!user || bookTagAssignmentBusy) return;
+
+  const entry = entries.find(item => item.id === entryId);
+
+  if (!entry) {
+    notify('This reading record could not be found.', true);
+    return;
+  }
+
+  const book = bookForEntry(entry);
+
+  $('taggingBookshelfEntryId').value = entry.id;
+
+  $('bookTagAssignmentSubtitle').textContent =
+    `Choose tags for “${book.title}”. You can select more than one! 💗`;
+
+  renderBookTagAssignmentChoices();
+
+  $('bookTagAssignmentDialog').showModal();
+}
+
+function renderBookTagAssignmentChoices() {
+  const target = $('bookTagAssignmentChoices');
+
+  if (!target) return;
+
+  target.replaceChildren();
+
+  const entryId = $('taggingBookshelfEntryId').value;
+
+  if (!entryId) return;
+
+  if (!bookTags.length) {
+    empty(
+      target,
+      'You have no tags yet! Close this window and create your first tag in My Book Tags™. 🌈'
+    );
+    return;
+  }
+
+  const assignedIds = new Set(
+    entryTagAssignments
+      .filter(a => a.bookshelf_entry_id === entryId)
+      .map(a => a.tag_id)
+  );
+
+  for (const tag of bookTags) {
+    const selected = assignedIds.has(tag.id);
+
+    const choice = element('button', 'book-tag-choice');
+
+    choice.type = 'button';
+    choice.dataset.tagId = tag.id;
+
+    choice.setAttribute('aria-pressed', String(selected));
+
+    choice.disabled = bookTagAssignmentBusy;
+
+    choice.style.setProperty('--tag-color', tag.color);
+
+    const label = element(
+      'span',
+      'book-tag-chip',
+      `${selected ? '✓ ' : '＋ '}${tag.name}`
+    );
+
+    label.style.setProperty('--tag-color', tag.color);
+
+    choice.append(label);
+
+    target.append(choice);
+  }
+}
+
+async function toggleBookTagAssignment(tagId) {
+  if (!user || bookTagAssignmentBusy) return;
+
+  const entryId = $('taggingBookshelfEntryId').value;
+
+  if (!entries.some(entry => entry.id === entryId)) {
+    notify('Reading record not found.', true);
+    return;
+  }
+
+  if (!bookTags.some(tag => tag.id === tagId)) {
+    notify('This tag no longer exists.', true);
+    return;
+  }
+
+  const existing = entryTagAssignments.find(
+    a => a.bookshelf_entry_id === entryId && a.tag_id === tagId
+  );
+
+  bookTagAssignmentBusy = true;
+  renderBookTagAssignmentChoices();
+
+  try {
+    if (existing) {
+      const { data, error } = await db
+        .from('tbb_entry_tags')
+        .delete()
+        .eq('id', existing.id)
+        .eq('user_id', user.id)
+        .select('id');
+
+      if (error) throw error;
+
+      if (!data?.length) {
+        throw Error('Could not remove that tag from this book.');
+      }
+    } else {
+      const { error } = await db
+        .from('tbb_entry_tags')
+        .insert({
+          user_id: user.id,
+          bookshelf_entry_id: entryId,
+          tag_id: tagId
+        });
+
+      if (error && error.code !== '23505') {
+        throw error;
+      }
+    }
+
+    await loadEntryTagAssignments();
+
+    notify(
+      existing
+        ? 'Tag removed from this book! 💗'
+        : 'Tag added to this book! 🌈🏷️'
+    );
+  } catch (error) {
+    console.error('Book tag assignment:', error);
+
+    notify(
+      error.message || 'Could not update the book tags.',
+      true
+    );
+  } finally {
+    bookTagAssignmentBusy = false;
+    renderBookTagAssignmentChoices();
+  }
+}
+
+/* ==========================================
+   BOOK TAG ASSIGNMENT LISTENERS
+   ========================================== */
+
+$('bookTagAssignmentChoices')?.addEventListener('click', event => {
+  const button = event.target.closest('button[data-tag-id]');
+
+  if (!button || button.disabled) return;
+
+  toggleBookTagAssignment(button.dataset.tagId);
+});
+
+$('closeBookTagAssignmentButton')?.addEventListener('click', () => {
+  if (!bookTagAssignmentBusy) {
+    $('bookTagAssignmentDialog').close();
+  }
+});
+
+$('bookTagAssignmentDialog')?.addEventListener('cancel', event => {
+  if (bookTagAssignmentBusy) event.preventDefault();
+});
+
 /* ==========================================
    INITIALIZATION
    ========================================== */
@@ -1851,9 +2117,9 @@ async function init() {
       loadCollection(),
       loadShelves(),
       loadBookTags(),
+      loadEntryTagAssignments(),
       stats()
     ]);
-    
     notify('Your Bookshelf is ready, Baddie! 💗');
   } catch(e) {
     console.error('Bookshelf initialization:',e);
@@ -2032,4 +2298,4 @@ window.addEventListener('beforeunload',()=>{
    START THE BOOKSHELF™
    ========================================== */
 
-init();
+init();}
