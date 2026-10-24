@@ -1441,7 +1441,9 @@ async function saveProfile(event) {
 
     updateCard();
 
-    status.textContent = "Your Library Card was saved! 💗";
+    status.textContent = "💗 Your Library Card was saved successfully!";
+    status.style.display = "block";
+    status.scrollIntoView({ behavior: "smooth", block: "nearest" });
     status.className = "notice";
 
     notify("Your Library Card was saved! 💗");
