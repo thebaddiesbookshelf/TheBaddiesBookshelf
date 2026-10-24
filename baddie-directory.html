@@ -204,6 +204,21 @@ a{color:inherit;text-decoration:none}
 @media(max-width:360px){
   .grid{grid-template-columns:1fr}
 }
+
+/* Reading Diary™ — public entries inside the Directory profile modal */
+.directory-diary-section{margin-top:20px;padding:17px;background:var(--alt);border:1px solid var(--border);border-radius:15px}
+.directory-diary-section h3{margin:0 0 8px;font-size:15px;color:var(--light)}
+.directory-diary-section>.muted{font-size:12px;line-height:1.6;margin:0 0 13px}
+.vanity-diary-list{display:grid;gap:12px}
+.vanity-diary-entry{padding:15px;border:1px solid var(--border);border-radius:13px;background:var(--surface);overflow-wrap:anywhere}
+.vanity-diary-entry-header{display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;font-size:12px;color:var(--light)}
+.vanity-diary-entry-title{margin:10px 0 5px;font-size:19px;line-height:1.35}
+.vanity-diary-entry-date,.vanity-diary-empty,.vanity-diary-loading{color:var(--muted);font-size:12px}
+.vanity-diary-book{color:var(--light);font-size:12px}
+.vanity-diary-entry-content{line-height:1.75;font-size:13px;overflow-wrap:anywhere;white-space:normal}
+.vanity-diary-entry-content p{margin:0 0 10px;white-space:normal}
+.vanity-diary-entry-content ul,.vanity-diary-entry-content ol{padding-left:20px}
+
 </style>
 </head>
 
@@ -288,6 +303,14 @@ a{color:inherit;text-decoration:none}
       <div id="modalGenres"></div>
     </div>
 
+    <section class="directory-diary-section" aria-label="Public Reading Diary">
+      <h3>💌 Between Her Pages™</h3>
+      <p class="muted">A peek at the diary entries this Baddie has chosen to share.</p>
+      <div id="vanityDiaryEntries" class="vanity-diary-list" aria-live="polite">
+        Opening her diary... 💗
+      </div>
+    </section>
+
     <p
       class="request-status"
       id="requestStatus"
@@ -308,6 +331,7 @@ a{color:inherit;text-decoration:none}
 
 <script type="module">
 import {db,requireAccess,logout} from "./js/auth.js";
+import {loadVanityDiary} from "./js/vanity-diary.js";
 
 const $ = id => document.getElementById(id);
 
@@ -651,6 +675,17 @@ function openProfile(member){
   document.body.style.overflow = "hidden";
   $("closeModal").focus();
 
+  // Replace the timeline container for each opened profile.
+  // An older in-flight request can then only update its detached node,
+  // never the currently displayed Baddie's diary.
+  const previousDiary = $("vanityDiaryEntries");
+  const freshDiary = document.createElement("div");
+  freshDiary.id = "vanityDiaryEntries";
+  freshDiary.className = "vanity-diary-list";
+  freshDiary.setAttribute("aria-live", "polite");
+  previousDiary.replaceWith(freshDiary);
+
+  void loadVanityDiary(member.user_id);
   refreshConversationStatus(member,token);
 }
 

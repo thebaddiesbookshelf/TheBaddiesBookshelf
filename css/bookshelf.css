@@ -2023,3 +2023,168 @@ a {
 }
 
 /* END READING DIARY™ STYLING */
+
+
+/* ==========================================
+   READING DIARY™ — DECORATION DRAWER
+   STEP 2F
+   ========================================== */
+
+.diary-decor-studio {
+  margin: 15px 0 22px;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--surface);
+}
+
+.diary-decor-header h4 {
+  margin: 0 0 6px;
+  color: var(--light);
+  font-size: 20px;
+}
+
+.diary-decor-header p,
+.diary-decor-description {
+  margin: 0 0 15px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.diary-decor-toggle,
+.diary-prompt-btn {
+  width: 100%;
+  padding: 13px 16px;
+  border: 1px solid var(--accent);
+  border-radius: 12px;
+  background: var(--accent);
+  color: #170d15;
+  font-size: 13px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.diary-decor-drawer {
+  display: grid;
+  gap: 17px;
+  margin-top: 18px;
+}
+
+.diary-decor-drawer[hidden] {
+  display: none !important;
+}
+
+.diary-decor-panel {
+  padding: 17px;
+  border: 1px solid var(--border);
+  border-radius: 15px;
+  background: var(--alt);
+}
+
+.diary-decor-heading {
+  margin: 0 0 15px;
+  color: var(--light);
+  font-size: 14px;
+}
+
+.diary-sticker-grid {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.diary-sticker-btn {
+  display: grid;
+  place-items: center;
+  min-height: 43px;
+  padding: 5px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  font-size: 23px;
+  cursor: pointer;
+}
+
+.diary-sticker-btn:hover,
+.diary-divider-btn:hover,
+.diary-ink-btn:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.diary-divider-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.diary-divider-btn {
+  min-height: 42px;
+  padding: 9px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.diary-ink-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.diary-ink-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  padding: 12px 5px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--diary-swatch);
+  font-size: 28px;
+  cursor: pointer;
+}
+
+.diary-ink-btn span {
+  color: var(--text);
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.diary-prompt-btn {
+  margin-top: 4px;
+}
+
+.diary-decor-toggle:hover,
+.diary-prompt-btn:hover {
+  filter: brightness(1.08);
+}
+
+@media (max-width: 600px) {
+  .diary-decor-studio {
+    padding: 14px;
+  }
+
+  .diary-decor-panel {
+    padding: 12px;
+  }
+
+  .diary-sticker-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  .diary-divider-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .diary-ink-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* END DECORATION DRAWER */

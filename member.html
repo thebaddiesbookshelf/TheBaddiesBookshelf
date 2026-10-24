@@ -173,6 +173,18 @@ input:focus,textarea:focus,button:focus-visible {
   .theme-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
   .panel { padding:18px; }
 }
+
+/* READING DIARY™ — VANITY TIMELINE */
+.vanity-diary-list{display:grid;gap:16px}
+.vanity-diary-entry{padding:22px;border:1px solid var(--border);border-radius:18px;background:var(--alt);overflow-wrap:anywhere}
+.vanity-diary-entry-header{display:flex;gap:12px;flex-wrap:wrap;justify-content:space-between;color:var(--light);font-size:12px;font-weight:bold}
+.vanity-diary-entry-title{margin:13px 0 5px;font-family:Georgia,serif;font-size:23px}
+.vanity-diary-entry-date,.vanity-diary-empty,.vanity-diary-loading{color:var(--muted);font-size:13px}
+.vanity-diary-book{color:var(--light);font-size:13px}
+.vanity-diary-entry-content{line-height:1.8;overflow-wrap:anywhere}
+.vanity-diary-entry-content p{margin:0 0 12px}
+.vanity-diary-entry-content ul,.vanity-diary-entry-content ol{padding-left:24px}
+@media(max-width:600px){.vanity-diary-entry{padding:16px}}
 </style>
 </head>
 <body>
@@ -423,6 +435,17 @@ input:focus,textarea:focus,button:focus-visible {
   </div>
 </section>
 
+<section class="section" id="vanityDiarySection">
+  <div class="section-head">
+    <h2>💌 Between Her Pages™</h2>
+    <span class="pill">My Public Diary</span>
+  </div>
+  <div class="panel">
+    <p class="muted">The moments you've chosen to share with the Baddies. Private entries stay private. 💗</p>
+    <div id="vanityDiaryEntries" class="vanity-diary-list" aria-live="polite">Opening your public diary... 💌</div>
+  </div>
+</section>
+
 <section class="section" id="baddiePost">
   <div class="section-head">
     <h2>📣 The Baddie Post™</h2>
@@ -439,6 +462,7 @@ input:focus,textarea:focus,button:focus-visible {
 
 <script type="module">
 import { db, requireAccess, logout } from "./js/auth.js";
+import { loadVanityDiary } from "./js/vanity-diary.js";
 
 const $ = id => document.getElementById(id);
 const bucket = "tbb-avatars";
@@ -933,6 +957,7 @@ async function init() {
 
     await loadProfile();
     await loadAnnouncements();
+    await loadVanityDiary(currentUser.id);
 
   } catch (error) {
     notify(error.message,true);
