@@ -1,0 +1,201 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#130d17">
+  <title>My Besties™ | TBB 2.0</title>
+
+  <link rel="stylesheet" href="css/auth.css">
+  <link rel="stylesheet" href="css/friends.css">
+</head>
+
+<body>
+  <main class="friends-shell">
+
+    <header class="friends-topbar">
+      <div class="friends-brand">TBB ✦ 2.0</div>
+
+      <nav class="friends-nav" aria-label="Main navigation">
+        <a class="friends-btn" href="home.html">
+          Library Home
+        </a>
+        <a class="friends-btn" href="member.html">
+          💋 My Vanity™
+        </a>
+        <a class="friends-btn" href="baddie-directory.html">
+          🎀 Baddie Directory™
+        </a>
+        <button class="friends-btn" id="friendsLogout"
+                type="button">
+          Sign Out
+        </button>
+      </nav>
+    </header>
+
+    <section class="friends-hero">
+      <span class="friends-eyebrow">
+        THE BADDIES BOOKSHELF PRESENTS
+      </span>
+
+      <div class="friends-hero-content">
+        <div>
+          <h1>My Besties™ <span>👯🏾‍♀️</span></h1>
+          <p>
+            Your bookish friendships, your favorite Baddies,
+            and a whole lotta love. Because the best stories
+            are even better with besties. 💗
+          </p>
+        </div>
+        <div class="friends-hero-symbol" aria-hidden="true">
+          💌
+        </div>
+      </div>
+
+      <div class="friends-stats">
+        <div class="friends-stat">
+          <strong id="friendCount">—</strong>
+          <span>My Besties</span>
+        </div>
+
+        <div class="friends-stat">
+          <strong id="receivedCount">—</strong>
+          <span>Incoming Requests</span>
+        </div>
+
+        <div class="friends-stat">
+          <strong id="sentCount">—</strong>
+          <span>Sent Requests</span>
+        </div>
+
+        <div class="friends-stat">
+          <strong id="unreadCount">—</strong>
+          <span>Unread Alerts</span>
+        </div>
+      </div>
+    </section>
+
+    <p id="friendsMessage" class="friends-message"
+       role="status" aria-live="polite"></p>
+
+    <section class="friends-section">
+      <div class="friends-section-head">
+        <div>
+          <span class="friends-kicker">YOUR INNER CIRCLE</span>
+          <h2>💗 My Besties</h2>
+        </div>
+        <a class="friends-btn primary"
+           href="baddie-directory.html">
+          💌 Find More Besties
+        </a>
+      </div>
+
+      <div class="friends-panel">
+        <label for="friendsSearch" class="friends-label">
+          Search My Besties
+        </label>
+        <input id="friendsSearch"
+               type="search"
+               placeholder="Search by name or username..."
+               autocomplete="off">
+
+        <div id="friendsList" class="friends-grid"
+             aria-live="polite">
+          <p class="friends-empty">
+            Gathering your besties... 💗
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="friends-section" id="incoming">
+      <div class="friends-section-head">
+        <div>
+          <span class="friends-kicker">SOMEONE WANTS TO CONNECT</span>
+          <h2>💌 Incoming Requests</h2>
+        </div>
+        <span class="friends-pill" id="incomingBadge">
+          0 Pending
+        </span>
+      </div>
+
+      <div class="friends-panel">
+        <p class="friends-description">
+          These Baddies want to join your bookish circle!
+          Accept to become official besties or decline
+          if you'd rather not. 🎀
+        </p>
+
+        <div id="incomingList" class="friends-grid"
+             aria-live="polite">
+          <p class="friends-empty">
+            Checking your requests...
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="friends-section" id="outgoing">
+      <div class="friends-section-head">
+        <div>
+          <span class="friends-kicker">LOVE NOTES IN WAITING</span>
+          <h2>⏳ Sent Requests</h2>
+        </div>
+        <span class="friends-pill" id="outgoingBadge">
+          0 Pending
+        </span>
+      </div>
+
+      <div class="friends-panel">
+        <p class="friends-description">
+          Waiting for a little friendship magic?
+          You can cancel any request that hasn't
+          been accepted yet. 💗
+        </p>
+
+        <div id="outgoingList" class="friends-grid"
+             aria-live="polite">
+          <p class="friends-empty">
+            Checking sent requests...
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="friends-section" id="notifications">
+      <div class="friends-section-head">
+        <div>
+          <span class="friends-kicker">THE FRIENDSHIP SCOOP</span>
+          <h2>🔔 Bestie Notifications</h2>
+        </div>
+        <span class="friends-pill" id="notificationBadge">
+          0 Unread
+        </span>
+      </div>
+
+      <div class="friends-panel">
+        <p class="friends-description">
+          New requests and friendship celebrations
+          live right here! 💌
+        </p>
+
+        <div id="notificationList" class="friends-notification-list"
+             aria-live="polite">
+          <p class="friends-empty">
+            Opening your friendship notifications...
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <footer class="friends-footer">
+      Made for the Baddies, with love. 💗
+      <span>TBB 2.0 ✦ My Besties™</span>
+    </footer>
+
+  </main>
+
+  <script type="module" src="js/friends-page.js"></script>
+</body>
+</html>

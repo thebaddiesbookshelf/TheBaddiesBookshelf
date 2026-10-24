@@ -441,6 +441,90 @@ a{color:inherit;text-decoration:none}
 /* END DIRECTORY WRITING STUDIO™ */
 
 
+/* ==========================================
+   PHASE 6 — FRIENDS™ DIRECTORY
+   ========================================== */
+
+.directory-mutual-list {
+  display:grid;
+  gap:10px;
+  margin-top:14px;
+}
+
+.directory-mutual-card {
+  display:flex;
+  align-items:center;
+  gap:11px;
+  padding:11px 13px;
+  border:1px solid var(--border);
+  border-radius:13px;
+  background:var(--surface);
+}
+
+.directory-mutual-icon {
+  width:36px;
+  height:36px;
+  flex-shrink:0;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  background:var(--alt);
+  font-size:18px;
+}
+
+.directory-mutual-name {
+  min-width:0;
+  font-size:13px;
+  font-weight:bold;
+  overflow-wrap:anywhere;
+}
+
+.directory-mutual-handle {
+  color:var(--light);
+  font-size:11px;
+  margin-top:4px;
+  overflow-wrap:anywhere;
+}
+
+#directoryFriendStatus {
+  line-height:1.6;
+}
+
+#directoryFriendStatus.error {
+  color:#ffb0b0;
+}
+
+#directoryFriendActions .btn {
+  min-width:120px;
+}
+
+@media(max-width:540px) {
+  #directoryFriendActions {
+    flex-direction:column;
+  }
+}
+
+
+/* FRIENDS™ NOTIFICATION BADGE */
+
+.bestie-notification-badge {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:20px;
+  height:20px;
+  padding:0 5px;
+  border-radius:100px;
+  background:var(--accent);
+  color:#170d15;
+  font-size:11px;
+  font-weight:900;
+}
+
+.bestie-notification-badge[hidden] {
+  display:none;
+}
+
 </style>
 </head>
 
@@ -452,6 +536,16 @@ a{color:inherit;text-decoration:none}
   <nav class="nav" aria-label="Member navigation">
     <a class="btn" href="member.html">← The Vanity™</a>
     <a class="btn" href="vanity-mail.html">💌 Vanity Mail™</a>
+    
+    <a class="btn" href="friends.html">
+      👯🏾‍♀️ My Besties™
+      <span
+        class="bestie-notification-badge"
+        data-friend-notification-badge
+        hidden
+      ></span>
+    </a>
+
     <button class="btn" id="logout" type="button">Sign Out</button>
   </nav>
 </header>
@@ -589,6 +683,39 @@ a{color:inherit;text-decoration:none}
 
 <!-- END DIRECTORY WRITING STUDIO™ -->
 
+<!-- ==========================================
+     PHASE 6 — FRIENDS™
+     DIRECTORY FRIENDSHIP CONTROLS
+     ========================================== -->
+
+<section class="section" id="directoryFriendSection">
+  <h3>👯🏾‍♀️ The Bestie Connection™</h3>
+
+  <p class="muted" id="directoryFriendStatus"
+     role="status" aria-live="polite">
+    Checking your friendship...
+  </p>
+
+  <div class="modal-actions" id="directoryFriendActions">
+  </div>
+</section>
+
+<section class="section" id="directoryMutualSection">
+  <h3>💗 Our Mutual Besties™</h3>
+
+  <p class="muted">
+    The Baddies you both call friends!
+    Only shared connections appear here. 🎀
+  </p>
+
+  <div id="directoryMutualList" class="directory-mutual-list"
+       aria-live="polite">
+    Finding your mutual Besties...
+  </div>
+</section>
+
+<!-- END FRIENDS™ DIRECTORY CONTROLS -->
+
 
     <p
       class="request-status"
@@ -613,6 +740,12 @@ import {db,requireAccess,logout} from "./js/auth.js";
 import {loadVanityDiary} from "./js/vanity-diary.js";
 import {loadVanityQuotes} from "./js/vanity-quotes.js";
 import {loadVanityWriting} from "./js/vanity-writing.js";
+
+import {
+  loadDirectoryFriendship,
+  clearDirectoryFriendship
+} from "./js/directory-friends.js";
+
 
 const $ = id => document.getElementById(id);
 
@@ -1005,12 +1138,20 @@ void loadVanityWriting(member.user_id);
   // Preserve existing Vanity Mail™ functionality.
   refreshConversationStatus(member,token);
 
+// Load this Baddie's friendship controls
+// and shared mutual Besties.
+void loadDirectoryFriendship(member.user_id);
+
 }
 
 function closeProfile(){
   if(requestBusy) return;
 
   ++profileGeneration;
+  
+// Clear the previous Baddie's friendship state.
+clearDirectoryFriendship();
+
   $("profileOverlay").hidden = true;
   document.body.style.overflow = "";
   selectedMember = null;
@@ -1150,6 +1291,9 @@ async function init(){
     if(!access) return;
 
     currentUser = access.user;
+    
+    void initializeFriendBadge(currentUser.id);
+
 
     await loadMyTheme();
     await loadDirectory();
