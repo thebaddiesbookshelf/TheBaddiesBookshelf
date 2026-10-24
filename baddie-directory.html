@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#130d17">
 <title>The Baddie Directory™ | TBB 2.0</title>
+<link rel="stylesheet" href="css/writing-reader.css">
 
 <style>
 :root{
@@ -219,6 +220,227 @@ a{color:inherit;text-decoration:none}
 .vanity-diary-entry-content p{margin:0 0 10px;white-space:normal}
 .vanity-diary-entry-content ul,.vanity-diary-entry-content ol{padding-left:20px}
 
+
+/* ==========================================
+   QUOTE VAULT™ — DIRECTORY PROFILE
+   ========================================== */
+
+.directory-quote-section {
+  margin-top: 20px;
+  padding: 17px;
+  background: var(--alt);
+  border: 1px solid var(--border);
+  border-radius: 15px;
+}
+
+.directory-quote-section h3 {
+  margin: 0 0 8px;
+  font-size: 15px;
+  color: var(--light);
+}
+
+.directory-quote-section > .muted {
+  margin: 0 0 13px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.directory-quote-section .vanity-quote-list {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+
+.directory-quote-section .quote-vault-card {
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  background: var(--surface);
+  overflow-wrap: anywhere;
+}
+
+.directory-quote-section .quote-vault-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.directory-quote-section .quote-vault-card-icon {
+  color: var(--accent);
+  font-family: Georgia, serif;
+  font-size: 40px;
+  line-height: 1;
+}
+
+.directory-quote-section .quote-vault-visibility {
+  color: var(--light);
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.directory-quote-section .quote-vault-text {
+  margin: 12px 0 16px;
+  color: var(--text);
+  font-family: Georgia, serif;
+  font-size: 15px;
+  font-style: italic;
+  line-height: 1.75;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.directory-quote-section .quote-vault-book {
+  margin: 0 0 8px;
+  color: var(--light);
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.directory-quote-section .quote-vault-page,
+.directory-quote-section .quote-vault-date {
+  margin: 8px 0;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.directory-quote-section .quote-vault-note {
+  margin: 12px 0;
+  padding: 11px;
+  border-left: 3px solid var(--accent);
+  border-radius: 0 9px 9px 0;
+  background: var(--alt);
+  color: var(--text);
+  font-size: 12px;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.directory-quote-section .library-empty-message {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+/* END DIRECTORY QUOTE VAULT™ */
+
+
+/* ==========================================
+   WRITING STUDIO™ — DIRECTORY PROFILE
+   ========================================== */
+
+.directory-writing-section {
+  margin-top: 20px;
+  padding: 17px;
+  background: var(--alt);
+  border: 1px solid var(--border);
+  border-radius: 15px;
+  min-width: 0;
+}
+
+.directory-writing-section h3 {
+  margin: 0 0 8px;
+  font-size: 15px;
+  color: var(--light);
+}
+
+.directory-writing-section > .muted {
+  margin: 0 0 13px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.directory-writing-section .vanity-writing-list {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  min-width: 0;
+}
+
+.directory-writing-section .writing-piece-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  background: var(--surface);
+  overflow-wrap: anywhere;
+}
+
+.directory-writing-section .writing-piece-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+
+.directory-writing-section .writing-piece-category,
+.directory-writing-section .writing-piece-visibility {
+  color: var(--light);
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.directory-writing-section .writing-piece-title {
+  margin: 14px 0 9px;
+  color: var(--text);
+  font-family: Georgia, serif;
+  font-size: 20px;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.directory-writing-section .writing-piece-preview {
+  flex: 1;
+  margin: 0 0 12px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.75;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.directory-writing-section .writing-piece-meta {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.directory-writing-section .writing-piece-actions {
+  margin-top: 13px;
+}
+
+.directory-writing-section .writing-piece-actions button {
+  width: 100%;
+  padding: 11px 13px;
+  border: 1px solid var(--accent);
+  border-radius: 10px;
+  background: var(--accent);
+  color: #180b14;
+  font: inherit;
+  font-size: 12px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.directory-writing-section .writing-piece-actions button:hover {
+  filter: brightness(1.1);
+}
+
+.directory-writing-section .library-empty-message {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+/* END DIRECTORY WRITING STUDIO™ */
+
+
 </style>
 </head>
 
@@ -311,6 +533,63 @@ a{color:inherit;text-decoration:none}
       </div>
     </section>
 
+    
+<!-- ==========================================
+     QUOTE VAULT™ — DIRECTORY PROFILE
+     ========================================== -->
+
+<section
+  class="directory-quote-section"
+  aria-label="Public Quote Vault"
+>
+  <h3>💬 Words Worth Keeping™</h3>
+
+  <p class="muted">
+    The unforgettable lines this Baddie has
+    chosen to share with the world. 💗
+  </p>
+
+  <div
+    id="vanityQuoteEntries"
+    class="vanity-quote-list"
+    aria-live="polite"
+  >
+    Opening her favorite lines... 💌
+  </div>
+</section>
+
+<!-- END DIRECTORY QUOTE VAULT™ -->
+
+
+<!-- ==========================================
+     TBB 2.0 — WRITING STUDIO™
+     DIRECTORY PROFILE COLLECTION
+     ========================================== -->
+
+<section
+  class="directory-writing-section"
+  aria-label="Shared Writing Studio"
+>
+  <h3>🖋️ Her Written World™</h3>
+
+  <p class="muted">
+    A little window into this Baddie's imagination.
+    Discover the stories, poetry, letters, and creative
+    thoughts she's chosen to share. 💗
+  </p>
+
+  <div
+    id="vanityWritingEntries"
+    class="vanity-writing-list"
+    aria-live="polite"
+  >
+    Opening her masterpieces... 💌
+  </div>
+</section>
+
+<!-- END DIRECTORY WRITING STUDIO™ -->
+
+
     <p
       class="request-status"
       id="requestStatus"
@@ -332,6 +611,8 @@ a{color:inherit;text-decoration:none}
 <script type="module">
 import {db,requireAccess,logout} from "./js/auth.js";
 import {loadVanityDiary} from "./js/vanity-diary.js";
+import {loadVanityQuotes} from "./js/vanity-quotes.js";
+import {loadVanityWriting} from "./js/vanity-writing.js";
 
 const $ = id => document.getElementById(id);
 
@@ -685,8 +966,45 @@ function openProfile(member){
   freshDiary.setAttribute("aria-live", "polite");
   previousDiary.replaceWith(freshDiary);
 
+  // Load this Baddie's public Reading Diary™.
   void loadVanityDiary(member.user_id);
+
+  // Replace the Quote Vault™ container for each opened profile.
+  // This prevents an older profile's quotes from appearing
+  // when someone quickly switches between Baddies.
+  const previousQuotes = $("vanityQuoteEntries");
+  const freshQuotes = document.createElement("div");
+
+  freshQuotes.id = "vanityQuoteEntries";
+  freshQuotes.className = "vanity-quote-list";
+  freshQuotes.setAttribute("aria-live", "polite");
+
+  previousQuotes.replaceWith(freshQuotes);
+
+  // Only public quotes are retrieved.
+  void loadVanityQuotes(member.user_id);
+  
+// Replace the Writing Studio™ container whenever
+// a different Baddie's profile is opened.
+// This prevents older requests from displaying
+// another member's shared writing.
+
+const previousWriting = $("vanityWritingEntries");
+const freshWriting = document.createElement("div");
+
+freshWriting.id = "vanityWritingEntries";
+freshWriting.className = "vanity-writing-list";
+freshWriting.setAttribute("aria-live", "polite");
+
+previousWriting.replaceWith(freshWriting);
+
+// Retrieve only this Baddie's shared pieces.
+void loadVanityWriting(member.user_id);
+
+
+  // Preserve existing Vanity Mail™ functionality.
   refreshConversationStatus(member,token);
+
 }
 
 function closeProfile(){
@@ -855,6 +1173,10 @@ $("profileOverlay").addEventListener("click",event=>{
 });
 
 document.addEventListener("keydown",event=>{
+  if(document.getElementById("writingReaderDialog")?.open) {
+    return;
+  }
+
   if($("profileOverlay").hidden) return;
 
   if(event.key === "Escape"){
@@ -884,5 +1206,6 @@ document.addEventListener("keydown",event=>{
 
 init();
 </script>
+<script type="module" src="js/writing-reader-bootstrap.js"></script>
 </body>
 </html>

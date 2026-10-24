@@ -2188,3 +2188,1319 @@ a {
 }
 
 /* END DECORATION DRAWER */
+
+
+/* ==========================================
+   TBB 2.0 — QUOTE VAULT™
+   STEP 3C — THE QUOTE COLLECTION
+   ========================================== */
+
+.quote-vault-section {
+  scroll-margin-top: 24px;
+}
+
+.quote-vault-welcome {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(25px, 5vw, 48px);
+  margin-bottom: 24px;
+  border: 1px solid rgba(232, 151, 193, .35);
+  border-radius: 24px;
+  background:
+    radial-gradient(
+      circle at 92% 12%,
+      rgba(255, 193, 224, .35),
+      transparent 38%
+    ),
+    linear-gradient(
+      135deg,
+      #fff8fc 0%,
+      #ffeaf4 55%,
+      #f9e4f1 100%
+    );
+  color: #642d4c;
+  text-align: center;
+  box-shadow: 0 12px 32px rgba(108, 37, 77, .08);
+}
+
+.quote-vault-eyebrow {
+  margin: 0 0 12px;
+  font-size: .72rem;
+  font-weight: 800;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: #a94f7c;
+}
+
+.quote-vault-decoration {
+  margin: 10px 0;
+  font-size: 1.8rem;
+  letter-spacing: .25em;
+}
+
+.quote-vault-welcome h3 {
+  margin: 12px 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.6rem, 4vw, 2.6rem);
+  line-height: 1.2;
+  color: #612443;
+}
+
+.quote-vault-welcome h3 em {
+  color: #c24c87;
+}
+
+.quote-vault-welcome > p:not(.quote-vault-eyebrow) {
+  max-width: 650px;
+  margin: 14px auto 24px;
+  line-height: 1.8;
+  color: #77465f;
+}
+
+.quote-vault-welcome .library-action-btn {
+  margin-inline: auto;
+}
+
+/* STATISTICS */
+
+.quote-vault-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin: 22px 0 30px;
+}
+
+.quote-vault-stat {
+  padding: 20px 12px;
+  border: 1px solid rgba(205, 121, 165, .25);
+  border-radius: 18px;
+  background: linear-gradient(160deg, #fffafd, #ffedf5);
+  text-align: center;
+  box-shadow: 0 6px 18px rgba(105, 39, 76, .05);
+}
+
+.quote-vault-stat > span {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 1.6rem;
+}
+
+.quote-vault-stat strong {
+  display: block;
+  color: #8e345e;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 900;
+}
+
+.quote-vault-stat p {
+  margin: 6px 0 0;
+  color: #85536d;
+  font-size: .85rem;
+}
+
+/* COLLECTION CONTROLS */
+
+.quote-vault-collection {
+  min-width: 0;
+}
+
+.quote-vault-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 12px;
+}
+
+.quote-vault-controls label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: #75415d;
+  font-size: .8rem;
+  font-weight: 700;
+}
+
+.quote-vault-controls input,
+.quote-vault-controls select {
+  width: 100%;
+  min-width: 150px;
+  max-width: 240px;
+  padding: 11px 13px;
+  border: 1px solid #e7bbd2;
+  border-radius: 12px;
+  background: #fff;
+  color: #612443;
+  font: inherit;
+}
+
+.quote-vault-controls input:focus,
+.quote-vault-controls select:focus {
+  outline: 2px solid #e58bb8;
+  outline-offset: 2px;
+}
+
+/* QUOTE CARDS */
+
+.quote-vault-grid {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(min(100%, 285px), 1fr)
+  );
+  gap: 18px;
+  margin-top: 22px;
+}
+
+.quote-vault-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 24px;
+  border: 1px solid #eac6d9;
+  border-radius: 20px;
+  background: #fffafd;
+  box-shadow: 0 8px 24px rgba(99, 39, 75, .07);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.quote-vault-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(99, 39, 75, .12);
+}
+
+.quote-vault-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.quote-vault-card-icon {
+  font-family: Georgia, serif;
+  font-size: 3.4rem;
+  line-height: .7;
+  color: #d779aa;
+}
+
+.quote-vault-visibility {
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #fbe5f0;
+  color: #8b3e65;
+  font-size: .72rem;
+  font-weight: 800;
+}
+
+.quote-vault-text {
+  margin: 8px 0 20px;
+  color: #51243c;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.08rem;
+  font-style: italic;
+  line-height: 1.8;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.quote-vault-book {
+  margin: auto 0 8px;
+  color: #a34c7a;
+  font-size: .88rem;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+
+.quote-vault-page {
+  margin: 0 0 10px;
+  color: #866078;
+  font-size: .8rem;
+}
+
+.quote-vault-note {
+  margin: 10px 0;
+  padding: 13px;
+  border-left: 3px solid #e49abd;
+  border-radius: 0 10px 10px 0;
+  background: #fff0f7;
+  color: #76445f;
+  font-size: .87rem;
+  line-height: 1.65;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.quote-vault-date {
+  margin: 12px 0 0;
+  color: #9a7387;
+  font-size: .75rem;
+}
+
+.quote-vault-card-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.quote-vault-card-actions button {
+  padding: 9px 15px;
+  border: 1px solid #e3abc8;
+  border-radius: 12px;
+  background: #fce8f2;
+  color: #79365b;
+  font: inherit;
+  font-size: .82rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.quote-vault-card-actions button:hover {
+  background: #f8d6e7;
+}
+
+/* EDITOR */
+
+.quote-editor-dialog {
+  width: min(94vw, 650px);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.quote-editor-dialog::backdrop {
+  background: rgba(43, 17, 36, .65);
+  backdrop-filter: blur(4px);
+}
+
+.quote-editor-field {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin: 20px 0;
+}
+
+.quote-editor-field > label {
+  color: #793e60;
+  font-size: .9rem;
+  font-weight: 800;
+}
+
+.quote-editor-field input,
+.quote-editor-field select,
+.quote-editor-field textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 14px;
+  border: 1px solid #e6b6ce;
+  border-radius: 12px;
+  background: #fff;
+  color: #54243f;
+  font: inherit;
+}
+
+.quote-editor-field textarea {
+  resize: vertical;
+  line-height: 1.65;
+}
+
+.quote-editor-field input:focus,
+.quote-editor-field select:focus,
+.quote-editor-field textarea:focus {
+  outline: 2px solid #e38cb9;
+  outline-offset: 2px;
+}
+
+.quote-editor-dialog .library-dialog-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+#deleteQuoteButton:not([hidden]) {
+  margin-right: auto;
+  border-color: #e7a4b3;
+  color: #9d294a;
+}
+
+#quoteEditorStatus {
+  min-height: 1.3em;
+}
+
+/* EMPTY STATE */
+
+.quote-vault-grid > .library-empty-message {
+  grid-column: 1 / -1;
+  padding: 35px 18px;
+  text-align: center;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 650px) {
+  .quote-vault-stats {
+    gap: 8px;
+  }
+
+  .quote-vault-stat {
+    padding: 15px 6px;
+  }
+
+  .quote-vault-stat p {
+    font-size: .72rem;
+  }
+
+  .quote-vault-controls {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .quote-vault-controls label,
+  .quote-vault-controls input,
+  .quote-vault-controls select {
+    width: 100%;
+    max-width: none;
+  }
+
+  .quote-vault-card {
+    padding: 20px;
+  }
+
+  .quote-editor-dialog {
+    width: 96vw;
+  }
+}
+
+/* ==========================================
+   END QUOTE VAULT™ STYLES
+   ========================================== */
+
+
+/* ==========================================
+   TBB 2.0 — BADDIE WRITING STUDIO™
+   STEP 4C — WRITING DESK & CREATIVE CANVAS
+   ========================================== */
+
+/* MAIN SECTION */
+
+.writing-studio-section {
+  scroll-margin-top: 24px;
+  min-width: 0;
+}
+
+.writing-studio-section [hidden],
+.writing-editor-dialog [hidden] {
+  display: none !important;
+}
+
+/* WELCOME AREA */
+
+.writing-studio-welcome {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(24px, 5vw, 46px);
+  margin-bottom: 25px;
+  border: 1px solid #d98aaf;
+  border-radius: 24px;
+  background:
+    radial-gradient(
+      circle at 90% 10%,
+      rgba(255, 181, 218, .23),
+      transparent 45%
+    ),
+    linear-gradient(
+      135deg,
+      #42223c 0%,
+      #2c1b32 55%,
+      #201627 100%
+    );
+  color: #fff5fb;
+  text-align: center;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, .12);
+}
+
+.writing-studio-eyebrow {
+  margin: 0 0 12px;
+  color: #ffc6e3;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+}
+
+.writing-studio-decoration {
+  margin: 12px 0;
+  font-size: 29px;
+  letter-spacing: 7px;
+}
+
+.writing-studio-welcome h3 {
+  margin: 14px 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(26px, 4vw, 40px);
+  line-height: 1.25;
+}
+
+.writing-studio-welcome h3 em {
+  color: #ffb5da;
+  font-weight: normal;
+}
+
+.writing-studio-welcome > p:not(.writing-studio-eyebrow) {
+  max-width: 650px;
+  margin: 0 auto 22px;
+  color: #f4dce9;
+  font-size: 14px;
+  line-height: 1.9;
+}
+
+.writing-studio-welcome .library-action-btn {
+  min-height: 46px;
+  padding-inline: 24px;
+}
+
+/* STATISTICS */
+
+.writing-studio-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin: 23px 0 28px;
+}
+
+.writing-studio-stat {
+  min-width: 0;
+  padding: 20px 12px;
+  border: 1px solid #76506b;
+  border-radius: 18px;
+  background: #2c1c30;
+  color: #fff5fb;
+  text-align: center;
+}
+
+.writing-studio-stat > span {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 23px;
+}
+
+.writing-studio-stat strong {
+  display: block;
+  color: #ffb5da;
+  font-size: clamp(25px, 4vw, 34px);
+  line-height: 1.2;
+}
+
+.writing-studio-stat p {
+  margin: 7px 0 0;
+  color: #e6c7d8;
+  font-size: 12px;
+}
+
+/* COLLECTION */
+
+.writing-studio-collection {
+  min-width: 0;
+  padding: 22px;
+  border: 1px solid #76506b;
+  border-radius: 20px;
+  background: #261a2b;
+}
+
+.writing-studio-controls {
+  display: flex;
+  align-items: end;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 12px 0;
+}
+
+.writing-studio-controls label {
+  display: grid;
+  gap: 7px;
+  min-width: 150px;
+  color: #f5d5e6;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.writing-studio-controls input,
+.writing-studio-controls select {
+  width: 100%;
+  min-height: 43px;
+  padding: 10px 12px;
+  border: 1px solid #79526f;
+  border-radius: 11px;
+  background: #39263d;
+  color: #fff5fb;
+  font: inherit;
+  font-size: 13px;
+}
+
+.writing-studio-controls input:focus,
+.writing-studio-controls select:focus {
+  outline: 2px solid #ff86c3;
+  outline-offset: 2px;
+}
+
+.writing-studio-grid {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(min(100%, 250px), 1fr)
+  );
+  gap: 16px;
+  margin-top: 19px;
+}
+
+.writing-studio-grid > .library-empty-message {
+  grid-column: 1 / -1;
+}
+
+/* SAVED PIECE CARDS */
+
+.writing-piece-card {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  min-width: 0;
+  padding: 19px;
+  border: 1px solid #76506b;
+  border-radius: 17px;
+  background: #35243a;
+  color: #fff5fb;
+  overflow-wrap: anywhere;
+  transition: border-color .18s, transform .18s;
+}
+
+.writing-piece-card:hover {
+  transform: translateY(-2px);
+  border-color: #ff8cc5;
+}
+
+.writing-piece-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 9px;
+  flex-wrap: wrap;
+}
+
+.writing-piece-category,
+.writing-piece-visibility {
+  color: #ffb5da;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.writing-piece-title {
+  margin: 0;
+  color: #fff5fb;
+  font-family: Georgia, serif;
+  font-size: 21px;
+  line-height: 1.35;
+}
+
+.writing-piece-preview {
+  margin: 0;
+  color: #e2c7d8;
+  font-size: 13px;
+  line-height: 1.75;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.writing-piece-meta {
+  margin-top: auto;
+  color: #cbaec2;
+  font-size: 11px;
+}
+
+.writing-piece-actions {
+  display: flex;
+  gap: 9px;
+  flex-wrap: wrap;
+}
+
+.writing-piece-actions button {
+  flex: 1;
+  min-height: 40px;
+  padding: 9px 12px;
+  border: 1px solid #a86991;
+  border-radius: 10px;
+  background: #57324e;
+  color: #fff5fb;
+  font: inherit;
+  font-size: 12px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.writing-piece-actions button:hover {
+  background: #754065;
+}
+
+/* CREATIVE CANVAS DIALOG */
+
+.writing-editor-dialog {
+  width: min(900px, calc(100vw - 24px));
+  max-width: 900px;
+  max-height: 92dvh;
+  overflow-y: auto;
+  padding: clamp(18px, 3vw, 32px);
+  border: 1px solid #ad7395;
+  border-radius: 22px;
+  background: #281b2e;
+  color: #fff5fb;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, .5);
+}
+
+.writing-editor-dialog::backdrop {
+  background: rgba(9, 5, 13, .82);
+  backdrop-filter: blur(5px);
+}
+
+.writing-editor-header {
+  margin-bottom: 22px;
+  text-align: center;
+}
+
+.writing-editor-header h3 {
+  margin: 8px 0 10px;
+  color: #fff5fb;
+  font-family: Georgia, serif;
+  font-size: clamp(25px, 4vw, 35px);
+}
+
+.writing-editor-header .library-helper {
+  color: #e7c5d8;
+}
+
+.writing-editor-field {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+  margin-bottom: 21px;
+}
+
+.writing-editor-field > label {
+  color: #ffd2e9;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.writing-editor-field input,
+.writing-editor-field select {
+  width: 100%;
+  min-width: 0;
+  min-height: 45px;
+  padding: 11px 13px;
+  border: 1px solid #8b5d7d;
+  border-radius: 12px;
+  background: #39283e;
+  color: #fff5fb;
+  font: inherit;
+  font-size: 14px;
+}
+
+.writing-editor-field input:focus,
+.writing-editor-field select:focus {
+  outline: 2px solid #ff9bd0;
+  outline-offset: 2px;
+}
+
+.writing-editor-field .library-helper {
+  margin: 0;
+  color: #e1bfd2;
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+/* FORMATTING TOOLBAR */
+
+.writing-format-toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 7px;
+  padding: 10px;
+  border: 1px solid #8b5d7d;
+  border-radius: 12px 12px 0 0;
+  background: #422b43;
+}
+
+.writing-format-toolbar button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 37px;
+  min-height: 37px;
+  padding: 7px;
+  border: 1px solid #956585;
+  border-radius: 8px;
+  background: #553651;
+  color: #fff5fb;
+  font-family: Georgia, serif;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.writing-format-toolbar button:hover,
+.writing-format-toolbar button:focus-visible {
+  border-color: #ffb5da;
+  background: #774668;
+}
+
+.writing-format-toolbar button[aria-pressed="true"] {
+  border-color: #ffb5da;
+  background: #a14f7e;
+}
+
+/* RICH-TEXT EDITOR MOUNT */
+
+.writing-rich-editor {
+  min-height: 320px;
+  padding: 21px;
+  border: 1px solid #8b5d7d;
+  border-top: 0;
+  border-radius: 0 0 12px 12px;
+  background: #fff9fc;
+  color: #302133;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 16px;
+  line-height: 1.85;
+  overflow-wrap: anywhere;
+}
+
+.writing-rich-editor:focus-within {
+  outline: 2px solid #ff8cc5;
+  outline-offset: 2px;
+}
+
+.writing-rich-editor .ProseMirror {
+  min-height: 290px;
+  outline: none;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.writing-rich-editor .ProseMirror > :first-child {
+  margin-top: 0;
+}
+
+.writing-rich-editor .ProseMirror p {
+  margin: 0 0 13px;
+}
+
+.writing-rich-editor .ProseMirror h2 {
+  margin: 20px 0 12px;
+  font-size: 25px;
+  line-height: 1.35;
+}
+
+.writing-rich-editor .ProseMirror ul,
+.writing-rich-editor .ProseMirror ol {
+  padding-left: 25px;
+  margin: 10px 0;
+}
+
+.writing-rich-editor .ProseMirror blockquote {
+  margin: 15px 0;
+  padding: 8px 16px;
+  border-left: 4px solid #db83b3;
+  background: #fff0f8;
+  font-style: italic;
+}
+
+.writing-rich-editor .ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: #9e8194;
+  pointer-events: none;
+  height: 0;
+}
+
+/* SAVE STATUS */
+
+#writingEditorStatus {
+  min-height: 20px;
+  margin: 10px 0 17px;
+  color: #ffcfeb;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+#writingEditorStatus[data-state="saved"] {
+  color: #b9f0d0;
+}
+
+#writingEditorStatus[data-state="error"] {
+  color: #ffb2bd;
+}
+
+/* ACTION BUTTONS */
+
+.writing-editor-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.writing-editor-actions button {
+  min-height: 44px;
+  padding: 11px 16px;
+  border-radius: 11px;
+  font-weight: bold;
+}
+
+#deleteWritingPiece {
+  border: 1px solid #d88a9d;
+  background: #64303e;
+  color: #fff0f4;
+}
+
+/* MOBILE */
+
+@media (max-width: 650px) {
+  .writing-studio-welcome {
+    padding: 26px 18px;
+  }
+
+  .writing-studio-decoration {
+    font-size: 24px;
+    letter-spacing: 3px;
+  }
+
+  .writing-studio-stats {
+    gap: 8px;
+  }
+
+  .writing-studio-stat {
+    padding: 16px 7px;
+  }
+
+  .writing-studio-stat p {
+    font-size: 10px;
+  }
+
+  .writing-studio-collection {
+    padding: 15px;
+  }
+
+  .writing-studio-controls {
+    align-items: stretch;
+  }
+
+  .writing-studio-controls label {
+    flex: 1 1 100%;
+  }
+
+  .writing-editor-dialog {
+    width: calc(100vw - 12px);
+    max-height: 96dvh;
+    padding: 17px;
+    border-radius: 16px;
+  }
+
+  .writing-rich-editor {
+    min-height: 260px;
+    padding: 15px;
+    font-size: 15px;
+  }
+
+  .writing-rich-editor .ProseMirror {
+    min-height: 230px;
+  }
+
+  .writing-editor-actions button {
+    flex: 1 1 100%;
+  }
+}
+
+/* ==========================================
+   END BADDIE WRITING STUDIO™ CSS
+   ========================================== */
+
+
+/* ==========================================
+   TBB 2.0 — LOVE NOTES™
+   STEP 4E.3 — READER, REACTIONS & COMMENTS
+   ========================================== */
+
+/* READING WINDOW */
+
+.writing-reader-dialog {
+  width: min(850px, calc(100vw - 24px));
+  max-width: 850px;
+  max-height: 92dvh;
+  overflow-y: auto;
+  padding: clamp(18px, 4vw, 36px);
+  border: 1px solid #a97498;
+  border-radius: 24px;
+  background: #271b2d;
+  color: #fff4fa;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, .5);
+}
+
+.writing-reader-dialog::backdrop {
+  background: rgba(12, 6, 16, .85);
+  backdrop-filter: blur(6px);
+}
+
+.writing-reader-shell {
+  min-width: 0;
+}
+
+/* READER HEADER */
+
+.writing-reader-header {
+  padding: 12px 0 25px;
+  text-align: center;
+}
+
+.writing-reader-category {
+  display: inline-block;
+  margin: 10px 0;
+  padding: 7px 13px;
+  border: 1px solid #9b6789;
+  border-radius: 999px;
+  background: #493049;
+  color: #ffd2e9;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.writing-reader-header h3 {
+  margin: 13px 0;
+  color: #fff5fb;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(27px, 5vw, 39px);
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.writing-reader-author {
+  margin: 0;
+  color: #e6bfd5;
+  font-size: 13px;
+}
+
+/* READING CONTENT */
+
+.writing-reader-content {
+  min-height: 180px;
+  padding: clamp(20px, 4vw, 36px);
+  border: 1px solid #e6bbd3;
+  border-radius: 17px;
+  background: #fffafc;
+  color: #34263a;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 16px;
+  line-height: 1.9;
+  overflow-wrap: anywhere;
+}
+
+.writing-reader-content p {
+  margin: 0 0 16px;
+  white-space: pre-wrap;
+}
+
+.writing-reader-content h2 {
+  margin: 20px 0 12px;
+  font-size: 25px;
+  line-height: 1.4;
+}
+
+.writing-reader-content ul,
+.writing-reader-content ol {
+  padding-left: 25px;
+  margin: 12px 0;
+}
+
+.writing-reader-content li {
+  margin-bottom: 7px;
+}
+
+.writing-reader-content blockquote {
+  margin: 18px 0;
+  padding: 9px 17px;
+  border-left: 4px solid #d67fae;
+  background: #fff0f7;
+  font-style: italic;
+}
+
+.writing-reader-content strong {
+  font-weight: 800;
+}
+
+.writing-reader-content em {
+  font-style: italic;
+}
+
+.writing-reader-content u {
+  text-decoration: underline;
+}
+
+/* LOVE NOTES SECTION */
+
+.writing-love-notes {
+  margin-top: 30px;
+  padding-top: 25px;
+  border-top: 1px solid #805873;
+}
+
+.writing-love-notes-heading {
+  margin-bottom: 19px;
+  text-align: center;
+}
+
+.writing-love-notes-heading h4 {
+  margin: 0 0 8px;
+  color: #ffc3e0;
+  font-family: Georgia, serif;
+  font-size: 29px;
+}
+
+.writing-love-notes-heading p {
+  margin: 0;
+  color: #e4bfd3;
+  font-size: 13px;
+}
+
+/* REACTION BUTTONS */
+
+.writing-reaction-buttons {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 9px;
+  margin: 22px 0 28px;
+}
+
+.writing-reaction-buttons button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 76px;
+  padding: 12px 7px;
+  border: 1px solid #916484;
+  border-radius: 13px;
+  background: #3b2940;
+  color: #fff2f9;
+  font: inherit;
+  font-size: 12px;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+  transition:
+    background .18s,
+    border-color .18s,
+    transform .18s;
+}
+
+.writing-reaction-buttons button:hover {
+  transform: translateY(-2px);
+  border-color: #ffadd6;
+  background: #583751;
+}
+
+.writing-reaction-buttons button[aria-pressed="true"] {
+  border-color: #ffb5da;
+  background: #86466d;
+  box-shadow: inset 0 0 0 1px #ffc9e4;
+}
+
+.writing-reaction-buttons button:disabled {
+  opacity: .55;
+  cursor: wait;
+}
+
+.writing-reaction-buttons [data-reaction-count] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 25px;
+  min-height: 25px;
+  padding: 3px 7px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .13);
+  color: #fff5fb;
+  font-size: 12px;
+}
+
+/* COMMENTS */
+
+.writing-comments-section {
+  margin-top: 25px;
+}
+
+.writing-comments-section h5 {
+  margin: 0 0 17px;
+  color: #ffd0e7;
+  font-family: Georgia, serif;
+  font-size: 21px;
+}
+
+.writing-comments-list {
+  display: grid;
+  gap: 13px;
+  margin-bottom: 22px;
+}
+
+.writing-comment-card {
+  padding: 16px;
+  border: 1px solid #76506d;
+  border-radius: 14px;
+  background: #36263b;
+  overflow-wrap: anywhere;
+}
+
+.writing-comment-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 9px;
+}
+
+.writing-comment-author {
+  color: #ffc5e2;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.writing-comment-date {
+  color: #c6a5bb;
+  font-size: 11px;
+}
+
+.writing-comment-body {
+  margin: 0;
+  color: #fff0f7;
+  font-size: 13px;
+  line-height: 1.8;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.writing-comment-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 11px;
+}
+
+.writing-comment-actions button {
+  padding: 7px 11px;
+  border: 1px solid #a87391;
+  border-radius: 8px;
+  background: #58334e;
+  color: #fff1f7;
+  font: inherit;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.writing-comment-actions button:hover {
+  background: #77405f;
+}
+
+/* COMMENT FORM */
+
+.writing-comment-form {
+  display: grid;
+  gap: 11px;
+  padding: 19px;
+  border: 1px solid #815875;
+  border-radius: 15px;
+  background: #33233a;
+}
+
+.writing-comment-form label {
+  color: #ffd0e7;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.writing-comment-form textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 13px;
+  border: 1px solid #926888;
+  border-radius: 11px;
+  background: #442e46;
+  color: #fff5fb;
+  font: inherit;
+  font-size: 13px;
+  line-height: 1.7;
+  resize: vertical;
+}
+
+.writing-comment-form textarea::placeholder {
+  color: #d2adc4;
+}
+
+.writing-comment-form textarea:focus {
+  outline: 2px solid #ffadd6;
+  outline-offset: 2px;
+}
+
+.writing-comment-form button {
+  justify-self: start;
+  min-height: 42px;
+}
+
+.writing-comment-form button:disabled {
+  opacity: .6;
+  cursor: wait;
+}
+
+/* FEEDBACK STATUS */
+
+#writingFeedbackStatus {
+  min-height: 19px;
+  margin: 17px 0;
+  color: #ffcfeb;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+/* MOBILE */
+
+@media (max-width: 650px) {
+  .writing-reader-dialog {
+    width: calc(100vw - 12px);
+    max-height: 96dvh;
+    padding: 17px;
+    border-radius: 16px;
+  }
+
+  .writing-reader-content {
+    padding: 18px;
+    font-size: 15px;
+  }
+
+  .writing-reaction-buttons {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .writing-reaction-buttons button {
+    min-height: 70px;
+  }
+
+  .writing-comment-form {
+    padding: 14px;
+  }
+
+  .writing-comment-form button {
+    width: 100%;
+  }
+}
+
+/* ==========================================
+   END LOVE NOTES™ CSS
+   ========================================== */

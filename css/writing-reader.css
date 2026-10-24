@@ -1,0 +1,379 @@
+/* ==========================================
+   TBB 2.0 — LOVE NOTES™
+   STEP 4E.3 — READER, REACTIONS & COMMENTS
+   ========================================== */
+
+/* READING WINDOW */
+
+.writing-reader-dialog {
+  width: min(850px, calc(100vw - 24px));
+  max-width: 850px;
+  max-height: 92dvh;
+  overflow-y: auto;
+  padding: clamp(18px, 4vw, 36px);
+  border: 1px solid #a97498;
+  border-radius: 24px;
+  background: #271b2d;
+  color: #fff4fa;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, .5);
+}
+
+.writing-reader-dialog::backdrop {
+  background: rgba(12, 6, 16, .85);
+  backdrop-filter: blur(6px);
+}
+
+.writing-reader-shell {
+  min-width: 0;
+}
+
+/* READER HEADER */
+
+.writing-reader-header {
+  padding: 12px 0 25px;
+  text-align: center;
+}
+
+.writing-reader-category {
+  display: inline-block;
+  margin: 10px 0;
+  padding: 7px 13px;
+  border: 1px solid #9b6789;
+  border-radius: 999px;
+  background: #493049;
+  color: #ffd2e9;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.writing-reader-header h3 {
+  margin: 13px 0;
+  color: #fff5fb;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(27px, 5vw, 39px);
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.writing-reader-author {
+  margin: 0;
+  color: #e6bfd5;
+  font-size: 13px;
+}
+
+/* READING CONTENT */
+
+.writing-reader-content {
+  min-height: 180px;
+  padding: clamp(20px, 4vw, 36px);
+  border: 1px solid #e6bbd3;
+  border-radius: 17px;
+  background: #fffafc;
+  color: #34263a;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 16px;
+  line-height: 1.9;
+  overflow-wrap: anywhere;
+}
+
+.writing-reader-content p {
+  margin: 0 0 16px;
+  white-space: pre-wrap;
+}
+
+.writing-reader-content h2 {
+  margin: 20px 0 12px;
+  font-size: 25px;
+  line-height: 1.4;
+}
+
+.writing-reader-content ul,
+.writing-reader-content ol {
+  padding-left: 25px;
+  margin: 12px 0;
+}
+
+.writing-reader-content li {
+  margin-bottom: 7px;
+}
+
+.writing-reader-content blockquote {
+  margin: 18px 0;
+  padding: 9px 17px;
+  border-left: 4px solid #d67fae;
+  background: #fff0f7;
+  font-style: italic;
+}
+
+.writing-reader-content strong {
+  font-weight: 800;
+}
+
+.writing-reader-content em {
+  font-style: italic;
+}
+
+.writing-reader-content u {
+  text-decoration: underline;
+}
+
+/* LOVE NOTES SECTION */
+
+.writing-love-notes {
+  margin-top: 30px;
+  padding-top: 25px;
+  border-top: 1px solid #805873;
+}
+
+.writing-love-notes-heading {
+  margin-bottom: 19px;
+  text-align: center;
+}
+
+.writing-love-notes-heading h4 {
+  margin: 0 0 8px;
+  color: #ffc3e0;
+  font-family: Georgia, serif;
+  font-size: 29px;
+}
+
+.writing-love-notes-heading p {
+  margin: 0;
+  color: #e4bfd3;
+  font-size: 13px;
+}
+
+/* REACTION BUTTONS */
+
+.writing-reaction-buttons {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 9px;
+  margin: 22px 0 28px;
+}
+
+.writing-reaction-buttons button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 76px;
+  padding: 12px 7px;
+  border: 1px solid #916484;
+  border-radius: 13px;
+  background: #3b2940;
+  color: #fff2f9;
+  font: inherit;
+  font-size: 12px;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+  transition:
+    background .18s,
+    border-color .18s,
+    transform .18s;
+}
+
+.writing-reaction-buttons button:hover {
+  transform: translateY(-2px);
+  border-color: #ffadd6;
+  background: #583751;
+}
+
+.writing-reaction-buttons button[aria-pressed="true"] {
+  border-color: #ffb5da;
+  background: #86466d;
+  box-shadow: inset 0 0 0 1px #ffc9e4;
+}
+
+.writing-reaction-buttons button:disabled {
+  opacity: .55;
+  cursor: wait;
+}
+
+.writing-reaction-buttons [data-reaction-count] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 25px;
+  min-height: 25px;
+  padding: 3px 7px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .13);
+  color: #fff5fb;
+  font-size: 12px;
+}
+
+/* COMMENTS */
+
+.writing-comments-section {
+  margin-top: 25px;
+}
+
+.writing-comments-section h5 {
+  margin: 0 0 17px;
+  color: #ffd0e7;
+  font-family: Georgia, serif;
+  font-size: 21px;
+}
+
+.writing-comments-list {
+  display: grid;
+  gap: 13px;
+  margin-bottom: 22px;
+}
+
+.writing-comment-card {
+  padding: 16px;
+  border: 1px solid #76506d;
+  border-radius: 14px;
+  background: #36263b;
+  overflow-wrap: anywhere;
+}
+
+.writing-comment-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 9px;
+}
+
+.writing-comment-author {
+  color: #ffc5e2;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.writing-comment-date {
+  color: #c6a5bb;
+  font-size: 11px;
+}
+
+.writing-comment-body {
+  margin: 0;
+  color: #fff0f7;
+  font-size: 13px;
+  line-height: 1.8;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.writing-comment-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 11px;
+}
+
+.writing-comment-actions button {
+  padding: 7px 11px;
+  border: 1px solid #a87391;
+  border-radius: 8px;
+  background: #58334e;
+  color: #fff1f7;
+  font: inherit;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.writing-comment-actions button:hover {
+  background: #77405f;
+}
+
+/* COMMENT FORM */
+
+.writing-comment-form {
+  display: grid;
+  gap: 11px;
+  padding: 19px;
+  border: 1px solid #815875;
+  border-radius: 15px;
+  background: #33233a;
+}
+
+.writing-comment-form label {
+  color: #ffd0e7;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.writing-comment-form textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 13px;
+  border: 1px solid #926888;
+  border-radius: 11px;
+  background: #442e46;
+  color: #fff5fb;
+  font: inherit;
+  font-size: 13px;
+  line-height: 1.7;
+  resize: vertical;
+}
+
+.writing-comment-form textarea::placeholder {
+  color: #d2adc4;
+}
+
+.writing-comment-form textarea:focus {
+  outline: 2px solid #ffadd6;
+  outline-offset: 2px;
+}
+
+.writing-comment-form button {
+  justify-self: start;
+  min-height: 42px;
+}
+
+.writing-comment-form button:disabled {
+  opacity: .6;
+  cursor: wait;
+}
+
+/* FEEDBACK STATUS */
+
+#writingFeedbackStatus {
+  min-height: 19px;
+  margin: 17px 0;
+  color: #ffcfeb;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+/* MOBILE */
+
+@media (max-width: 650px) {
+  .writing-reader-dialog {
+    width: calc(100vw - 12px);
+    max-height: 96dvh;
+    padding: 17px;
+    border-radius: 16px;
+  }
+
+  .writing-reader-content {
+    padding: 18px;
+    font-size: 15px;
+  }
+
+  .writing-reaction-buttons {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .writing-reaction-buttons button {
+    min-height: 70px;
+  }
+
+  .writing-comment-form {
+    padding: 14px;
+  }
+
+  .writing-comment-form button {
+    width: 100%;
+  }
+}
+
+/* ==========================================
+   END LOVE NOTES™ CSS
+   ========================================== */

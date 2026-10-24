@@ -102,14 +102,19 @@
         <div class="feature-icon">💌</div>
         <h3>Quote Vault™</h3>
         <p>Save the lines that made you feel absolutely everything.</p>
-        <span>Coming next ✦</span>
+        <a href="#quoteVault">Open My Vault ✦</a>
       </article>
+      
       <article class="bookshelf-feature">
         <div class="feature-icon">🖋️</div>
         <h3>Baddie Writing Studio™</h3>
-        <p>Express yourself with gorgeous fonts, colorful ink, and rich text.</p>
-        <span>Coming next ✦</span>
+        <p>
+          Your imagination deserves its own spotlight.
+          Write stories, poetry, letters, and everything in between.
+        </p>
+        <a href="#writingStudio">Enter My Writing Studio ✦</a>
       </article>
+
       <article class="bookshelf-feature">
         <div class="feature-icon">🏆</div>
         <h3>Reading Goals</h3>
@@ -1022,6 +1027,756 @@
 </dialog>
 
 <!-- END READING DIARY™ -->
+ 
+<!-- ==========================================
+     TBB 2.0 — QUOTE VAULT™
+     STEP 3B — MY QUOTE COLLECTION
+     ========================================== -->
+
+<section
+  class="bookshelf-section quote-vault-section"
+  id="quoteVault"
+  aria-labelledby="quoteVaultHeading"
+>
+
+  <div class="bookshelf-section-heading">
+    <h2 id="quoteVaultHeading">💬 Quote Vault™</h2>
+    <span>THE WORDS THAT STAY WITH YOU</span>
+  </div>
+
+  <div class="quote-vault-welcome">
+
+    <p class="quote-vault-eyebrow">
+      THE BADDIES BOOKSHELF PRESENTS
+    </p>
+
+    <div class="quote-vault-decoration" aria-hidden="true">
+      ✨ 📖 💌 ✨
+    </div>
+
+    <h3>
+      Some words are <em>too good to forget.</em>
+    </h3>
+
+    <p>
+      The lines that made you gasp. The declarations
+      that had you kicking your feet. The words that
+      broke your heart and somehow put it back together.
+      Save them all here, Baddie. 💗
+    </p>
+
+    <button
+      id="createQuoteButton"
+      class="library-action-btn"
+      type="button"
+    >
+      💌 Save a New Quote
+    </button>
+
+  </div>
+
+  <!-- QUOTE VAULT STATISTICS -->
+
+  <div class="quote-vault-stats">
+
+    <article class="quote-vault-stat">
+      <span>💬</span>
+      <strong id="quoteTotalCount">0</strong>
+      <p>Saved Quotes</p>
+    </article>
+
+    <article class="quote-vault-stat">
+      <span>🌎</span>
+      <strong id="quotePublicCount">0</strong>
+      <p>Public Quotes</p>
+    </article>
+
+    <article class="quote-vault-stat">
+      <span>🔒</span>
+      <strong id="quotePrivateCount">0</strong>
+      <p>Private Quotes</p>
+    </article>
+
+  </div>
+
+  <!-- COLLECTION -->
+
+  <div class="quote-vault-collection">
+
+    <div class="library-collection-heading">
+      <h3>🎀 My Favorite Lines</h3>
+
+      <div class="quote-vault-controls">
+
+        <label for="quoteSearch">
+          Search
+          <input
+            id="quoteSearch"
+            type="search"
+            maxlength="150"
+            placeholder="Find a favorite line..."
+            autocomplete="off"
+          >
+        </label>
+
+        <label for="quoteBookFilter">
+          Book
+          <select id="quoteBookFilter">
+            <option value="all">All Books</option>
+          </select>
+        </label>
+
+        <label for="quoteVisibilityFilter">
+          Visibility
+          <select id="quoteVisibilityFilter">
+            <option value="all">All Quotes</option>
+            <option value="private">🔒 Private</option>
+            <option value="public">🌎 Public</option>
+          </select>
+        </label>
+
+      </div>
+    </div>
+
+    <div
+      id="quoteVaultEntries"
+      class="quote-vault-grid"
+      aria-live="polite"
+    >
+      <p class="library-empty-message">
+        💌 Your Quote Vault™ is waiting for its
+        first unforgettable line.
+      </p>
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ==========================================
+     QUOTE VAULT™ — CREATE / EDIT QUOTE
+     ========================================== -->
+
+<dialog
+  id="quoteEditorDialog"
+  class="library-dialog quote-editor-dialog"
+  aria-labelledby="quoteEditorHeading"
+>
+
+  <form id="quoteEditorForm">
+
+    <h3 id="quoteEditorHeading">
+      💌 Save This Moment™
+    </h3>
+
+    <p class="library-helper">
+      Give those unforgettable words a forever home.
+    </p>
+
+    <input id="quoteEditingId" type="hidden">
+
+    <div class="quote-editor-field">
+      <label for="quoteBookSelect">
+        📚 Which Book Stole Your Heart?
+      </label>
+
+      <select id="quoteBookSelect" required>
+        <option value="">Choose from My Library™...</option>
+      </select>
+    </div>
+
+    <div class="quote-editor-field">
+      <label for="quoteText">
+        💬 The Quote *
+      </label>
+
+      <textarea
+        id="quoteText"
+        maxlength="3000"
+        rows="6"
+        required
+        placeholder="The words you'll never forget..."
+      ></textarea>
+    </div>
+
+    <div class="quote-editor-field">
+      <label for="quotePageNumber">
+        📖 Page Number (Optional)
+      </label>
+
+      <input
+        id="quotePageNumber"
+        type="number"
+        min="1"
+        step="1"
+        placeholder="Where did the magic happen?"
+      >
+    </div>
+
+    <div class="quote-editor-field">
+      <label for="quotePersonalNote">
+        💗 Why Did This One Hit Different?
+      </label>
+
+      <textarea
+        id="quotePersonalNote"
+        maxlength="5000"
+        rows="4"
+        placeholder="Your thoughts, feelings, or favorite reactions..."
+      ></textarea>
+    </div>
+
+    <div class="quote-editor-field">
+      <label for="quoteVisibility">
+        🔐 Who Gets to See This?
+      </label>
+
+      <select id="quoteVisibility">
+        <option value="private">
+          🔒 Just Me — Private
+        </option>
+        <option value="public">
+          🌎 My Vanity™ — Public
+        </option>
+      </select>
+
+      <p class="library-helper">
+        Your quotes are private by default.
+        Public quotes can appear on your Vanity™
+        and Baddie Directory™ profile.
+      </p>
+    </div>
+
+    <p
+      id="quoteEditorStatus"
+      class="library-helper"
+      role="status"
+      aria-live="polite"
+    ></p>
+
+    <div class="library-dialog-actions">
+
+      <button
+        id="deleteQuoteButton"
+        type="button"
+        hidden
+      >
+        🗑️ Delete Quote
+      </button>
+
+      <button
+        id="cancelQuoteEditor"
+        type="button"
+      >
+        Cancel
+      </button>
+
+      <button
+        id="saveQuoteButton"
+        type="submit"
+      >
+        Save to My Vault 💗
+      </button>
+
+    </div>
+
+  </form>
+
+</dialog>
+
+<!-- END QUOTE VAULT™ -->
+
+<!-- ==========================================
+     TBB 2.0 — BADDIE WRITING STUDIO™
+     STEP 4B — MY WRITING DESK™
+     ========================================== -->
+
+<section
+  class="bookshelf-section writing-studio-section"
+  id="writingStudio"
+  aria-labelledby="writingStudioHeading"
+>
+
+  <div class="bookshelf-section-heading">
+    <h2 id="writingStudioHeading">
+      🖋️ The Baddie Writing Studio™
+    </h2>
+    <span>WHERE YOUR IMAGINATION TAKES THE LEAD</span>
+  </div>
+
+  <!-- WRITING STUDIO WELCOME -->
+
+  <div class="writing-studio-welcome">
+
+    <p class="writing-studio-eyebrow">
+      THE BADDIES BOOKSHELF PRESENTS
+    </p>
+
+    <div class="writing-studio-decoration" aria-hidden="true">
+      🖋️ ✨ 💌 ✨
+    </div>
+
+    <h3>
+      Darling, <em>you have a story to tell.</em>
+    </h3>
+
+    <p>
+      Maybe it's a love story waiting to unfold.
+      A poem you've been holding close.
+      A letter you never sent.
+      Or simply the thoughts that deserve a place to land.
+      This is your creative little universe, Baddie. 💗
+    </p>
+
+    <button
+      id="createWritingPiece"
+      class="library-action-btn"
+      type="button"
+    >
+      ✨ Start Writing
+    </button>
+
+  </div>
+
+  <!-- WRITING STATISTICS -->
+
+  <div class="writing-studio-stats">
+
+    <article class="writing-studio-stat">
+      <span>🖋️</span>
+      <strong id="writingTotalCount">0</strong>
+      <p>My Pieces</p>
+    </article>
+
+    <article class="writing-studio-stat">
+      <span>🔒</span>
+      <strong id="writingPrivateCount">0</strong>
+      <p>Private Drafts</p>
+    </article>
+
+    <article class="writing-studio-stat">
+      <span>💗</span>
+      <strong id="writingSharedCount">0</strong>
+      <p>Shared Pieces</p>
+    </article>
+
+  </div>
+
+  <!-- MY WRITING COLLECTION -->
+
+  <div class="writing-studio-collection">
+
+    <div class="library-collection-heading">
+      <h3>🎀 My Writing Desk™</h3>
+
+      <div class="writing-studio-controls">
+
+        <label for="writingSearch">
+          Search
+          <input
+            id="writingSearch"
+            type="search"
+            maxlength="150"
+            placeholder="Find your words..."
+            autocomplete="off"
+          >
+        </label>
+
+        <label for="writingCategoryFilter">
+          Category
+          <select id="writingCategoryFilter">
+            <option value="all">All Writing</option>
+            <option value="story">📖 Stories</option>
+            <option value="poetry">🌷 Poetry</option>
+            <option value="letter">💌 Letters</option>
+            <option value="freewriting">☁️ Freewriting</option>
+          </select>
+        </label>
+
+        <label for="writingVisibilityFilter">
+          Visibility
+          <select id="writingVisibilityFilter">
+            <option value="all">All Pieces</option>
+            <option value="private">🔒 Private</option>
+            <option value="shared">💗 Shared</option>
+          </select>
+        </label>
+
+      </div>
+    </div>
+
+    <div
+      id="writingStudioEntries"
+      class="writing-studio-grid"
+      aria-live="polite"
+    >
+      <p class="library-empty-message">
+        🖋️ Your Writing Desk™ is waiting for its first masterpiece.
+        Every great story begins with a single word, Baddie. 💗
+      </p>
+    </div>
+
+  </div>
+
+</section>
+
+<!-- END WRITING STUDIO COLLECTION -->
+ 
+<!-- ==========================================
+     THE CREATIVE CANVAS™
+     CREATE / EDIT WRITING
+     ========================================== -->
+
+<dialog
+  id="writingEditorDialog"
+  class="library-dialog writing-editor-dialog"
+  aria-labelledby="writingEditorHeading"
+>
+  <form id="writingEditorForm">
+
+    <div class="writing-editor-header">
+      <p class="writing-studio-eyebrow">
+        YOUR IMAGINATION. YOUR WORDS. YOUR WORLD.
+      </p>
+
+      <h3 id="writingEditorHeading">
+        🖋️ The Creative Canvas™
+      </h3>
+
+      <p class="library-helper">
+        Write freely, Baddie. Your work will be autosaved. 💗
+      </p>
+    </div>
+
+    <input id="writingEditingId" type="hidden">
+
+    <!-- TITLE -->
+
+    <div class="writing-editor-field">
+      <label for="writingTitle">
+        💌 Give Your Piece a Title
+      </label>
+
+      <input
+        id="writingTitle"
+        type="text"
+        maxlength="150"
+        required
+        placeholder="Once upon a very dramatic Tuesday..."
+      >
+    </div>
+
+    <!-- CATEGORY -->
+
+    <div class="writing-editor-field">
+      <label for="writingCategory">
+        ✨ What Are We Creating?
+      </label>
+
+      <select id="writingCategory" required>
+        <option value="story">📖 Original Story</option>
+        <option value="poetry">🌷 Poetry</option>
+        <option value="letter">💌 Letter</option>
+        <option value="freewriting">☁️ Freewriting</option>
+      </select>
+    </div>
+
+    <!-- FORMATTING -->
+
+    <div class="writing-editor-field">
+
+      <label id="writingContentLabel">
+        🖋️ Let Your Words Flow
+      </label>
+
+      <div
+        class="writing-format-toolbar"
+        role="toolbar"
+        aria-label="Writing formatting tools"
+      >
+
+        <button type="button" data-writing-command="bold"
+                aria-label="Bold" title="Bold">
+          <strong>B</strong>
+        </button>
+
+        <button type="button" data-writing-command="italic"
+                aria-label="Italic" title="Italic">
+          <em>I</em>
+        </button>
+
+        <button type="button" data-writing-command="underline"
+                aria-label="Underline" title="Underline">
+          <u>U</u>
+        </button>
+
+        <button type="button" data-writing-command="heading"
+                aria-label="Heading" title="Heading">
+          H
+        </button>
+
+        <button type="button" data-writing-command="bulletList"
+                aria-label="Bullet list" title="Bullet list">
+          ☷
+        </button>
+
+        <button type="button" data-writing-command="orderedList"
+                aria-label="Numbered list" title="Numbered list">
+          1.
+        </button>
+
+        <button type="button" data-writing-command="blockquote"
+                aria-label="Blockquote" title="Blockquote">
+          ❝
+        </button>
+
+        <button type="button" data-writing-command="clear"
+                aria-label="Clear formatting" title="Clear formatting">
+          ✕
+        </button>
+
+      </div>
+
+      <!-- Structured rich-text editor mounts here -->
+      <div
+        id="writingContentEditor"
+        class="writing-rich-editor"
+        role="textbox"
+        aria-labelledby="writingContentLabel"
+        aria-multiline="true"
+        aria-describedby="writingContentHelp"
+        data-placeholder="Once upon a time..."
+      ></div>
+
+      <p id="writingContentHelp" class="library-helper">
+        Make it bold, make it beautiful, make it yours.
+      </p>
+
+    </div>
+
+    <!-- VISIBILITY -->
+
+    <div class="writing-editor-field">
+      <label for="writingVisibility">
+        🔐 Who Gets to Read This?
+      </label>
+
+      <select id="writingVisibility">
+        <option value="private">
+          🔒 Just Me — Private
+        </option>
+        <option value="shared">
+          💗 Share with TBB Members
+        </option>
+      </select>
+
+      <p class="library-helper">
+        Your writing is private by default.
+        Shared pieces can appear on your Vanity™
+        and Baddie Directory™ profile and receive Love Notes™.
+      </p>
+    </div>
+
+    <!-- SAVE STATUS -->
+
+    <p
+      id="writingEditorStatus"
+      class="library-helper"
+      role="status"
+      aria-live="polite"
+    >
+      Your canvas is ready. 💗
+    </p>
+
+    <!-- ACTIONS -->
+
+    <div class="library-dialog-actions writing-editor-actions">
+
+      <button
+        id="deleteWritingPiece"
+        type="button"
+        hidden
+      >
+        🗑️ Delete Piece
+      </button>
+
+      <button id="cancelWritingEditor" type="button">
+        Close
+      </button>
+
+      <button id="saveWritingPiece" type="submit">
+        Save My Writing 💗
+      </button>
+
+    </div>
+
+  </form>
+</dialog>
+
+<!-- END THE CREATIVE CANVAS™ -->
+ 
+<!-- ==========================================
+     TBB 2.0 — LOVE NOTES™
+     SHARED WRITING & COMMUNITY FEEDBACK
+     ========================================== -->
+
+<dialog
+  id="writingReaderDialog"
+  class="library-dialog writing-reader-dialog"
+  aria-labelledby="writingReaderTitle"
+>
+  <div class="writing-reader-shell">
+
+    <!-- READER HEADER -->
+
+    <div class="writing-reader-header">
+      <p class="writing-studio-eyebrow">
+        THE BADDIE WRITING STUDIO™ PRESENTS
+      </p>
+
+      <span id="writingReaderCategory"
+            class="writing-reader-category"></span>
+
+      <h3 id="writingReaderTitle">
+        A Baddie's Masterpiece
+      </h3>
+
+      <p id="writingReaderAuthor"
+         class="writing-reader-author"></p>
+    </div>
+
+    <!-- WRITING CONTENT -->
+
+    <article
+      id="writingReaderContent"
+      class="writing-reader-content"
+      aria-label="Writing content"
+    ></article>
+
+    <!-- LOVE NOTES -->
+
+    <section
+      class="writing-love-notes"
+      aria-labelledby="writingLoveNotesHeading"
+    >
+      <div class="writing-love-notes-heading">
+        <h4 id="writingLoveNotesHeading">
+          💌 Love Notes™
+        </h4>
+        <p>
+          Because beautiful words deserve a little love.
+        </p>
+      </div>
+
+      <!-- REACTIONS -->
+
+      <div
+        id="writingReactionButtons"
+        class="writing-reaction-buttons"
+        aria-label="React to this writing"
+      >
+        <button type="button"
+                data-writing-reaction="love"
+                aria-pressed="false">
+          💗 Loved It
+          <span data-reaction-count="love">0</span>
+        </button>
+
+        <button type="button"
+                data-writing-reaction="felt_this"
+                aria-pressed="false">
+          🥹 Felt This
+          <span data-reaction-count="felt_this">0</span>
+        </button>
+
+        <button type="button"
+                data-writing-reaction="ate_that"
+                aria-pressed="false">
+          🔥 Ate That
+          <span data-reaction-count="ate_that">0</span>
+        </button>
+
+        <button type="button"
+                data-writing-reaction="beautiful"
+                aria-pressed="false">
+          ✨ Beautiful
+          <span data-reaction-count="beautiful">0</span>
+        </button>
+      </div>
+
+      <!-- COMMENTS -->
+
+      <div class="writing-comments-section">
+
+        <h5>💗 Notes from the Baddies</h5>
+
+        <div
+          id="writingCommentsList"
+          class="writing-comments-list"
+          aria-live="polite"
+        >
+          <p class="library-empty-message">
+            Be the first to leave a little love. 💌
+          </p>
+        </div>
+
+        <form id="writingCommentForm"
+              class="writing-comment-form">
+
+          <label for="writingCommentText">
+            Leave a Love Note™
+          </label>
+
+          <textarea
+            id="writingCommentText"
+            maxlength="2000"
+            rows="3"
+            required
+            placeholder="Baddie, this was EVERYTHING..."
+          ></textarea>
+
+          <button
+            id="submitWritingComment"
+            type="submit"
+            class="library-action-btn"
+          >
+            💌 Send My Love Note
+          </button>
+
+        </form>
+
+      </div>
+
+    </section>
+
+    <!-- STATUS -->
+
+    <p
+      id="writingFeedbackStatus"
+      class="library-helper"
+      role="status"
+      aria-live="polite"
+    ></p>
+
+    <!-- CLOSE -->
+
+    <div class="library-dialog-actions">
+      <button
+        id="closeWritingReader"
+        type="button"
+      >
+        Close 💗
+      </button>
+    </div>
+
+  </div>
+</dialog>
+
+<!-- END LOVE NOTES™ -->
+
+
+
   <footer class="bookshelf-footer">
     THE BADDIES BOOKSHELF ✦ YOUR STORY, YOUR ERA.
   </footer>
@@ -1031,6 +1786,9 @@
 <script type="module" src="js/bookshelf.js"></script>
 <script type="module" src="js/reading-diary.js"></script>
 <script type="module" src="js/diary-decor.js"></script>
+<script type="module" src="js/quote-vault.js"></script>
+<script type="module" src="js/writing-studio.js"></script>
+<script type="module" src="js/writing-feedback.js"></script>
 <script src="js/back-to-top.js" defer></script>
 </body>
 </html>

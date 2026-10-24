@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>The Vanity™ | TBB 2.0</title>
 <link rel="stylesheet" href="css/auth.css">
+<link rel="stylesheet" href="css/writing-reader.css">
 <style>
 :root {
   --accent:#ff4da6;
@@ -185,6 +186,202 @@ input:focus,textarea:focus,button:focus-visible {
 .vanity-diary-entry-content p{margin:0 0 12px}
 .vanity-diary-entry-content ul,.vanity-diary-entry-content ol{padding-left:24px}
 @media(max-width:600px){.vanity-diary-entry{padding:16px}}
+
+
+/* ==========================================
+   QUOTE VAULT™ — VANITY™ PUBLIC QUOTES
+   ========================================== */
+
+.vanity-quote-list {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(min(100%, 290px), 1fr)
+  );
+  gap: 16px;
+}
+
+.vanity-quote-list .quote-vault-card {
+  min-width: 0;
+  padding: 22px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--alt);
+  overflow-wrap: anywhere;
+}
+
+.vanity-quote-list .quote-vault-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.vanity-quote-list .quote-vault-card-icon {
+  color: var(--accent);
+  font-family: Georgia, serif;
+  font-size: 48px;
+  line-height: 1;
+}
+
+.vanity-quote-list .quote-vault-visibility {
+  color: var(--light);
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.vanity-quote-list .quote-vault-text {
+  margin: 14px 0 20px;
+  font-family: Georgia, serif;
+  font-style: italic;
+  font-size: 17px;
+  line-height: 1.8;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.vanity-quote-list .quote-vault-book {
+  color: var(--light);
+  font-weight: bold;
+  font-size: 13px;
+}
+
+.vanity-quote-list .quote-vault-page,
+.vanity-quote-list .quote-vault-date {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.vanity-quote-list .quote-vault-note {
+  margin: 14px 0;
+  padding: 12px;
+  border-left: 3px solid var(--accent);
+  border-radius: 0 10px 10px 0;
+  background: var(--surface);
+  white-space: pre-wrap;
+  line-height: 1.7;
+  font-size: 13px;
+}
+
+.vanity-quote-list > .library-empty-message {
+  grid-column: 1 / -1;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+@media (max-width: 600px) {
+  .vanity-quote-list {
+    grid-template-columns: 1fr;
+  }
+
+  .vanity-quote-list .quote-vault-card {
+    padding: 17px;
+  }
+}
+
+/* END VANITY™ QUOTE STYLES */
+
+/* ==========================================
+   WRITING STUDIO™ — VANITY™ COLLECTION
+   ========================================== */
+
+.vanity-writing-list {
+  display: grid;
+  grid-template-columns:
+    repeat(auto-fit, minmax(min(100%, 290px), 1fr));
+  gap: 16px;
+}
+
+.vanity-writing-list .writing-piece-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 22px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--alt);
+  overflow-wrap: anywhere;
+}
+
+.vanity-writing-list .writing-piece-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.vanity-writing-list .writing-piece-category,
+.vanity-writing-list .writing-piece-visibility {
+  color: var(--light);
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.vanity-writing-list .writing-piece-title {
+  margin: 18px 0 10px;
+  color: var(--text);
+  font-family: Georgia, serif;
+  font-size: 23px;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.vanity-writing-list .writing-piece-preview {
+  flex: 1;
+  margin: 0 0 15px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.8;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.vanity-writing-list .writing-piece-meta {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.vanity-writing-list .writing-piece-actions {
+  margin-top: 15px;
+}
+
+.vanity-writing-list .writing-piece-actions button {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid var(--accent);
+  border-radius: 11px;
+  background: var(--accent);
+  color: #170d15;
+  font: inherit;
+  font-size: 13px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.vanity-writing-list .writing-piece-actions button:hover {
+  filter: brightness(1.1);
+}
+
+.vanity-writing-list > .library-empty-message {
+  grid-column: 1 / -1;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+@media (max-width: 600px) {
+  .vanity-writing-list {
+    grid-template-columns: 1fr;
+  }
+
+  .vanity-writing-list .writing-piece-card {
+    padding: 17px;
+  }
+}
+
+/* END VANITY™ WRITING STUDIO™ STYLES */
+
+
 </style>
 </head>
 <body>
@@ -446,6 +643,81 @@ input:focus,textarea:focus,button:focus-visible {
   </div>
 </section>
 
+
+<!-- ==========================================
+     TBB 2.0 — QUOTE VAULT™
+     PUBLIC VANITY™ COLLECTION
+     ========================================== -->
+
+<section
+  class="section"
+  id="vanityQuoteSection"
+  aria-labelledby="vanityQuoteHeading"
+>
+  <div class="section-head">
+    <h2 id="vanityQuoteHeading">
+      💬 Words Worth Keeping™
+    </h2>
+    <span class="pill">My Public Quote Vault™</span>
+  </div>
+
+  <div class="panel">
+    <p class="muted">
+      The lines that made you feel absolutely everything.
+      A little collection of words you've chosen to share
+      with the Baddies. Private quotes stay private. 💗
+    </p>
+
+    <div
+      id="vanityQuoteEntries"
+      class="vanity-quote-list"
+      aria-live="polite"
+    >
+      Opening your favorite lines... 💌
+    </div>
+  </div>
+</section>
+
+<!-- END PUBLIC QUOTE VAULT™ -->
+ 
+<!-- ==========================================
+     TBB 2.0 — THE BADDIE WRITING STUDIO™
+     SHARED MASTERPIECES ON VANITY™
+     ========================================== -->
+
+<section
+  class="section"
+  id="vanityWritingSection"
+  aria-labelledby="vanityWritingHeading"
+>
+  <div class="section-head">
+    <h2 id="vanityWritingHeading">
+      🖋️ Her Written World™
+    </h2>
+    <span class="pill">My Shared Masterpieces</span>
+  </div>
+
+  <div class="panel">
+    <p class="muted">
+      Stories from my imagination, poetry from my heart,
+      letters worth sharing, and thoughts straight from
+      the Creative Canvas™. 💗
+      Only the pieces I've chosen to share appear here.
+    </p>
+
+    <div
+      id="vanityWritingEntries"
+      class="vanity-writing-list"
+      aria-live="polite"
+    >
+      Opening your masterpieces... 💌
+    </div>
+  </div>
+</section>
+
+<!-- END VANITY™ WRITING STUDIO™ -->
+
+
 <section class="section" id="baddiePost">
   <div class="section-head">
     <h2>📣 The Baddie Post™</h2>
@@ -463,6 +735,8 @@ input:focus,textarea:focus,button:focus-visible {
 <script type="module">
 import { db, requireAccess, logout } from "./js/auth.js";
 import { loadVanityDiary } from "./js/vanity-diary.js";
+import { loadVanityQuotes } from "./js/vanity-quotes.js";
+import { loadVanityWriting } from "./js/vanity-writing.js";
 
 const $ = id => document.getElementById(id);
 const bucket = "tbb-avatars";
@@ -956,8 +1230,10 @@ async function init() {
     }
 
     await loadProfile();
-    await loadAnnouncements();
-    await loadVanityDiary(currentUser.id);
+      await loadAnnouncements();
+      await loadVanityDiary(currentUser.id);
+      await loadVanityQuotes(currentUser.id);
+      await loadVanityWriting(currentUser.id);
 
   } catch (error) {
     notify(error.message,true);
@@ -1005,5 +1281,6 @@ window.addEventListener("pagehide",releasePreviewUrl);
 
 init();
 </script>
+<script type="module" src="js/writing-reader-bootstrap.js"></script>
 </body>
 </html>
