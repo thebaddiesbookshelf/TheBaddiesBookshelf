@@ -3504,3 +3504,68 @@ a {
 /* ==========================================
    END LOVE NOTES™ CSS
    ========================================== */
+
+   /* ==========================================
+   TBB 2.0 — MY BOOK COLLECTION™
+   SCROLLABLE LIBRARY
+   ========================================== */
+
+.my-library-scroll-box {
+  width: 100%;
+  max-height: 650px;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  padding: 20px;
+  margin-top: 16px;
+
+  border: 1px solid var(--border, #65415d);
+  border-radius: 22px;
+
+  background: var(--surface, #241727);
+
+  box-sizing: border-box;
+
+  scrollbar-width: thin;
+  scrollbar-color:
+    var(--accent, #ff4da6)
+    transparent;
+
+  overscroll-behavior: contain;
+}
+
+/* Pretty pink scrollbar */
+
+.my-library-scroll-box::-webkit-scrollbar {
+  width: 9px;
+}
+
+.my-library-scroll-box::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.my-library-scroll-box::-webkit-scrollbar-thumb {
+  background: var(--accent, #ff4da6);
+  border-radius: 20px;
+}
+
+.my-library-scroll-box::-webkit-scrollbar-thumb:hover {
+  background: var(--light, #ffb5da);
+}
+
+/* Keep book cards inside the box */
+
+.my-library-scroll-box .library-book-grid {
+  width: 100%;
+  min-width: 0;
+}
+
+/* Mobile-friendly collection */
+
+@media (max-width: 600px) {
+  .my-library-scroll-box {
+    max-height: 480px;
+    padding: 12px;
+    border-radius: 16px;
+  }
+}

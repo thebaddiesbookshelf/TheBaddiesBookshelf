@@ -220,8 +220,14 @@
     <p class="library-helper">
       Search the TBB catalog to add books to your personal collection.
     </p>
-    <div id="catalogResults" class="library-book-grid"
-         aria-live="polite"></div>
+    <!-- ==========================================
+     FIND YOUR NEXT OBSESSION™
+     TBB CATALOG SEARCH RESULTS
+     ========================================== -->
+
+<div id="catalogResults"
+     class="library-book-grid"
+     aria-live="polite"></div>
 
     <div class="library-collection-heading">
       <h3>🎀 My Book Collection</h3>
@@ -244,8 +250,21 @@
       </label>
     </div>
 
-    <div id="myBookCollection" class="library-book-grid"
-         aria-live="polite"></div>
+    <!-- ==========================================
+     MY BOOK COLLECTION™ — SCROLLABLE LIBRARY
+     ========================================== -->
+
+<div class="my-library-scroll-box"
+     role="region"
+     aria-label="My Book Collection"
+     tabindex="0">
+
+  <div id="myBookCollection"
+       class="library-book-grid"
+       aria-live="polite">
+  </div>
+
+</div>
 
     <!-- BRING YOUR OWN BOOK™ -->
     <dialog id="communityBookDialog" class="library-dialog">
