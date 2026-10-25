@@ -523,6 +523,13 @@
         };
         let user = null, age = 'unverified', active = null, joined = new Set(), emojis = [], posts = [], page = 0, hasMore = false;
         const LIMIT = 15;
+        const CHAT_REFRESH_MS = 3000;
+        let refreshBusy = false;
+        let feedBusy = false;
+        let roomVersion = 0;
+        let refreshTimer = null;
+        // Preserve expanded conversations and unsent replies when new posts arrive.
+        const openConversations = new Set();
         function notice(text, error = false) { $('notice').textContent = text; $('notice').className = 'notice' + (error ? ' error' : ''); $('notice').hidden = false }
         function clearNotice() { $('notice').hidden = true }
         function el(tag, cls, text) { const x = document.createElement(tag); if (cls) x.className = cls; if (text !== undefined) x.textContent = text; return x }
@@ -557,7 +564,10 @@
             if (error) return err(error); await memberships(); await selectRoom('baddie_central');
         }
         async function selectRoom(id) {
-            if (!canSee(id)) return; active = id; page = 0; posts = [];
+            if (!canSee(id)) return;
+            roomVersion++;
+            openConversations.clear();
+            active = id; page = 0; posts = [];
             $('roomTitle').textContent = ROOM[id].name; $('roomSubtitle').textContent = ROOM[id].subtitle;
             $('toggleMembership').hidden = !optional(id);
             if (optional(id)) { $('toggleMembership').textContent = 'Leave this space'; $('toggleMembership').onclick = () => leave(id) }
@@ -565,18 +575,19 @@
         }
         async function loadPosts(append) {
             if (!active) return;
-            const current = active, offset = append ? page * LIMIT : 0;
-            $('feed').replaceChildren(el('div', 'empty', 'Loading the latest bookish tea…'));
+            const current = active, version = roomVersion, offset = append ? page * LIMIT : 0;
+            feedBusy = true;
+            if (!append) $('feed').replaceChildren(el('div', 'empty', 'Loading the latest bookish tea…'));
             const { data, error } = await db.from('tbb_commons_posts')
                 .select('id,commons_id,author_id,body,is_pinned,created_at')
                 .eq('commons_id', current).eq('is_deleted', false)
                 .order('is_pinned', { ascending: false }).order('created_at', { ascending: false })
                 .range(offset, offset + LIMIT - 1);
-            if (current !== active) return;
-            if (error) { err(error); $('feed').replaceChildren(); return }
+            if (current !== active || version !== roomVersion) { feedBusy = false; return; }
+            if (error) { feedBusy = false; err(error); if (!append) $('feed').replaceChildren(); return; }
             if (append) posts.push(...(data || [])); else posts = data || [];
             hasMore = (data || []).length === LIMIT; $('more').hidden = !hasMore;
-            await renderPosts();
+            try { await renderPosts(); } finally { feedBusy = false; }
         }
         async function getProfiles(ids) {
             if (!ids.length) return {};
@@ -631,16 +642,37 @@
                 head.append(identity, button('⚑ Report', 'btn ghost small', () => report('post', p.id))); card.append(head, el('div', 'postbody', p.body));
                 const reactionWrap = el('div', 'reactions'); card.append(reactionWrap);
                 reactionArea(reactionWrap, 'post', p.id, reactions.filter(r => r.post_id === p.id));
-                const section = el('div', 'comments'), open = button('💬 Show Comments', 'btn ghost small', async () => { if (section.dataset.loaded === 'true') { section.hidden = !section.hidden; return } await loadComments(p.id, section) });
-                card.append(open, section); section.hidden = true; feed.append(card);
+                const section = el('div', 'comments');
+                section.dataset.postId = p.id;
+                const open = button('💬 Show Comments', 'btn ghost small', async () => {
+                    if (section.hidden) {
+                        section.hidden = false;
+                        openConversations.add(p.id);
+                        if (section.dataset.loaded !== 'true') await loadComments(p.id, section);
+                    } else {
+                        section.hidden = true;
+                        openConversations.delete(p.id);
+                    }
+                });
+                card.append(open, section);
+                section.hidden = !openConversations.has(p.id);
+                feed.append(card);
+                if (!section.hidden) await loadComments(p.id, section);
             }
         }
         async function loadComments(postId, section) {
-            section.hidden = false; section.replaceChildren(el('div', 'muted', 'Loading comments…'));
+            const oldInput = section.querySelector('textarea');
+            const draft = oldInput?.value || '';
+            const wasFocused = document.activeElement === oldInput;
+            const cursor = wasFocused ? oldInput.selectionStart : null;
+            section.hidden = false;
+            if (section.dataset.loaded !== 'true') section.replaceChildren(el('div', 'muted', 'Loading comments…'));
             const { data, error } = await db.from('tbb_commons_comments').select('id,author_id,body,created_at').eq('post_id', postId).eq('is_deleted', false).order('created_at', { ascending: true }).limit(100);
             if (error) { section.replaceChildren(); return err(error) }
+            if (!section.isConnected || section.dataset.postId !== postId) return;
             section.replaceChildren(); section.dataset.loaded = 'true';
             const comments = data || [];
+            section.dataset.commentSignature = JSON.stringify(comments.map(c => [c.id, c.body, c.created_at]));
             const [profiles, reactions] = await Promise.all([getProfiles(comments.map(c => c.author_id)), getReactions(comments.map(c => c.id), 'comment')]);
             if (!comments.length) section.append(el('p', 'muted', 'No comments yet. Start the conversation!'));
             for (const c of comments) {
@@ -652,6 +684,61 @@
             const send = el('button', 'btn small', 'Post Comment'); send.type = 'submit'; form.append(text, send);
             form.addEventListener('submit', async e => { e.preventDefault(); send.disabled = true; const { error } = await db.from('tbb_commons_comments').insert({ post_id: postId, author_id: user.id, body: text.value.trim() }); send.disabled = false; if (error) return err(error); section.dataset.loaded = 'false'; await loadComments(postId, section) });
             section.append(form);
+            text.value = draft;
+            if (wasFocused) {
+                text.focus({ preventScroll: true });
+                if (cursor !== null) text.setSelectionRange(cursor, cursor);
+            }
+        }
+
+        // Refresh only when content actually changes. Never reload the whole page.
+        async function refreshChat() {
+            if (!active || document.hidden || refreshBusy || feedBusy || !$('app') || $('app').hidden) return;
+            refreshBusy = true;
+            const current = active, version = roomVersion;
+            try {
+                // Include already-loaded pages so new posts do not discard older posts.
+                const { data, error } = await db.from('tbb_commons_posts')
+                    .select('id,commons_id,author_id,body,is_pinned,created_at')
+                    .eq('commons_id', current).eq('is_deleted', false)
+                    .order('is_pinned', { ascending: false }).order('created_at', { ascending: false })
+                    .range(0, (page + 1) * LIMIT - 1);
+                if (error) throw error;
+                if (current !== active || version !== roomVersion || feedBusy) return;
+                const next = data || [];
+                const signature = rows => JSON.stringify(rows.map(p => [p.id, p.body, p.is_pinned, p.created_at]));
+                if (signature(next) !== signature(posts)) {
+                    posts = next;
+                    hasMore = next.length === (page + 1) * LIMIT;
+                    $('more').hidden = !hasMore;
+                    await renderPosts();
+                } else {
+                    // Check only conversations the member has expanded.
+                    for (const section of $('feed').querySelectorAll('.comments[data-post-id]')) {
+                        if (section.hidden || current !== active || version !== roomVersion) continue;
+                        const postId = section.dataset.postId;
+                        const { data: comments, error: commentError } = await db.from('tbb_commons_comments')
+                            .select('id,body,created_at')
+                            .eq('post_id', postId).eq('is_deleted', false)
+                            .order('created_at', { ascending: true }).limit(100);
+                        if (commentError) throw commentError;
+                        const nextSignature = JSON.stringify((comments || []).map(c => [c.id, c.body, c.created_at]));
+                        if (nextSignature !== section.dataset.commentSignature && section.isConnected)
+                            await loadComments(postId, section);
+                    }
+                }
+            } catch (error) {
+                console.warn('Commons auto-refresh will retry:', error.message);
+            } finally {
+                refreshBusy = false;
+            }
+        }
+        function startChatRefresh() {
+            if (refreshTimer !== null) return;
+            refreshTimer = setInterval(refreshChat, CHAT_REFRESH_MS);
+            document.addEventListener('visibilitychange', () => {
+                if (!document.hidden) void refreshChat();
+            });
         }
         async function report(type, id) {
             const reason = prompt('Report reason: harassment, bullying, hate_speech, sexual_content, spam, spoilers, privacy, or other', 'other');
@@ -691,6 +778,7 @@
                 const { data: catalog, error: emojiError } = await db.from('tbb_custom_emojis').select('id,name,shortcode,storage_path').eq('status', 'published').order('display_order', { ascending: true });
                 if (emojiError) console.warn('Emoji catalog unavailable', emojiError.message); emojis = catalog || [];
                 $('app').hidden = false; clearNotice(); await selectRoom(age === 'junior' ? 'junior_central' : 'baddie_central');
+                startChatRefresh();
             } catch (e) { err(e) }
         }
         await init();

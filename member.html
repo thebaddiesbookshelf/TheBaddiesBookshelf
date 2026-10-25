@@ -402,6 +402,14 @@ input:focus,textarea:focus,button:focus-visible {
 }
 
 
+/* PHASE 8 — VANITY MAIL™ UNREAD BADGE */
+.mail-notification-badge {
+  display:inline-flex;align-items:center;justify-content:center;
+  min-width:20px;height:20px;padding:0 5px;border-radius:100px;
+  background:#ff4da6;color:#170d15;font-size:11px;font-weight:900;
+}
+.mail-notification-badge[hidden] { display:none; }
+
 /* ==========================================
    PHASE 6 — FRIENDSHIP PREFERENCES™
    ========================================== */
@@ -574,6 +582,9 @@ input:focus,textarea:focus,button:focus-visible {
   ></span>
 </a>
 
+    <a class="btn" href="vanity-mail.html" aria-label="Vanity Mail inbox" id="vanityMailNav">
+      💌 Vanity Mail™ <span class="mail-notification-badge" id="mailUnreadBadge" hidden></span>
+    </a>
     <button class="btn" id="logout" type="button">Sign Out</button>
   </div>
 </header>
@@ -842,11 +853,21 @@ input:focus,textarea:focus,button:focus-visible {
     </article>
 
     <article class="panel dashboard-card">
-      <div class="symbol">💬</div>
-      <h3>The Commons™</h3>
-      <p>Community discussions and age-appropriate Commons spaces.</p>
-      <div class="status">Dashboard navigation pending</div>
-    </article>
+  <div class="symbol">💬</div>
+
+  <h3>The Commons™</h3>
+
+  <p>
+    The Baddies are chatting, spilling bookish tea,
+    and catching up in their favorite Commons spaces! 💗
+  </p>
+
+  <div class="status">
+    <a href="commons.html">
+      Enter The Commons™ 💬 →
+    </a>
+  </div>
+</article>
 
     <article class="panel dashboard-card">
       <div class="symbol">🎉</div>
@@ -1613,12 +1634,53 @@ async function loadAnnouncements() {
   }
 }
 
+// Phase 8: count only unread incoming messages in accepted conversations.
+// Supabase RLS must restrict reads to conversation participants.
+let mailBadgeBusy = false;
+async function refreshMailBadge() {
+  if (!currentUser || document.hidden || mailBadgeBusy) return;
+  mailBadgeBusy = true;
+  try {
+    const {data:threads,error:threadError} = await db
+      .from("tbb_vm_conversations")
+      .select("id")
+      .eq("status","accepted")
+      .or(`member_a.eq.${currentUser.id},member_b.eq.${currentUser.id}`);
+    if (threadError) throw threadError;
+    let total = 0;
+    const ids = (threads || []).map(row => row.id);
+    // Chunk the filter so large inboxes do not create oversized URLs.
+    for (let i=0;i<ids.length;i+=50) {
+      const {count,error} = await db.from("tbb_vm_messages")
+        .select("id",{count:"exact",head:true})
+        .in("conversation_id",ids.slice(i,i+50))
+        .neq("sender_id",currentUser.id)
+        .is("read_at",null);
+      if (error) throw error;
+      total += count || 0;
+    }
+    const badge = $("mailUnreadBadge");
+    badge.hidden = total === 0;
+    badge.textContent = total > 99 ? "99+" : String(total);
+    $("vanityMailNav").setAttribute("aria-label",
+      total ? `Vanity Mail, ${total} unread messages` : "Vanity Mail inbox");
+  } catch(error) {
+    console.warn("Vanity Mail unread count unavailable:",error.message);
+  } finally { mailBadgeBusy = false; }
+}
+const mailBadgeTimer = setInterval(refreshMailBadge,5000);
+document.addEventListener("visibilitychange",() => {
+  if (!document.hidden) void refreshMailBadge();
+});
+window.addEventListener("pagehide",() => clearInterval(mailBadgeTimer));
+
 async function init() {
   try {
     const access = await requireAccess();
     if (!access) return;
 
     currentUser = access.user;
+    void refreshMailBadge();
     
     await loadFriendPreferences(currentUser.id);
     

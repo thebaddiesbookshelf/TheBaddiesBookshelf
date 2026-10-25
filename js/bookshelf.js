@@ -604,6 +604,105 @@ async function saveEditor(ev) {
   }
 }
 
+/* ==========================================
+   MY BOOKSHELF™
+   REMOVE BOOK FROM MY LIBRARY
+   ========================================== */
+
+let deleteBookBusy = false;
+
+async function removeBookFromLibrary() {
+  if (!user || editBusy || deleteBookBusy) return;
+
+  const id = $('editingEntryId').value;
+
+  const entry = entries.find(e => e.id === id);
+
+  if (!entry) {
+    notify('This reading record could not be found.', true);
+    return;
+  }
+
+  const book = bookForEntry(entry);
+  const title = book.title || 'this book';
+
+  const confirmed = window.confirm(
+    `Remove “${title}” from My Library™?\n\n` +
+    'This will delete your personal reading record, ' +
+    'including its reading status, page progress, ' +
+    'rating, and reading dates.\n\n' +
+    'The book will remain in the shared catalog ' +
+    'for other Baddies.\n\n' +
+    'This action cannot be undone.'
+  );
+
+  if (!confirmed) return;
+
+  deleteBookBusy = true;
+  editBusy = true;
+
+  const deleteButton = $('removeBookEditor');
+  const saveButton = $('saveBookEditor');
+
+  deleteButton.disabled = true;
+  saveButton.disabled = true;
+
+  deleteButton.textContent = 'Removing...';
+
+  let deleted = false;
+
+  try {
+    const { data, error } = await db
+      .from('tbb_bookshelf_entries')
+      .delete()
+      .eq('id', id)
+      .eq('user_id', user.id)
+      .select('id');
+
+    if (error) throw error;
+
+    if (!data?.length) {
+      throw Error(
+        'This book could not be removed from your Library.'
+      );
+    }
+
+    deleted = true;
+
+    $('bookEditor').close();
+
+    await loadCollection();
+
+    await Promise.all([
+      loadShelves(),
+      loadEntryTagAssignments(),
+      stats()
+    ]);
+
+    notify(
+      `“${title}” was removed from My Library™. 💗`
+    );
+
+  } catch (error) {
+    console.error('Remove book from Library:', error);
+
+    notify(
+      deleted
+        ? `“${title}” was removed, but the Library could not fully refresh. Please reload the page.`
+        : error.message || 'Could not remove this book.',
+      true
+    );
+
+  } finally {
+    deleteBookBusy = false;
+    editBusy = false;
+
+    deleteButton.disabled = false;
+    saveButton.disabled = false;
+
+    deleteButton.textContent = '🗑️ Remove from My Library';
+  }
+}
 function actions(ev) {
   const tagButton = ev.target.closest(
     'button[data-tag-entry-id]'
@@ -2156,6 +2255,38 @@ $('bookEditorForm')?.addEventListener(
   'submit',saveEditor
 );
 
+/* ==========================================
+   MY BOOKSHELF™
+   DELETE BUTTON SETUP
+   ========================================== */
+
+const bookshelfSaveButton = $('saveBookEditor');
+
+if (bookshelfSaveButton && !$('removeBookEditor')) {
+  const removeButton = document.createElement('button');
+
+  removeButton.type = 'button';
+  removeButton.id = 'removeBookEditor';
+  removeButton.textContent = '🗑️ Remove from My Library';
+
+  removeButton.style.background = '#62283f';
+  removeButton.style.color = '#fff';
+  removeButton.style.border = '1px solid #e88bad';
+  removeButton.style.borderRadius = '12px';
+  removeButton.style.padding = '12px 16px';
+  removeButton.style.fontWeight = '800';
+  removeButton.style.cursor = 'pointer';
+
+  bookshelfSaveButton.insertAdjacentElement(
+    'afterend',
+    removeButton
+  );
+
+  removeButton.addEventListener(
+    'click',
+    removeBookFromLibrary
+  );
+}
 $('cancelBookEditor')?.addEventListener('click',()=>{
   if(!editBusy) $('bookEditor').close();
 });
