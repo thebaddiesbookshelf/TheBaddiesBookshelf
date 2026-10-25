@@ -247,6 +247,18 @@
       color: #ffb1dd;
     }
 
+    /* Phase 7E — shared Vanity™ member identities */
+    .story-member { display:inline-flex; align-items:center; gap:11px; min-width:0; }
+    .story-avatar { width:46px; height:46px; flex:none; border-radius:50%; border:2px solid #b7659d; background:#44263f; display:grid; place-items:center; overflow:hidden; color:#ffe1f3; font-weight:800; font-size:15px; }
+    .story-avatar img { width:100%; height:100%; object-fit:cover; display:block; }
+    .story-member-info { min-width:0; }
+    .story-member-link { border:0; background:none; padding:0; color:#ffb1dd; font-weight:800; text-align:left; cursor:pointer; overflow-wrap:anywhere; }
+    .story-member-link:hover, .story-member-link:focus-visible { text-decoration:underline; color:#ff8acc; }
+    .story-handle { font-size:12px; color:var(--muted); overflow-wrap:anywhere; }
+    .story-comment-member .story-avatar { width:32px; height:32px; font-size:11px; }
+    .story-comment-member { gap:8px; }
+    .story-comment-member .story-member-info { display:flex; flex-wrap:wrap; align-items:baseline; column-gap:8px; }
+
     .postbody {
       white-space: pre-wrap;
       overflow-wrap: anywhere;
@@ -589,14 +601,8 @@
 
   <script type="module">
 
-    import { createClient } from
-      'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
-
-    // Reuses the existing TBB Supabase project.
-    const db = createClient(
-      'https://rmfmdetdykwfxxfzamhj.supabase.co',
-      'sb_publishable_6UBKZvkvkyPNACqDDNRjNQ_wlgy-Jr2'
-    );
+    // Reuse the existing Phase 6 authentication and Supabase session.
+    import { db, getAccess } from './js/auth.js';
 
     const $ = id => document.getElementById(id);
 
@@ -947,25 +953,92 @@ function setPostType(type) {
     // FEED
     // -------------------------------------------------
 
+    // Phase 7E: use the same profile fields and private avatar bucket
+    // as My Vanity™ and the Baddie Directory™.
+    const avatarUrlCache = new Map();
+
+    async function getAvatarUrl(path) {
+      if (!path || typeof path !== 'string') return null;
+      if (avatarUrlCache.has(path)) return avatarUrlCache.get(path);
+      const { data, error } = await db.storage
+        .from('tbb-avatars')
+        .createSignedUrl(path, 3600);
+      if (error) {
+        console.warn('Cover Story avatar unavailable:', error.message);
+        return null;
+      }
+      const signed = data?.signedUrl || null;
+      if (signed) avatarUrlCache.set(path, signed);
+      return signed;
+    }
+
     async function getProfiles(ids) {
-      if (!ids.length) return {};
+      const unique = [...new Set(ids.filter(Boolean))];
+      if (!unique.length) return {};
 
       const { data, error } = await db
         .from('tbb_profiles')
-        .select('user_id,display_name,username')
-        .in('user_id', [...new Set(ids)]);
+        .select('user_id,display_name,username,avatar_path')
+        .in('user_id', unique);
 
       if (error) {
         console.warn('Profiles unavailable:', error.message);
         return {};
       }
 
-      return Object.fromEntries(
-        (data || []).map(profile => [
-          profile.user_id,
-          profile
-        ])
-      );
+      const profiles = data || [];
+      await Promise.all(profiles.map(async profile => {
+        profile.signedAvatarUrl = await getAvatarUrl(profile.avatar_path);
+      }));
+      return Object.fromEntries(profiles.map(profile => [profile.user_id, profile]));
+    }
+
+    function profileDestination(memberId) {
+      if (!memberId) return null;
+      if (memberId === user?.id) return 'member.html';
+      return 'baddie-directory.html?profile=' + encodeURIComponent(memberId);
+    }
+
+    function memberIdentity(memberId, profile, compact = false) {
+      const name = profile?.display_name?.trim() || 'TBB Baddie';
+      const root = el('div', 'story-member' + (compact ? ' story-comment-member' : ''));
+      const destination = profileDestination(memberId);
+      const avatar = el('span', 'story-avatar');
+      const initials = name.split(/\s+/).slice(0, 2)
+        .map(word => word.charAt(0)).join('').toUpperCase() || '💗';
+      avatar.textContent = initials;
+      if (profile?.signedAvatarUrl) {
+        const image = el('img');
+        image.src = profile.signedAvatarUrl;
+        image.alt = '';
+        image.loading = 'lazy';
+        image.referrerPolicy = 'no-referrer';
+        image.addEventListener('error', () => image.remove(), { once: true });
+        avatar.replaceChildren(image);
+      }
+      const details = el('span', 'story-member-info');
+      const link = el(destination ? 'a' : 'span', 'story-member-link', name);
+      if (destination) {
+        link.href = destination;
+        link.title = memberId === user?.id
+          ? 'Open My Vanity™'
+          : `View ${name}'s Library Card`;
+      }
+      details.append(link);
+      if (!compact && profile?.username) {
+        details.append(el('div', 'story-handle',
+          '@' + profile.username.replace(/^@/, '')));
+      }
+      if (destination) {
+        const avatarLink = el('a');
+        avatarLink.href = destination;
+        avatarLink.setAttribute('aria-label', `View ${name}'s profile`);
+        avatarLink.append(avatar);
+        root.append(avatarLink, details);
+      } else {
+        root.append(avatar, details);
+      }
+      return root;
     }
 
     async function loadPosts(append = false) {
@@ -1034,8 +1107,7 @@ function setPostType(type) {
         const profile = profiles[post.author_id];
 
         identity.append(
-          el('div', 'author',
-            profile?.display_name || 'TBB Baddie'),
+          memberIdentity(post.author_id, profile),
           el('div', 'muted', time(post.created_at)),
           el('div', 'posttype',
             post.post_type === 'poll'
@@ -1464,12 +1536,12 @@ async function renderMedia(postId, container) {
 
         const header = el('div', 'row between');
 
-        header.append(
-          el('span', 'author',
-            (profiles[comment.author_id]?.display_name ||
-              'TBB Baddie') +
-            ' · ' + time(comment.created_at))
+        const commenter = el('div');
+        commenter.append(
+          memberIdentity(comment.author_id, profiles[comment.author_id], true),
+          el('div', 'muted', time(comment.created_at))
         );
+        header.append(commenter);
 
         if (comment.author_id === user.id) {
           header.append(
@@ -1681,37 +1753,18 @@ item.append(replyButton);
 
     async function init() {
       try {
-        const {
-          data: { user: currentUser },
-          error: authError
-        } = await db.auth.getUser();
-
-        if (authError || !currentUser) {
+        const access = await getAccess();
+        if (!access?.user) {
           notice('Please sign in to view Cover Story™.');
-
           const link = el('a', '', ' Go to Baddie Login →');
           link.href = 'login.html';
           $('notice').append(link);
-
           return;
         }
 
-        user = currentUser;
-
-        const { data: membership, error: memberError } =
-          await db
-            .from('tbb_memberships')
-            .select('status')
-            .eq('user_id', user.id)
-            .maybeSingle();
-
-        if (memberError) throw memberError;
-
-        if (membership?.status !== 'approved') {
-          notice(
-            'Your TBB membership must be approved before ' +
-            'you can access Cover Story™.'
-          );
+        user = access.user;
+        if (access.status !== 'approved') {
+          notice('Your TBB membership must be approved before you can access Cover Story™.');
           return;
         }
 

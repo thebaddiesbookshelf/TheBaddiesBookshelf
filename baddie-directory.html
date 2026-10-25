@@ -905,6 +905,21 @@ async function loadDirectory(){
     renderDirectory();
     setStatus("");
 
+    // Phase 7E: direct links from Cover Story™ open this existing
+    // Library Card modal, without introducing another profile page.
+    const requestedId = new URLSearchParams(location.search).get('profile');
+    if (requestedId) {
+      const requestedMember = members.find(member => member.user_id === requestedId);
+      if (requestedMember) {
+        openProfile(requestedMember);
+      } else if (requestedId === currentUser.id) {
+        location.replace('member.html');
+        return;
+      } else {
+        setStatus('That Library Card is not available in the directory. 💗', true);
+      }
+    }
+
   }catch(error){
     console.error(error);
     setStatus(error.message,true);

@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#180d1c">
+  <title>Moderation HQ™ | The Baddies Bookshelf</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{color-scheme:dark;--bg:#130b17;--panel:#25152a;--panel2:#35203b;--line:#805074;--pink:#ff4eae;--text:#fff4fc;--muted:#c9b2c8;--gold:#f5cb87}
+    *{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top left,#492344,transparent 35%),var(--bg);color:var(--text);font:15px/1.5 'DM Sans',sans-serif}
+    a{color:#ffacd9}button,select,textarea{font:inherit}button{cursor:pointer}button:disabled{opacity:.55;cursor:not-allowed}
+    .top{padding:18px clamp(18px,5vw,60px);border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;align-items:center;background:#170d1d}
+    .brand{font-size:21px;font-weight:800;color:#fff;text-decoration:none}.brand span{color:var(--pink)}.nav{display:flex;gap:18px;flex-wrap:wrap}
+    main{max-width:1120px;margin:auto;padding:32px 18px 80px}.eyebrow{color:#ff9bd1;font-size:12px;letter-spacing:2px;font-weight:800;text-transform:uppercase}
+    h1,h2{font-family:'Playfair Display',serif}h1{font-size:clamp(34px,6vw,55px);margin:8px 0}h2{font-size:23px;margin:0 0 12px}
+    .sub{color:var(--muted);margin-top:0}.panel{background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:19px;margin:17px 0;box-shadow:0 8px 25px #0003}
+    .toolbar,.row,.actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.toolbar{justify-content:space-between}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+    .metric{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:16px}.metric strong{display:block;font-size:27px;color:#ffabd8}.metric span{color:var(--muted);font-size:12px}
+    button,.btn{border:1px solid #a56692;border-radius:10px;padding:9px 13px;background:#412749;color:#fff;font-weight:700}
+    button.primary{background:var(--pink);border-color:var(--pink)}button.danger{background:#702b48;border-color:#d57996}
+    select,textarea{background:#160e1b;color:#fff;border:1px solid var(--line);border-radius:10px;padding:10px;width:100%}select{width:auto;max-width:100%}textarea{min-height:80px;resize:vertical}
+    .card{border-top:1px solid #77516f;padding:18px 0}.card:first-child{border-top:0}.meta{color:var(--muted);font-size:12px;overflow-wrap:anywhere}
+    .pill{display:inline-block;border:1px solid #a96c97;border-radius:30px;padding:3px 10px;font-size:12px;font-weight:800;color:#ffc3e4}
+    .preview{white-space:pre-wrap;overflow-wrap:anywhere;background:#170f1c;border:1px solid #65435f;padding:12px;border-radius:10px;margin:10px 0;max-height:240px;overflow:auto}
+    .muted{color:var(--muted)}.notice{border:1px solid #a66a95;border-radius:12px;background:#38223b;padding:12px 15px;margin:15px 0}.error{border-color:#e17c91;background:#48232e}
+    .hidden,[hidden]{display:none!important}.field{display:block;font-weight:700;margin:10px 0 5px}.actions{margin-top:12px}details{margin-top:10px}summary{cursor:pointer;color:#ffb8dd;font-weight:700}
+    .empty{text-align:center;color:var(--muted);padding:20px}.audit-item{padding:12px 0;border-bottom:1px solid #68445e;overflow-wrap:anywhere}
+    @media(max-width:650px){.grid{grid-template-columns:1fr}.panel{padding:15px}.top{align-items:flex-start}}
+  </style>
+</head>
+<body>
+  <header class="top">
+    <a class="brand" href="home.html">THE BADDIES <span>BOOKSHELF</span> ♕</a>
+    <nav class="nav" aria-label="Navigation"><a href="home.html">Home</a><a href="cover-story.html">Cover Story™</a><a href="member.html">My Vanity™</a></nav>
+  </header>
+  <main>
+    <div class="eyebrow">✦ Staff Access Only ✦</div>
+    <h1>🛡️ Moderation <span style="color:var(--pink)">HQ™</span></h1>
+    <p class="sub">Keep our bookshelf safe, respectful, and full of Baddie love. 💗</p>
+    <div id="notice" class="notice" role="status" aria-live="polite">Checking staff access…</div>
+    <div id="app" hidden>
+      <section class="grid" aria-label="Report overview">
+        <div class="metric"><strong id="openCount">—</strong><span>Open reports</span></div>
+        <div class="metric"><strong id="reviewCount">—</strong><span>Under review</span></div>
+        <div class="metric"><strong id="totalCount">—</strong><span>Reports loaded</span></div>
+      </section>
+      <section class="panel">
+        <div class="toolbar"><h2>🚩 Report Queue</h2><button id="refresh" type="button">↻ Refresh</button></div>
+        <div class="toolbar"><label for="filter">Show reports</label><select id="filter"><option value="open">Open</option><option value="reviewed">Reviewed</option><option value="resolved">Resolved</option><option value="dismissed">Dismissed</option><option value="all">All statuses</option></select></div>
+        <p class="meta">Showing up to 100 most recent reports. Report details and moderation actions are staff-only.</p>
+        <div id="reports" aria-live="polite"></div>
+      </section>
+      <section class="panel"><div class="toolbar"><h2>📋 Moderation History</h2><button id="refreshHistory" type="button">↻ Refresh history</button></div><p class="meta">Showing up to 50 recent audit entries.</p><div id="history"></div></section>
+    </div>
+  </main>
+  <script type="module">
+    import { db } from './js/auth.js';
+    const $ = id => document.getElementById(id);
+    const create = (tag, className = '', content) => { const e = document.createElement(tag); if(className)e.className=className; if(content !== undefined)e.textContent=String(content); return e; };
+    let staffUser = null;
+    let reports = [];
+    let busy = false;
+    const allowedStatuses = new Set(['open','reviewed','resolved','dismissed']);
+    const formatDate = value => value ? new Date(value).toLocaleString() : 'Not available';
+    const notice = (message, error=false) => { $('notice').textContent=message; $('notice').className='notice'+(error?' error':''); $('notice').hidden=false; };
+    const clearNotice = () => { $('notice').hidden=true; };
+    const errorMessage = error => error?.message || 'Something went wrong. Please try again.';
+    const setBusy = value => { busy=value; $('refresh').disabled=value; $('refreshHistory').disabled=value; $('filter').disabled=value; };
+    function actionButton(label, onClick, className='') { const b=create('button',className,label); b.type='button'; b.addEventListener('click',onClick); return b; }
+    async function confirmStaff() {
+      const {data:{user},error:authError}=await db.auth.getUser();
+      if(authError || !user) throw new Error('Please sign in to access Moderation HQ™.');
+      const {data:allowed,error}=await db.rpc('tbb_post_is_staff');
+      if(error) throw error;
+      if(allowed !== true) throw new Error('Moderation HQ™ is available to approved TBB admins and staff moderators only.');
+      staffUser=user;
+    }
+    async function loadReports() {
+      if(!staffUser)return;
+      const {data,error}=await db.from('tbb_post_reports')
+        .select('id,reporter_id,post_id,comment_id,reason,details,status,reviewed_by,reviewed_at')
+        .order('id',{ascending:false}).limit(100);
+      if(error)throw error;
+      reports=data||[];
+      $('openCount').textContent=reports.filter(r=>r.status==='open').length;
+      $('reviewCount').textContent=reports.filter(r=>r.status==='reviewed').length;
+      $('totalCount').textContent=reports.length;
+      await renderReports();
+    }
+    async function getPreview(report) {
+      const targetIsPost=Boolean(report.post_id);
+      const targetId=targetIsPost?report.post_id:report.comment_id;
+      if(!targetId)return 'This report has no linked post or comment.';
+      const table=targetIsPost?'tbb_posts':'tbb_post_comments';
+      const {data,error}=await db.from(table).select('body,moderation_status').eq('id',targetId).maybeSingle();
+      if(error)return 'Content preview unavailable. Check staff read permissions.';
+      if(!data)return 'Content unavailable or no longer accessible.';
+      return `Status: ${data.moderation_status || 'unknown'}\n\n${data.body || '(No text content; may be an image or poll.)'}`;
+    }
+    async function reviewReport(report,status) {
+      if(busy)return;
+      if(!['reviewed','resolved','dismissed'].includes(status))return;
+      const reason=window.prompt(`Reason for marking this report ${status}:`);
+      if(reason===null)return;
+      if(!reason.trim() || reason.trim().length>2000){notice('Enter a reason between 1 and 2000 characters.',true);return;}
+      if(!window.confirm(`Mark this report as ${status}?`))return;
+      setBusy(true);
+      try {
+        const {data,error}=await db.rpc('tbb_review_post_report',{p_report_id:report.id,p_status:status,p_reason:reason.trim()});
+        if(error)throw error;
+        if(data!==true)throw new Error('The report was not changed. It may already be closed.');
+        notice(`Report marked ${status}. 💗`);
+        await Promise.all([loadReports(),loadHistory()]);
+      }catch(error){notice(errorMessage(error),true);}finally{setBusy(false);}
+    }
+    async function moderate(report,action) {
+      if(busy)return;
+      const targetId=action.endsWith('_post')?report.post_id:report.comment_id;
+      if(!targetId){notice('This report has no matching target.',true);return;}
+      const reason=window.prompt(`Reason for ${action.replaceAll('_',' ')}:`);
+      if(reason===null)return;
+      if(!reason.trim() || reason.trim().length>2000){notice('Enter a reason between 1 and 2000 characters.',true);return;}
+      if(!window.confirm(`Confirm ${action.replaceAll('_',' ')}? This changes the content moderation status.`))return;
+      setBusy(true);
+      try {
+        const {data,error}=await db.rpc('tbb_moderate_post_content',{p_action:action,p_target_id:targetId,p_reason:reason.trim()});
+        if(error)throw error;
+        if(data!==true)throw new Error('No content was changed. It may already have that status.');
+        notice('Moderation action recorded successfully. 🛡️');
+        await Promise.all([loadReports(),loadHistory()]);
+      }catch(error){notice(errorMessage(error),true);}finally{setBusy(false);}
+    }
+    async function renderReports() {
+      const root=$('reports');root.replaceChildren();
+      const filter=$('filter').value;
+      const selected=reports.filter(r=>filter==='all'||r.status===filter);
+      if(!selected.length){root.append(create('div','empty','No reports in this view, bestie. 💗'));return;}
+      for(const report of selected){
+        const card=create('article','card');
+        const title=create('div','row');
+        title.append(create('strong','',report.post_id?'📖 Reported post':'💬 Reported comment'),create('span','pill',report.status||'unknown'));
+        card.append(title);
+        card.append(create('div','meta',`Report ID: ${report.id}`));
+        card.append(create('div','meta',`Reason: ${report.reason || 'Not specified'}`));
+        if(report.details)card.append(create('div','preview',report.details));
+        card.append(create('div','meta',`Reporter ID: ${report.reporter_id || 'Unavailable'}`));
+        card.append(create('div','meta',`Target ID: ${report.post_id || report.comment_id || 'Unavailable'}`));
+        if(report.reviewed_at)card.append(create('div','meta',`Last reviewed: ${formatDate(report.reviewed_at)}`));
+        const details=create('details');
+        const summary=create('summary','','View reported content');details.append(summary);
+        const preview=create('div','preview','Open to load content preview.');details.append(preview);
+        details.addEventListener('toggle',async()=>{if(details.open){preview.textContent='Loading…';preview.textContent=await getPreview(report);}});
+        card.append(details);
+        const actions=create('div','actions');
+        if(report.status==='open')actions.append(actionButton('👀 Mark Reviewed',()=>reviewReport(report,'reviewed')));
+        if(report.status==='open'||report.status==='reviewed'){
+          actions.append(actionButton('💗 Resolve',()=>reviewReport(report,'resolved'),'primary'));
+          actions.append(actionButton('✕ Dismiss',()=>reviewReport(report,'dismissed')));
+        }
+        if(report.post_id){
+          actions.append(actionButton('🗑️ Remove Post',()=>moderate(report,'remove_post'),'danger'));
+          actions.append(actionButton('↩ Restore Post',()=>moderate(report,'restore_post')));
+        }else if(report.comment_id){
+          actions.append(actionButton('🗑️ Remove Comment',()=>moderate(report,'remove_comment'),'danger'));
+          actions.append(actionButton('↩ Restore Comment',()=>moderate(report,'restore_comment')));
+        }
+        card.append(actions);root.append(card);
+      }
+    }
+    async function loadHistory() {
+      if(!staffUser)return;
+      const root=$('history');root.replaceChildren();
+      const {data,error}=await db.from('tbb_post_moderation_log')
+        .select('actor_id,post_id,comment_id,action,reason').order('id',{ascending:false}).limit(50);
+      if(error){root.append(create('p','muted','History unavailable. Staff read access or log ordering may need review.'));console.warn('Moderation history:',error.message);return;}
+      if(!data?.length){root.append(create('p','empty','No moderation history available.'));return;}
+      for(const item of data){
+        const line=create('div','audit-item');
+        line.append(create('strong','',String(item.action||'Moderation action').replaceAll('_',' ')));
+        line.append(create('div','meta',`Staff: ${item.actor_id || 'Unknown'} · Target: ${item.post_id || item.comment_id || 'Unknown'}`));
+        line.append(create('div','',item.reason||'No reason recorded'));
+        root.append(line);
+      }
+    }
+    $('filter').addEventListener('change',()=>{renderReports().catch(e=>notice(errorMessage(e),true));});
+    $('refresh').addEventListener('click',async()=>{try{setBusy(true);await loadReports();clearNotice();}catch(e){notice(errorMessage(e),true);}finally{setBusy(false);}});
+    $('refreshHistory').addEventListener('click',async()=>{try{setBusy(true);await loadHistory();}catch(e){notice(errorMessage(e),true);}finally{setBusy(false);}});
+    try{
+      await confirmStaff();
+      $('app').hidden=false;
+      clearNotice();
+      await Promise.all([loadReports(),loadHistory()]);
+    }catch(error){$('app').hidden=true;notice(errorMessage(error),true);console.warn('Moderation HQ initialization:',error);}
+  </script>
+</body>
+</html>
