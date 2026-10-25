@@ -1743,15 +1743,38 @@
       });
     }
     async function loadCoverCounts() {
-      const [all, covered] = await Promise.all([
-        db.from('tbb_books').select('id', { count: 'exact', head: true }),
-        db.from('tbb_books').select('id', { count: 'exact', head: true }).or(coverHasArtwork)
-      ]);
-      if (all.error) throw all.error;
-      if (covered.error) throw covered.error;
-      $('coversAssigned').textContent = (covered.count ?? 0).toLocaleString();
-      $('coversMissing').textContent = ((all.count ?? 0) - (covered.count ?? 0)).toLocaleString();
-    }
+  const assigned = $('coversAssigned');
+  const missing = $('coversMissing');
+
+  try {
+    const [all, covered] = await Promise.all([
+      db.from('tbb_books')
+        .select('id', { count: 'exact', head: true }),
+
+      db.from('tbb_books')
+        .select('id', { count: 'exact', head: true })
+        .or(coverHasArtwork)
+    ]);
+
+    if (all.error) throw all.error;
+    if (covered.error) throw covered.error;
+
+    const total = all.count ?? 0;
+    const withCovers = covered.count ?? 0;
+
+    assigned.textContent = withCovers.toLocaleString();
+    missing.textContent = (total - withCovers).toLocaleString();
+
+  } catch (error) {
+    console.error('Cover Closet totals:', error);
+
+    coverStatus(
+      'Cover totals could not load: ' + error.message,
+      true,
+      'coverListStatus'
+    );
+  }
+}
     async function loadCoverBooks() {
       const serial = ++coverSearchSerial;
       const search = $('coverSearch').value.trim();
@@ -2430,6 +2453,135 @@ async function hqLoadEmojis() {
     `${data.length} reaction(s) in your collection. 💋`
   );
 }
+
+    
+    /* ACTIVITIES STUDIO — RESTORED FUNCTIONS */
+
+    function activityReset() {
+      $('activityForm').reset();
+      $('activityId').value = '';
+      $('activitySave').textContent = '💗 Save Activity';
+      studioSetStatus('activityFormStatus', '');
+    }
+
+    async function activityLoad() {
+      studioSetStatus('activityListStatus', 'Loading activities…');
+      $('activityList').replaceChildren();
+
+      try {
+        let q = db.from('tbb_activities')
+          .select('id,title,activity_type,frequency,starts_on,ends_on,description,rules,status,created_at')
+          .order('starts_on', { ascending: false })
+          .limit(200);
+
+        if ($('activityListFilter').value !== 'all') {
+          q = q.eq('status', $('activityListFilter').value);
+        }
+
+        const { data, error } = await q;
+        if (error) throw error;
+
+        studioSetStatus(
+          'activityListStatus',
+          `${data.length} activities shown (newest 200 maximum).`
+        );
+
+        for (const item of data) {
+          const card = document.createElement('article');
+          card.className = 'item';
+
+          card.append(
+            studioElement('h3', item.title),
+            studioElement(
+              'p',
+              `${item.activity_type.replaceAll('_', ' ')} · ${hqLabelFrequency(item.frequency)} · ${item.starts_on} → ${item.ends_on} · ${item.status}`,
+              'muted'
+            )
+          );
+
+          if (item.description) {
+            card.append(studioElement('p', item.description));
+          }
+
+          const actions = document.createElement('div');
+          actions.className = 'hq-item-actions';
+
+          const edit = document.createElement('button');
+          edit.type = 'button';
+          edit.textContent = '✏️ Edit';
+
+          edit.onclick = () => {
+            $('activityId').value = item.id;
+
+            for (const [id, value] of [
+              ['Title', item.title],
+              ['Type', item.activity_type],
+              ['Frequency', item.frequency],
+              ['Status', item.status],
+              ['Start', item.starts_on],
+              ['End', item.ends_on],
+              ['Description', item.description],
+              ['Rules', item.rules]
+            ]) {
+              $('activity' + id).value = value || '';
+            }
+
+            $('activitySave').textContent = '💗 Update Activity';
+            $('activityForm').scrollIntoView({
+              behavior: 'smooth',
+              block: 'start'
+            });
+          };
+
+          actions.append(edit);
+
+          if (item.status !== 'archived') {
+            const archive = document.createElement('button');
+            archive.type = 'button';
+            archive.textContent = 'Archive';
+
+            archive.onclick = async () => {
+              if (!confirm(`Archive ${item.title}?`)) return;
+
+              archive.disabled = true;
+
+              const { error } = await db.from('tbb_activities')
+                .update({
+                  status: 'archived',
+                  updated_by: adminUser.id,
+                  updated_at: new Date().toISOString()
+                })
+                .eq('id', item.id);
+
+              if (error) {
+                studioSetStatus('activityListStatus', error.message, true);
+                archive.disabled = false;
+              } else {
+                if ($('activityId').value === item.id) {
+                  activityReset();
+                }
+                await activityLoad();
+              }
+            };
+
+            actions.append(archive);
+          }
+
+          card.append(actions);
+          $('activityList').append(card);
+        }
+
+        if (!data.length) {
+          $('activityList').append(
+            studioElement('p', 'No activities match this filter.')
+          );
+        }
+
+      } catch (e) {
+        studioSetStatus('activityListStatus', e.message, true);
+      }
+    }
+
 
     async function activitySave(e) {
       e.preventDefault(); const btn = $('activitySave'); btn.disabled = true;
