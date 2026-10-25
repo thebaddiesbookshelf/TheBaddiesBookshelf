@@ -604,7 +604,147 @@ input:focus,textarea:focus,button:focus-visible {
 }
 
 /* END GOLDEN SHELF™ CARD */
+/* ==========================================
+   VANITY™ — PROFILE PICTURE CROP EDITOR
+   ========================================== */
 
+.avatar-crop-editor[hidden] {
+  display: none !important;
+}
+
+.avatar-crop-editor {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.82);
+  backdrop-filter: blur(8px);
+
+  overflow-y: auto;
+}
+
+.avatar-crop-panel {
+  width: min(100%, 520px);
+  max-height: calc(100dvh - 40px);
+  overflow-y: auto;
+
+  padding: 25px;
+  border: 1px solid var(--border);
+  border-radius: 24px;
+
+  background: var(--surface);
+  color: var(--text);
+
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5);
+}
+
+.avatar-crop-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.avatar-crop-heading h3 {
+  margin-top: 8px;
+  color: var(--light);
+  font-size: 25px;
+}
+
+.avatar-crop-heading p {
+  margin: 10px 0 0;
+  font-size: 13px;
+}
+
+.avatar-crop-stage {
+  width: min(100%, 400px);
+  aspect-ratio: 1;
+  margin: 0 auto;
+
+  overflow: hidden;
+  border: 3px solid var(--accent);
+  border-radius: 22px;
+
+  background: var(--alt);
+  box-shadow: 0 0 30px
+    color-mix(in srgb, var(--accent) 20%, transparent);
+
+  touch-action: none;
+  cursor: grab;
+}
+
+.avatar-crop-stage:active {
+  cursor: grabbing;
+}
+
+#avatarCropCanvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+}
+
+.avatar-crop-controls {
+  margin-top: 25px;
+}
+
+.avatar-crop-controls label {
+  display: block;
+  margin-bottom: 12px;
+}
+
+#avatarCropZoom {
+  width: 100%;
+  padding: 0;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.avatar-crop-controls .helper {
+  margin-top: 12px;
+  text-align: center;
+}
+
+.avatar-crop-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 25px;
+}
+
+#avatarCropStatus {
+  display: block;
+  margin-top: 12px;
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  .avatar-crop-editor {
+    padding: 10px;
+  }
+
+  .avatar-crop-panel {
+    padding: 18px;
+    max-height: calc(100dvh - 20px);
+  }
+
+  .avatar-crop-heading h3 {
+    font-size: 21px;
+  }
+
+  .avatar-crop-buttons button {
+    flex: 1;
+  }
+}
+
+/* END VANITY™ PROFILE PICTURE CROP EDITOR */
 </style>
 </head>
 <body>
@@ -715,6 +855,97 @@ input:focus,textarea:focus,button:focus-visible {
             </button>
           </div>
           <span class="helper" id="avatarStatus" role="status"></span>
+          <!-- ==========================================
+     VANITY™ — PROFILE PICTURE CROP EDITOR
+     ========================================== -->
+
+<div
+  id="avatarCropEditor"
+  class="avatar-crop-editor"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="avatarCropTitle"
+  hidden
+>
+  <div class="avatar-crop-panel">
+
+    <div class="avatar-crop-heading">
+      <div>
+        <span class="eyebrow">THE VANITY™</span>
+        <h3 id="avatarCropTitle">✂️ Edit My Picture™</h3>
+        <p class="muted">
+          Zoom, drag, and find your perfect angle, Baddie! 💋
+        </p>
+      </div>
+
+      <button
+        class="btn"
+        id="closeAvatarCrop"
+        type="button"
+        aria-label="Close picture editor"
+      >
+        ✕
+      </button>
+    </div>
+
+    <div class="avatar-crop-stage">
+      <canvas
+        id="avatarCropCanvas"
+        width="400"
+        height="400"
+        aria-label="Profile picture crop preview"
+      ></canvas>
+    </div>
+
+    <div class="avatar-crop-controls">
+      <label for="avatarCropZoom">
+        🔍 Picture Zoom
+      </label>
+
+      <input
+        id="avatarCropZoom"
+        type="range"
+        min="1"
+        max="3"
+        step="0.01"
+        value="1"
+      >
+
+      <p class="helper">
+        Drag your picture to reposition it.
+        Use the slider to zoom in or out.
+      </p>
+    </div>
+
+    <div class="avatar-crop-buttons">
+      <button
+        class="btn"
+        id="cancelAvatarCrop"
+        type="button"
+      >
+        Cancel
+      </button>
+
+      <button
+        class="btn primary"
+        id="saveAvatarCrop"
+        type="button"
+      >
+        Save My Picture 💗
+      </button>
+    </div>
+
+    <p
+      id="avatarCropStatus"
+      class="helper"
+      role="status"
+      aria-live="polite"
+    ></p>
+
+  </div>
+</div>
+
+<!-- END VANITY™ PROFILE PICTURE CROP EDITOR -->
         </div>
 
         <div class="field">
@@ -1435,6 +1666,274 @@ let selectedTheme = "romi";
 let savedAvatarPath = null;
 let previewObjectUrl = null;
 let avatarBusy = false;
+/* ==========================================
+   VANITY™ — PROFILE PICTURE CROP EDITOR
+   ========================================== */
+
+let cropImage = null;
+let cropFile = null;
+let cropObjectUrl = null;
+let cropZoom = 1;
+let cropOffsetX = 0;
+let cropOffsetY = 0;
+let cropDragging = false;
+let cropPointerX = 0;
+let cropPointerY = 0;
+let cropReturnFocus = null;
+
+const CROP_SIZE = 400;
+
+function cropCanvas() {
+  return $("avatarCropCanvas");
+}
+
+function cropContext() {
+  return cropCanvas().getContext("2d");
+}
+
+function cropBaseScale() {
+  if (!cropImage) return 1;
+
+  return Math.max(
+    CROP_SIZE / cropImage.naturalWidth,
+    CROP_SIZE / cropImage.naturalHeight
+  );
+}
+
+function clampCropOffsets() {
+  if (!cropImage) return;
+
+  const scale = cropBaseScale() * cropZoom;
+
+  const width = cropImage.naturalWidth * scale;
+  const height = cropImage.naturalHeight * scale;
+
+  const maxX = Math.max(0, (width - CROP_SIZE) / 2);
+  const maxY = Math.max(0, (height - CROP_SIZE) / 2);
+
+  cropOffsetX = Math.max(-maxX, Math.min(maxX, cropOffsetX));
+  cropOffsetY = Math.max(-maxY, Math.min(maxY, cropOffsetY));
+}
+
+function drawAvatarCrop() {
+  if (!cropImage) return;
+
+  clampCropOffsets();
+
+  const canvas = cropCanvas();
+  const ctx = cropContext();
+
+  const scale = cropBaseScale() * cropZoom;
+
+  const width = cropImage.naturalWidth * scale;
+  const height = cropImage.naturalHeight * scale;
+
+  const x = (CROP_SIZE - width) / 2 + cropOffsetX;
+  const y = (CROP_SIZE - height) / 2 + cropOffsetY;
+
+  ctx.clearRect(0, 0, CROP_SIZE, CROP_SIZE);
+
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = "high";
+
+  ctx.drawImage(cropImage, x, y, width, height);
+}
+
+function cleanupCropImage() {
+  if (cropObjectUrl) {
+    URL.revokeObjectURL(cropObjectUrl);
+    cropObjectUrl = null;
+  }
+
+  cropImage = null;
+  cropFile = null;
+  cropDragging = false;
+}
+
+function closeAvatarCropEditor() {
+  $("avatarCropEditor").hidden = true;
+  document.body.style.overflow = "";
+
+  cleanupCropImage();
+
+  if (cropReturnFocus?.isConnected) {
+    cropReturnFocus.focus();
+  }
+
+  cropReturnFocus = null;
+}
+
+async function openAvatarCropEditor(file) {
+  validateAvatar(file);
+
+  cleanupCropImage();
+
+  cropFile = file;
+  cropZoom = 1;
+  cropOffsetX = 0;
+  cropOffsetY = 0;
+
+  $("avatarCropZoom").value = "1";
+  $("avatarCropStatus").textContent = "";
+
+  cropObjectUrl = URL.createObjectURL(file);
+
+  const image = new Image();
+
+  try {
+    await new Promise((resolve, reject) => {
+      image.onload = resolve;
+      image.onerror = () => reject(
+        new Error("This picture could not be opened.")
+      );
+
+      image.src = cropObjectUrl;
+    });
+
+    if (!image.naturalWidth || !image.naturalHeight) {
+      throw new Error("This picture has invalid dimensions.");
+    }
+
+    cropImage = image;
+
+    drawAvatarCrop();
+
+    cropReturnFocus = document.activeElement;
+
+    $("avatarCropEditor").hidden = false;
+    document.body.style.overflow = "hidden";
+
+    $("closeAvatarCrop").focus();
+
+  } catch (error) {
+    cleanupCropImage();
+    throw error;
+  }
+}
+
+function croppedAvatarBlob() {
+  return new Promise((resolve, reject) => {
+    if (!cropImage) {
+      reject(new Error("Choose a picture to crop first."));
+      return;
+    }
+
+    drawAvatarCrop();
+
+    cropCanvas().toBlob(
+      blob => {
+        if (!blob) {
+          reject(new Error("Could not create your cropped picture."));
+          return;
+        }
+
+        resolve(blob);
+      },
+      "image/jpeg",
+      0.9
+    );
+  });
+}
+
+/* Zoom */
+
+$("avatarCropZoom").addEventListener("input", event => {
+  if (!cropImage) return;
+
+  cropZoom = Number(event.target.value);
+  drawAvatarCrop();
+});
+
+/* Mouse and touch dragging */
+
+cropCanvas().addEventListener("pointerdown", event => {
+  if (!cropImage) return;
+
+  cropDragging = true;
+
+  cropPointerX = event.clientX;
+  cropPointerY = event.clientY;
+
+  cropCanvas().setPointerCapture(event.pointerId);
+});
+
+cropCanvas().addEventListener("pointermove", event => {
+  if (!cropDragging || !cropImage) return;
+
+  const rect = cropCanvas().getBoundingClientRect();
+
+  const scaleX = CROP_SIZE / rect.width;
+  const scaleY = CROP_SIZE / rect.height;
+
+  cropOffsetX += (event.clientX - cropPointerX) * scaleX;
+  cropOffsetY += (event.clientY - cropPointerY) * scaleY;
+
+  cropPointerX = event.clientX;
+  cropPointerY = event.clientY;
+
+  drawAvatarCrop();
+});
+
+function stopCropDragging() {
+  cropDragging = false;
+}
+
+cropCanvas().addEventListener("pointerup", stopCropDragging);
+cropCanvas().addEventListener("pointercancel", stopCropDragging);
+cropCanvas().addEventListener("lostpointercapture", stopCropDragging);
+
+/* Cancel and close */
+
+$("closeAvatarCrop").addEventListener(
+  "click",
+  closeAvatarCropEditor
+);
+
+$("cancelAvatarCrop").addEventListener(
+  "click",
+  closeAvatarCropEditor
+);
+
+$("avatarCropEditor").addEventListener("click", event => {
+  if (event.target === $("avatarCropEditor") && !avatarBusy) {
+    closeAvatarCropEditor();
+  }
+});
+
+document.addEventListener("keydown", event => {
+  if (
+    event.key === "Escape" &&
+    !$("avatarCropEditor").hidden &&
+    !avatarBusy
+  ) {
+    closeAvatarCropEditor();
+  }
+
+  if (
+    event.key === "Tab" &&
+    !$("avatarCropEditor").hidden
+  ) {
+    const focusable = [
+      $("closeAvatarCrop"),
+      $("avatarCropZoom"),
+      $("cancelAvatarCrop"),
+      $("saveAvatarCrop")
+    ].filter(element => !element.disabled);
+
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  }
+});
+
+/* END VANITY™ PROFILE PICTURE CROP EDITOR */
 
 function notify(text, error = false) {
   $("message").textContent = text;
@@ -1609,26 +2108,52 @@ async function uploadAvatar() {
   if (!currentUser || avatarBusy) return;
 
   const file = $("avatarFile").files?.[0];
+
+  if (!file) {
+    $("avatarStatus").textContent = "Choose a picture first.";
+    return;
+  }
+
+  try {
+    await openAvatarCropEditor(file);
+  } catch (error) {
+    $("avatarStatus").textContent = error.message;
+    notify(error.message, true);
+  }
+}
+
+async function saveCroppedAvatar() {
+  if (!currentUser || avatarBusy || !cropImage) return;
+
   let uploadedPath = null;
+  let profileSaved = false;
+
   avatarBusy = true;
+
+  $("saveAvatarCrop").disabled = true;
+  $("cancelAvatarCrop").disabled = true;
+  $("closeAvatarCrop").disabled = true;
   $("uploadAvatar").disabled = true;
   $("removeAvatar").disabled = true;
 
   try {
-    const extension = validateAvatar(file);
-    $("avatarStatus").textContent = "Uploading your picture...";
+    $("avatarCropStatus").textContent =
+      "Preparing your perfect picture... 💗";
 
-    // A unique filename avoids overwriting cached images
-    // and preserves the existing avatar until save succeeds.
+    const blob = await croppedAvatarBlob();
+
     const path =
-      `${currentUser.id}/${crypto.randomUUID()}.${extension}`;
+      `${currentUser.id}/${crypto.randomUUID()}.jpg`;
 
-    const { error:uploadError } = await db.storage
+    $("avatarCropStatus").textContent =
+      "Uploading your picture...";
+
+    const { error: uploadError } = await db.storage
       .from(bucket)
-      .upload(path,file,{
-        contentType:file.type,
-        upsert:false,
-        cacheControl:"3600"
+      .upload(path, blob, {
+        contentType: "image/jpeg",
+        upsert: false,
+        cacheControl: "3600"
       });
 
     if (uploadError) throw uploadError;
@@ -1636,37 +2161,78 @@ async function uploadAvatar() {
     uploadedPath = path;
 
     await saveAvatarPath(path);
+    profileSaved = true;
 
     const oldPath = savedAvatarPath;
+
     savedAvatarPath = path;
     uploadedPath = null;
 
+    // Clear the selected file before closing the editor.
+    $("avatarFile").value = "";
+
+    closeAvatarCropEditor();
+
     await loadAvatar(path);
 
-    $("avatarFile").value = "";
-    $("avatarStatus").textContent = "Picture saved! 💗";
+    $("avatarStatus").textContent =
+      "Your cropped picture is saved! 💗";
+
     notify("Your new profile picture is saved! 💗");
 
-    // Clean up the old picture only after the new one
-    // is safely stored on the member's profile.
-    if (oldPath && oldPath !== path &&
-        oldPath.startsWith(currentUser.id + "/")) {
-      await db.storage.from(bucket).remove([oldPath]);
+    // Only delete the old image after the new profile
+    // reference has been successfully saved.
+    if (
+      oldPath &&
+      oldPath !== path &&
+      oldPath.startsWith(currentUser.id + "/")
+    ) {
+      const { error: removeError } = await db.storage
+        .from(bucket)
+        .remove([oldPath]);
+
+      if (removeError) {
+        console.warn(
+          "Previous avatar cleanup failed:",
+          removeError
+        );
+      }
     }
 
   } catch (error) {
-    // Remove an uploaded file if profile saving failed.
-    if (uploadedPath) {
-      await db.storage.from(bucket).remove([uploadedPath]);
+    // Only remove the new upload if it was NOT
+    // successfully attached to the profile.
+    if (uploadedPath && !profileSaved) {
+      await db.storage
+        .from(bucket)
+        .remove([uploadedPath]);
     }
-    $("avatarStatus").textContent = error.message;
-    notify(error.message,true);
+
+    $("avatarCropStatus").textContent = error.message;
+
+    if (profileSaved) {
+      $("avatarStatus").textContent =
+        "Picture saved, but the preview could not refresh. Reload the page.";
+
+      notify(
+        "Picture saved. Refresh the page to see it.",
+        false
+      );
+    } else {
+      notify(error.message, true);
+    }
+
   } finally {
     avatarBusy = false;
+
+    $("saveAvatarCrop").disabled = false;
+    $("cancelAvatarCrop").disabled = false;
+    $("closeAvatarCrop").disabled = false;
     $("uploadAvatar").disabled = false;
     $("removeAvatar").disabled = false;
   }
 }
+
 
 async function removeAvatar() {
   if (!currentUser || avatarBusy) return;
@@ -2103,6 +2669,10 @@ $("friendRequestsEnabled").addEventListener(
 
 $("uploadAvatar").addEventListener("click",uploadAvatar);
 $("removeAvatar").addEventListener("click",removeAvatar);
+$("saveAvatarCrop").addEventListener(
+  "click",
+  saveCroppedAvatar
+);
 
 document.querySelectorAll(".theme-option").forEach(button => {
   button.addEventListener("click",() => {
@@ -2117,21 +2687,20 @@ document.querySelectorAll(".theme-option").forEach(button => {
   $(id).addEventListener("input",updateCard);
 });
 
-$("avatarFile").addEventListener("change",() => {
+$("avatarFile").addEventListener("change", () => {
   const file = $("avatarFile").files?.[0];
+
   if (!file) return;
 
   try {
     validateAvatar(file);
-    releasePreviewUrl();
-    previewObjectUrl = URL.createObjectURL(file);
-    displayAvatar(previewObjectUrl);
+
     $("avatarStatus").textContent =
-      "Previewing your picture — click Upload Picture to save.";
+      "Picture selected! Click Upload Picture 💗 to crop and save it.";
+
   } catch (error) {
     $("avatarFile").value = "";
     $("avatarStatus").textContent = error.message;
-    loadAvatar(savedAvatarPath);
   }
 });
 

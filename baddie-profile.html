@@ -104,6 +104,55 @@
       background-size: cover;
       background-position: center;
     }
+    /* ============================================
+   TBB — COVER PHOTO STUDIO™
+   ============================================ */
+
+.banner {
+  position: relative;
+}
+
+.cover-edit-btn {
+  position: absolute;
+  right: 18px;
+  bottom: 18px;
+  z-index: 2;
+
+  padding: 10px 16px;
+  border: 1px solid rgba(255, 255, 255, .45);
+  border-radius: 12px;
+
+  background: rgba(24, 10, 28, .82);
+  color: #fff5fc;
+
+  font-family: "DM Sans", sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+
+  backdrop-filter: blur(10px);
+  box-shadow: 0 5px 18px rgba(0, 0, 0, .25);
+
+  transition: background .2s ease, transform .2s ease;
+}
+
+.cover-edit-btn:hover {
+  background: #a32672;
+  transform: translateY(-2px);
+}
+
+.cover-edit-btn:focus-visible {
+  outline: 3px solid #ffb6e1;
+  outline-offset: 3px;
+}
+
+@media (max-width: 600px) {
+  .cover-edit-btn {
+    right: 12px;
+    bottom: 12px;
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+}
 
     .profile-info {
       padding: 0 28px 28px;
@@ -938,7 +987,275 @@
   }
 }
 
+/* ============================================
+   TBB — COVER PHOTO STUDIO™ MODAL
+   ============================================ */
 
+.cover-studio-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+
+  background: rgba(10, 4, 14, 0.88);
+  backdrop-filter: blur(8px);
+
+  overflow-y: auto;
+}
+
+.cover-studio-overlay[hidden] {
+  display: none !important;
+}
+
+.cover-studio-modal {
+  width: 100%;
+  max-width: 720px;
+  max-height: calc(100dvh - 40px);
+
+  overflow-y: auto;
+
+  background: linear-gradient(
+    145deg,
+    #301b35,
+    #1b1020
+  );
+
+  border: 1px solid #a65c90;
+  border-radius: 22px;
+
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.6);
+}
+
+.cover-studio-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 15px;
+
+  padding: 24px 26px 18px;
+
+  border-bottom: 1px solid #ffffff20;
+}
+
+.cover-studio-header h2 {
+  margin: 0 0 6px;
+
+  color: #ffd4ef;
+  font-family: "Playfair Display", serif;
+  font-size: clamp(21px, 4vw, 28px);
+}
+
+.cover-studio-header p {
+  margin: 0;
+  color: #cdb1c9;
+  font-size: 13px;
+}
+
+.cover-studio-close {
+  flex-shrink: 0;
+
+  width: 38px;
+  height: 38px;
+
+  border: 1px solid #875477;
+  border-radius: 50%;
+
+  background: #44263f;
+  color: white;
+
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.cover-studio-close:hover {
+  background: #a32672;
+}
+
+.cover-studio-body {
+  padding: 24px 26px;
+}
+
+.cover-studio-label {
+  display: block;
+
+  margin: 14px 0 9px;
+
+  color: #ffd4ef;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+#coverPhotoFile {
+  display: block;
+  width: 100%;
+
+  padding: 12px;
+
+  border: 1px solid #875477;
+  border-radius: 12px;
+
+  background: #170c1b;
+  color: #fff5fc;
+
+  font: inherit;
+}
+
+#coverPhotoFile::file-selector-button {
+  margin-right: 12px;
+  padding: 9px 12px;
+
+  border: 0;
+  border-radius: 9px;
+
+  background: #ff3ba9;
+  color: #190b17;
+
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.cover-studio-helper {
+  margin: 10px 0 16px;
+
+  color: #cdb1c9;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+#coverCropSection h3 {
+  margin: 22px 0 6px;
+
+  color: #ffd4ef;
+  font-family: "Playfair Display", serif;
+  font-size: 20px;
+}
+
+/* Wide banner cropping area */
+
+.cover-crop-viewport {
+  width: 100%;
+  aspect-ratio: 4 / 1;
+
+  overflow: hidden;
+
+  border: 2px solid #d578ae;
+  border-radius: 14px;
+
+  background: #120916;
+
+  cursor: grab;
+  touch-action: none;
+}
+
+.cover-crop-viewport:active {
+  cursor: grabbing;
+}
+
+#coverCropCanvas {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+}
+
+/* Zoom slider */
+
+#coverZoom {
+  display: block;
+  width: 100%;
+
+  margin: 12px 0 18px;
+
+  accent-color: #ff3ba9;
+  cursor: pointer;
+}
+
+.cover-studio-secondary {
+  padding: 10px 15px;
+
+  border: 1px solid #965c87;
+  border-radius: 11px;
+
+  background: #44263f;
+  color: #fff5fc;
+
+  font: inherit;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.cover-studio-secondary:hover {
+  background: #673052;
+}
+
+.cover-studio-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+
+  padding: 20px 26px;
+
+  border-top: 1px solid #ffffff20;
+}
+
+.cover-studio-footer .btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+#coverStudioStatus {
+  overflow-wrap: anywhere;
+}
+
+/* Mobile adjustments */
+
+@media (max-width: 600px) {
+  .cover-studio-overlay {
+    padding: 10px;
+  }
+
+  .cover-studio-modal {
+    max-height: calc(100dvh - 20px);
+    border-radius: 16px;
+  }
+
+  .cover-studio-header,
+  .cover-studio-body,
+  .cover-studio-footer {
+    padding: 18px;
+  }
+
+  .cover-crop-viewport {
+    aspect-ratio: 3 / 1;
+  }
+
+  .cover-studio-footer button {
+    flex: 1;
+  }
+}
+.cover-save-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.cover-save-options button {
+  flex: 1;
+  min-width: 125px;
+}
+
+.cover-studio-footer button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
   </style>
 </head>
 
@@ -968,7 +1285,147 @@
 
       <section class="profile">
 
-        <div class="banner" id="profileBanner"></div>
+        <div class="banner" id="profileBanner">
+
+        <!-- COVER PHOTO STUDIO™ — OWNER ONLY -->
+        <button
+            type="button"
+            id="editCoverPhoto"
+            class="cover-edit-btn"
+            hidden
+        >
+            📸 Edit Cover Photo
+        </button>
+
+        </div>
+
+        <!-- ============================================
+     TBB — COVER PHOTO STUDIO™ EDITOR
+     ============================================ -->
+
+<div
+  id="coverStudio"
+  class="cover-studio-overlay"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="coverStudioTitle"
+  hidden
+>
+  <div class="cover-studio-modal">
+
+    <div class="cover-studio-header">
+      <div>
+        <h2 id="coverStudioTitle">🎀 Cover Photo Studio™</h2>
+        <p>Make your Baddie Profile™ yours, babe. 💋</p>
+      </div>
+
+      <button
+        type="button"
+        id="closeCoverStudio"
+        class="cover-studio-close"
+        aria-label="Close cover photo editor"
+      >
+        ✕
+      </button>
+    </div>
+
+    <div class="cover-studio-body">
+
+      <label class="cover-studio-label" for="coverPhotoFile">
+        📸 Choose Your Cover Photo
+      </label>
+
+      <input
+        type="file"
+        id="coverPhotoFile"
+        accept="image/jpeg,image/png,image/webp"
+      >
+
+      <p class="cover-studio-helper">
+        JPEG, PNG, or WebP. Maximum 5 MB.
+      </p>
+
+      <div id="coverCropSection" hidden>
+
+        <h3>✂️ Make It Picture Perfect</h3>
+
+        <p class="cover-studio-helper">
+          Drag to reposition your picture. Use the slider
+          to zoom in or out.
+        </p>
+
+        <div class="cover-crop-viewport" id="coverCropViewport">
+          <canvas id="coverCropCanvas"></canvas>
+        </div>
+
+        <label class="cover-studio-label" for="coverZoom">
+          🔍 Zoom
+        </label>
+
+        <input
+          type="range"
+          id="coverZoom"
+          min="1"
+          max="3"
+          step="0.01"
+          value="1"
+        >
+
+        <button
+          type="button"
+          id="resetCoverCrop"
+          class="cover-studio-secondary"
+        >
+          ↺ Reset Position
+        </button>
+
+      </div>
+
+      <p
+        id="coverStudioStatus"
+        class="cover-studio-helper"
+        role="status"
+        aria-live="polite"
+      ></p>
+
+    </div>
+
+    <div class="cover-studio-footer">
+
+      <button
+        type="button"
+        id="removeCoverPhoto"
+        class="cover-studio-secondary"
+      >
+        🗑️ Remove Cover
+      </button>
+
+      <div class="cover-save-options">
+  <button
+    type="button"
+    id="saveOriginalCover"
+    class="cover-studio-secondary"
+    disabled
+  >
+    📸 Save Original
+  </button>
+
+  <button
+    type="button"
+    id="saveCoverPhoto"
+    class="btn"
+    disabled
+  >
+    ✂️ Save Cropped
+  </button>
+</div>
+
+    </div>
+
+  </div>
+</div>
+
+<!-- END COVER PHOTO STUDIO™ -->
 
         <div class="profile-info">
 
@@ -1326,6 +1783,661 @@
 
 
     const $ = id => document.getElementById(id);
+    /* ============================================
+   TBB — COVER PHOTO STUDIO™
+   STEP 5: OPEN / CLOSE CONTROLS
+   ============================================ */
+
+let coverStudioPreviousFocus = null;
+
+function openCoverStudio() {
+  // Never allow the editor to open for another Baddie's profile.
+  if (
+    !currentUser?.id ||
+    !profile?.user_id ||
+    profile.user_id !== currentUser.id
+  ) {
+    return;
+  }
+
+  coverStudioPreviousFocus = document.activeElement;
+
+  $("coverStudio").hidden = false;
+
+  $("coverStudioStatus").textContent = "";
+  $("coverPhotoFile").value = "";
+  $("coverCropSection").hidden = true;
+  $("saveCoverPhoto").disabled = true;
+  $("saveOriginalCover").disabled = true;
+
+  document.body.style.overflow = "hidden";
+
+  $("closeCoverStudio").focus();
+}
+
+function closeCoverStudio() {
+  if (coverStudioBusy) return;
+
+  $("coverStudio").hidden = true;
+
+  document.body.style.overflow = "";
+
+  $("coverPhotoFile").value = "";
+  $("coverCropSection").hidden = true;
+  $("coverStudioStatus").textContent = "";
+
+  if (coverStudioPreviousFocus?.isConnected) {
+    coverStudioPreviousFocus.focus();
+  }
+
+  coverStudioPreviousFocus = null;
+}
+
+// Open when the profile owner clicks Edit Cover Photo.
+$("editCoverPhoto").addEventListener("click", openCoverStudio);
+
+// Close using the X button.
+$("closeCoverStudio").addEventListener("click", closeCoverStudio);
+
+// Close by clicking the dark area outside the popup.
+$("coverStudio").addEventListener("click", event => {
+  if (event.target === $("coverStudio")) {
+    closeCoverStudio();
+  }
+});
+
+// Close by pressing Escape.
+document.addEventListener("keydown", event => {
+  if (event.key === "Escape" && !$("coverStudio").hidden) {
+    closeCoverStudio();
+  }
+});
+/* ============================================
+   TBB — COVER PHOTO STUDIO™
+   STEP 6: IMAGE CROP, ZOOM & DRAG
+   ============================================ */
+
+let coverCropImage = null;
+let coverCropObjectUrl = null;
+let coverCropZoom = 1;
+let coverCropX = 0;
+let coverCropY = 0;
+let coverCropDragging = false;
+let coverCropPointerX = 0;
+let coverCropPointerY = 0;
+
+const COVER_CROP_WIDTH = 1200;
+const COVER_CROP_HEIGHT = 300;
+const COVER_MAX_FILE_SIZE = 5 * 1024 * 1024;
+
+function coverCropLimits() {
+  if (!coverCropImage) return null;
+
+  const baseScale = Math.max(
+    COVER_CROP_WIDTH / coverCropImage.naturalWidth,
+    COVER_CROP_HEIGHT / coverCropImage.naturalHeight
+  );
+
+  const scale = baseScale * coverCropZoom;
+
+  const width = coverCropImage.naturalWidth * scale;
+  const height = coverCropImage.naturalHeight * scale;
+
+  return {
+    width,
+    height,
+    maxX: Math.max(0, (width - COVER_CROP_WIDTH) / 2),
+    maxY: Math.max(0, (height - COVER_CROP_HEIGHT) / 2)
+  };
+}
+
+function drawCoverCrop() {
+  if (!coverCropImage) return;
+
+  const canvas = $("coverCropCanvas");
+  const context = canvas.getContext("2d");
+
+  if (!context) return;
+
+  canvas.width = COVER_CROP_WIDTH;
+  canvas.height = COVER_CROP_HEIGHT;
+
+  const limits = coverCropLimits();
+  if (!limits) return;
+
+  coverCropX = Math.max(
+    -limits.maxX,
+    Math.min(limits.maxX, coverCropX)
+  );
+
+  coverCropY = Math.max(
+    -limits.maxY,
+    Math.min(limits.maxY, coverCropY)
+  );
+
+  context.clearRect(
+    0,
+    0,
+    COVER_CROP_WIDTH,
+    COVER_CROP_HEIGHT
+  );
+
+  context.imageSmoothingEnabled = true;
+  context.imageSmoothingQuality = "high";
+
+  context.drawImage(
+    coverCropImage,
+    (COVER_CROP_WIDTH - limits.width) / 2 + coverCropX,
+    (COVER_CROP_HEIGHT - limits.height) / 2 + coverCropY,
+    limits.width,
+    limits.height
+  );
+}
+
+function resetCoverCropPosition() {
+  coverCropZoom = 1;
+  coverCropX = 0;
+  coverCropY = 0;
+
+  $("coverZoom").value = "1";
+
+  drawCoverCrop();
+}
+
+function clearCoverCropImage() {
+  coverCropImage = null;
+  coverCropDragging = false;
+
+  if (coverCropObjectUrl) {
+    URL.revokeObjectURL(coverCropObjectUrl);
+    coverCropObjectUrl = null;
+  }
+
+  const canvas = $("coverCropCanvas");
+  const context = canvas.getContext("2d");
+
+  if (context) {
+    context.clearRect(0, 0, canvas.width, canvas.height);
+  }
+
+  $("coverCropSection").hidden = true;
+  $("saveCoverPhoto").disabled = true;
+  $("saveOriginalCover").disabled = true;
+}
+
+// Choose an image.
+$("coverPhotoFile").addEventListener("change", async event => {
+  const file = event.target.files?.[0];
+
+  clearCoverCropImage();
+
+  if (!file) return;
+
+  if (
+    !["image/jpeg", "image/png", "image/webp"].includes(file.type)
+  ) {
+    $("coverStudioStatus").textContent =
+      "Please choose a JPEG, PNG, or WebP image.";
+    return;
+  }
+
+  if (file.size > COVER_MAX_FILE_SIZE) {
+    $("coverStudioStatus").textContent =
+      "Your cover photo must be 5 MB or smaller.";
+    return;
+  }
+
+  $("coverStudioStatus").textContent = "Preparing your cover photo...";
+
+  const objectUrl = URL.createObjectURL(file);
+  coverCropObjectUrl = objectUrl;
+
+  const image = new Image();
+
+  try {
+    await new Promise((resolve, reject) => {
+      image.onload = resolve;
+      image.onerror = reject;
+      image.src = objectUrl;
+    });
+
+    // Ignore an image that finished loading after another was selected.
+    if (coverCropObjectUrl !== objectUrl) return;
+
+    if (!image.naturalWidth || !image.naturalHeight) {
+      throw new Error("Invalid image dimensions.");
+    }
+
+    coverCropImage = image;
+
+    coverCropImage = image;
+
+    $("coverCropSection").hidden = false;
+    $("saveCoverPhoto").disabled = false;
+    $("saveOriginalCover").disabled = false;
+
+    resetCoverCropPosition();
+
+    $("coverStudioStatus").textContent =
+      "Looking good! Drag to reposition or zoom to adjust. 💗";
+  } catch (error) {
+    if (coverCropObjectUrl !== objectUrl) return;
+
+    clearCoverCropImage();
+
+    $("coverStudioStatus").textContent =
+      "This image couldn't be opened. Please try another.";
+  }
+});
+
+// Zoom.
+$("coverZoom").addEventListener("input", event => {
+  if (!coverCropImage) return;
+
+  coverCropZoom = Number(event.target.value);
+
+  drawCoverCrop();
+});
+
+// Reset crop.
+$("resetCoverCrop").addEventListener(
+  "click",
+  resetCoverCropPosition
+);
+
+// Start dragging.
+$("coverCropViewport").addEventListener(
+  "pointerdown",
+  event => {
+    if (!coverCropImage) return;
+
+    coverCropDragging = true;
+
+    coverCropPointerX = event.clientX;
+    coverCropPointerY = event.clientY;
+
+    $("coverCropViewport").setPointerCapture(event.pointerId);
+  }
+);
+
+// Drag to reposition.
+$("coverCropViewport").addEventListener(
+  "pointermove",
+  event => {
+    if (!coverCropDragging || !coverCropImage) return;
+
+    const viewport = $("coverCropViewport");
+    const rect = viewport.getBoundingClientRect();
+
+    if (!rect.width || !rect.height) return;
+
+    const dx = event.clientX - coverCropPointerX;
+    const dy = event.clientY - coverCropPointerY;
+
+    coverCropX += dx * (COVER_CROP_WIDTH / rect.width);
+    coverCropY += dy * (COVER_CROP_HEIGHT / rect.height);
+
+    coverCropPointerX = event.clientX;
+    coverCropPointerY = event.clientY;
+
+    drawCoverCrop();
+  }
+);
+
+// Stop dragging.
+function stopCoverCropDragging() {
+  coverCropDragging = false;
+}
+
+$("coverCropViewport").addEventListener(
+  "pointerup",
+  stopCoverCropDragging
+);
+
+$("coverCropViewport").addEventListener(
+  "pointercancel",
+  stopCoverCropDragging
+);
+
+$("coverCropViewport").addEventListener(
+  "lostpointercapture",
+  stopCoverCropDragging
+);
+/* ============================================
+   TBB — COVER PHOTO STUDIO™
+   STEP 8: SAVE ORIGINAL, SAVE CROPPED, REMOVE
+   ============================================ */
+
+let coverStudioBusy = false;
+
+const COVER_BUCKET = "tbb-avatars";
+
+const COVER_DEFAULT_BACKGROUND =
+  "linear-gradient(135deg, #a32672, #38183c 65%, #22112c)";
+
+function coverStudioIsOwner() {
+  return Boolean(
+    currentUser?.id &&
+    profile?.user_id &&
+    currentUser.id === profile.user_id
+  );
+}
+
+function setCoverStudioBusy(busy) {
+  coverStudioBusy = busy;
+
+  $("saveOriginalCover").disabled =
+    busy || !coverCropImage;
+
+  $("saveCoverPhoto").disabled =
+    busy || !coverCropImage;
+
+  $("removeCoverPhoto").disabled = busy;
+  $("coverPhotoFile").disabled = busy;
+  $("closeCoverStudio").disabled = busy;
+  $("coverZoom").disabled = busy;
+  $("resetCoverCrop").disabled = busy;
+}
+
+function showCoverStudioMessage(message) {
+  $("coverStudioStatus").textContent = message;
+}
+
+function coverFileExtension(type) {
+  const extensions = {
+    "image/jpeg": "jpg",
+    "image/png": "png",
+    "image/webp": "webp"
+  };
+
+  return extensions[type] || null;
+}
+
+function croppedCoverBlob() {
+  return new Promise((resolve, reject) => {
+    if (!coverCropImage) {
+      reject(new Error("Choose a photo first."));
+      return;
+    }
+
+    // Ensure the latest zoom and position are rendered.
+    drawCoverCrop();
+
+    $("coverCropCanvas").toBlob(
+      blob => {
+        if (blob) {
+          resolve(blob);
+        } else {
+          reject(new Error("Could not prepare cropped image."));
+        }
+      },
+      "image/webp",
+      0.9
+    );
+  });
+}
+
+async function displaySavedCover(path) {
+  if (!path) {
+    $("profileBanner").style.backgroundImage =
+      COVER_DEFAULT_BACKGROUND;
+
+    return;
+  }
+
+  const url = await signedUrl(COVER_BUCKET, path);
+
+  if (!url) {
+    throw new Error("Could not load the saved cover photo.");
+  }
+
+  $("profileBanner").style.backgroundImage =
+    `url("${url}")`;
+}
+
+async function saveCoverPhotoToSupabase(useCrop) {
+  if (!coverStudioIsOwner()) {
+    showCoverStudioMessage(
+      "Only the profile owner can change this cover photo."
+    );
+    return;
+  }
+
+  if (coverStudioBusy) return;
+
+  const originalFile = $("coverPhotoFile").files?.[0];
+
+  if (!originalFile || !coverCropImage) {
+    showCoverStudioMessage("Choose a cover photo first.");
+    return;
+  }
+
+  if (originalFile.size > COVER_MAX_FILE_SIZE) {
+    showCoverStudioMessage(
+      "Your original image must be 5 MB or smaller."
+    );
+    return;
+  }
+
+  const previousPath = profile.banner_path || null;
+  let newPath = null;
+  let profileUpdated = false;
+
+  setCoverStudioBusy(true);
+  showCoverStudioMessage("Saving your cover photo... 💗");
+
+  try {
+    let uploadBody;
+    let contentType;
+
+    if (useCrop) {
+      uploadBody = await croppedCoverBlob();
+      contentType = "image/webp";
+    } else {
+      uploadBody = originalFile;
+      contentType = originalFile.type;
+    }
+
+    const extension = coverFileExtension(contentType);
+
+    if (!extension) {
+      throw new Error("Unsupported image format.");
+    }
+
+    const uniqueId = crypto.randomUUID();
+
+    // Storage policy requires the member's UUID
+    // as the first folder in the object path.
+    newPath =
+      `${currentUser.id}/covers/cover-${uniqueId}.${extension}`;
+
+    const { error: uploadError } = await db.storage
+      .from(COVER_BUCKET)
+      .upload(newPath, uploadBody, {
+        contentType,
+        upsert: false,
+        cacheControl: "3600"
+      });
+
+    if (uploadError) {
+      throw uploadError;
+    }
+
+    // Update only this member's banner_path.
+    const { data: updatedProfile, error: updateError } =
+      await db
+        .from("tbb_profiles")
+        .update({
+          banner_path: newPath
+        })
+        .eq("user_id", currentUser.id)
+        .select("banner_path")
+        .single();
+
+    if (updateError) {
+      throw updateError;
+    }
+
+    if (updatedProfile?.banner_path !== newPath) {
+      throw new Error("Cover photo update was not confirmed.");
+    }
+
+    profileUpdated = true;
+    profile.banner_path = newPath;
+
+    // Update the banner without reloading the whole page.
+    await displaySavedCover(newPath);
+
+    // Old cover files are deleted only if they are inside
+    // this member's dedicated covers folder.
+    if (
+      previousPath &&
+      previousPath !== newPath &&
+      previousPath.startsWith(
+        `${currentUser.id}/covers/`
+      )
+    ) {
+      const { error: cleanupError } = await db.storage
+        .from(COVER_BUCKET)
+        .remove([previousPath]);
+
+      if (cleanupError) {
+        console.warn(
+          "Old cover cleanup failed:",
+          cleanupError.message
+        );
+      }
+    }
+
+        setCoverStudioBusy(false);
+    closeCoverStudio();
+  } catch (error) {
+    console.error("Cover photo save failed:", error);
+
+    // If upload succeeded but database update failed,
+    // clean up the newly uploaded, unreferenced file.
+    if (newPath && !profileUpdated) {
+      const { error: cleanupError } = await db.storage
+        .from(COVER_BUCKET)
+        .remove([newPath]);
+
+      if (cleanupError) {
+        console.warn(
+          "Unreferenced cover cleanup failed:",
+          cleanupError.message
+        );
+      }
+    }
+
+    showCoverStudioMessage(
+      error?.message ||
+      "Something went wrong saving your cover photo."
+    );
+  } finally {
+    setCoverStudioBusy(false);
+  }
+}
+
+async function removeSavedCoverPhoto() {
+  if (!coverStudioIsOwner()) {
+    showCoverStudioMessage(
+      "Only the profile owner can remove this cover photo."
+    );
+    return;
+  }
+
+  if (coverStudioBusy) return;
+
+  const previousPath = profile.banner_path || null;
+
+  if (!previousPath) {
+    showCoverStudioMessage(
+      "You don't have a saved cover photo to remove."
+    );
+    return;
+  }
+
+  const confirmed = window.confirm(
+    "Remove your cover photo and restore the original banner?"
+  );
+
+  if (!confirmed) return;
+
+  setCoverStudioBusy(true);
+  showCoverStudioMessage("Removing your cover photo...");
+
+  try {
+    // Clear the database reference first.
+    const { data: updatedProfile, error: updateError } =
+      await db
+        .from("tbb_profiles")
+        .update({
+          banner_path: null
+        })
+        .eq("user_id", currentUser.id)
+        .select("banner_path")
+        .single();
+
+    if (updateError) {
+      throw updateError;
+    }
+
+    if (updatedProfile?.banner_path !== null) {
+      throw new Error("Cover removal was not confirmed.");
+    }
+
+    profile.banner_path = null;
+
+    await displaySavedCover(null);
+
+    // Only delete files in the dedicated cover folder.
+    // Never touch avatars or other image assets.
+    if (
+      previousPath.startsWith(
+        `${currentUser.id}/covers/`
+      )
+    ) {
+      const { error: deleteError } = await db.storage
+        .from(COVER_BUCKET)
+        .remove([previousPath]);
+
+      if (deleteError) {
+        console.warn(
+          "Cover file cleanup failed:",
+          deleteError.message
+        );
+      }
+    }
+
+        setCoverStudioBusy(false);
+    closeCoverStudio();
+  } catch (error) {
+    console.error("Cover photo removal failed:", error);
+
+    showCoverStudioMessage(
+      error?.message ||
+      "Could not remove your cover photo."
+    );
+  } finally {
+    setCoverStudioBusy(false);
+  }
+}
+
+// Save original without cropping.
+$("saveOriginalCover").addEventListener("click", () => {
+  saveCoverPhotoToSupabase(false);
+});
+
+// Save the edited canvas.
+$("saveCoverPhoto").addEventListener("click", () => {
+  saveCoverPhotoToSupabase(true);
+});
+
+// Remove existing cover.
+$("removeCoverPhoto").addEventListener(
+  "click",
+  removeSavedCoverPhoto
+);
 
     let currentUser = null;
     let profile = null;
@@ -1812,6 +2924,9 @@ async function loadSharedPages(profileUserId, isOwner) {
 
       
         const isOwner = profile.user_id === currentUser.id;
+
+        // Cover Photo Studio™ — only the profile owner can edit.
+        $("editCoverPhoto").hidden = !isOwner;
 
         loadReadingTab(profile, isOwner);
         loadAboutTab(profile, isOwner);
