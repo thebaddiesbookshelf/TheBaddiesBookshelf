@@ -314,7 +314,12 @@
         return;
       }
       let status = 'pending'; const { data: membership } = await supabase.from('tbb_memberships').select('status').eq('user_id', user.id).maybeSingle(); if (membership?.status) status = membership.status;
-      $('accountMessage').textContent = status === 'approved' ? 'You are signed in and your membership is approved! Your Commons access will depend on admin-verified age permissions.' : 'You are signed in. Your membership status is ' + status + '. An admin must approve your account before you can enter member-only areas.';
+      if (status === 'approved') {
+         $('accountMessage').textContent = 'Membership approved! Opening The Vanity™…';
+         window.location.replace(new URL('member.html', window.location.href).href);
+         return;
+       }
+       $('accountMessage').textContent = 'You are signed in. Your membership status is ' + status + '. An admin must approve your account before you can enter member-only areas.';
     }
     signinForm.addEventListener('submit', async e => { e.preventDefault(); busy(signinForm, true); clearMessage(); try { const { error } = await supabase.auth.signInWithPassword({ email: $('signinEmail').value.trim(), password: $('signinPassword').value }); if (error) throw error; message('Welcome back, bestie! ♡'); await showSession() } catch (err) { message(err.message, true) } finally { busy(signinForm, false) } });
     signupForm.addEventListener('submit', async e => {
