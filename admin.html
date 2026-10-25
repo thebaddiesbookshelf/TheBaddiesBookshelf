@@ -550,6 +550,25 @@
     section[id] {
       scroll-margin-top: 22px
     }
+
+    
+.challenge-studio-link {
+  display: inline-block;
+  padding: 11px 17px;
+  margin: 5px 7px 5px 0;
+  border: 1px solid #ff64bc;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #ff2ba6, #b61882);
+  color: white;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.challenge-studio-link:hover {
+  color: white;
+  filter: brightness(1.15);
+}
+
   </style>
 </head>
 
@@ -567,7 +586,8 @@
         <a href="#moderationSuite">🛡️ Moderation</a><a href="cover-story-moderation.html">🎬 Cover Story Reports</a><a href="staff.html">🛡️ Staff Desk</a><a href="#coverCloset">📚
           Cover Closet</a>
         <a href="#activitiesStudio">🎲 Activities</a><a href="#roleDesk">💌 Role Desk</a><a href="#baddiePost">💌 Baddie
-          Post</a>
+          Post</a>       
+      <a href="#challengeDesignStudio">🎨 Challenge Design Studio</a>
         <a href="#emojiVault">💋 Emoji Vault</a><a href="#headquarters">⚙️ Headquarters</a>
       </nav>
     </header>
@@ -841,6 +861,120 @@
         completion, and member progress will be connected in the next activity build; saving a plan does not yet create
         a playable board.</p>
     </section>
+    
+<!-- ==========================================
+     PHASE 10 — CHALLENGE DESIGN STUDIO™
+     ========================================== -->
+
+<section
+  class="admin-card"
+  id="challengeDesignStudio"
+>
+  <h2>🎨 The Challenge Design Studio™</h2>
+
+  <p>
+    Welcome to your no-code challenge headquarters,
+    Baddie! 💗 Create, customize, and manage
+    Bingo and A–Z reading challenges without
+    rebuilding your website every month.
+  </p>
+
+  <div class="hq-grid">
+
+    <div class="hq-metric">
+      <span>Draft Challenges</span>
+      <strong id="challengeDraftCount">—</strong>
+    </div>
+
+    <div class="hq-metric">
+      <span>Published Challenges</span>
+      <strong id="challengePublishedCount">—</strong>
+    </div>
+
+    <div class="hq-metric">
+      <span>Challenge Templates</span>
+      <strong id="challengeTemplateCount">—</strong>
+    </div>
+
+  </div>
+
+  <div class="hq-form">
+
+    <h3>💗 Create Something Cute</h3>
+
+    <p class="hq-small">
+      Choose a challenge type to open its builder.
+      Customize prompts, colors, emojis, dates,
+      and member experience.
+    </p>
+
+    
+    <a
+      href="challenge-studio.html?type=bingo"
+      class="challenge-studio-link"
+    >
+      🎀 Create Bingo
+    </a>
+
+    <a
+      href="challenge-studio.html?type=az"
+      class="challenge-studio-link"
+    >
+      🔤 Create A–Z
+    </a>
+
+
+    </div>
+
+    <p class="hq-small">
+      The builders will become available when
+      the editor is connected.
+    </p>
+
+  </div>
+
+  <h3>👑 Your Challenge Collection</h3>
+
+  <div class="hq-toolbar">
+
+    <label>
+      <strong>Show challenges</strong>
+
+      <select id="challengeListFilter">
+        <option value="all">All challenges</option>
+        <option value="draft">Drafts</option>
+        <option value="scheduled">Scheduled</option>
+        <option value="published">Published</option>
+        <option value="archived">Archived</option>
+        <option value="templates">Templates</option>
+      </select>
+    </label>
+
+    <button
+      type="button"
+      id="challengeRefresh"
+      disabled
+    >
+      ↻ Refresh Challenges
+    </button>
+
+  </div>
+
+  <p
+    id="challengeStudioStatus"
+    class="hq-small"
+    role="status"
+  >
+    Challenge editor setup in progress.
+  </p>
+
+  <div
+    id="challengeCollection"
+    aria-live="polite"
+  ></div>
+
+</section>
+
     <section class="admin-card" id="roleDesk">
       <h2>💌 The Role Desk™</h2>
       <p>Review requests for <strong>Golden Shelf™</strong> and <strong>TBB Team Member (Staff)</strong>. Staff means
@@ -2044,7 +2178,7 @@ $("emojiUploadForm").onsubmit = async event => {
     display_order: 0,
     created_by: access.user.id
   });
-  
+
     if (saveError) {
       const { error: cleanupError } = await db.storage
         .from(emojiBucket)

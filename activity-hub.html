@@ -1,0 +1,406 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Activity Hub™ | TBB</title>
+<link rel="stylesheet" href="css/auth.css">
+
+<style>
+:root {
+  color-scheme:dark;
+  --bg:#120b17;
+  --surface:#25162b;
+  --alt:#35203b;
+  --border:#77466e;
+  --pink:#ff5cb8;
+  --light:#ffb9e1;
+  --text:#fff3fa;
+  --muted:#dcbad1;
+}
+* {box-sizing:border-box}
+body {
+  margin:0;
+  min-height:100vh;
+  color:var(--text);
+  font-family:"Trebuchet MS",Arial,sans-serif;
+  background:
+    radial-gradient(ellipse at 80% 0%,#582449 0%,transparent 50%),
+    var(--bg);
+}
+a {color:inherit}
+main {width:min(1120px,94%);margin:auto;padding:25px 0 80px}
+.topbar {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  flex-wrap:wrap;
+}
+.brand {
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:2px;
+  color:var(--light);
+}
+.back {
+  padding:11px 16px;
+  background:var(--alt);
+  border:1px solid var(--border);
+  border-radius:12px;
+  text-decoration:none;
+  font-weight:bold;
+}
+.hero {
+  margin-top:24px;
+  padding:clamp(25px,5vw,55px);
+  border:1px solid var(--border);
+  border-radius:26px;
+  background:linear-gradient(135deg,#512142,var(--surface) 75%);
+  text-align:center;
+}
+.eyebrow {
+  color:var(--light);
+  letter-spacing:3px;
+  font-size:11px;
+  font-weight:bold;
+}
+h1 {font-size:clamp(38px,7vw,68px);margin:14px 0}
+h2 {font-size:25px;margin:0}
+p {line-height:1.65}
+.muted {color:var(--muted)}
+.section {margin-top:37px}
+.section-head {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:12px;
+  margin-bottom:17px;
+}
+.pill {
+  padding:8px 13px;
+  border:1px solid var(--border);
+  border-radius:50px;
+  color:var(--light);
+  font-size:12px;
+  font-weight:bold;
+}
+.grid {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:18px;
+}
+.card {
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  min-width:0;
+  padding:25px;
+  border:1px solid var(--border);
+  border-radius:22px;
+  background:var(--surface);
+  overflow-wrap:anywhere;
+}
+.card-icon {font-size:38px}
+.card h3 {font-size:22px;margin:0}
+.card p {margin:0;color:var(--muted);font-size:14px}
+.card .tag {
+  align-self:flex-start;
+  border-radius:40px;
+  padding:7px 11px;
+  background:var(--alt);
+  color:var(--light);
+  font-size:11px;
+  font-weight:bold;
+}
+.card .title {font-weight:bold;font-size:17px}
+.card .description {white-space:pre-wrap}
+.card .dates {font-size:12px}
+.card .action {
+  display:block;
+  margin-top:auto;
+  padding:13px 16px;
+  text-align:center;
+  border-radius:12px;
+  background:var(--pink);
+  color:#220e1d;
+  font-weight:900;
+  text-decoration:none;
+}
+.card .action:hover {filter:brightness(1.1)}
+.card.upcoming {opacity:.8}
+.card.upcoming .action {
+  background:var(--alt);
+  color:var(--light);
+  cursor:default;
+}
+.empty {
+  padding:25px;
+  border:1px dashed var(--border);
+  border-radius:18px;
+  background:var(--surface);
+  color:var(--muted);
+}
+.notice {
+  padding:15px;
+  border-radius:13px;
+  background:var(--alt);
+  color:var(--light);
+}
+.notice.error {color:#ffaaaa}
+[hidden] {display:none!important}
+@media(max-width:680px) {
+  .grid {grid-template-columns:1fr}
+  .card {padding:20px}
+}
+</style>
+</head>
+
+<body>
+<main id="app" hidden>
+  <header class="topbar">
+    <div class="brand">TBB ✦ THE BADDIES BOOKSHELF</div>
+    <a class="back" href="member.html">← Back to The Vanity™</a>
+  </header>
+
+  <section class="hero">
+    <div class="eyebrow">WELCOME TO YOUR NEXT BOOKISH ADVENTURE</div>
+    <h1>🎉 Activity Hub™</h1>
+    <p>
+      New month, new challenges, new reasons to turn
+      one more page! 💗
+    </p>
+    <span class="pill">✦ Read • Participate • Celebrate ✦</span>
+  </section>
+
+  <p id="notice" class="notice" role="status">
+    Loading your Baddie activities… 💗
+  </p>
+
+  <section class="section" id="activeSection" hidden>
+    <div class="section-head">
+      <h2>💗 Happening Now</h2>
+      <span class="pill" id="activeCount">0 Activities</span>
+    </div>
+    <div class="grid" id="activeGrid"></div>
+  </section>
+
+  <section class="section" id="upcomingSection" hidden>
+    <div class="section-head">
+      <h2>✨ Coming Soon</h2>
+      <span class="pill" id="upcomingCount">0 Upcoming</span>
+    </div>
+    <div class="grid" id="upcomingGrid"></div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <h2>🎀 Our Monthly Traditions</h2>
+    </div>
+    <div class="grid">
+      <article class="card">
+        <div class="card-icon">🎀</div>
+        <h3>Monthly Bingo™</h3>
+        <span class="tag">Individual Activity</span>
+        <p>
+          Complete reading prompts on your very own Bingo board.
+          Each square is a little victory, and every completed
+          line deserves a celebration!
+        </p>
+      </article>
+
+      <article class="card">
+        <div class="card-icon">🔤</div>
+        <h3>Monthly A–Z™</h3>
+        <span class="tag">Community Activity</span>
+        <p>
+          Twenty-six letters, twenty-six books, one community!
+          Claim a letter, reserve your book, and help the Baddies
+          complete the entire alphabet together.
+        </p>
+      </article>
+    </div>
+  </section>
+</main>
+
+<p id="accessMessage" style="padding:25px">
+  Checking your Baddie access… 💗
+</p>
+
+<script type="module">
+import { db, requireAccess } from "./js/auth.js";
+
+const $ = id => document.getElementById(id);
+
+function localDate() {
+  const date=new Date();
+  return [
+    date.getFullYear(),
+    String(date.getMonth()+1).padStart(2,"0"),
+    String(date.getDate()).padStart(2,"0")
+  ].join("-");
+}
+
+function formatDate(value) {
+  if (!value) return null;
+  const [year,month,day]=value.split("-").map(Number);
+  return new Date(year,month-1,day).toLocaleDateString(
+    undefined,{month:"short",day:"numeric",year:"numeric"}
+  );
+}
+
+function dateLabel(challenge) {
+  if (!challenge.start_date && !challenge.end_date) {
+    return "Anytime Activity";
+  }
+  const start=formatDate(challenge.start_date);
+  const end=formatDate(challenge.end_date);
+
+  if (start && end) return `${start} – ${end}`;
+  if (start) return `Starts ${start}`;
+  return `Ends ${end}`;
+}
+
+function addText(parent,tag,className,value) {
+  const element=document.createElement(tag);
+  if (className) element.className=className;
+  element.textContent=value;
+  parent.append(element);
+  return element;
+}
+
+function makeCard(challenge,upcoming=false) {
+  const type=challenge.challenge_type;
+  const isBingo=type==="bingo";
+  const icon=challenge.theme?.emoji ||
+    (isBingo?"🎀":"🔤");
+
+  const card=document.createElement("article");
+  card.className="card"+(upcoming?" upcoming":"");
+
+  addText(card,"div","card-icon",icon);
+
+  addText(
+    card,"span","tag",
+    isBingo?"🎀 Individual Bingo":"🔤 Community A–Z"
+  );
+
+  addText(card,"h3","title",challenge.title);
+
+  if (challenge.description) {
+    addText(
+      card,"p","description",challenge.description
+    );
+  }
+
+  addText(card,"p","dates",dateLabel(challenge));
+
+  if (upcoming) {
+    addText(card,"span","action","✨ Opening Soon");
+  } else {
+    const link=document.createElement("a");
+    link.className="action";
+    link.href=isBingo
+      ? `bingo.html?challenge=${encodeURIComponent(challenge.id)}`
+      : `az.html?challenge=${encodeURIComponent(challenge.id)}`;
+
+    link.textContent=isBingo
+      ? "🎀 Open My Bingo Board →"
+      : "🔤 Join the Community Board →";
+
+    card.append(link);
+  }
+
+  return card;
+}
+
+async function loadActivities() {
+  const result=await db
+    .from("tbb_challenges")
+    .select(
+      "id,title,description,challenge_type,status,start_date,end_date,theme"
+    )
+    .in("challenge_type",["bingo","az"])
+    .eq("status","published")
+    .eq("is_template",false)
+    .order("start_date",{ascending:true});
+
+  if (result.error) throw result.error;
+
+  const today=localDate();
+  const active=[];
+  const upcoming=[];
+
+  for (const challenge of result.data) {
+    if (
+      challenge.end_date &&
+      challenge.end_date<today
+    ) continue;
+
+    if (
+      challenge.start_date &&
+      challenge.start_date>today
+    ) {
+      upcoming.push(challenge);
+    } else {
+      active.push(challenge);
+    }
+  }
+
+  $("activeGrid").replaceChildren(
+    ...active.map(item=>makeCard(item))
+  );
+
+  $("upcomingGrid").replaceChildren(
+    ...upcoming.map(item=>makeCard(item,true))
+  );
+
+  $("activeCount").textContent=
+    `${active.length} ${active.length===1?"Activity":"Activities"}`;
+
+  $("upcomingCount").textContent=
+    `${upcoming.length} Upcoming`;
+
+  $("activeSection").hidden=false;
+  $("upcomingSection").hidden=upcoming.length===0;
+
+  if (!active.length) {
+    const empty=document.createElement("div");
+    empty.className="empty";
+    empty.textContent=
+      "No activities are open right now, Baddie! Check back soon. 💗";
+    $("activeGrid").append(empty);
+  }
+
+  $("notice").hidden=true;
+}
+
+(async function initialize() {
+  try {
+    const access=await requireAccess(false);
+
+    if (!access?.user?.id) {
+      throw Error("Please sign in to enter Activity Hub.");
+    }
+
+    $("app").hidden=false;
+    $("accessMessage").hidden=true;
+
+    await loadActivities();
+  } catch(error) {
+    const text=error?.message || String(error);
+
+    if ($("app").hidden) {
+      $("accessMessage").textContent=
+        `Unable to open Activity Hub: ${text}`;
+    } else {
+      $("notice").textContent=text;
+      $("notice").classList.add("error");
+    }
+  }
+})();
+</script>
+</body>
+</html>

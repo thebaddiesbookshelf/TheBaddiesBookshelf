@@ -1,0 +1,1309 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#170c1d">
+<title>Monthly A–Z™ | The Baddies Bookshelf</title>
+<link rel="stylesheet" href="css/auth.css">
+
+<style>
+:root {
+  color-scheme:dark;
+  --bg:#120a18;
+  --surface:#24152d;
+  --surface2:#35203d;
+  --border:#75476f;
+  --pink:#ff66ba;
+  --lightpink:#ffb8e2;
+  --text:#fff4fb;
+  --muted:#d7b9d2;
+}
+* {box-sizing:border-box}
+[hidden] {display:none!important}
+body {
+  margin:0;
+  min-height:100vh;
+  font-family:"Trebuchet MS",Arial,sans-serif;
+  background:
+    radial-gradient(ellipse at 15% 0%,#602751,transparent 45%),
+    radial-gradient(ellipse at 95% 75%,#301d48,transparent 45%),
+    var(--bg);
+  color:var(--text);
+}
+button,input,select {font:inherit}
+button {cursor:pointer}
+button:disabled {opacity:.5;cursor:not-allowed}
+a {color:var(--lightpink);text-decoration:none}
+a:hover {text-decoration:underline}
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+a:focus-visible {
+  outline:3px solid #ffb8e2;
+  outline-offset:3px;
+}
+.shell {
+  width:min(1600px,96%);
+  margin:auto;
+}
+.topbar {
+  background:#170c1de8;
+  border-bottom:2px solid #9c507f;
+  padding:18px 0;
+}
+.topinner {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:15px;
+}
+.brand {
+  color:white;
+  font-weight:900;
+  letter-spacing:1px;
+  font-size:18px;
+}
+.nav {
+  display:flex;
+  gap:16px;
+  flex-wrap:wrap;
+  font-size:13px;
+  font-weight:bold;
+}
+.hero {
+  position:relative;
+  text-align:center;
+  padding:60px 20px;
+  background:
+    repeating-linear-gradient(
+      135deg,
+      transparent 0 40px,
+      #ffffff06 40px 80px
+    ),
+    linear-gradient(135deg,#351936,#80365d,#3b204d);
+  border-bottom:5px solid #c76a9d;
+}
+.kicker {
+  display:inline-block;
+  padding:10px 18px;
+  border:1px solid #ffb9e1;
+  border-radius:50px;
+  background:#1b0e20a6;
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:2px;
+}
+.hero h1 {
+  font-family:Georgia,serif;
+  font-size:clamp(44px,8vw,92px);
+  line-height:1;
+  margin:22px 0 14px;
+  color:#fff0f9;
+  text-shadow:4px 5px 0 #67234d;
+}
+.hero .script {
+  font-family:Georgia,serif;
+  font-style:italic;
+  font-size:clamp(19px,3vw,29px);
+  color:#ffc0e6;
+}
+.hero p {
+  max-width:640px;
+  margin:16px auto 0;
+  line-height:1.7;
+  font-size:15px;
+}
+main.shell {padding:30px 0 70px}
+.panel {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:22px;
+  overflow:hidden;
+  box-shadow:0 10px 35px #00000028;
+}
+.panel-head {
+  padding:17px 21px;
+  background:linear-gradient(110deg,#7d3564,#b74c87);
+  color:white;
+  font-weight:900;
+  letter-spacing:.5px;
+}
+.panel-body {padding:22px}
+.toolbar {
+  display:flex;
+  align-items:end;
+  gap:12px;
+  flex-wrap:wrap;
+}
+.toolbar label {flex:1;min-width:210px}
+label {
+  display:block;
+  font-size:13px;
+  font-weight:900;
+}
+select,input {
+  width:100%;
+  margin-top:9px;
+  padding:13px;
+  border:1px solid #a16a98;
+  border-radius:12px;
+  background:#39243f;
+  color:white;
+}
+.btn {
+  padding:12px 18px;
+  border:1px solid #a16a98;
+  border-radius:12px;
+  background:#563052;
+  color:white;
+  font-weight:900;
+}
+.btn.primary {
+  background:linear-gradient(135deg,#ff9bd3,#ff60b5);
+  border-color:#ff9bd3;
+  color:#2a1028;
+}
+.btn.danger {
+  background:#593044;
+}
+.btn.full {width:100%}
+.status {
+  min-height:20px;
+  color:#ffcae8;
+  font-size:13px;
+  line-height:1.6;
+}
+.status.error {color:#ffb1b1}
+.layout {
+  display:grid;
+  grid-template-columns:minmax(0,2.4fr) minmax(320px,1fr);
+  align-items:start;
+  gap:28px;
+  margin-top:25px;
+}
+.left,
+.right {
+  min-width:0;
+  width:100%;
+  display:flex;
+  flex-direction:column;
+  gap:24px;
+}
+
+.left > .panel,
+.right > .panel {
+  width:100%;
+}
+.board-intro {
+  text-align:center;
+  margin-bottom:22px;
+}
+.board-intro h2 {
+  margin:0 0 10px;
+  font-family:Georgia,serif;
+  font-size:clamp(22px,3vw,34px);
+}
+.board-intro p {
+  margin:0;
+  font-size:13px;
+  line-height:1.7;
+  white-space:pre-wrap;
+}
+#boardWrap {
+  --board-bg:#39223a;
+  --board-tile:#593b59;
+  --board-accent:#ff91d1;
+  --board-text:#fff4fb;
+}
+#alphabet {
+  display:grid;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  gap:14px;
+  width:100%;
+}
+
+.letter-tile {
+  position:relative;
+  width:100%;
+  aspect-ratio:1;
+  min-width:0;
+  padding:8px;
+  border:2px solid var(--board-accent);
+  border-radius:14px;
+  background:var(--board-tile);
+  color:var(--board-text);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:4px;
+  transition:transform .15s,border-color .15s;
+}
+.letter-tile:hover {transform:translateY(-2px)}
+.letter-tile.selected {
+  outline:3px solid #fff0f9;
+  outline-offset:2px;
+}
+.letter-tile.claimed {
+  background:#654462;
+  border-style:dashed;
+}
+.letter-tile.completed {
+  background:var(--board-accent);
+  color:var(--board-bg);
+}
+.letter-tile .big {
+  font-family:Georgia,serif;
+  font-size:clamp(30px,4vw,55px);
+  font-weight:bold;
+  line-height:1;
+}
+.letter-tile .tiny {
+  font-size:10px;
+  font-weight:900;
+}
+.legend {
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+  margin-top:21px;
+  font-size:12px;
+  color:var(--muted);
+}
+.stats {
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px;
+}
+.stat {
+  padding:17px 8px;
+  background:var(--surface2);
+  border-radius:14px;
+  text-align:center;
+}
+.stat strong {
+  display:block;
+  color:#ff9ed6;
+  font-size:clamp(23px,3vw,32px);
+}
+.stat span {
+  display:block;
+  margin-top:5px;
+  font-size:11px;
+  color:var(--muted);
+}
+.progress {
+  height:15px;
+  margin:20px 0 10px;
+  border-radius:30px;
+  background:#100816;
+  overflow:hidden;
+}
+#progressFill {
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,#fa66b6,#ffd0eb);
+  transition:width .25s;
+}
+.muted {
+  color:var(--muted);
+  line-height:1.7;
+}
+.small {font-size:13px}
+.detail-letter {
+  font-family:Georgia,serif;
+  font-size:65px;
+  font-weight:bold;
+  line-height:1;
+  color:#ff9dd5;
+}
+.detail-badge {
+  display:inline-block;
+  margin:14px 0;
+  padding:7px 12px;
+  border-radius:20px;
+  background:#4e2b4a;
+  font-size:12px;
+  font-weight:bold;
+}
+.detail-box {
+  background:#38213e;
+  border-left:4px solid #ff83c7;
+  border-radius:12px;
+  padding:17px;
+  margin:15px 0;
+  overflow-wrap:anywhere;
+}
+.detail-box h3 {
+  margin:0 0 8px;
+  font-size:15px;
+}
+.detail-box p {margin:5px 0;line-height:1.6}
+.detail-actions {
+  display:grid;
+  gap:10px;
+  margin-top:18px;
+}
+.rules {
+  margin:0;
+  padding-left:20px;
+  line-height:1.9;
+  font-size:13px;
+}
+.rules li {margin-bottom:9px}
+.notice {
+  padding:18px 21px;
+  background:#39223f;
+  border:1px solid #84537d;
+  border-radius:15px;
+  line-height:1.7;
+  font-size:13px;
+}
+footer {
+  text-align:center;
+  padding:28px 15px;
+  background:#170c1d;
+  border-top:1px solid #75476f;
+  font-size:12px;
+  letter-spacing:1px;
+  color:#dcbad5;
+}
+@media(max-width:1000px) {
+  .layout {
+    grid-template-columns:1fr;
+  }
+
+  #alphabet {
+    grid-template-columns:repeat(6,minmax(0,1fr));
+    gap:10px;
+  }
+}
+
+@media(max-width:520px) {
+  .hero {
+    padding:45px 16px;
+  }
+
+  .panel-body {
+    padding:15px;
+  }
+
+  #alphabet {
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:8px;
+  }
+
+  .letter-tile {
+    border-radius:10px;
+  }
+
+  .letter-tile .big {
+    font-size:clamp(26px,7vw,38px);
+  }
+
+  .letter-tile .tiny {
+    font-size:9px;
+  }
+
+  .stats {
+    gap:6px;
+  }
+
+  .stat {
+    padding:12px 4px;
+  }
+
+  .nav {
+    gap:10px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div id="app" hidden>
+
+<header class="topbar">
+  <div class="shell topinner">
+    <a class="brand" href="vanity.html">
+      💗 THE BADDIES BOOKSHELF
+    </a>
+    <nav class="nav" aria-label="Navigation">
+      <a href="vanity.html">The Vanity™</a>
+      <a href="activity-hub.html">Activity Hub™</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <span class="kicker">
+    ✦ THE BADDIES BOOKSHELF PRESENTS ✦
+  </span>
+  <h1>MONTHLY<br>A–Z™</h1>
+  <div class="script">
+    Every letter has a story, Baddie ♡
+  </div>
+  <p>
+    Twenty-six letters. Twenty-six books.
+    One fabulous community working together
+    to conquer the alphabet! 📚💋
+  </p>
+</section>
+
+<main class="shell">
+
+  <section class="panel">
+    <div class="panel-head">
+      💌 YOUR COMMUNITY CHALLENGE
+    </div>
+    <div class="panel-body">
+      <div class="toolbar">
+        <label for="challengeSelect">
+          Choose your A–Z board
+          <select id="challengeSelect"></select>
+        </label>
+        <button id="refresh" class="btn" type="button">
+          🔄 Refresh
+        </button>
+      </div>
+      <p id="loadStatus" class="status" role="status"></p>
+    </div>
+  </section>
+
+  <div id="game" hidden>
+
+    <div class="layout">
+
+      <div class="left">
+
+        <section class="panel" id="boardWrap">
+          <div class="panel-head">
+            🔤 THE BADDIE ALPHABET BOARD
+          </div>
+          <div class="panel-body">
+
+            <div class="board-intro">
+              <h2 id="boardTitle"></h2>
+              <p id="boardDescription" class="muted"></p>
+            </div>
+
+            <div id="alphabet"
+              aria-label="Interactive A to Z board">
+            </div>
+
+            <div class="legend">
+              <span>💗 Available</span>
+              <span>📖 Claimed</span>
+              <span>👑 Completed</span>
+            </div>
+
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head">
+            👑 OUR COMMUNITY PROGRESS
+          </div>
+          <div class="panel-body">
+
+            <div class="stats">
+              <div class="stat">
+                <strong id="doneCount">0</strong>
+                <span>COMPLETED</span>
+              </div>
+              <div class="stat">
+                <strong id="claimedCount">0</strong>
+                <span>BEING READ</span>
+              </div>
+              <div class="stat">
+                <strong id="openCount">26</strong>
+                <span>AVAILABLE</span>
+              </div>
+            </div>
+
+            <div class="progress"
+              role="progressbar"
+              aria-label="A–Z completion progress"
+              aria-valuemin="0"
+              aria-valuemax="100"
+              aria-valuenow="0"
+              id="progressTrack">
+              <div id="progressFill"></div>
+            </div>
+
+            <p id="progressMessage" class="muted small"></p>
+
+          </div>
+        </section>
+
+      </div>
+
+      <aside class="right">
+
+        <section class="panel">
+          <div class="panel-head">
+            💋 THE BADDIE CLAIM DESK
+          </div>
+          <div class="panel-body">
+            <div id="letterDetail" aria-live="polite">
+              <p class="muted">
+                Select a letter to see its details!
+              </p>
+            </div>
+
+            <p id="actionStatus"
+              class="status"
+              role="status">
+            </p>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head">
+            📚 THE A–Z PLAYBOOK
+          </div>
+          <div class="panel-body">
+
+            <ol class="rules">
+              <li>
+                Choose an available letter.
+              </li>
+              <li>
+                Enter a book title beginning with
+                that letter.
+              </li>
+              <li>
+                Claim the letter to reserve it
+                for yourself.
+              </li>
+              <li>
+                Finish reading your book and
+                mark the letter complete.
+              </li>
+              <li>
+                Need to change plans? Release
+                your unfinished letter.
+              </li>
+            </ol>
+
+            <div class="notice">
+              💗 <strong>THE BADDIE RULE:</strong>
+              A, An, and The count as the beginning
+              of a title! Each letter belongs to
+              only one Baddie at a time, and
+              completed letters stay locked.
+            </div>
+
+          </div>
+        </section>
+
+      </aside>
+
+    </div>
+
+  </div>
+
+</main>
+
+<footer>
+  THE BADDIES BOOKSHELF ♡ READ • SLAY • REPEAT
+</footer>
+
+</div>
+
+<p id="accessMessage" style="padding:25px">
+  Checking your Baddie access… 💗
+</p>
+
+<script type="module">
+import { db, requireAccess } from "./js/auth.js";
+
+const $ = id => document.getElementById(id);
+const LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+
+let user = null;
+let challenges = [];
+let current = null;
+let items = [];
+let claims = new Map();
+let selectedLetter = "A";
+let busy = false;
+let loadVersion = 0;
+
+function status(id,text,error=false) {
+  const el=$(id);
+  el.textContent=text;
+  el.classList.toggle("error",error);
+}
+
+function message(error) {
+  return error?.message || String(error);
+}
+
+function todayLocal() {
+  const date=new Date();
+  return [
+    date.getFullYear(),
+    String(date.getMonth()+1).padStart(2,"0"),
+    String(date.getDate()).padStart(2,"0")
+  ].join("-");
+}
+
+function validateItems(rows) {
+  if (rows.length!==26) {
+    throw Error("This board needs exactly 26 letters.");
+  }
+
+  const keys=rows.map(row=>
+    String(row.item_key || "").toUpperCase()
+  );
+
+  if (
+    new Set(keys).size!==26 ||
+    LETTERS.some(letter=>!keys.includes(letter))
+  ) {
+    throw Error("A–Z letters are not configured correctly.");
+  }
+}
+
+function firstBookLetter(title) {
+  const cleaned=String(title || "")
+    .trim()
+    .replace(/^[^A-Za-z]*/,"");
+
+  return cleaned.charAt(0).toUpperCase();
+}
+
+function updateProgress() {
+  let done=0;
+  let reading=0;
+
+  for (const claim of claims.values()) {
+    if (claim.status==="completed") done++;
+    else if (claim.status==="claimed") reading++;
+  }
+
+  const open=26-done-reading;
+  const percent=Math.round(done/26*100);
+
+  $("doneCount").textContent=String(done);
+  $("claimedCount").textContent=String(reading);
+  $("openCount").textContent=String(open);
+
+  $("progressFill").style.width=percent+"%";
+  $("progressTrack").setAttribute(
+    "aria-valuenow",String(percent)
+  );
+
+  $("progressMessage").textContent=
+    done===26
+      ? "👑 THE WHOLE ALPHABET IS COMPLETE! BADDIES, WE DID THAT!"
+      : `${done} of 26 letters completed together! 💗`;
+}
+
+function renderBoard() {
+  if (!current) return;
+
+  const theme=current.theme || {};
+  const board=$("boardWrap");
+
+  board.style.setProperty(
+    "--board-bg",theme.background || "#39223a"
+  );
+  board.style.setProperty(
+    "--board-tile",theme.tile || "#593b59"
+  );
+  board.style.setProperty(
+    "--board-accent",theme.accent || "#ff91d1"
+  );
+  board.style.setProperty(
+    "--board-text",theme.text || "#fff4fb"
+  );
+
+  $("boardTitle").textContent=
+    `${theme.emoji || "🔤"} ${current.title}`;
+
+  $("boardDescription").textContent=
+    current.description || "";
+
+  const container=$("alphabet");
+  container.replaceChildren();
+
+  const ordered=[...items].sort((a,b)=>
+    LETTERS.indexOf(String(a.item_key).toUpperCase()) -
+    LETTERS.indexOf(String(b.item_key).toUpperCase())
+  );
+
+  for (const item of ordered) {
+    const letter=String(item.item_key).toUpperCase();
+    const claim=claims.get(item.id);
+
+    const button=document.createElement("button");
+    button.type="button";
+    button.className="letter-tile";
+
+    if (claim) button.classList.add(claim.status);
+    if (selectedLetter===letter) {
+      button.classList.add("selected");
+    }
+
+    button.setAttribute(
+      "aria-pressed",
+      String(selectedLetter===letter)
+    );
+
+    const big=document.createElement("span");
+    big.className="big";
+    big.textContent=letter;
+
+    const tiny=document.createElement("span");
+    tiny.className="tiny";
+    tiny.textContent=!claim
+      ? "💗 OPEN"
+      : claim.status==="completed"
+        ? "👑 DONE"
+        : "📖 TAKEN";
+
+    button.append(big,tiny);
+
+    button.addEventListener("click",()=>{
+      selectedLetter=letter;
+      renderBoard();
+      renderDetail();
+    });
+
+    container.append(button);
+  }
+
+  updateProgress();
+}
+
+function makeButton(label,handler,variant="") {
+  const button=document.createElement("button");
+  button.type="button";
+  button.className=`btn full ${variant}`;
+  button.textContent=label;
+  button.disabled=busy;
+  button.addEventListener("click",handler);
+  return button;
+}
+
+function renderDetail() {
+  if (!current || !user) return;
+
+  const item=items.find(row=>
+    String(row.item_key).toUpperCase()===selectedLetter
+  );
+
+  if (!item) return;
+
+  const claim=claims.get(item.id);
+  const mine=claim?.user_id===user.id;
+  const container=$("letterDetail");
+  container.replaceChildren();
+
+  const letter=document.createElement("div");
+  letter.className="detail-letter";
+  letter.textContent=selectedLetter;
+  container.append(letter);
+
+  const badge=document.createElement("span");
+  badge.className="detail-badge";
+  badge.textContent=!claim
+    ? "💗 Available to Claim"
+    : claim.status==="completed"
+      ? "👑 Completed"
+      : "📖 Currently Claimed";
+  container.append(badge);
+
+  const box=document.createElement("div");
+  box.className="detail-box";
+
+  const heading=document.createElement("h3");
+  heading.textContent=item.title || `Letter ${selectedLetter}`;
+  box.append(heading);
+
+  if (item.description) {
+    const description=document.createElement("p");
+    description.className="muted small";
+    description.textContent=item.description;
+    box.append(description);
+  }
+
+  container.append(box);
+
+  if (!claim) {
+    const intro=document.createElement("p");
+    intro.className="muted small";
+    intro.textContent=
+      `Choose a book beginning with ${selectedLetter} `+
+      "to reserve this letter.";
+    container.append(intro);
+
+    const label=document.createElement("label");
+    label.textContent="📚 Your Book Title";
+
+    const input=document.createElement("input");
+    input.type="text";
+    input.maxLength=200;
+    input.placeholder=`Book beginning with ${selectedLetter}…`;
+    input.setAttribute(
+      "aria-label",
+      `Book title for letter ${selectedLetter}`
+    );
+
+    label.append(input);
+    container.append(label);
+
+    const actions=document.createElement("div");
+    actions.className="detail-actions";
+
+    actions.append(
+      makeButton(
+        `💗 Claim Letter ${selectedLetter}`,
+        ()=>claimLetter(item,input.value),
+        "primary"
+      )
+    );
+
+    input.addEventListener("keydown",event=>{
+      if (event.key==="Enter" && !busy) {
+        claimLetter(item,input.value);
+      }
+    });
+
+    container.append(actions);
+    return;
+  }
+
+  const bookBox=document.createElement("div");
+  bookBox.className="detail-box";
+
+    const bookHeading=document.createElement("h3");
+  bookHeading.textContent="📚 BOOK SELECTION";
+
+  const book=document.createElement("p");
+  book.textContent=claim.book_title;
+
+  const ownerHeading=document.createElement("h3");
+
+  ownerHeading.textContent=
+    claim.status==="completed"
+      ? "👑 COMPLETED BY"
+      : "💋 CLAIMED BY";
+
+  const owner=document.createElement("p");
+  owner.className="claim-owner-name";
+  owner.textContent=claim.claimant_name || "A Baddie";
+
+  const ownershipStatus=document.createElement("p");
+  ownershipStatus.className="muted small";
+
+  ownershipStatus.textContent=
+    claim.status==="completed"
+      ? "✨ This Baddie finished their book and secured this letter for the community!"
+      : "📖 This Baddie is currently reading their book for this letter.";
+
+  bookBox.append(
+    bookHeading,
+    book,
+    ownerHeading,
+    owner,
+    ownershipStatus
+  );
+  container.append(bookBox);
+
+  if (claim.status==="completed") {
+    const finished=document.createElement("p");
+    finished.className="muted small";
+    finished.textContent=mine
+      ? "👑 YOU completed this letter! It is now permanently locked."
+      : "👑 This letter has been completed and is permanently locked.";
+    container.append(finished);
+    return;
+  }
+
+  if (!mine) {
+    const notice=document.createElement("p");
+    notice.className="muted small";
+    notice.textContent=
+      "This letter is reserved by another Baddie. "+
+      "Check back if they release it!";
+    container.append(notice);
+    return;
+  }
+
+  const actions=document.createElement("div");
+  actions.className="detail-actions";
+
+  actions.append(
+    makeButton(
+      "👑 Mark Book Complete",
+      ()=>completeLetter(item),
+      "primary"
+    ),
+    makeButton(
+      "↩️ Release This Letter",
+      ()=>releaseLetter(item),
+      "danger"
+    )
+  );
+
+  container.append(actions);
+}
+
+function render() {
+  if (!current) return;
+  renderBoard();
+  renderDetail();
+}
+
+async function fetchClaims(challengeId) {
+  const result=await db
+    .from("tbb_az_claims")
+    .select(
+      "item_id,user_id,book_title,claimant_name,status,claimed_at,completed_at"
+    )
+    .eq("challenge_id",challengeId);
+
+  if (result.error) throw result.error;
+
+  return new Map(
+    (result.data || []).map(entry=>[
+      entry.item_id,entry
+    ])
+  );
+}
+
+async function refreshBoard(silent=false) {
+  if (!current || busy) return;
+
+  const version=loadVersion;
+  const challengeId=current.id;
+
+  if (!silent) {
+    status("loadStatus","Refreshing the community board…");
+  }
+
+  try {
+    const updated=await fetchClaims(challengeId);
+
+    if (
+      version!==loadVersion ||
+      current?.id!==challengeId
+    ) return;
+
+    claims=updated;
+    render();
+
+    if (!silent) {
+      status("loadStatus","💗 Board is up to date!");
+    }
+  } catch(error) {
+    if (!silent) {
+      status("loadStatus",message(error),true);
+    }
+  }
+}
+
+async function performAction(rpc,args,successText) {
+  if (busy || !current) return;
+
+  busy=true;
+
+  const version=loadVersion;
+  const challengeId=current.id;
+
+  $("challengeSelect").disabled=true;
+  $("refresh").disabled=true;
+
+  status("actionStatus","Saving your letter… 💗");
+
+  try {
+    const result=await db.rpc(rpc,args);
+    if (result.error) throw result.error;
+
+    const updated=await fetchClaims(challengeId);
+
+    if (
+      version===loadVersion &&
+      current?.id===challengeId
+    ) {
+      claims=updated;
+      status("actionStatus",successText);
+    }
+  } catch(error) {
+    status("actionStatus",message(error),true);
+
+    try {
+      const updated=await fetchClaims(challengeId);
+      if (version===loadVersion) claims=updated;
+    } catch (_) {}
+  } finally {
+    busy=false;
+    $("challengeSelect").disabled=false;
+    $("refresh").disabled=false;
+    render();
+  }
+}
+
+async function claimLetter(item,bookTitle) {
+  const title=String(bookTitle || "").trim();
+  const letter=String(item.item_key).toUpperCase();
+
+  if (!title) {
+    status(
+      "actionStatus",
+      "Enter your book title first, Baddie! 💗",
+      true
+    );
+    return;
+  }
+
+  if (title.length>200) {
+    status(
+      "actionStatus",
+      "Book title is too long.",
+      true
+    );
+    return;
+  }
+
+  const actual=firstBookLetter(title);
+
+  if (actual!==letter) {
+    status(
+      "actionStatus",
+      `💌 "${title}" belongs under ${actual || "?"}, `+
+      `not ${letter}! Choose the correct letter.`,
+      true
+    );
+    return;
+  }
+
+  await performAction(
+    "tbb_az_claim_letter",
+    {
+      p_challenge_id:current.id,
+      p_item_id:item.id,
+      p_book_title:title
+    },
+    `💗 Letter ${letter} is officially yours!`
+  );
+}
+
+async function releaseLetter(item) {
+  if (!confirm(
+    `Release letter ${item.item_key}?\n\n`+
+    "Another Baddie will be able to claim it."
+  )) return;
+
+  await performAction(
+    "tbb_az_release_letter",
+    {
+      p_challenge_id:current.id,
+      p_item_id:item.id
+    },
+    `↩️ Letter ${item.item_key} is available again!`
+  );
+}
+
+async function completeLetter(item) {
+  if (!confirm(
+    `Finished your book for letter ${item.item_key}?\n\n`+
+    "Completing it permanently locks this letter."
+  )) return;
+
+  await performAction(
+    "tbb_az_complete_letter",
+    {
+      p_challenge_id:current.id,
+      p_item_id:item.id
+    },
+    `👑 Letter ${item.item_key} COMPLETE! YOU ATE!`
+  );
+}
+
+async function openChallenge(id) {
+  const version=++loadVersion;
+
+  current=null;
+  $("game").hidden=true;
+
+  status(
+    "loadStatus",
+    "Opening your community board…"
+  );
+
+  try {
+    const challenge=challenges.find(row=>row.id===id);
+    if (!challenge) {
+      throw Error("Challenge not found.");
+    }
+
+    const result=await db
+      .from("tbb_challenge_items")
+      .select(
+        "id,item_key,title,description,emoji,display_order"
+      )
+      .eq("challenge_id",id)
+      .order("display_order");
+
+    if (result.error) throw result.error;
+
+    validateItems(result.data);
+
+    const savedClaims=await fetchClaims(id);
+
+    if (version!==loadVersion) return;
+
+    current=challenge;
+    items=result.data;
+    claims=savedClaims;
+
+    selectedLetter="A";
+    $("game").hidden=false;
+
+    status("actionStatus","");
+    status(
+      "loadStatus",
+      "💗 Your community board is ready!"
+    );
+
+    render();
+  } catch(error) {
+    if (version!==loadVersion) return;
+    status("loadStatus",message(error),true);
+  }
+}
+
+async function loadChallenges() {
+  const date=todayLocal();
+
+  const result=await db
+    .from("tbb_challenges")
+    .select(
+      "id,title,description,theme,settings,start_date,end_date"
+    )
+    .eq("challenge_type","az")
+    .eq("status","published")
+    .eq("is_template",false)
+    .or(`start_date.is.null,start_date.lte.${date}`)
+    .or(`end_date.is.null,end_date.gte.${date}`)
+    .order("created_at",{ascending:false});
+
+  if (result.error) throw result.error;
+
+  challenges=result.data || [];
+
+  const select=$("challengeSelect");
+  select.replaceChildren();
+
+  if (!challenges.length) {
+    select.disabled=true;
+
+    const option=document.createElement("option");
+    option.textContent="No A–Z challenges open yet";
+    option.value="";
+    select.append(option);
+
+    status(
+      "loadStatus",
+      "💗 No community A–Z boards are open right now!"
+    );
+    return;
+  }
+
+  for (const challenge of challenges) {
+    const option=document.createElement("option");
+    option.value=challenge.id;
+    option.textContent=challenge.title;
+    select.append(option);
+  }
+
+  const requestedId=new URLSearchParams(
+    window.location.search
+  ).get("challenge");
+
+  const selected=challenges.find(
+    challenge=>challenge.id===requestedId
+  );
+
+  if (requestedId && !selected) {
+    status(
+      "loadStatus",
+      "That challenge is not currently available.",
+      true
+    );
+    select.disabled=true;
+    return;
+  }
+
+  const chosen=selected || challenges[0];
+
+  select.value=chosen.id;
+  await openChallenge(chosen.id);
+}
+
+$("challengeSelect").addEventListener(
+  "change",
+  event=>{
+    if (event.target.value && !busy) {
+      const id=event.target.value;
+      const url=new URL(window.location.href);
+      url.searchParams.set("challenge",id);
+      history.replaceState(null,"",url);
+      openChallenge(id);
+    }
+  }
+);
+
+$("refresh").addEventListener(
+  "click",
+  ()=>refreshBoard()
+);
+
+(async function initialize() {
+  try {
+    const access=await requireAccess(false);
+
+    if (!access?.user?.id) {
+      throw Error(
+        "Please sign in to open Monthly A–Z."
+      );
+    }
+
+    user=access.user;
+
+    $("app").hidden=false;
+    $("accessMessage").hidden=true;
+
+    await loadChallenges();
+
+    setInterval(()=>{
+      if (!document.hidden && !busy && current) {
+        refreshBoard(true);
+      }
+    },15000);
+
+  } catch(error) {
+    if (!user) {
+      $("accessMessage").textContent=
+        `Unable to open A–Z: ${message(error)}`;
+    } else {
+      status(
+        "loadStatus",
+        message(error),
+        true
+      );
+    }
+  }
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,727 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Baddie Bingo™ | TBB</title>
+<link rel="stylesheet" href="css/auth.css">
+
+<style>
+:root {
+  color-scheme:dark;
+  --pink:#ff55b9;
+  --text:#fff0fa;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0;
+  min-height:100vh;
+  background:
+    radial-gradient(circle at top,#532146,transparent 48%),
+    #100914;
+  color:var(--text);
+  font-family:system-ui,sans-serif;
+}
+main {
+  width:min(1100px,100%);
+  margin:auto;
+  padding:25px 16px 75px;
+}
+h1 {
+  font-size:clamp(2rem,6vw,3.3rem);
+  margin:12px 0;
+}
+a { color:#ff9cda; }
+button,select {
+  font:inherit;
+  color:white;
+  border:1px solid #a15a8e;
+  border-radius:12px;
+  background:#321934;
+  padding:12px;
+}
+button { cursor:pointer; }
+button:disabled { opacity:.55;cursor:wait; }
+select { width:100%;max-width:500px; }
+.card {
+  background:#23132a;
+  border:1px solid #75416c;
+  border-radius:22px;
+  padding:20px;
+  margin-top:20px;
+}
+.muted { color:#dfb9d5; }
+.status { min-height:25px;color:#b8f6d3; }
+.status.error { color:#ffa6bc; }
+#boardWrap {
+  --board-bg:#45253d;
+  --board-tile:#75465e;
+  --board-accent:#ffb7db;
+  --board-text:#fff5fb;
+  background:var(--board-bg);
+  color:var(--board-text);
+  border:2px solid var(--board-accent);
+  border-radius:22px;
+  padding:clamp(9px,3vw,25px);
+}
+#boardTitle {
+  color:var(--board-text);
+  text-align:center;
+  overflow-wrap:anywhere;
+}
+#boardDescription {
+  text-align:center;
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+}
+#board {
+  display:grid;
+  grid-template-columns:repeat(var(--cols),minmax(0,1fr));
+  gap:clamp(3px,1vw,9px);
+}
+.square {
+  min-width:0;
+  min-height:clamp(65px,12vw,150px);
+  padding:8px 4px;
+  background:var(--board-tile);
+  color:var(--board-text);
+  border:2px solid var(--board-accent);
+  border-radius:12px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  text-align:center;
+  overflow-wrap:anywhere;
+  font-size:clamp(10px,1.4vw,15px);
+  transition:transform .15s,background .15s;
+}
+.square:not(:disabled):active { transform:scale(.96); }
+.square.checked {
+  background:var(--board-accent);
+  color:var(--board-bg);
+  font-weight:800;
+}
+.square.free {
+  border-style:dashed;
+  font-weight:800;
+}
+.square .emoji { font-size:clamp(16px,2.6vw,28px); }
+.square .prompt { line-height:1.25; }
+.square .check { font-size:18px; }
+.stats {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+}
+.stat {
+  padding:16px;
+  text-align:center;
+  background:#321b38;
+  border-radius:15px;
+}
+.stat strong { display:block;font-size:1.6rem; }
+.progressTrack {
+  background:#1b0b20;
+  border-radius:99px;
+  height:13px;
+  overflow:hidden;
+  margin:16px 0;
+}
+#progressFill {
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,#ff54b8,#ffd0eb);
+  transition:width .25s;
+}
+
+.bingo-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 25px;
+}
+
+.bingo-nav a {
+  display: inline-block;
+  padding: 11px 17px;
+  border: 1px solid #a15a8e;
+  border-radius: 12px;
+  background: #321934;
+  color: #ffb8e2;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.bingo-nav a:hover {
+  background: #69325d;
+  color: white;
+}
+
+@media(max-width:550px) {
+  .card { padding:12px; }
+  .square { border-width:1px;border-radius:7px;padding:5px 2px; }
+  .square .check { font-size:13px; }
+}
+main a {
+  text-decoration: none;
+}
+
+main a:hover {
+  text-decoration: none;
+}
+</style>
+</head>
+
+<body>
+
+<main id="app" hidden>
+  <a href="index.html"> Back to TBB</a>
+  <a href="activity-hub.html"> Back to Activity Hub™</a>
+  <a href="vanity.html">💗 Back to The Vanity™</a>
+
+  <h1>🎀 Baddie Bingo™</h1>
+  <p class="muted">
+    Your board. Your books. Your baddie progress. 💗
+  </p>
+
+  <section class="card">
+    <label for="challengeSelect">
+      <strong>✨ Choose your Bingo challenge</strong>
+    </label>
+    <p>
+      <select id="challengeSelect"></select>
+    </p>
+    <p id="challengeStatus" class="status" role="status"></p>
+  </section>
+
+  <section class="card" id="gameSection" hidden>
+    <div id="boardWrap">
+      <h2 id="boardTitle"></h2>
+      <p id="boardDescription"></p>
+      <div id="board"></div>
+    </div>
+
+    <div class="progressTrack">
+      <div id="progressFill"></div>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <strong id="completedCount">0 / 0</strong>
+        <span>Squares completed</span>
+      </div>
+      <div class="stat">
+        <strong id="bingoCount">0</strong>
+        <span>Completed Bingo lines</span>
+      </div>
+    </div>
+
+    <p id="gameStatus" class="status" role="status"></p>
+    <p class="muted">
+      Tap a square to mark it complete. Tap it again to undo.
+      Your progress saves to your account automatically.
+    </p>
+  </section>
+</main>
+
+<p id="accessMessage" style="padding:25px">
+  Checking your Baddie access… 💗
+</p>
+
+<script type="module">
+import { db, requireAccess } from './js/auth.js';
+
+const $ = id => document.getElementById(id);
+
+let user = null;
+let challenges = [];
+let currentChallenge = null;
+let boardItems = [];
+let completed = new Set();
+let loadingToken = 0;
+let changing = false;
+
+function message(id,text,error=false) {
+  $(id).textContent = text;
+  $(id).classList.toggle('error',error);
+}
+
+function errorText(error) {
+  return error?.message || String(error);
+}
+
+function todayLocal() {
+  const date = new Date();
+
+  return [
+    date.getFullYear(),
+    String(date.getMonth() + 1).padStart(2, '0'),
+    String(date.getDate()).padStart(2, '0')
+  ].join('-');
+}
+
+
+function shuffle(array) {
+  const result = [...array];
+
+  for (let i=result.length-1;i>0;i--) {
+    const j=Math.floor(Math.random()*(i+1));
+    [result[i],result[j]]=[result[j],result[i]];
+  }
+
+  return result;
+}
+
+function arrangeItems(items,challenge) {
+  const size=Number(challenge.settings?.size);
+  const freeCenter=Boolean(challenge.settings?.free_center);
+
+  const free=items.find(item=>item.is_free_space);
+  const normal=shuffle(items.filter(item=>!item.is_free_space));
+
+  if (!freeCenter) return normal;
+
+  if (!free) {
+    throw Error('This board is missing its free square.');
+  }
+
+  normal.splice(Math.floor(size*size/2),0,free);
+  return normal;
+}
+
+async function getBoardLayout(challenge,items) {
+  const layout=challenge.settings?.layout || 'shared';
+
+  if (layout !== 'randomized') {
+    return [...items];
+  }
+
+  const existing=await db
+    .from('tbb_challenge_boards')
+    .select('board_layout')
+    .eq('challenge_id',challenge.id)
+    .eq('user_id',user.id)
+    .maybeSingle();
+
+  if (existing.error) throw existing.error;
+
+  let ids=existing.data?.board_layout;
+
+  if (!ids) {
+    const arrangement=arrangeItems(items,challenge);
+    const proposed=arrangement.map(item=>item.id);
+
+    const saved=await db
+      .from('tbb_challenge_boards')
+      .insert({
+        challenge_id:challenge.id,
+        user_id:user.id,
+        board_layout:proposed
+      });
+
+    if (saved.error && saved.error.code !== '23505') {
+      throw saved.error;
+    }
+
+    // Read the stored layout, including if another tab
+    // created it at the same time.
+    const reread=await db
+      .from('tbb_challenge_boards')
+      .select('board_layout')
+      .eq('challenge_id',challenge.id)
+      .eq('user_id',user.id)
+      .single();
+
+    if (reread.error) throw reread.error;
+    ids=reread.data.board_layout;
+  }
+
+  const byId=new Map(items.map(item=>[item.id,item]));
+
+  if (
+    !Array.isArray(ids) ||
+    ids.length !== items.length ||
+    new Set(ids).size !== items.length ||
+    ids.some(id=>!byId.has(id))
+  ) {
+    throw Error('Saved board layout is invalid. Contact an admin.');
+  }
+
+  const ordered=ids.map(id=>byId.get(id));
+
+  if (challenge.settings?.free_center) {
+    const center=Math.floor(ordered.length/2);
+    if (!ordered[center]?.is_free_space) {
+      throw Error('Saved board has an invalid free center.');
+    }
+  }
+
+  return ordered;
+}
+
+function bingoLines(size) {
+  const lines=[];
+
+  for (let row=0;row<size;row++) {
+    lines.push(
+      Array.from({length:size},(_,col)=>row*size+col)
+    );
+  }
+
+  for (let col=0;col<size;col++) {
+    lines.push(
+      Array.from({length:size},(_,row)=>row*size+col)
+    );
+  }
+
+  lines.push(
+    Array.from({length:size},(_,i)=>i*size+i)
+  );
+
+  lines.push(
+    Array.from({length:size},(_,i)=>i*size+(size-1-i))
+  );
+
+  return lines;
+}
+
+function isChecked(item) {
+  return item.is_free_space || completed.has(item.id);
+}
+
+function updateStats() {
+  if (!currentChallenge) return;
+
+  const size=Number(currentChallenge.settings?.size);
+  const total=boardItems.length;
+
+  const count=boardItems.filter(isChecked).length;
+
+  const lines=bingoLines(size).filter(line=>
+    line.every(index=>isChecked(boardItems[index]))
+  ).length;
+
+  $('completedCount').textContent=`${count} / ${total}`;
+  $('bingoCount').textContent=String(lines);
+
+  $('progressFill').style.width=
+    `${total ? Math.round(count/total*100) : 0}%`;
+
+  if (count===total && total>0) {
+    message('gameStatus','👑 FULL BOARD COMPLETED! YOU ATE THAT!');
+  } else if (lines>0) {
+    message(
+      'gameStatus',
+      `🎉 BINGO, BADDIE! ${lines} completed line${lines===1?'':'s'}!`
+    );
+  } else {
+    message('gameStatus','💗 Keep turning those pages, Baddie!');
+  }
+}
+
+function renderBoard() {
+  const challenge=currentChallenge;
+  if (!challenge) return;
+
+  const theme=challenge.theme || {};
+  const root=$('boardWrap');
+
+  root.style.setProperty(
+    '--board-bg',theme.background || '#45253d'
+  );
+  root.style.setProperty(
+    '--board-tile',theme.tile || '#75465e'
+  );
+  root.style.setProperty(
+    '--board-accent',theme.accent || '#ffb7db'
+  );
+  root.style.setProperty(
+    '--board-text',theme.text || '#fff5fb'
+  );
+
+  $('boardTitle').textContent=
+    `${theme.emoji || '🎀'} ${challenge.title}`;
+
+  $('boardDescription').textContent=
+    challenge.description || '';
+
+  const size=Number(challenge.settings?.size);
+  $('board').style.setProperty('--cols',String(size));
+  $('board').replaceChildren();
+
+  for (const item of boardItems) {
+    const checked=isChecked(item);
+
+    const square=document.createElement('button');
+    square.type='button';
+    square.className='square';
+
+    if (checked) square.classList.add('checked');
+    if (item.is_free_space) square.classList.add('free');
+
+    square.disabled=item.is_free_space || changing;
+    square.setAttribute('aria-pressed',String(checked));
+
+    const emoji=document.createElement('span');
+    emoji.className='emoji';
+    emoji.textContent=item.is_free_space
+      ? '⭐'
+      : (item.emoji || '📖');
+
+    const prompt=document.createElement('span');
+    prompt.className='prompt';
+    prompt.textContent=item.is_free_space
+      ? 'FREE SPACE'
+      : item.title;
+
+    const check=document.createElement('span');
+    check.className='check';
+    check.textContent=checked ? '✓' : '';
+
+    square.append(emoji,prompt,check);
+
+    if (item.description && !item.is_free_space) {
+      square.title=item.description;
+    }
+
+    if (!item.is_free_space) {
+      square.addEventListener('click',()=>toggleSquare(item));
+    }
+
+    $('board').append(square);
+  }
+
+  updateStats();
+}
+
+async function toggleSquare(item) {
+  if (changing || !currentChallenge) return;
+
+  changing=true;
+  const challengeId=currentChallenge.id;
+  const wasChecked=completed.has(item.id);
+
+  message('gameStatus','Saving your progress…');
+
+  // Prevent double taps while saving.
+  $('board').querySelectorAll('button').forEach(button=>{
+    button.disabled=true;
+  });
+
+  try {
+    if (wasChecked) {
+      const result=await db
+        .from('tbb_challenge_progress')
+        .delete()
+        .eq('challenge_id',challengeId)
+        .eq('item_id',item.id)
+        .eq('user_id',user.id);
+
+      if (result.error) throw result.error;
+      completed.delete(item.id);
+    } else {
+      const result=await db
+        .from('tbb_challenge_progress')
+        .upsert({
+          challenge_id:challengeId,
+          item_id:item.id,
+          user_id:user.id
+        },{
+          onConflict:'challenge_id,item_id,user_id',
+          ignoreDuplicates:true
+        });
+
+      if (result.error) throw result.error;
+      completed.add(item.id);
+    }
+  } catch(error) {
+    message(
+      'gameStatus',
+      `Progress not saved: ${errorText(error)}`,
+      true
+    );
+  } finally {
+    changing=false;
+    renderBoard();
+  }
+}
+
+async function openChallenge(id) {
+  const token=++loadingToken;
+  $('gameSection').hidden=true;
+  message('challengeStatus','Loading your Bingo board…');
+
+  try {
+    const challenge=challenges.find(c=>c.id===id);
+
+    if (!challenge) {
+      throw Error('Challenge not found.');
+    }
+
+    const size=Number(challenge.settings?.size);
+
+    if (![3,4,5].includes(size)) {
+      throw Error('Unsupported Bingo board size.');
+    }
+
+    const [itemsResult,progressResult]=await Promise.all([
+      db.from('tbb_challenge_items')
+        .select('id,item_key,title,description,emoji,display_order,is_free_space')
+        .eq('challenge_id',id)
+        .order('display_order'),
+
+      db.from('tbb_challenge_progress')
+        .select('item_id')
+        .eq('challenge_id',id)
+        .eq('user_id',user.id)
+    ]);
+
+    if (itemsResult.error) throw itemsResult.error;
+    if (progressResult.error) throw progressResult.error;
+
+    const items=itemsResult.data;
+
+    if (items.length!==size*size) {
+      throw Error('This Bingo board is not fully configured.');
+    }
+
+    const arranged=await getBoardLayout(challenge,items);
+
+    if (token!==loadingToken) return;
+
+    currentChallenge=challenge;
+    boardItems=arranged;
+    completed=new Set(
+      progressResult.data.map(row=>row.item_id)
+    );
+
+    $('gameSection').hidden=false;
+    renderBoard();
+    message('challengeStatus','💗 Your Bingo board is ready!');
+  } catch(error) {
+    if (token!==loadingToken) return;
+    message(
+      'challengeStatus',
+      `Could not load Bingo: ${errorText(error)}`,
+      true
+    );
+  }
+}
+
+
+async function loadChallenges() {
+  message('challengeStatus', 'Finding available Bingo challenges…');
+
+  const date = todayLocal();
+
+  const result = await db
+    .from('tbb_challenges')
+    .select('id,title,description,theme,settings,start_date,end_date')
+    .eq('challenge_type', 'bingo')
+    .eq('status', 'published')
+    .eq('is_template', false)
+    .or(`start_date.is.null,start_date.lte.${date}`)
+    .or(`end_date.is.null,end_date.gte.${date}`)
+    .order('created_at', { ascending: false });
+
+  if (result.error) throw result.error;
+
+  challenges = result.data || [];
+
+  const select = $('challengeSelect');
+  select.replaceChildren();
+
+  if (!challenges.length) {
+    select.disabled = true;
+
+    const option = document.createElement('option');
+    option.value = '';
+    option.textContent = 'No active Bingo challenges yet';
+    select.append(option);
+
+    message(
+      'challengeStatus',
+      '🎀 No Bingo boards are open right now. Check back soon!'
+    );
+    return;
+  }
+
+  for (const challenge of challenges) {
+    const option = document.createElement('option');
+    option.value = challenge.id;
+    option.textContent = challenge.title;
+    select.append(option);
+  }
+
+  const requestedId = new URLSearchParams(
+    window.location.search
+  ).get('challenge');
+
+  const requestedChallenge = challenges.find(
+    challenge => challenge.id === requestedId
+  );
+
+  if (requestedId && !requestedChallenge) {
+    select.disabled = true;
+
+    message(
+      'challengeStatus',
+      '💗 This Bingo challenge is not currently available.',
+      true
+    );
+    return;
+  }
+
+  select.disabled = false;
+
+  const chosen = requestedChallenge || challenges[0];
+
+  select.value = chosen.id;
+
+  await openChallenge(chosen.id);
+}
+
+
+
+$('challengeSelect').addEventListener('change', event => {
+  const id = event.target.value;
+
+  if (!id) return;
+
+  const url = new URL(window.location.href);
+  url.searchParams.set('challenge', id);
+  history.replaceState(null, '', url);
+
+  openChallenge(id);
+});
+
+
+(async function initialize() {
+  try {
+    const access=await requireAccess(false);
+
+    if (!access?.user?.id) {
+      throw Error('Please sign in to access Bingo.');
+    }
+
+    user=access.user;
+    $('app').hidden=false;
+    $('accessMessage').hidden=true;
+
+    await loadChallenges();
+  } catch(error) {
+    if (!user) {
+      $('accessMessage').textContent=
+        `Unable to open Bingo: ${errorText(error)}`;
+    } else {
+      message('challengeStatus',errorText(error),true);
+    }
+  }
+})();
+</script>
+</body>
+</html>
