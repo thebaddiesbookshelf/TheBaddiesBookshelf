@@ -561,6 +561,50 @@ input:focus,textarea:focus,button:focus-visible {
   .vanity-featured {grid-template-columns:1fr;gap:12px}
   .vanity-feature {padding:20px}
 }
+
+
+/* ==========================================
+   PHASE 9 — GOLDEN SHELF™ VANITY CARD
+   ========================================== */
+
+.golden-shelf-card {
+  background:
+    linear-gradient(
+      135deg,
+      #3d2334 0%,
+      #261627 55%,
+      #432b27 100%
+    );
+  border: 1px solid #dcb777;
+  box-shadow: 0 8px 30px #0003;
+}
+
+.golden-shelf-card h3 {
+  color: #f3c77c;
+  font-family: Georgia, serif;
+  letter-spacing: 1px;
+}
+
+.golden-shelf-card .symbol {
+  font-size: 36px;
+}
+
+.golden-shelf-card .status a {
+  color: #f3c77c;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.golden-shelf-card .status a:hover {
+  text-decoration: underline;
+}
+
+.golden-shelf-card[hidden] {
+  display: none !important;
+}
+
+/* END GOLDEN SHELF™ CARD */
+
 </style>
 </head>
 <body>
@@ -868,6 +912,67 @@ input:focus,textarea:focus,button:focus-visible {
     </a>
   </div>
 </article>
+
+    <!-- ==========================================
+     PHASE 9 — THE ROLE DESK™
+     VANITY™ DASHBOARD SHORTCUT
+     Official Website Role Requests
+     ========================================== -->
+
+      <article class="panel dashboard-card">
+        <div class="symbol">💌</div>
+
+        <h3>The Role Desk™</h3>
+
+        <p>
+          Already part of the TBB Team? 💗
+          Request your official website role right here,
+          whether you're a Golden Shelf™ member,
+          TBB Staff, or an authorized Administrator! 👑
+          Submit your request and let the Admin Team
+          take care of the rest. 💋
+        </p>
+
+        <div class="status">
+          <a href="role-requests.html">
+            Request My TBB Role 👑 →
+          </a>
+        </div>
+      </article>
+
+      <!-- END PHASE 9 — THE ROLE DESK™ -->
+       
+<!-- ==========================================
+     PHASE 9 — THE GOLDEN SHELF™
+     INVITATION-ONLY VANITY ENTRANCE
+     ========================================== -->
+
+<article
+  class="panel dashboard-card golden-shelf-card"
+  id="goldenShelfCard"
+  hidden
+>
+  <div class="symbol">👑</div>
+
+  <h3>Golden Shelf™</h3>
+
+  <p>
+    You've been invited into TBB's exclusive
+    Baddie inner circle! 💗
+    Spill the tea, cast your Pink Ballots™,
+    share your ideas, and get a first look
+    at what's coming next. ✨
+  </p>
+
+  <div class="status">
+    <a href="golden-shelf.html">
+      Enter The Golden Shelf™ 👑 →
+    </a>
+  </div>
+</article>
+
+<!-- END THE GOLDEN SHELF™ -->
+
 
     <article class="panel dashboard-card">
       <div class="symbol">🎉</div>
@@ -1681,6 +1786,34 @@ async function init() {
 
     currentUser = access.user;
     void refreshMailBadge();
+    
+// ==========================================
+// PHASE 9 — GOLDEN SHELF™ ACCESS CHECK
+// ==========================================
+
+try {
+  const { data: hasGoldenAccess, error: goldenError } =
+    await db.rpc("tbb_can_access_golden");
+
+  if (goldenError) {
+    console.warn(
+      "Golden Shelf access check unavailable:",
+      goldenError.message
+    );
+  } else {
+    $("goldenShelfCard").hidden =
+      hasGoldenAccess !== true;
+  }
+
+} catch (error) {
+  console.warn(
+    "Golden Shelf access check failed:",
+    error.message
+  );
+}
+
+// END GOLDEN SHELF™ ACCESS CHECK
+
     
     await loadFriendPreferences(currentUser.id);
     

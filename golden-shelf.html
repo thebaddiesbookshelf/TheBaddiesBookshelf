@@ -1,0 +1,1181 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#160b19">
+<title>The Golden Shelf™ | The Baddies Bookshelf</title>
+<link rel="icon" href="favicon.ico">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  color-scheme:dark;
+  --bg:#100912;
+  --panel:#211326;
+  --pink:#ff3ba9;
+  --gold:#f3c77c;
+  --text:#fff5fc;
+  --muted:#cbb4ca;
+  --line:#76516e;
+}
+* {box-sizing:border-box}
+body {
+  margin:0;
+  min-height:100vh;
+  background:radial-gradient(ellipse at 15% 0%,#48203f,transparent 40%),var(--bg);
+  color:var(--text);
+  font:15px/1.6 "DM Sans",sans-serif;
+}
+button,input,textarea {font:inherit}
+button {cursor:pointer}
+button:disabled {opacity:.55;cursor:not-allowed}
+a {color:#ffabd9}
+.wrap {max-width:1050px;margin:auto;padding:25px 16px 80px}
+nav {display:flex;gap:18px;flex-wrap:wrap;padding:10px 0;font-weight:700}
+.hero {text-align:center;padding:38px 12px}
+.eyebrow {
+  color:var(--gold);
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:3px;
+  text-transform:uppercase;
+}
+h1,h2 {font-family:"Playfair Display",serif}
+h1 {font-size:clamp(38px,7vw,68px);margin:8px 0;color:var(--gold)}
+h2 {font-size:25px;color:#ffd3ec}
+.hero p {color:var(--muted)}
+.tabs {display:flex;gap:9px;flex-wrap:wrap;margin:20px 0}
+.tab,.btn {
+  border:1px solid #a46b91;
+  border-radius:12px;
+  padding:11px 15px;
+  background:#38213e;
+  color:white;
+  font-weight:800;
+}
+.tab.active,.btn.primary {
+  background:linear-gradient(120deg,#ff3ba9,#a91d76);
+  border-color:#ff81ca;
+}
+.panel,.item {
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:19px;
+  padding:22px;
+  margin:15px 0;
+  box-shadow:0 10px 30px #0003;
+}
+.item {background:#2c1931;padding:17px}
+textarea,input[type=text] {
+  width:100%;
+  background:#120b16;
+  border:1px solid #98628b;
+  border-radius:12px;
+  padding:12px;
+  color:white;
+  margin:8px 0;
+  resize:vertical;
+}
+textarea {min-height:100px}
+label {display:block;font-weight:800}
+.muted {color:var(--muted);font-size:13px}
+.author {color:#ffabd9;font-weight:800}
+.meta {font-size:12px;color:var(--muted)}
+.body {white-space:pre-wrap;overflow-wrap:anywhere;margin:12px 0}
+.actions {display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}
+.reply {border-top:1px solid #64445f;padding:12px 0}
+.notice {
+  background:#321d35;
+  border:1px solid var(--gold);
+  border-radius:13px;
+  padding:15px;
+  margin:16px 0;
+}
+.error {color:#ffafbd}
+.success {color:#a8f1bd}
+.option {
+  display:block;
+  padding:10px;
+  background:#38213e;
+  border-radius:10px;
+  margin:7px 0;
+}
+.option input {margin-right:9px}
+.reaction-area {margin-top:14px}
+.reaction-button {padding:7px 11px}
+.reaction-button[aria-pressed=true] {
+  background:#7b285d;
+  border-color:#ff87cc;
+}
+.danger {border-color:#b45c75}
+.section[hidden],#app[hidden],[hidden] {display:none!important}
+footer {text-align:center;color:#bca0b7;padding:25px}
+button:focus-visible,a:focus-visible,textarea:focus-visible,input:focus-visible {
+  outline:3px solid #ffb5e0;
+  outline-offset:3px;
+}
+@media(max-width:600px) {
+  .tab {flex:1 1 42%;font-size:13px}
+  .panel {padding:16px}
+  .hero {padding:22px 8px}
+}
+</style>
+</head>
+<body>
+<main class="wrap">
+<nav>
+<a href="home.html">← TBB Home</a>
+<a href="member.html">💋 My Vanity™</a>
+<a href="commons.html">💬 The Commons™</a>
+</nav>
+
+<header class="hero">
+<div class="eyebrow">✦ An Invitation-Only Baddie Experience ✦</div>
+<h1>👑 The Golden Shelf™</h1>
+<p>Where exclusive conversations spark our next big ideas. 💗</p>
+</header>
+
+<div id="notice" class="notice" role="status" aria-live="polite">
+Checking your Golden Shelf invitation…
+</div>
+
+<div id="app" hidden>
+<div class="tabs" role="tablist" aria-label="Golden Shelf sections">
+<button class="tab active" data-tab="chat" type="button">💬 Golden Chat</button>
+<button class="tab" data-tab="polls" type="button">🗳️ Golden Ballots</button>
+<button class="tab" data-tab="questions" type="button">💭 Think Tank</button>
+<button class="tab" data-tab="exclusives" type="button">✨ Exclusives</button>
+</div>
+
+<section id="chat" class="section">
+<div class="panel">
+<h2>💬 The Golden Chat™</h2>
+<p class="muted">Your private corner to spill the tea, swap ideas, and connect with fellow Golden Shelf Baddies.</p>
+<form id="chatForm">
+<label for="chatBody">What's on your mind, Baddie? 💗</label>
+<textarea id="chatBody" maxlength="5000" required placeholder="Spill the tea, Baddie…"></textarea>
+<button class="btn primary" type="submit">💌 Send to Golden Chat</button>
+</form>
+</div>
+<div id="chatFeed"></div>
+</section>
+
+<section id="polls" class="section" hidden>
+<div class="panel">
+<h2>🗳️ Golden Ballots™</h2>
+<p class="muted">Help shape upcoming TBB events, themes, activities, and giveaways.</p>
+<div id="pollCreator" hidden>
+<form id="pollForm">
+<label for="pollQuestion">Create a Golden Ballot</label>
+<textarea id="pollQuestion" maxlength="1000" required placeholder="What should our next event be?"></textarea>
+<label for="pollOptions">Options — one per line (2–10)</label>
+<textarea id="pollOptions" required placeholder="Option one&#10;Option two&#10;Option three"></textarea>
+<button class="btn primary" type="submit">Publish Golden Ballot</button>
+</form>
+</div>
+</div>
+<div id="pollFeed"></div>
+</section>
+
+<section id="questions" class="section" hidden>
+<div class="panel">
+<h2>💭 Baddie Think Tank™</h2>
+<p class="muted">Your opinions help build the next chapter of The Baddies Bookshelf.</p>
+<div id="questionCreator" hidden>
+<form id="questionForm">
+<label for="questionBody">Ask the Golden Shelf Baddies</label>
+<textarea id="questionBody" maxlength="2000" required placeholder="What should we improve or create next?"></textarea>
+<button class="btn primary" type="submit">Post Question</button>
+</form>
+</div>
+</div>
+<div id="questionFeed"></div>
+</section>
+
+<section id="exclusives" class="section" hidden>
+<div class="panel">
+<h2>✨ Baddie Exclusives™</h2>
+<p class="muted">Early previews, special announcements, and a little behind-the-scenes magic.</p>
+<div id="exclusiveCreator" hidden>
+<form id="exclusiveForm">
+<label for="exclusiveTitle">Exclusive Title</label>
+<input id="exclusiveTitle" type="text" maxlength="150" required placeholder="Something special is coming…">
+<label for="exclusiveBody">Announcement</label>
+<textarea id="exclusiveBody" maxlength="5000" required></textarea>
+<button class="btn primary" type="submit">Publish Exclusive</button>
+</form>
+</div>
+</div>
+<div id="exclusiveFeed"></div>
+</section>
+</div>
+
+<footer>✦ The Baddies Bookshelf · Golden Shelf™ · Invitation Only ✦</footer>
+</main>
+
+<script type="module">
+import {db,requireAccess} from "./js/auth.js";
+
+const $ = id => document.getElementById(id);
+
+const el = (tag,text="",cls="") => {
+  const x = document.createElement(tag);
+  x.textContent = text;
+  if(cls)x.className = cls;
+  return x;
+};
+
+const btn = (text,fn) => {
+  const b = el("button",text,"btn");
+  b.type = "button";
+  b.onclick = fn;
+  return b;
+};
+
+let user = null;
+let admin = false;
+let active = "chat";
+let busy = false;
+let chatSignature = "";
+const names = new Map();
+const expandedPosts = new Set();
+
+const goldenEmojis = ["💗","😂","😍","🔥","👑","📚","✨","😭"];
+
+function notice(text,error=false) {
+  $("notice").textContent = text;
+  $("notice").className = "notice" + (error ? " error" : "");
+  $("notice").hidden = false;
+}
+
+function errorMessage(error) {
+  notice(error?.message || "Something went wrong.",true);
+}
+
+function time(date) {
+  return new Date(date).toLocaleString();
+}
+
+async function profiles(ids) {
+  const missing = [...new Set(ids.filter(id => id && !names.has(id)))];
+
+  if(!missing.length)return;
+
+  const {data,error} = await db
+    .from("tbb_profiles")
+    .select("user_id,display_name")
+    .in("user_id",missing);
+
+  if(error)console.warn(error.message);
+
+  for(const p of data || []) {
+    names.set(p.user_id,p.display_name || "TBB Baddie");
+  }
+
+  for(const id of missing) {
+    if(!names.has(id))names.set(id,"TBB Baddie");
+  }
+}
+
+function author(id) {
+  return names.get(id) || "TBB Baddie";
+}
+
+function card(title,body,by,date) {
+  const x = el("article","","item");
+
+  x.append(
+    el("div",title,"author"),
+    el("div",`${by} · ${time(date)}`,"meta"),
+    el("div",body,"body")
+  );
+
+  return x;
+}
+
+async function verify() {
+  const {data,error} = await db.rpc("tbb_can_access_golden");
+  if(error)throw error;
+  return data === true;
+}
+
+async function loadSection() {
+  if(active === "chat")return loadChat();
+  if(active === "polls")return loadPolls();
+  if(active === "questions")return loadQuestions();
+  return loadExclusives();
+}
+
+function selectTab(tab) {
+  active = tab;
+
+  document.querySelectorAll(".tab").forEach(b => {
+    const selected = b.dataset.tab === tab;
+    b.classList.toggle("active",selected);
+    b.setAttribute("aria-selected",String(selected));
+  });
+
+  document.querySelectorAll(".section").forEach(s => {
+    s.hidden = s.id !== tab;
+  });
+
+  void loadSection().catch(errorMessage);
+}
+
+document.querySelectorAll(".tab").forEach(b => {
+  b.onclick = () => selectTab(b.dataset.tab);
+});
+
+/* ==========================================
+   ADMIN MODERATION
+   ========================================== */
+
+async function deleteGoldenItem(table,id,label,reload) {
+  if(!admin)return;
+
+  if(!confirm(
+    `Permanently delete this ${label}?\n\nThis cannot be undone.`
+  ))return;
+
+  const {data,error} = await db
+    .from(table)
+    .delete()
+    .eq("id",id)
+    .select("id");
+
+  if(error)return errorMessage(error);
+
+  if(!data?.length) {
+    return notice("Deletion was not confirmed. Please try again.",true);
+  }
+
+  notice(`👑 ${label} deleted successfully.`);
+
+  if(reload)await reload();
+  else await loadSection();
+}
+
+function addGoldenDeleteButton(container,table,id,label,reload) {
+  if(!admin)return;
+
+  const button = btn("🗑️ Delete",() =>
+    deleteGoldenItem(table,id,label,reload)
+  );
+
+  button.classList.add("danger");
+  container.append(button);
+}
+
+/* ==========================================
+   GOLDEN CHAT™ REACTIONS
+   ========================================== */
+
+async function loadGoldenReactions(postId,container) {
+  const {data,error} = await db
+    .from("tbb_golden_reactions")
+    .select("id,user_id,emoji")
+    .eq("post_id",postId);
+
+  if(error) {
+    container.textContent = "Reactions unavailable.";
+    console.warn(error.message);
+    return;
+  }
+
+  container.replaceChildren();
+
+  const reactions = data || [];
+  const heading = el("div","React to this post 💗","muted");
+  container.append(heading);
+
+  const row = el("div","","actions");
+
+  for(const emoji of goldenEmojis) {
+    const matching = reactions.filter(r => r.emoji === emoji);
+    const own = matching.find(r => r.user_id === user.id);
+
+    const button = btn(`${emoji} ${matching.length}`,async () => {
+      button.disabled = true;
+
+      let result;
+
+      if(own) {
+        result = await db
+          .from("tbb_golden_reactions")
+          .delete()
+          .eq("id",own.id)
+          .eq("user_id",user.id);
+      } else {
+        result = await db
+          .from("tbb_golden_reactions")
+          .insert({
+            post_id:postId,
+            user_id:user.id,
+            emoji
+          });
+      }
+
+      button.disabled = false;
+
+      if(result.error)return errorMessage(result.error);
+
+      await loadGoldenReactions(postId,container);
+    });
+
+    button.classList.add("reaction-button");
+    button.setAttribute("aria-pressed",String(!!own));
+    row.append(button);
+  }
+
+  container.append(row);
+}
+
+/* ==========================================
+   GOLDEN CHAT™ POSTS
+   ========================================== */
+
+async function loadChat() {
+  const {data,error} = await db
+    .from("tbb_golden_posts")
+    .select("id,author_id,body,created_at")
+    .order("created_at",{ascending:false})
+    .limit(100);
+
+  if(error)throw error;
+
+  await profiles((data || []).map(p => p.author_id));
+
+  const feed = $("chatFeed");
+  feed.replaceChildren();
+
+  if(!data?.length) {
+    chatSignature = "[]";
+    feed.append(el(
+      "div",
+      "No messages yet. Start the conversation, Baddie! 💗",
+      "panel"
+    ));
+    return;
+  }
+
+  for(const p of data) {
+    const x = card(
+      author(p.author_id),
+      p.body,
+      "Golden Chat",
+      p.created_at
+    );
+
+    const reactionArea = el("div","","reaction-area");
+    x.append(reactionArea);
+    void loadGoldenReactions(p.id,reactionArea);
+
+    const replies = el("div","","replies");
+    replies.hidden = !expandedPosts.has(p.id);
+
+    const actions = el("div","","actions");
+
+    const toggle = btn(
+      expandedPosts.has(p.id) ? "Hide Replies" : "💬 Show Replies",
+      async () => {
+        if(expandedPosts.has(p.id)) {
+          expandedPosts.delete(p.id);
+          replies.hidden = true;
+          toggle.textContent = "💬 Show Replies";
+        } else {
+          expandedPosts.add(p.id);
+          replies.hidden = false;
+          toggle.textContent = "Hide Replies";
+          await loadReplies(p.id,replies);
+        }
+      }
+    );
+
+    actions.append(toggle);
+
+    addGoldenDeleteButton(
+      actions,
+      "tbb_golden_posts",
+      p.id,
+      "Golden Chat post",
+      loadChat
+    );
+
+    x.append(actions,replies);
+    feed.append(x);
+
+    if(expandedPosts.has(p.id)) {
+      void loadReplies(p.id,replies);
+    }
+  }
+
+  chatSignature = JSON.stringify(
+    data.map(p => [p.id,p.body,p.created_at])
+  );
+}
+
+async function loadReplies(postId,root) {
+  const {data,error} = await db
+    .from("tbb_golden_replies")
+    .select("id,author_id,body,created_at")
+    .eq("post_id",postId)
+    .order("created_at",{ascending:true});
+
+  if(error)return errorMessage(error);
+
+  await profiles((data || []).map(r => r.author_id));
+
+  root.replaceChildren();
+
+  for(const r of data || []) {
+    const x = el("div","","reply");
+
+    x.append(
+      el("strong",author(r.author_id),"author"),
+      el("div",r.body,"body"),
+      el("small",time(r.created_at),"meta")
+    );
+
+    addGoldenDeleteButton(
+      x,
+      "tbb_golden_replies",
+      r.id,
+      "reply",
+      () => loadReplies(postId,root)
+    );
+
+    root.append(x);
+  }
+
+  const form = el("form");
+  const input = el("textarea");
+
+  input.maxLength = 2000;
+  input.required = true;
+  input.placeholder = "Reply to a fellow Baddie…";
+
+  const send = el("button","Post Reply","btn primary");
+  send.type = "submit";
+
+  form.append(input,send);
+
+  form.onsubmit = async e => {
+    e.preventDefault();
+
+    const body = input.value.trim();
+    if(!body)return;
+
+    send.disabled = true;
+
+    const {error} = await db
+      .from("tbb_golden_replies")
+      .insert({
+        post_id:postId,
+        author_id:user.id,
+        body
+      });
+
+    send.disabled = false;
+
+    if(error)return errorMessage(error);
+
+    await loadReplies(postId,root);
+  };
+
+  root.append(form);
+}
+
+$("chatForm").onsubmit = async e => {
+  e.preventDefault();
+
+  const body = $("chatBody").value.trim();
+  if(!body)return;
+
+  const send = e.currentTarget.querySelector('[type="submit"]');
+  send.disabled = true;
+
+  const {error} = await db
+    .from("tbb_golden_posts")
+    .insert({author_id:user.id,body});
+
+  send.disabled = false;
+
+  if(error)return errorMessage(error);
+
+  $("chatBody").value = "";
+  await loadChat();
+};
+
+/* ==========================================
+   GOLDEN BALLOTS™
+   ========================================== */
+
+async function loadPolls() {
+  const {data,error} = await db
+    .from("tbb_golden_polls")
+    .select("id,author_id,question,options,is_open,created_at")
+    .order("created_at",{ascending:false});
+
+  if(error)throw error;
+
+  const ids = (data || []).map(p => p.id);
+  let votes = [];
+
+  if(ids.length) {
+    const result = await db
+      .from("tbb_golden_votes")
+      .select("poll_id,user_id,option_index")
+      .in("poll_id",ids);
+
+    if(result.error)throw result.error;
+    votes = result.data || [];
+  }
+
+  const feed = $("pollFeed");
+  feed.replaceChildren();
+
+  if(!data?.length) {
+    feed.append(el(
+      "div",
+      "No Golden Ballots have been posted yet.",
+      "panel"
+    ));
+    return;
+  }
+
+  for(const p of data) {
+    const x = el("article","","item");
+
+    x.append(
+      el("h3",p.question),
+      el("p",p.is_open ? "Voting is open 💗" : "🔒 Poll closed","muted")
+    );
+
+    const options = Array.isArray(p.options) ? p.options : [];
+    const mine = votes.find(
+      v => v.poll_id === p.id && v.user_id === user.id
+    );
+
+    const form = el("form");
+    const groupName = "poll_" + p.id;
+
+    options.forEach((option,index) => {
+      const label = el("label","","option");
+      const radio = el("input");
+
+      radio.type = "radio";
+      radio.name = groupName;
+      radio.value = String(index);
+      radio.disabled = !!mine || !p.is_open;
+      if(mine?.option_index === index)radio.checked = true;
+
+      label.append(radio,document.createTextNode(String(option)));
+      form.append(label);
+    });
+
+    if(!mine && p.is_open) {
+      const send = el("button","Cast My Vote","btn primary");
+      send.type = "submit";
+      form.append(send);
+
+      form.onsubmit = async e => {
+        e.preventDefault();
+
+        const selected = form.querySelector("input:checked");
+        if(!selected)return;
+
+        send.disabled = true;
+
+        const {error} = await db
+          .from("tbb_golden_votes")
+          .insert({
+            poll_id:p.id,
+            user_id:user.id,
+            option_index:Number(selected.value)
+          });
+
+        send.disabled = false;
+
+        if(error)return errorMessage(error);
+
+        await loadPolls();
+      };
+    }
+
+    x.append(form);
+
+    if(mine) {
+      x.append(el("p","✓ Your vote has been recorded.","success"));
+    }
+
+    const counts = options.map((_,i) =>
+      votes.filter(v =>
+        v.poll_id === p.id && v.option_index === i
+      ).length
+    );
+
+    const total = counts.reduce((a,b) => a+b,0);
+
+    options.forEach((option,i) => {
+      const percent = total
+        ? Math.round(counts[i] / total * 100)
+        : 0;
+
+      x.append(el(
+        "p",
+        `${option}: ${counts[i]} vote(s) · ${percent}%`,
+        "muted"
+      ));
+    });
+
+    if(admin) {
+      const controls = el("div","","actions");
+
+      const statusButton = btn(
+        p.is_open ? "🔒 Close Voting" : "🔓 Reopen Voting",
+        async () => {
+          const action = p.is_open ? "close" : "reopen";
+
+          if(!confirm(`Are you sure you want to ${action} this poll?`)) {
+            return;
+          }
+
+          statusButton.disabled = true;
+
+          const {data:updated,error} = await db
+            .from("tbb_golden_polls")
+            .update({is_open:!p.is_open})
+            .eq("id",p.id)
+            .select("id,is_open");
+
+          statusButton.disabled = false;
+
+          if(error)return errorMessage(error);
+
+          if(!updated?.length) {
+            return notice("Poll update was not confirmed.",true);
+          }
+
+          await loadPolls();
+        }
+      );
+
+      controls.append(statusButton);
+
+      addGoldenDeleteButton(
+        controls,
+        "tbb_golden_polls",
+        p.id,
+        "Golden Ballot",
+        loadPolls
+      );
+
+      x.append(controls);
+    }
+
+    feed.append(x);
+  }
+}
+
+$("pollForm").onsubmit = async e => {
+  e.preventDefault();
+  if(!admin)return;
+
+  const question = $("pollQuestion").value.trim();
+  const options = $("pollOptions").value
+    .split("\n")
+    .map(s => s.trim())
+    .filter(Boolean);
+
+  if(!question || options.length < 2 || options.length > 10) {
+    return notice("Please provide a question and 2–10 options.",true);
+  }
+
+  const send = e.currentTarget.querySelector('[type="submit"]');
+  send.disabled = true;
+
+  const {error} = await db
+    .from("tbb_golden_polls")
+    .insert({
+      author_id:user.id,
+      question,
+      options
+    });
+
+  send.disabled = false;
+
+  if(error)return errorMessage(error);
+
+  e.currentTarget.reset();
+await loadPolls();
+
+notice("🗳️ Your Golden Ballot™ has been published successfully! 💗");
+
+$("pollFeed").scrollIntoView({
+  behavior: "smooth",
+  block: "start"
+});
+};
+
+/* ==========================================
+   BADDIE THINK TANK™
+   ========================================== */
+
+async function loadQuestions() {
+  const {data,error} = await db
+    .from("tbb_golden_questions")
+    .select("id,author_id,question,created_at")
+    .order("created_at",{ascending:false});
+
+  if(error)throw error;
+
+  const feed = $("questionFeed");
+  feed.replaceChildren();
+
+  if(!data?.length) {
+    feed.append(el(
+      "div",
+      "No questions yet. The next big idea is coming!",
+      "panel"
+    ));
+    return;
+  }
+
+  for(const q of data) {
+    const x = el("article","","item");
+
+    x.append(
+      el("h3",q.question),
+      el("small",time(q.created_at),"meta")
+    );
+
+    const answers = el("div");
+    answers.hidden = true;
+
+    const actions = el("div","","actions");
+
+    const toggle = btn("💬 View Responses",async () => {
+      answers.hidden = !answers.hidden;
+
+      toggle.textContent = answers.hidden
+        ? "💬 View Responses"
+        : "Hide Responses";
+
+      if(!answers.hidden)await loadAnswers(q.id,answers);
+    });
+
+    actions.append(toggle);
+
+    addGoldenDeleteButton(
+      actions,
+      "tbb_golden_questions",
+      q.id,
+      "Think Tank question",
+      loadQuestions
+    );
+
+    x.append(actions,answers);
+    feed.append(x);
+  }
+}
+
+async function loadAnswers(questionId,root) {
+  const {data,error} = await db
+    .from("tbb_golden_answers")
+    .select("id,author_id,body,created_at")
+    .eq("question_id",questionId)
+    .order("created_at",{ascending:true});
+
+  if(error)return errorMessage(error);
+
+  await profiles((data || []).map(a => a.author_id));
+
+  root.replaceChildren();
+
+  for(const a of data || []) {
+    const answerCard = card(
+      "💗 " + author(a.author_id),
+      a.body,
+      "Baddie Response",
+      a.created_at
+    );
+
+    addGoldenDeleteButton(
+      answerCard,
+      "tbb_golden_answers",
+      a.id,
+      "Think Tank response",
+      () => loadAnswers(questionId,root)
+    );
+
+    root.append(answerCard);
+  }
+
+  const form = el("form");
+  const input = el("textarea");
+
+  input.required = true;
+  input.maxLength = 2000;
+  input.placeholder = "Share your ideas, Baddie…";
+
+  const send = el("button","Submit My Thoughts","btn primary");
+  send.type = "submit";
+
+  form.append(input,send);
+
+  form.onsubmit = async e => {
+    e.preventDefault();
+
+    const body = input.value.trim();
+    if(!body)return;
+
+    send.disabled = true;
+
+    const {error} = await db
+      .from("tbb_golden_answers")
+      .insert({
+        question_id:questionId,
+        author_id:user.id,
+        body
+      });
+
+    send.disabled = false;
+
+    if(error)return errorMessage(error);
+
+    await loadAnswers(questionId,root);
+  };
+
+  root.append(form);
+}
+
+$("questionForm").onsubmit = async e => {
+  e.preventDefault();
+  if(!admin)return;
+
+  const question = $("questionBody").value.trim();
+  if(!question)return;
+
+  const send = e.currentTarget.querySelector('[type="submit"]');
+  send.disabled = true;
+
+  const {error} = await db
+    .from("tbb_golden_questions")
+    .insert({
+      author_id:user.id,
+      question
+    });
+
+  send.disabled = false;
+
+  if(error)return errorMessage(error);
+
+  e.currentTarget.reset();
+    await loadQuestions();
+
+    notice("💭 Your Think Tank™ question is officially live! 👑");
+
+    $("questionFeed").scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+    });
+};
+
+/* ==========================================
+   BADDIE EXCLUSIVES™
+   ========================================== */
+
+async function loadExclusives() {
+  const {data,error} = await db
+    .from("tbb_golden_exclusives")
+    .select("id,author_id,title,body,created_at")
+    .order("created_at",{ascending:false});
+
+  if(error)throw error;
+
+  await profiles((data || []).map(x => x.author_id));
+
+  const feed = $("exclusiveFeed");
+  feed.replaceChildren();
+
+  if(!data?.length) {
+    feed.append(el(
+      "div",
+      "No exclusives yet. Something fabulous is coming! ✨",
+      "panel"
+    ));
+    return;
+  }
+
+  for(const x of data) {
+    const exclusiveCard = card(
+      x.title,
+      x.body,
+      author(x.author_id),
+      x.created_at
+    );
+
+    addGoldenDeleteButton(
+      exclusiveCard,
+      "tbb_golden_exclusives",
+      x.id,
+      "Baddie Exclusive",
+      loadExclusives
+    );
+
+    feed.append(exclusiveCard);
+  }
+}
+
+$("exclusiveForm").onsubmit = async e => {
+  e.preventDefault();
+  if(!admin)return;
+
+  const title = $("exclusiveTitle").value.trim();
+  const body = $("exclusiveBody").value.trim();
+
+  if(!title || !body)return;
+
+  const send = e.currentTarget.querySelector('[type="submit"]');
+  send.disabled = true;
+
+  const {error} = await db
+    .from("tbb_golden_exclusives")
+    .insert({
+      author_id:user.id,
+      title,
+      body
+    });
+
+  send.disabled = false;
+
+  if(error)return errorMessage(error);
+
+  e.currentTarget.reset();
+  await loadExclusives();
+};
+
+/* ==========================================
+   AUTOMATIC CHAT REFRESH
+   ========================================== */
+
+async function refreshChat() {
+  if(active !== "chat" || document.hidden || busy)return;
+
+  // Don't interrupt a Baddie while typing a reply.
+  if(document.activeElement?.closest?.(".replies form"))return;
+
+  busy = true;
+
+  try {
+    const {data,error} = await db
+      .from("tbb_golden_posts")
+      .select("id,body,created_at")
+      .order("created_at",{ascending:false})
+      .limit(100);
+
+    if(error)throw error;
+
+    const next = JSON.stringify(
+      (data || []).map(p => [p.id,p.body,p.created_at])
+    );
+
+    if(next !== chatSignature)await loadChat();
+
+  } catch(error) {
+    console.warn("Golden Chat refresh:",error.message);
+  } finally {
+    busy = false;
+  }
+}
+
+/* ==========================================
+   INVITATION-ONLY ACCESS
+   ========================================== */
+
+async function init() {
+  try {
+    const access = await requireAccess(false);
+    if(!access)return;
+
+    user = access.user;
+
+    if(!await verify()) {
+      notice(
+        "👑 This space is invitation-only. Your account does not currently have Golden Shelf access."
+      );
+      return;
+    }
+
+    const { data: isGoldenAdmin, error: adminError } =
+        await db.rpc("tbb_is_golden_admin");
+
+        if (adminError) throw adminError;
+
+        admin = isGoldenAdmin === true;
+
+    $("pollCreator").hidden = !admin;
+    $("questionCreator").hidden = !admin;
+    $("exclusiveCreator").hidden = !admin;
+
+    $("app").hidden = false;
+    $("notice").hidden = true;
+
+    selectTab("chat");
+
+    setInterval(async () => {
+  if (document.hidden || busy) return;
+
+  // Golden Chat already has its own refresh protection.
+  if (active === "chat") {
+    await refreshChat();
+    return;
+  }
+
+  // Don't interrupt a Baddie while typing or voting.
+  const currentSection = document.getElementById(active);
+
+  if (
+    currentSection &&
+    currentSection.contains(document.activeElement) &&
+    (
+      document.activeElement.matches("textarea, input") ||
+      document.activeElement.closest("form")
+    )
+  ) {
+    return;
+  }
+
+  busy = true;
+
+  try {
+    if (active === "polls") {
+      await loadPolls();
+    }
+
+    if (active === "questions") {
+      await loadQuestions();
+    }
+
+    if (active === "exclusives") {
+      await loadExclusives();
+    }
+  } catch (error) {
+    console.warn("Golden Shelf auto-refresh:", error.message);
+  } finally {
+    busy = false;
+  }
+}, 3000);
+
+
+  } catch(error) {
+    errorMessage(error);
+  }
+}
+
+await init();
+</script>
+<script src="js/back-to-top.js" defer></script>
+</body>
+</html>

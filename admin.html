@@ -912,14 +912,53 @@
       <div id="postMailList" aria-live="polite"></div>
       <p class="hq-note">Recipient inbox and read/unread controls will appear when The Vanity™ is built. Sending mail here stores it securely now.</p>
     </section>
-    <section class="admin-card" id="emojiVault">
-      <h2>💋 The Emoji Vault™</h2>
-      <p>View your existing published custom reactions and their storage assets. Publishing, ordering, and uploading
-        will be connected in the dedicated Emoji Vault build.</p><button id="hqRefreshEmojis">Refresh Emoji
-        Catalog</button>
-      <p id="hqEmojiStatus" class="hq-small" role="status"></p>
-      <div id="hqEmojiList" class="closet-results"></div>
-    </section>
+    
+<section class="admin-card" id="emojiVault">
+  <h2>💋 The Emoji Vault™</h2>
+  <p>Upload, name, publish, and manage TBB's custom reactions. A little extra attitude for every Baddie! 💗</p>
+
+  <form id="emojiUploadForm" class="hq-form">
+    <h3>✨ Add a New Reaction</h3>
+
+    <label for="emojiName"><strong>Reaction name</strong></label>
+    <input id="emojiName" type="text" maxlength="60"
+      placeholder="Side Eye, Pink Hearts, Girl BYE..."
+      required style="width:100%">
+
+    <label for="emojiFile"><strong>Reaction image</strong></label>
+    <input id="emojiFile" type="file"
+      accept="image/png,image/webp" required>
+
+    <p class="hq-small">PNG or WebP only · Maximum 1 MB</p>
+
+    <div id="emojiPreviewBox" hidden>
+      <h3>🎀 Reaction Preview</h3>
+      <img id="emojiPreview" alt="New reaction preview"
+        style="width:90px;height:90px;object-fit:contain;border-radius:12px">
+      <p id="emojiShortcodePreview" class="hq-small"></p>
+    </div>
+
+    <label for="emojiPublish"><strong>Availability</strong></label>
+    <select id="emojiPublish">
+      <option value="draft">Save as draft</option>
+      <option value="published">Publish for Baddies</option>
+    </select>
+
+    <button id="emojiUploadButton" type="submit">
+      💗 Upload Reaction
+    </button>
+
+    <p id="emojiUploadStatus" class="hq-small" role="status"></p>
+  </form>
+
+  <h3>👑 Your Reaction Collection</h3>
+  <button id="hqRefreshEmojis" type="button">
+    ↻ Refresh Emoji Catalog
+  </button>
+  <p id="hqEmojiStatus" class="hq-small" role="status"></p>
+  <div id="hqEmojiList" class="closet-results"></div>
+</section>
+
     
     <section class="admin-card" id="headquarters">
       <h2>⚙️ The Headquarters™</h2>
@@ -1851,76 +1890,413 @@
       }
       table.append(body); wrap.append(table);
     }
-    async function hqLoadEmojis() {
-      const wrap = $('hqEmojiList');
-      wrap.replaceChildren();
-      hqSetStatus('hqEmojiStatus', 'Loading emoji catalog…');
-      const { data, error } = await db.from('tbb_custom_emojis').select('id,name,shortcode,storage_path,status,display_order').order('display_order', { ascending: true });
-      if (error) { hqSetStatus('hqEmojiStatus', error.message, true); return; }
-      for (const emoji of data || []) {
-        const card = hqElement('div', undefined, 'closet-book');
-        if (emoji.storage_path) {
-          const img = document.createElement('img');
-          img.src = db.storage.from('tbb-custom-emojis').getPublicUrl(emoji.storage_path).data.publicUrl;
-          img.alt = emoji.name;
-          img.onerror = () => { img.remove(); };
-          card.append(img);
-        }
-        const info = hqElement('span');
-        info.append(hqElement('strong', emoji.name), hqElement('small', `:${emoji.shortcode}: · ${emoji.status}`));
-        card.append(info); wrap.append(card);
-      }
-      hqSetStatus('hqEmojiStatus', `${data?.length || 0} emoji(s) in your catalog.`);
-    }
-    $('hqRefresh').onclick = hqLoadDashboard;
-    $('hqLoadReports').onclick = () => { hqReportPage = 0; hqLoadReports(); };
-    $('hqReportFilter').onchange = () => { hqReportPage = 0; hqLoadReports(); };
-    $('hqReportsPrev').onclick = () => { if (hqReportPage > 0) { hqReportPage--; hqLoadReports(); } };
-    $('hqReportsNext').onclick = () => { if ((hqReportPage + 1) * hqReportPageSize < hqReportTotal) { hqReportPage++; hqLoadReports(); } };
-    $('hqRefreshLog').onclick = hqLoadModLog;
-    $('hqRefreshEmojis').onclick = hqLoadEmojis;
+    
+/* ==========================================
+   THE EMOJI VAULT™
+   ADMIN UPLOAD + REACTION MANAGEMENT
+   ========================================== */
 
-    /* ACTIVITIES STUDIO + ROLE DESK — dedicated new tables, no changes to legacy tools */
-    const activityFields = ['Title', 'Type', 'Frequency', 'Status', 'Start', 'End', 'Description', 'Rules'];
-    function studioSetStatus(id, value, error = false) { const el = $(id); el.textContent = value; el.className = 'hq-small ' + (error ? 'error' : 'notice'); }
-    function hqLabelRole(role) { return role === 'golden_shelf' ? '📚 Golden Shelf™' : '💗 TBB Team Member (Staff)'; }
-    function hqLabelFrequency(f) { return ({ monthly: 'Monthly', every_two_months: 'Every two months', annual: 'Annual', seasonal: 'Seasonal', custom: 'Custom' })[f] || f; }
-    function studioElement(tag, value, className = '') { const el = document.createElement(tag); el.textContent = value; if (className) el.className = className; return el; }
-    function activityReset() {
-      $('activityForm').reset(); $('activityId').value = ''; $('activitySave').textContent = '💗 Save Activity';
-      studioSetStatus('activityFormStatus', '');
+const emojiBucket = "tbb-custom-emojis";
+const emojiMaxBytes = 1048576;
+
+let emojiPreviewUrl = null;
+let emojiUploading = false;
+
+function emojiShortcode(name) {
+  return String(name || "")
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "_")
+    .replace(/^_+|_+$/g, "")
+    .slice(0, 50);
+}
+
+function emojiValidateFile(file) {
+  if (!file) throw new Error("Choose a reaction image first.");
+
+  if (!["image/png", "image/webp"].includes(file.type)) {
+    throw new Error("Only PNG and WebP images are supported.");
+  }
+
+  if (file.size > emojiMaxBytes) {
+    throw new Error("Reaction images must be 1 MB or smaller.");
+  }
+
+  if (file.size === 0) {
+    throw new Error("The selected image is empty.");
+  }
+}
+
+function emojiClearPreview() {
+  if (emojiPreviewUrl) {
+    URL.revokeObjectURL(emojiPreviewUrl);
+    emojiPreviewUrl = null;
+  }
+
+  $("emojiPreviewBox").hidden = true;
+  $("emojiPreview").removeAttribute("src");
+}
+
+function emojiUpdatePreview() {
+  emojiClearPreview();
+
+  const name = $("emojiName").value.trim();
+  const shortcode = emojiShortcode(name);
+  const file = $("emojiFile").files[0];
+
+  $("emojiShortcodePreview").textContent =
+    shortcode ? `Shortcode: :${shortcode}:` : "";
+
+  if (!file) return;
+
+  try {
+    emojiValidateFile(file);
+    emojiPreviewUrl = URL.createObjectURL(file);
+    $("emojiPreview").src = emojiPreviewUrl;
+    $("emojiPreviewBox").hidden = false;
+    hqSetStatus("emojiUploadStatus", "");
+  } catch (error) {
+    hqSetStatus("emojiUploadStatus", error.message, true);
+  }
+}
+
+$("emojiName").addEventListener("input", emojiUpdatePreview);
+$("emojiFile").addEventListener("change", emojiUpdatePreview);
+
+$("emojiUploadForm").onsubmit = async event => {
+  event.preventDefault();
+
+  if (emojiUploading) return;
+
+  const name = $("emojiName").value.trim();
+  const shortcode = emojiShortcode(name);
+  const file = $("emojiFile").files[0];
+  const status = $("emojiPublish").value;
+
+  try {
+    const access = await requireAccess(true);
+
+    if (!access?.user?.id) {
+      throw new Error("Your admin session could not be verified. Please sign in again.");
     }
-    async function activityLoad() {
-      studioSetStatus('activityListStatus', 'Loading activities…'); $('activityList').replaceChildren();
+
+    if (!name || !shortcode) {
+      throw new Error(
+        "Enter a reaction name containing letters or numbers."
+      );
+    }
+
+    emojiValidateFile(file);
+
+    if (!["draft", "published"].includes(status)) {
+      throw new Error("Invalid reaction status.");
+    }
+
+    emojiUploading = true;
+    $("emojiUploadButton").disabled = true;
+
+    hqSetStatus(
+      "emojiUploadStatus",
+      "Checking reaction name…"
+    );
+
+    const { data: existing, error: checkError } = await db
+      .from("tbb_custom_emojis")
+      .select("id")
+      .eq("shortcode", shortcode)
+      .limit(1);
+
+    if (checkError) throw checkError;
+
+    if (existing?.length) {
+      throw new Error(
+        `The shortcode :${shortcode}: already exists. Choose another name.`
+      );
+    }
+
+    const extension =
+      file.type === "image/png" ? "png" : "webp";
+
+    const storagePath =
+      `emojis/${crypto.randomUUID()}.${extension}`;
+
+    hqSetStatus(
+      "emojiUploadStatus",
+      "Uploading your reaction… 💗"
+    );
+
+    const { error: uploadError } = await db.storage
+      .from(emojiBucket)
+      .upload(storagePath, file, {
+        contentType: file.type,
+        upsert: false
+      });
+
+    if (uploadError) throw uploadError;
+
+    const { error: saveError } = await db
+  .from("tbb_custom_emojis")
+  .insert({
+    name,
+    shortcode,
+    storage_path: storagePath,
+    status,
+    display_order: 0,
+    created_by: access.user.id
+  });
+  
+    if (saveError) {
+      const { error: cleanupError } = await db.storage
+        .from(emojiBucket)
+        .remove([storagePath]);
+
+      if (cleanupError) {
+        console.warn(
+          "Emoji upload cleanup failed:",
+          cleanupError.message
+        );
+      }
+
+      throw saveError;
+    }
+
+    $("emojiUploadForm").reset();
+    emojiClearPreview();
+
+    await hqLoadEmojis();
+
+    hqSetStatus(
+      "emojiUploadStatus",
+      `💋 ${name} uploaded successfully!`
+    );
+
+  } catch (error) {
+    hqSetStatus(
+      "emojiUploadStatus",
+      error.message,
+      true
+    );
+  } finally {
+    emojiUploading = false;
+    $("emojiUploadButton").disabled = false;
+  }
+};
+
+async function hqLoadEmojis() {
+  const wrap = $("hqEmojiList");
+  wrap.replaceChildren();
+
+  hqSetStatus(
+    "hqEmojiStatus",
+    "Loading reaction collection…"
+  );
+
+  const { data, error } = await db
+    .from("tbb_custom_emojis")
+    .select(
+      "id,name,shortcode,storage_path,status,display_order"
+    )
+    .order("display_order", { ascending: true })
+    .order("created_at", { ascending: true });
+
+  if (error) {
+    hqSetStatus(
+      "hqEmojiStatus",
+      error.message,
+      true
+    );
+    return;
+  }
+
+  if (!data?.length) {
+    wrap.textContent =
+      "No custom reactions yet. Upload your first one! 💗";
+    hqSetStatus("hqEmojiStatus", "0 reactions");
+    return;
+  }
+
+  for (const emoji of data) {
+    const card = hqElement("div", undefined, "item");
+
+    const image = document.createElement("img");
+    image.src = db.storage
+      .from(emojiBucket)
+      .getPublicUrl(emoji.storage_path)
+      .data.publicUrl;
+
+    image.alt = emoji.name;
+    image.loading = "lazy";
+
+    image.style.width = "85px";
+    image.style.height = "85px";
+    image.style.objectFit = "contain";
+
+    const title = hqElement("h3", emoji.name);
+    const shortcode = hqElement(
+      "p",
+      `:${emoji.shortcode}:`,
+      "muted"
+    );
+
+    const status = hqElement(
+      "p",
+      emoji.status === "published"
+        ? "💗 Published"
+        : "🔒 Draft",
+      "hq-small"
+    );
+
+    const actions = hqElement(
+      "div",
+      undefined,
+      "hq-item-actions"
+    );
+
+    const renameButton = hqElement(
+      "button",
+      "✏️ Rename"
+    );
+
+    renameButton.type = "button";
+
+    renameButton.onclick = async () => {
+      const newName = prompt(
+        "Enter the new reaction name:",
+        emoji.name
+      );
+
+      if (newName === null) return;
+
+      const trimmed = newName.trim();
+      const newCode = emojiShortcode(trimmed);
+
+      if (!trimmed || !newCode) {
+        alert("Enter a valid reaction name.");
+        return;
+      }
+
+      renameButton.disabled = true;
+
       try {
-        let q = db.from('tbb_activities').select('id,title,activity_type,frequency,starts_on,ends_on,description,rules,status,created_at').order('starts_on', { ascending: false }).limit(200);
-        if ($('activityListFilter').value !== 'all') q = q.eq('status', $('activityListFilter').value);
-        const { data, error } = await q; if (error) throw error;
-        studioSetStatus('activityListStatus', `${data.length} activities shown (newest 200 maximum).`);
-        for (const item of data) {
-          const card = document.createElement('article'); card.className = 'item';
-          card.append(studioElement('h3', item.title), studioElement('p', `${item.activity_type.replaceAll('_', ' ')} · ${hqLabelFrequency(item.frequency)} · ${item.starts_on} → ${item.ends_on} · ${item.status}`, 'muted'));
-          if (item.description) card.append(studioElement('p', item.description));
-          const actions = document.createElement('div'); actions.className = 'hq-item-actions';
-          const edit = document.createElement('button'); edit.type = 'button'; edit.textContent = '✏️ Edit';
-          edit.onclick = () => {
-            $('activityId').value = item.id;
-            for (const [id, value] of [['Title', item.title], ['Type', item.activity_type], ['Frequency', item.frequency], ['Status', item.status], ['Start', item.starts_on], ['End', item.ends_on], ['Description', item.description], ['Rules', item.rules]]) $('activity' + id).value = value || '';
-            $('activitySave').textContent = '💗 Update Activity'; $('activityForm').scrollIntoView({ behavior: 'smooth', block: 'start' });
-          }; actions.append(edit);
-          if (item.status !== 'archived') {
-            const archive = document.createElement('button'); archive.type = 'button'; archive.textContent = 'Archive';
-            archive.onclick = async () => {
-              if (!confirm(`Archive ${item.title}?`)) return; archive.disabled = true;
-              const { error } = await db.from('tbb_activities').update({ status: 'archived', updated_by: adminUser.id, updated_at: new Date().toISOString() }).eq('id', item.id);
-              if (error) { studioSetStatus('activityListStatus', error.message, true); archive.disabled = false; } else { if ($('activityId').value === item.id) activityReset(); await activityLoad(); }
-            }; actions.append(archive);
-          }
-          card.append(actions); $('activityList').append(card);
+        const { error } = await db
+          .from("tbb_custom_emojis")
+          .update({
+            name: trimmed,
+            shortcode: newCode
+          })
+          .eq("id", emoji.id);
+
+        if (error) throw error;
+
+        await hqLoadEmojis();
+      } catch (error) {
+        alert(error.message);
+      } finally {
+        renameButton.disabled = false;
+      }
+    };
+
+    const publishButton = hqElement(
+      "button",
+      emoji.status === "published"
+        ? "🔒 Unpublish"
+        : "💗 Publish"
+    );
+
+    publishButton.type = "button";
+
+    publishButton.onclick = async () => {
+      const nextStatus =
+        emoji.status === "published"
+          ? "draft"
+          : "published";
+
+      publishButton.disabled = true;
+
+      try {
+        const { error } = await db
+          .from("tbb_custom_emojis")
+          .update({ status: nextStatus })
+          .eq("id", emoji.id);
+
+        if (error) throw error;
+
+        await hqLoadEmojis();
+      } catch (error) {
+        alert(error.message);
+      } finally {
+        publishButton.disabled = false;
+      }
+    };
+
+    const deleteButton = hqElement(
+      "button",
+      "🗑️ Delete"
+    );
+
+    deleteButton.type = "button";
+
+    deleteButton.onclick = async () => {
+      if (!confirm(
+        `Permanently delete "${emoji.name}"? This cannot be undone.`
+      )) return;
+
+      deleteButton.disabled = true;
+
+      try {
+        const { error: deleteError } = await db
+          .from("tbb_custom_emojis")
+          .delete()
+          .eq("id", emoji.id);
+
+        if (deleteError) throw deleteError;
+
+        const { error: storageError } = await db.storage
+          .from(emojiBucket)
+          .remove([emoji.storage_path]);
+
+        if (storageError) {
+          console.warn(
+            "Emoji image cleanup:",
+            storageError.message
+          );
+          alert(
+            "Reaction record deleted, but image cleanup failed. " +
+            "Check the storage bucket for the unused image."
+          );
         }
-        if (!data.length) $('activityList').append(studioElement('p', 'No activities match this filter.'));
-      } catch (e) { studioSetStatus('activityListStatus', e.message, true); }
-    }
+
+        await hqLoadEmojis();
+      } catch (error) {
+        alert(error.message);
+      } finally {
+        deleteButton.disabled = false;
+      }
+    };
+
+    actions.append(
+      renameButton,
+      publishButton,
+      deleteButton
+    );
+
+    card.append(
+      image,
+      title,
+      shortcode,
+      status,
+      actions
+    );
+
+    wrap.append(card);
+  }
+
+  hqSetStatus(
+    "hqEmojiStatus",
+    `${data.length} reaction(s) in your collection. 💋`
+  );
+}
+
     async function activitySave(e) {
       e.preventDefault(); const btn = $('activitySave'); btn.disabled = true;
       try {
