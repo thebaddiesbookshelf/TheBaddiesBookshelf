@@ -104,6 +104,27 @@ label {display:block;font-weight:800}
 .option input {margin-right:9px}
 .reaction-area {margin-top:14px}
 .reaction-button {padding:7px 11px}
+
+.reaction-button {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  min-height:40px;
+}
+
+.reaction-image {
+  width:23px;
+  height:23px;
+  object-fit:contain;
+  vertical-align:middle;
+  flex-shrink:0;
+}
+
+.reaction-count {
+  font-weight:800;
+}
+
 .reaction-button[aria-pressed=true] {
   background:#7b285d;
   border-color:#ff87cc;
@@ -367,64 +388,222 @@ function addGoldenDeleteButton(container,table,id,label,reload) {
   container.append(button);
 }
 
+
 /* ==========================================
    GOLDEN CHAT™ REACTIONS
+   BUILT-IN + EMOJI VAULT™
    ========================================== */
 
-async function loadGoldenReactions(postId,container) {
-  const {data,error} = await db
-    .from("tbb_golden_reactions")
-    .select("id,user_id,emoji")
-    .eq("post_id",postId);
+const emojiVaultBucket = "tbb-custom-emojis";
 
-  if(error) {
+let goldenCustomEmojis = [];
+let goldenEmojiLoadedAt = 0;
+let goldenEmojiPromise = null;
+
+async function loadGoldenCustomEmojis(force = false) {
+  const now = Date.now();
+
+  if (
+    !force &&
+    goldenEmojiLoadedAt &&
+    now - goldenEmojiLoadedAt < 30000
+  ) {
+    return goldenCustomEmojis;
+  }
+
+  if (goldenEmojiPromise) {
+    return goldenEmojiPromise;
+  }
+
+  goldenEmojiPromise = (async () => {
+    const { data, error } = await db
+      .from("tbb_custom_emojis")
+      .select(
+        "id,name,shortcode,storage_path,status,display_order"
+      )
+      .eq("status", "published")
+      .order("display_order", { ascending: true })
+      .order("created_at", { ascending: true });
+
+    if (error) {
+      console.warn(
+        "Emoji Vault reactions:",
+        error.message
+      );
+      return goldenCustomEmojis;
+    }
+
+    goldenCustomEmojis = (data || []).map(emoji => ({
+      ...emoji,
+      reactionKey: `:${emoji.shortcode}:`,
+      imageUrl: db.storage
+        .from(emojiVaultBucket)
+        .getPublicUrl(emoji.storage_path)
+        .data.publicUrl
+    }));
+
+    goldenEmojiLoadedAt = Date.now();
+
+    return goldenCustomEmojis;
+  })();
+
+  try {
+    return await goldenEmojiPromise;
+  } finally {
+    goldenEmojiPromise = null;
+  }
+}
+
+async function loadGoldenReactions(postId, container) {
+  const [reactionResult, customEmojis] = await Promise.all([
+    db
+      .from("tbb_golden_reactions")
+      .select("id,user_id,emoji")
+      .eq("post_id", postId),
+
+    loadGoldenCustomEmojis()
+  ]);
+
+  if (reactionResult.error) {
     container.textContent = "Reactions unavailable.";
-    console.warn(error.message);
+    console.warn(reactionResult.error.message);
     return;
   }
 
   container.replaceChildren();
 
-  const reactions = data || [];
-  const heading = el("div","React to this post 💗","muted");
+  const reactions = reactionResult.data || [];
+
+  const heading = el(
+    "div",
+    "React to this post 💗",
+    "muted"
+  );
+
   container.append(heading);
 
-  const row = el("div","","actions");
+  const row = el("div", "", "actions");
 
-  for(const emoji of goldenEmojis) {
-    const matching = reactions.filter(r => r.emoji === emoji);
-    const own = matching.find(r => r.user_id === user.id);
+  // Preserve all eight original Golden Chat reactions.
+  const options = goldenEmojis.map(emoji => ({
+    key: emoji,
+    name: emoji,
+    imageUrl: null
+  }));
 
-    const button = btn(`${emoji} ${matching.length}`,async () => {
+  // Add published Emoji Vault reactions.
+  for (const emoji of customEmojis) {
+    options.push({
+      key: emoji.reactionKey,
+      name: emoji.name,
+      imageUrl: emoji.imageUrl
+    });
+  }
+
+  // Preserve counts for previously used custom reactions,
+  // even if their emoji has since been unpublished.
+  const knownKeys = new Set(
+    options.map(option => option.key)
+  );
+
+  for (const reaction of reactions) {
+    if (
+      typeof reaction.emoji === "string" &&
+      reaction.emoji.startsWith(":") &&
+      reaction.emoji.endsWith(":") &&
+      !knownKeys.has(reaction.emoji)
+    ) {
+      knownKeys.add(reaction.emoji);
+
+      options.push({
+        key: reaction.emoji,
+        name: `${reaction.emoji} (unavailable)`,
+        imageUrl: null,
+        unavailable: true
+      });
+    }
+  }
+
+  for (const option of options) {
+    const matching = reactions.filter(
+      reaction => reaction.emoji === option.key
+    );
+
+    const own = matching.find(
+      reaction => reaction.user_id === user.id
+    );
+
+    const button = btn("", async () => {
       button.disabled = true;
 
       let result;
 
-      if(own) {
+      if (own) {
         result = await db
           .from("tbb_golden_reactions")
           .delete()
-          .eq("id",own.id)
-          .eq("user_id",user.id);
+          .eq("id", own.id)
+          .eq("user_id", user.id);
       } else {
         result = await db
           .from("tbb_golden_reactions")
           .insert({
-            post_id:postId,
-            user_id:user.id,
-            emoji
+            post_id: postId,
+            user_id: user.id,
+            emoji: option.key
           });
       }
 
       button.disabled = false;
 
-      if(result.error)return errorMessage(result.error);
+      if (result.error) {
+        return errorMessage(result.error);
+      }
 
-      await loadGoldenReactions(postId,container);
+      await loadGoldenReactions(postId, container);
     });
 
     button.classList.add("reaction-button");
-    button.setAttribute("aria-pressed",String(!!own));
+
+    button.setAttribute(
+      "aria-pressed",
+      String(!!own)
+    );
+
+    button.setAttribute(
+      "aria-label",
+      `${option.name}: ${matching.length} reactions`
+    );
+
+    button.title = option.name;
+
+    if (option.unavailable) {
+      button.disabled = !own;
+    }
+
+    if (option.imageUrl) {
+      const image = document.createElement("img");
+
+      image.src = option.imageUrl;
+      image.alt = "";
+      image.className = "reaction-image";
+      image.loading = "lazy";
+
+      button.append(image);
+    } else {
+      button.append(
+        el("span", option.key)
+      );
+    }
+
+    const count = el(
+      "span",
+      String(matching.length),
+      "reaction-count"
+    );
+
+    button.append(count);
+
     row.append(button);
   }
 
