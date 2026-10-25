@@ -794,6 +794,93 @@
       }
     }
 
+    /* ==========================================
+   PHASE 11.8 — SEASON REPORTING WINDOW
+   ========================================== */
+
+function getSeasonReportingState() {
+  if (!season) {
+    return {
+      open: false,
+      message: 'Reading League season information is unavailable.'
+    };
+  }
+
+ const today = localDateInZone(
+  roster?.confirmed_timezone ||
+  Intl.DateTimeFormat().resolvedOptions().timeZone ||
+  'UTC'
+);
+
+  if (season.status === 'draft') {
+    return {
+      open: false,
+      message: '🔎 Reading Reports™ are not open yet.'
+    };
+  }
+
+  if (today < season.starts_on) {
+    return {
+      open: false,
+      message:
+        '🐾 The mystery begins November 1, 2026! ' +
+        'Your Reading Reports™ will open when Season 3 begins. ' +
+        'Until then, get comfortable, meet your crew, ' +
+        'and prepare your case files! 💜🔎'
+    };
+  }
+
+  if (today > season.ends_on || season.status === 'completed') {
+    return {
+      open: false,
+      message:
+        '🏁 Season 3 has concluded! Official Reading Reports™ ' +
+        'are now closed. Your Reading Case File™ remains available.'
+    };
+  }
+
+  if (season.status !== 'active') {
+    return {
+      open: false,
+      message:
+        '🔎 Season 3 reporting is waiting for the official ' +
+        'season activation.'
+    };
+  }
+
+  return { open: true, message: '' };
+}
+
+function applySeasonReportingLock() {
+  const reporting = getSeasonReportingState();
+
+  const confirmed = Boolean(
+    roster?.confirmed_timezone &&
+    roster?.timezone_confirmed_at
+  );
+
+  const canSubmit = reporting.open && confirmed;
+
+  $('bookForm')
+    .querySelectorAll('input:not([readonly]), select, button')
+    .forEach(element => {
+      element.disabled = !canSubmit;
+    });
+
+  if (!reporting.open) {
+    showMessage(
+      'submissionMessage',
+      reporting.message
+    );
+  } else if (!confirmed) {
+    showMessage(
+      'submissionMessage',
+      '🌎 Confirm your time zone before submitting a report.'
+    );
+  } else {
+    hideMessage('submissionMessage');
+  }
+}
     function setTimezoneState() {
       const confirmed = Boolean(
         roster?.confirmed_timezone &&
@@ -808,11 +895,7 @@
           roster.confirmed_timezone.replaceAll('_', ' ');
       }
 
-      $('bookForm').querySelectorAll(
-        'input:not([readonly]), select, button'
-      ).forEach(el => {
-        el.disabled = !confirmed;
-      });
+      applySeasonReportingLock();
 
       $('finishTimeHint').textContent = confirmed
         ? `Enter the finish time in ${roster.confirmed_timezone}. ` +
@@ -1012,8 +1095,21 @@ function handleAttemptSelection() {
 }
 
     async function submitBook(event) {
-      event.preventDefault();
-      hideMessage('submissionMessage');
+  event.preventDefault();
+  hideMessage('submissionMessage');
+
+  const reporting = getSeasonReportingState();
+
+  if (!reporting.open) {
+    showMessage(
+      'submissionMessage',
+      reporting.message,
+      'error'
+    );
+
+    applySeasonReportingLock();
+    return;
+  }
 
       if (!roster?.confirmed_timezone) {
         showMessage(
@@ -1110,10 +1206,11 @@ function handleAttemptSelection() {
           error.message || 'Could not submit your report.',
           'error'
         );
+
       } finally {
-        btn.disabled = false;
         btn.textContent = '🔎 Submit Official Reading Report';
-      }
+        applySeasonReportingLock();
+        }
     }
 
     async function init() {
@@ -1213,6 +1310,7 @@ function handleAttemptSelection() {
         );
 
 await loadReadingAttempts();
+applySeasonReportingLock();
 
         $('timezoneSelect').addEventListener(
           'change',
