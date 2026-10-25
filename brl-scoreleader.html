@@ -1,0 +1,888 @@
+
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#171329">
+
+  <title>Live Scoreleader™ | TBB</title>
+
+  <link rel="stylesheet" href="css/auth.css">
+
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #100f1e;
+      --panel: #211c35;
+      --panel2: #302541;
+      --line: #715a88;
+      --pink: #ff8fcb;
+      --purple: #c6a9ff;
+      --cream: #fff1e1;
+      --muted: #d2c3dd;
+      --mint: #a9ebd8;
+      --gold: #ffdb94;
+    }
+
+    * { box-sizing: border-box; }
+
+    [hidden] { display: none !important; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--cream);
+      font-family: system-ui, -apple-system,
+        "Segoe UI", sans-serif;
+      background:
+        radial-gradient(
+          ellipse at 10% 0%,
+          #49325f 0%,
+          transparent 43%
+        ),
+        radial-gradient(
+          ellipse at 90% 15%,
+          #333b62 0%,
+          transparent 45%
+        ),
+        var(--bg);
+    }
+
+    a { color: var(--pink); }
+
+    button {
+      font: inherit;
+      font-weight: 800;
+      color: white;
+      border: 1px solid #a985c4;
+      border-radius: 12px;
+      padding: 11px 16px;
+      background: #644184;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: .55;
+      cursor: wait;
+    }
+
+    button:focus-visible,
+    a:focus-visible {
+      outline: 3px solid var(--pink);
+      outline-offset: 3px;
+    }
+
+    .shell {
+      max-width: 1250px;
+      margin: 0 auto;
+      padding: 28px 18px 80px;
+    }
+
+    .hero,
+    .panel {
+      background:
+        linear-gradient(
+          145deg,
+          #2a213f,
+          #181525
+        );
+      border: 1px solid var(--line);
+      border-radius: 23px;
+      padding: 25px;
+      box-shadow: 0 12px 35px #0004;
+    }
+
+    .hero {
+      text-align: center;
+      border-color: var(--purple);
+      margin-bottom: 22px;
+      padding: 35px 20px;
+    }
+
+    .eyebrow {
+      color: var(--pink);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-size: clamp(2.3rem, 6vw, 4.5rem);
+      line-height: 1.08;
+      margin: 15px 0;
+    }
+
+    h2 {
+      margin-top: 0;
+      color: #f9b8e6;
+    }
+
+    h3 {
+      color: #e3ceff;
+    }
+
+    p {
+      line-height: 1.6;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .tagline {
+      color: var(--gold);
+      font-weight: 800;
+      letter-spacing: .03em;
+    }
+
+    .nav {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    .nav a {
+      display: inline-block;
+      color: var(--cream);
+      background: #45345c;
+      border: 1px solid #9776b7;
+      border-radius: 12px;
+      padding: 10px 14px;
+      text-decoration: none;
+      font-weight: 800;
+    }
+
+    .status {
+      margin: 18px 0;
+      min-height: 25px;
+      color: var(--mint);
+      overflow-wrap: anywhere;
+    }
+
+    .status.error {
+      color: #ffb0bb;
+    }
+
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .toolbar p {
+      margin: 0;
+    }
+
+    .section-heading {
+      text-align: center;
+      margin: 35px 0 18px;
+    }
+
+    .section-heading h2 {
+      font-size: clamp(1.5rem, 4vw, 2.2rem);
+      margin-bottom: 6px;
+    }
+
+    .section-heading p {
+      margin-top: 0;
+    }
+
+    .crew-grid {
+      display: grid;
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+      gap: 20px;
+    }
+
+    .crew-card {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 27px;
+      background:
+        linear-gradient(
+          150deg,
+          #342448,
+          #1b1a32
+        );
+    }
+
+    .crew-card.leading {
+      border-color: var(--gold);
+      box-shadow: 0 0 30px #ffda8420;
+    }
+
+    .crew-card.tied {
+      border-color: var(--purple);
+    }
+
+    .crew-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .crew-emoji {
+      font-size: 42px;
+      line-height: 1;
+    }
+
+    .placement {
+      font-size: 12px;
+      font-weight: 900;
+      color: var(--gold);
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      text-align: right;
+    }
+
+    .crew-name {
+      font-size: clamp(1.5rem, 3vw, 2.1rem);
+      margin: 16px 0 5px;
+      overflow-wrap: anywhere;
+    }
+
+    .crew-count {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .total-label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      margin-top: 25px;
+    }
+
+    .total-number {
+      color: var(--gold);
+      font-size: clamp(2.3rem, 5vw, 4rem);
+      font-weight: 950;
+      line-height: 1.15;
+      overflow-wrap: anywhere;
+    }
+
+    .breakdown {
+      margin-top: 22px;
+      border-top: 1px solid var(--line);
+      padding-top: 12px;
+    }
+
+    .score-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 11px 0;
+      border-bottom: 1px solid #ffffff16;
+      font-size: 14px;
+    }
+
+    .score-row strong {
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .score-row:last-child {
+      border-bottom: 0;
+    }
+
+    .explanation {
+      margin: 22px 0 0;
+      padding: 15px;
+      background: #332744;
+      border: 1px solid #795f94;
+      border-radius: 14px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .wanted-grid {
+      display: grid;
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+      gap: 20px;
+    }
+
+    .wanted-panel {
+      min-width: 0;
+    }
+
+    .wanted-panel h3 {
+      margin-top: 0;
+      overflow-wrap: anywhere;
+    }
+
+    .wanted-row {
+      display: grid;
+      grid-template-columns: 50px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 12px;
+      padding: 15px 0;
+      border-bottom: 1px solid #ffffff20;
+    }
+
+    .wanted-row:last-child {
+      border-bottom: 0;
+    }
+
+    .wanted-rank {
+      display: grid;
+      place-items: center;
+      width: 43px;
+      height: 43px;
+      border-radius: 13px;
+      background: #453257;
+      color: var(--gold);
+      font-weight: 900;
+    }
+
+    .wanted-name {
+      font-weight: 800;
+      overflow-wrap: anywhere;
+    }
+
+    .wanted-pages {
+      font-weight: 900;
+      font-variant-numeric: tabular-nums;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .wanted-pages small {
+      display: block;
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .empty {
+      padding: 20px 10px;
+      text-align: center;
+      color: var(--muted);
+      border: 1px dashed var(--line);
+      border-radius: 14px;
+    }
+
+    .footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      padding: 30px 0 0;
+    }
+
+    @media (max-width: 800px) {
+      .crew-grid,
+      .wanted-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .crew-card {
+        padding: 22px;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .shell {
+        padding: 16px 12px 50px;
+      }
+
+      .hero,
+      .panel {
+        padding: 19px;
+      }
+
+      .wanted-row {
+        grid-template-columns:
+          40px minmax(0, 1fr) auto;
+        gap: 8px;
+      }
+
+      .wanted-rank {
+        width: 38px;
+        height: 38px;
+      }
+
+      .wanted-pages {
+        font-size: 13px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="shell" id="app" hidden>
+
+    <header class="hero">
+      <div class="eyebrow">
+        THE BADDIE READING LEAGUE · SEASON 3
+      </div>
+
+      <h1>🏆 Live Scoreleader™ 🐾</h1>
+
+      <p class="tagline">
+        Two Crews. One Mystery. Every Page Counts.
+      </p>
+
+      <p class="muted">
+        Welcome to The Cozy Case Files!
+        Follow the clues, watch the standings,
+        and see which crew is cracking the case.
+      </p>
+
+      <nav class="nav">
+        <a href="member.html">💋 My Vanity™</a>
+        <a href="brl-reading-reports.html">
+          🔎 Reading Reports™
+        </a>
+      </nav>
+    </header>
+
+    <div class="toolbar">
+      <p id="seasonInfo" class="muted">
+        Loading Season 3...
+      </p>
+
+      <button
+        type="button"
+        id="refreshScores"
+      >
+        ↻ Refresh Scores
+      </button>
+    </div>
+
+    <p
+      id="pageStatus"
+      class="status"
+      role="status"
+      aria-live="polite"
+    ></p>
+
+    <section aria-labelledby="crewHeading">
+      <div class="section-heading">
+        <h2 id="crewHeading">
+          🚐 The Crew Standings
+        </h2>
+        <p class="muted">
+          Every eligible page and bonus point matters.
+        </p>
+      </div>
+
+      <div id="crewStandings" class="crew-grid"></div>
+
+      <p class="explanation">
+        📚 <strong>Reading pages</strong> come from
+        accepted, eligible book reports.
+        🐾 <strong>Challenge bonuses</strong> are
+        awarded separately.
+        ⚖️ <strong>Admin adjustments</strong> are
+        signed point changes.
+        Your crew's official total combines all three.
+      </p>
+    </section>
+
+    <section aria-labelledby="wantedHeading">
+      <div class="section-heading">
+        <h2 id="wantedHeading">
+          🔎 Velma's Most Wanted™ 🐾
+        </h2>
+
+        <p class="muted">
+          The top five page detectives on each crew.
+          Ranked by eligible reading pages only —
+          challenge bonuses don't count here!
+        </p>
+      </div>
+
+      <div id="mostWanted" class="wanted-grid"></div>
+    </section>
+
+    <footer class="footer">
+      TBB · The Cozy Case Files · November–December 2026
+      <p>
+        Official scoring is maintained by the
+        Baddie Reading League.
+      </p>
+    </footer>
+
+  </main>
+
+  <script type="module">
+    import { db, requireAccess } from "./js/auth.js";
+
+    const $ = id => document.getElementById(id);
+
+    const numberFormat = new Intl.NumberFormat("en-US");
+
+    let currentSeason = null;
+    let loading = false;
+
+    function formatNumber(value) {
+      return numberFormat.format(Number(value) || 0);
+    }
+
+    function formatSigned(value) {
+      const number = Number(value) || 0;
+      return `${number > 0 ? "+" : ""}${formatNumber(number)}`;
+    }
+
+    function setStatus(message, isError = false) {
+      const element = $("pageStatus");
+      element.textContent = message;
+      element.classList.toggle("error", isError);
+    }
+
+    function createElement(tag, className, text) {
+      const element = document.createElement(tag);
+
+      if (className) element.className = className;
+
+      if (text !== undefined) {
+        element.textContent = String(text);
+      }
+
+      return element;
+    }
+
+    function addScoreRow(container, label, value) {
+      const row = createElement("div", "score-row");
+      row.append(
+        createElement("span", "", label),
+        createElement("strong", "", value)
+      );
+      container.append(row);
+    }
+
+    function renderCrewStandings(rows) {
+      const container = $("crewStandings");
+      container.replaceChildren();
+
+      if (!rows.length) {
+        container.append(
+          createElement(
+            "p",
+            "empty",
+            "No crews have been created for this season."
+          )
+        );
+        return;
+      }
+
+      const highestScore = Math.max(
+        ...rows.map(row => Number(row.total_score) || 0)
+      );
+
+      const leaderCount = rows.filter(
+        row => Number(row.total_score) === highestScore
+      ).length;
+
+      rows.forEach((team, index) => {
+        const card = createElement("article", "crew-card");
+
+        const score = Number(team.total_score) || 0;
+
+        const tied = leaderCount > 1 &&
+          score === highestScore;
+
+        const leading = leaderCount === 1 &&
+          score === highestScore;
+
+        if (leading) card.classList.add("leading");
+        if (tied) card.classList.add("tied");
+
+        const top = createElement("div", "crew-top");
+
+        const emoji = createElement(
+          "div",
+          "crew-emoji",
+          team.team_emoji || "🐾"
+        );
+
+        const placement = createElement(
+          "div",
+          "placement",
+          tied
+            ? "🤝 Tied for the Lead"
+            : leading
+              ? "🏆 Leading Crew"
+              : `Crew ${team.team_number}`
+        );
+
+        top.append(emoji, placement);
+
+        const name = createElement(
+          "h3",
+          "crew-name",
+          team.team_name
+        );
+
+        const count = createElement(
+          "div",
+          "crew-count",
+          `${formatNumber(team.active_baddies)} active Baddies`
+        );
+
+        const totalLabel = createElement(
+          "div",
+          "total-label",
+          "Official Scoreleader™ Total"
+        );
+
+        const total = createElement(
+          "div",
+          "total-number",
+          formatNumber(score)
+        );
+
+        const breakdown = createElement(
+          "div",
+          "breakdown"
+        );
+
+        addScoreRow(
+          breakdown,
+          "📚 Eligible Reading Pages",
+          formatNumber(team.eligible_reading_pages)
+        );
+
+        addScoreRow(
+          breakdown,
+          "🐾 Challenge Bonus Points",
+          formatSigned(team.challenge_bonus_points)
+        );
+
+        addScoreRow(
+          breakdown,
+          "⚖️ Admin Adjustments",
+          formatSigned(team.admin_adjustment_points)
+        );
+
+        card.append(
+          top,
+          name,
+          count,
+          totalLabel,
+          total,
+          breakdown
+        );
+
+        container.append(card);
+      });
+    }
+
+    function rankBaddies(rows) {
+      const groups = new Map();
+
+      for (const member of rows) {
+        if (!groups.has(member.team_id)) {
+          groups.set(member.team_id, []);
+        }
+
+        groups.get(member.team_id).push(member);
+      }
+
+      for (const members of groups.values()) {
+        members.sort((a, b) => {
+          const pageDifference =
+            Number(b.eligible_reading_pages) -
+            Number(a.eligible_reading_pages);
+
+          if (pageDifference !== 0) {
+            return pageDifference;
+          }
+
+          return String(a.discord_username)
+            .localeCompare(String(b.discord_username));
+        });
+
+        let previousPages = null;
+        let currentRank = 0;
+
+        members.forEach((member, index) => {
+          const pages = Number(member.eligible_reading_pages) || 0;
+
+          if (previousPages === null || pages !== previousPages) {
+            currentRank = index + 1;
+          }
+
+          member.displayRank = currentRank;
+          previousPages = pages;
+        });
+      }
+
+      return groups;
+    }
+
+    function renderMostWanted(teams, baddies) {
+      const container = $("mostWanted");
+      container.replaceChildren();
+
+      const grouped = rankBaddies(baddies);
+
+      for (const team of teams) {
+        const panel = createElement("article", "panel wanted-panel");
+
+        panel.append(
+          createElement(
+            "h3",
+            "",
+            `${team.team_emoji || "🐾"} ${team.team_name}`
+          )
+        );
+
+        const members = (grouped.get(team.team_id) || [])
+          .filter(member => member.displayRank <= 5);
+
+        if (!members.length) {
+          panel.append(
+            createElement(
+              "p",
+              "empty",
+              "No active Baddies in this crew yet."
+            )
+          );
+        }
+
+        for (const member of members) {
+          const row = createElement("div", "wanted-row");
+
+          const rank = createElement(
+            "div",
+            "wanted-rank",
+            `#${member.displayRank}`
+          );
+
+          const name = createElement(
+            "div",
+            "wanted-name",
+            `@${member.discord_username}`
+          );
+
+          const pages = createElement(
+            "div",
+            "wanted-pages",
+            formatNumber(member.eligible_reading_pages)
+          );
+
+          pages.append(
+            createElement("small", "", "eligible pages")
+          );
+
+          row.append(rank, name, pages);
+          panel.append(row);
+        }
+
+        container.append(panel);
+      }
+    }
+
+    async function loadScores() {
+      if (loading || !currentSeason) return;
+
+      loading = true;
+      $("refreshScores").disabled = true;
+      setStatus("🔎 Velma is reviewing the latest case files...");
+
+      try {
+        const [totalsResult, baddiesResult] =
+          await Promise.all([
+            db.rpc("tbb_brl_scoreleader_totals", {
+              p_season_id: currentSeason.id
+            }),
+
+            db.rpc("tbb_brl_scoreleader_baddie_pages", {
+              p_season_id: currentSeason.id
+            })
+          ]);
+
+        if (totalsResult.error) {
+          throw totalsResult.error;
+        }
+
+        if (baddiesResult.error) {
+          throw baddiesResult.error;
+        }
+
+        const totals = totalsResult.data || [];
+        const baddies = baddiesResult.data || [];
+
+        renderCrewStandings(totals);
+        renderMostWanted(totals, baddies);
+
+        const refreshed = new Date().toLocaleTimeString(
+          undefined,
+          { hour: "numeric", minute: "2-digit" }
+        );
+
+        setStatus(`🐾 Case files updated at ${refreshed}.`);
+
+      } catch (error) {
+        console.error("Scoreleader load error:", error);
+        setStatus(error.message, true);
+      } finally {
+        loading = false;
+        $("refreshScores").disabled = false;
+      }
+    }
+
+    async function init() {
+      try {
+        await requireAccess();
+
+        $("app").hidden = false;
+
+        const { data, error } = await db
+          .from("tbb_brl_seasons")
+          .select(
+            "id,season_number,title,theme,tagline," +
+            "starts_on,ends_on,status"
+          )
+          .eq("season_number", 3)
+          .neq("status", "draft")
+          .single();
+
+        if (error) throw error;
+
+        currentSeason = data;
+
+        $("seasonInfo").textContent =
+          `Season ${data.season_number} · ` +
+          `${data.starts_on} – ${data.ends_on} · ` +
+          `${data.status.toUpperCase()}`;
+
+        $("refreshScores").addEventListener(
+          "click",
+          loadScores
+        );
+
+        await loadScores();
+
+      } catch (error) {
+        console.error("Scoreleader initialization:", error);
+
+        $("app").hidden = false;
+        setStatus(
+          `Unable to open Scoreleader™: ${error.message}`,
+          true
+        );
+      }
+    }
+
+    init();
+  </script>
+
+</body>
+</html>

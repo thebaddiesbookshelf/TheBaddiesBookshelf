@@ -1,0 +1,1245 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#21152e">
+  <title>Velma & Daphne's Reading Reports™ | TBB</title>
+
+  <style>
+    :root {
+      --bg: #160f20;
+      --panel: #281b37;
+      --panel-light: #352346;
+      --border: #624675;
+      --text: #fff6fc;
+      --muted: #d6c3de;
+      --pink: #f4a7d2;
+      --lavender: #c8b2ff;
+      --gold: #ffe2a3;
+      --success: #b5f3d2;
+      --danger: #ffb7bd;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(ellipse at 10% 0%, #49305e 0%, transparent 42%),
+        radial-gradient(ellipse at 100% 15%, #56304b 0%, transparent 38%),
+        var(--bg);
+      color: var(--text);
+      font-family: "Trebuchet MS", Arial, sans-serif;
+      line-height: 1.5;
+    }
+
+    a { color: var(--pink); }
+
+    button, input, select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+    }
+
+    .shell {
+      max-width: 1320px;
+      margin: auto;
+      padding: 24px 22px 70px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+
+    .brand {
+      color: var(--lavender);
+      font-size: 13px;
+      letter-spacing: .16em;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .back {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      text-decoration: none;
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 9px 15px;
+      background: #ffffff0b;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid #89659b;
+      border-radius: 26px;
+      padding: 34px;
+      margin-bottom: 22px;
+      background:
+        radial-gradient(circle at 95% 20%, #8a4f8266, transparent 38%),
+        linear-gradient(125deg, #39264f, #281b3b 65%, #422741);
+      box-shadow: 0 20px 65px #00000030;
+    }
+
+    .eyebrow {
+      color: var(--gold);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-size: clamp(29px, 4.5vw, 54px);
+      line-height: 1.08;
+      margin: 11px 0;
+      letter-spacing: -.04em;
+    }
+
+    h1 em {
+      color: var(--pink);
+      font-style: normal;
+    }
+
+    .hero p {
+      max-width: 660px;
+      margin: 0;
+      color: #f0dff4;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.55fr) minmax(290px, 1fr);
+      gap: 20px;
+      align-items: start;
+    }
+
+    .stack {
+      display: grid;
+      gap: 20px;
+      min-width: 0;
+    }
+
+    .panel {
+      min-width: 0;
+      padding: 25px;
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      background: #281b37ed;
+      box-shadow: 0 10px 35px #00000020;
+    }
+
+    .panel h2 {
+      margin: 0 0 8px;
+      font-size: 22px;
+      letter-spacing: -.025em;
+    }
+
+    .panel p {
+      color: var(--muted);
+      margin: 0 0 18px;
+      font-size: 14px;
+    }
+
+    .label {
+      display: block;
+      margin-bottom: 7px;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .05em;
+      color: #f6d9fa;
+    }
+
+    .field {
+      display: block;
+      min-width: 0;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      min-width: 0;
+      padding: 12px 13px;
+      border-radius: 12px;
+      border: 1px solid #85699b;
+      background: #1c1428;
+      color: var(--text);
+      outline: none;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      border-color: var(--pink);
+      box-shadow: 0 0 0 3px #f4a7d222;
+    }
+
+    .field input[readonly] {
+      background: #3c2c4a;
+      color: var(--lavender);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 17px;
+    }
+
+    .wide { grid-column: 1 / -1; }
+
+    .hint {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 19px;
+      border: 0;
+      border-radius: 12px;
+      font-weight: 900;
+      background: linear-gradient(110deg, #ffb7dc, #d0b7ff);
+      color: #25152d;
+    }
+
+    .btn.secondary {
+      border: 1px solid #a58ab8;
+      background: #49335e;
+      color: white;
+    }
+
+    .btn.full { width: 100%; }
+
+    .mini-tag {
+      display: inline-block;
+      border-radius: 999px;
+      padding: 5px 10px;
+      background: #a679c433;
+      border: 1px solid #9e78b6;
+      color: #f0d7ff;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .identity {
+      padding: 15px;
+      border: 1px solid #75588a;
+      background: #ffffff08;
+      border-radius: 15px;
+      margin-bottom: 15px;
+    }
+
+    .identity strong {
+      display: block;
+      margin-top: 4px;
+      font-size: 20px;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .metric {
+      padding: 17px;
+      border-radius: 15px;
+      background: #ffffff0b;
+      border: 1px solid #6d547e;
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 29px;
+      color: var(--gold);
+    }
+
+    .metric span {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .check-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 11px;
+      border: 1px solid #8d6c99;
+      border-radius: 13px;
+      padding: 15px;
+      background: #ffffff08;
+      font-size: 14px;
+    }
+
+    .check-row input {
+      width: 18px;
+      height: 18px;
+      margin-top: 2px;
+      accent-color: #f4a7d2;
+      flex-shrink: 0;
+    }
+
+    .notice {
+      border: 1px solid #8b73a2;
+      border-radius: 13px;
+      background: #5d427644;
+      color: #f5e8ff;
+      padding: 12px 14px;
+      margin-bottom: 15px;
+      font-size: 13px;
+    }
+
+    .notice.success {
+      border-color: #5baf88;
+      background: #24654c55;
+      color: var(--success);
+    }
+
+    .notice.error {
+      border-color: #db7883;
+      background: #71364455;
+      color: var(--danger);
+    }
+
+    .rule {
+      border-bottom: 1px solid #725784;
+      padding: 13px 0;
+      color: #ebdbf3;
+      font-size: 13px;
+    }
+
+    .rule:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .rule strong {
+      color: var(--pink);
+    }
+
+    .hidden { display: none !important; }
+
+    @media (max-width: 850px) {
+      .layout { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 560px) {
+      .shell { padding: 15px 13px 45px; }
+      .hero { padding: 24px 19px; }
+      .panel { padding: 19px; }
+      .form-grid { grid-template-columns: 1fr; }
+      .wide { grid-column: auto; }
+      .metric strong { font-size: 24px; }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="shell">
+    <nav class="topbar">
+      <div class="brand">🐾 TBB • The Cozy Case Files</div>
+      <a class="back" href="member.html">← Back to My Vanity™</a>
+      <a class="back" href="brl-admin.html">← Fred's Mission Control™ </a>
+      <a href="brl-my-stats.html">
+        🗂️ My Reading Case File™
+    </a>
+
+    </nav>
+
+    <header class="hero">
+      <div class="eyebrow">✦ Mystery Inc. Headquarters ✦</div>
+      <h1>Velma & Daphne's<br><em>Reading Reports™</em></h1>
+      <p>
+        Every page leaves a clue, Baddie! File your official
+        reading report, collect your eligible pages, and help
+        your crew crack the case. 🔎📚
+      </p>
+    </header>
+
+    <div id="pageMessage" class="notice">
+      Checking your official Reading League assignment...
+    </div>
+
+    <div id="pageContent" class="layout hidden">
+
+      <section class="stack">
+
+        <div class="panel">
+          <h2>📂 Open a New Case File</h2>
+          <p>
+            Only official reports submitted here will contribute
+            to your Reading League score.
+          </p>
+
+          <div id="submissionMessage"
+               class="notice hidden"
+               role="status"
+               aria-live="polite"></div>
+
+          <form id="bookForm" class="form-grid">
+
+            
+            <div class="wide">
+            <label class="field">
+                <span class="label">📚 Which Reading Attempt?</span>
+                <select id="readingAttempt">
+                <option value="">New Book / First Reading</option>
+                </select>
+                <span class="hint">
+                Continuing a book or logging an approved reread?
+                Select your existing reading attempt here.
+                </span>
+            </label>
+            </div>
+
+
+            <label class="field">
+              <span class="label">Discord Username</span>
+              <input id="discordUsername" readonly>
+            </label>
+
+            <label class="field">
+              <span class="label">Assigned Crew</span>
+              <input id="assignedCrew" readonly>
+            </label>
+
+            <label class="field wide">
+              <span class="label">Book Title *</span>
+              <input id="bookTitle" maxlength="300" required
+                     placeholder="What's the title, detective?">
+            </label>
+
+            <label class="field wide">
+              <span class="label">Author *</span>
+              <input id="bookAuthor" maxlength="250" required
+                     placeholder="Who wrote this case file?">
+            </label>
+
+            <label class="field">
+              <span class="label">Reading Status *</span>
+              <select id="readingStatus" required>
+                <option value="completed">Completed</option>
+                <option value="partial">Partial</option>
+                <option value="dnf">DNF</option>
+              </select>
+            </label>
+
+            <label class="field">
+              <span class="label">Book Format *</span>
+              <select id="bookFormat" required>
+                <option value="physical">Physical</option>
+                <option value="ebook">E-book / Kindle</option>
+                <option value="audiobook">Audiobook</option>
+              </select>
+            </label>
+
+            <label class="field">
+              <span class="label">Amazon Edition Page Count *</span>
+              <input id="editionPages" type="number"
+                     min="1" step="1" required>
+              <span class="hint">
+                For audiobooks, use the Kindle edition's page count.
+              </span>
+            </label>
+
+            <label class="field">
+              <span class="label">Total Pages Read So Far *</span>
+              <input id="actualPages" type="number"
+                     min="1" step="1" required>
+              <span class="hint">
+                For a continuing book, enter your cumulative total,
+                not just the pages read since your last report.
+              </span>
+            </label>
+
+            <label class="field">
+              <span class="label">Date Started *</span>
+              <input id="startedOn" type="date" required>
+            </label>
+
+            <label class="field">
+              <span class="label">Rating (Optional)</span>
+              <select id="bookRating">
+                <option value="">Not rated</option>
+                <option value="0">0 / 5</option>
+                <option value="0.5">0.5 / 5</option>
+                <option value="1">1 / 5</option>
+                <option value="1.5">1.5 / 5</option>
+                <option value="2">2 / 5</option>
+                <option value="2.5">2.5 / 5</option>
+                <option value="3">3 / 5</option>
+                <option value="3.5">3.5 / 5</option>
+                <option value="4">4 / 5</option>
+                <option value="4.5">4.5 / 5</option>
+                <option value="5">5 / 5</option>
+              </select>
+            </label>
+
+            <label id="finishedField" class="field wide">
+              <span class="label">Date & Time Finished *</span>
+              <input id="finishedAt" type="datetime-local">
+              <span id="finishTimeHint" class="hint">
+                Enter the finish time in your confirmed time zone.
+                Completed books must be reported within 72 hours.
+              </span>
+            </label>
+
+            <label class="check-row wide">
+              <input id="certifyReport" type="checkbox" required>
+              <span>
+                I certify that all information provided on this
+                form is accurate and truthful.
+              </span>
+            </label>
+
+            <div class="wide">
+              <button id="submitBookBtn" class="btn full"
+                      type="submit">
+                🔎 Submit Official Reading Report
+              </button>
+            </div>
+          </form>
+        </div>
+
+      </section>
+
+      <aside class="stack">
+
+        <div class="panel">
+          <h2>🐾 Your Detective ID</h2>
+          <p>Your official Reading League assignment.</p>
+
+          <div class="identity">
+            <span class="mini-tag">Season 3 • The Cozy Case Files</span>
+            <strong id="crewName">Loading...</strong>
+            <span id="memberName"></span>
+          </div>
+
+          <div class="metric-grid">
+            <div class="metric">
+              <strong id="dailyAwarded">—</strong>
+              <span>Eligible pages today</span>
+            </div>
+            <div class="metric">
+              <strong id="dailyRemaining">—</strong>
+              <span>Pages remaining today</span>
+            </div>
+          </div>
+
+          <span id="scoringDate" class="hint"></span>
+        </div>
+
+        <div class="panel">
+          <h2>🌎 Your Reading Time Zone</h2>
+          <p>
+            Your daily page allowance and reporting deadlines
+            follow your confirmed local time zone.
+          </p>
+
+          <div id="timezoneLocked" class="hidden">
+            <div class="identity">
+              <span class="mini-tag">✓ Confirmed</span>
+              <strong id="confirmedTimezone"></strong>
+              <span class="hint">
+                Contact an admin if your time zone needs
+                correcting after submitting reports.
+              </span>
+            </div>
+          </div>
+
+          <form id="timezoneForm">
+            <label class="field">
+              <span class="label">Your Time Zone *</span>
+              <select id="timezoneSelect" required></select>
+            </label>
+
+            <p id="timezonePreview"
+               style="margin-top:12px"></p>
+
+            <button class="btn full" type="submit"
+                    id="confirmTimezoneBtn">
+              🌍 Confirm My Time Zone
+            </button>
+          </form>
+
+          <div id="timezoneMessage"
+               class="notice hidden"
+               role="status"></div>
+        </div>
+
+        <div class="panel">
+          <h2>📜 The Reading Rules</h2>
+
+          <div class="rule">
+            📚 Maximum <strong>1,000 eligible pages</strong>
+            per Baddie per local submission day.
+          </div>
+
+          <div class="rule">
+            🕰️ Completed books must be submitted
+            <strong>within 72 hours</strong> of finishing.
+          </div>
+
+          <div class="rule">
+            🔎 Partial and DNF reports earn credit for
+            eligible pages actually read.
+          </div>
+
+          <div class="rule">
+            🐾 Continuing a book?
+            <strong>Report cumulative pages.</strong>
+            Only newly reported pages can earn points.
+          </div>
+
+          <div class="rule">
+            💜 All reports require truthful certification.
+          </div>
+        </div>
+
+      </aside>
+    </div>
+  </main>
+
+  <script type="module">
+    import { db, requireAccess } from './js/auth.js';
+
+    const $ = id => document.getElementById(id);
+
+    let access = null;
+    let roster = null;
+    let season = null;
+    let team = null;
+
+    function showMessage(id, text, type = '') {
+      const el = $(id);
+      el.textContent = text;
+      el.className = `notice ${type}`.trim();
+    }
+
+    function hideMessage(id) {
+      $(id).classList.add('hidden');
+    }
+
+    function localDateInZone(zone, date = new Date()) {
+      return new Intl.DateTimeFormat('en-CA', {
+        timeZone: zone,
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+      }).format(date);
+    }
+
+    function zonedParts(date, zone) {
+      const parts = new Intl.DateTimeFormat('en-US', {
+        timeZone: zone,
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hourCycle: 'h23'
+      }).formatToParts(date);
+
+      return Object.fromEntries(
+        parts
+          .filter(p => p.type !== 'literal')
+          .map(p => [p.type, Number(p.value)])
+      );
+    }
+
+    function wallTimeToISO(value, zone) {
+      // Resolve a date/time entered in the confirmed IANA zone,
+      // rather than assuming the browser's local zone.
+      const match = value.match(
+        /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})$/
+      );
+
+      if (!match) {
+        throw new Error('Enter a valid finish date and time.');
+      }
+
+      const [, yy, mo, dd, hh, mm] = match.map(Number);
+      const wallUTC = Date.UTC(yy, mo - 1, dd, hh, mm);
+
+      const candidates = [];
+
+      // Try plausible offsets to accommodate daylight saving
+      // transitions and zones with half-hour offsets.
+      for (let offset = -14 * 60; offset <= 14 * 60; offset += 15) {
+        const candidate = new Date(wallUTC - offset * 60000);
+        const p = zonedParts(candidate, zone);
+
+        if (
+          p.year === yy &&
+          p.month === mo &&
+          p.day === dd &&
+          p.hour === hh &&
+          p.minute === mm
+        ) {
+          candidates.push(candidate);
+        }
+      }
+
+      if (candidates.length === 0) {
+        throw new Error(
+          'That local time does not exist in your time zone. ' +
+          'Choose another time.'
+        );
+      }
+
+      if (candidates.length > 1) {
+        throw new Error(
+          'That time occurs twice due to daylight saving. ' +
+          'Please contact an admin to confirm the correct finish time.'
+        );
+      }
+
+      return candidates[0].toISOString();
+    }
+
+    function formatZoneTime(zone) {
+      return new Intl.DateTimeFormat('en-US', {
+        timeZone: zone,
+        dateStyle: 'medium',
+        timeStyle: 'short'
+      }).format(new Date());
+    }
+
+    function getAvailableTimezones() {
+      if (typeof Intl.supportedValuesOf === 'function') {
+        return Intl.supportedValuesOf('timeZone');
+      }
+
+      return [
+        'Africa/Johannesburg',
+        'America/Chicago',
+        'America/Los_Angeles',
+        'America/New_York',
+        'America/Toronto',
+        'Asia/Dubai',
+        'Asia/Kolkata',
+        'Asia/Manila',
+        'Asia/Singapore',
+        'Australia/Sydney',
+        'Europe/London',
+        'Europe/Paris',
+        'Pacific/Auckland',
+        'UTC'
+      ];
+    }
+
+    function setupTimezoneOptions() {
+      const browserZone =
+        Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
+
+      const zones = new Set([
+        ...getAvailableTimezones(),
+        browserZone,
+        'UTC'
+      ]);
+
+      const select = $('timezoneSelect');
+      select.replaceChildren();
+
+      for (const zone of [...zones].sort()) {
+        const option = document.createElement('option');
+        option.value = zone;
+        option.textContent = zone.replaceAll('_', ' ');
+        select.appendChild(option);
+      }
+
+      select.value = browserZone;
+      updateTimezonePreview();
+    }
+
+    function updateTimezonePreview() {
+      const zone = $('timezoneSelect').value;
+
+      try {
+        $('timezonePreview').textContent =
+          `Current local time: ${formatZoneTime(zone)}`;
+      } catch {
+        $('timezonePreview').textContent =
+          'Choose a valid time zone.';
+      }
+    }
+
+    function setTimezoneState() {
+      const confirmed = Boolean(
+        roster?.confirmed_timezone &&
+        roster?.timezone_confirmed_at
+      );
+
+      $('timezoneLocked').classList.toggle('hidden', !confirmed);
+      $('timezoneForm').classList.toggle('hidden', confirmed);
+
+      if (confirmed) {
+        $('confirmedTimezone').textContent =
+          roster.confirmed_timezone.replaceAll('_', ' ');
+      }
+
+      $('bookForm').querySelectorAll(
+        'input:not([readonly]), select, button'
+      ).forEach(el => {
+        el.disabled = !confirmed;
+      });
+
+      $('finishTimeHint').textContent = confirmed
+        ? `Enter the finish time in ${roster.confirmed_timezone}. ` +
+          'Completed books must be submitted within 72 hours.'
+        : 'Confirm your time zone before submitting a report.';
+    }
+
+    function updateFinishField() {
+      const completed = $('readingStatus').value === 'completed';
+
+      $('finishedField').classList.toggle('hidden', !completed);
+      $('finishedAt').required = completed;
+
+      if (!completed) {
+        $('finishedAt').value = '';
+      }
+    }
+
+    
+async function loadDailyStats() {
+  if (!roster?.confirmed_timezone) return;
+
+  const { data, error } = await db.rpc(
+    'tbb_brl_my_daily_stats',
+    {
+      p_roster_id: roster.id
+    }
+  );
+
+  if (error) {
+    $('dailyAwarded').textContent = '—';
+    $('dailyRemaining').textContent = '—';
+    $('scoringDate').textContent =
+      'Unable to load your daily scoring totals.';
+    console.error('BRL daily stats error:', error);
+    return;
+  }
+
+  const stats = data?.[0];
+
+  if (!stats) {
+    $('dailyAwarded').textContent = '—';
+    $('dailyRemaining').textContent = '—';
+    $('scoringDate').textContent =
+      'No daily scoring information was returned.';
+    return;
+  }
+
+  $('dailyAwarded').textContent =
+    Number(stats.eligible_pages).toLocaleString();
+
+  $('dailyRemaining').textContent =
+    Number(stats.remaining_pages).toLocaleString();
+
+  $('scoringDate').textContent =
+    `Local scoring date: ${stats.local_scoring_date} ` +
+    `(${stats.confirmed_timezone})`;
+}
+
+
+    async function confirmTimezone(event) {
+      event.preventDefault();
+      hideMessage('timezoneMessage');
+
+      const btn = $('confirmTimezoneBtn');
+      const zone = $('timezoneSelect').value;
+
+      if (!zone) return;
+
+      btn.disabled = true;
+      btn.textContent = 'Confirming...';
+
+      try {
+        const { error } = await db.rpc(
+          'tbb_brl_confirm_timezone',
+          {
+            p_roster_id: roster.id,
+            p_timezone: zone
+          }
+        );
+
+        if (error) throw error;
+
+        roster.confirmed_timezone = zone;
+        roster.timezone_confirmed_at =
+          new Date().toISOString();
+
+        setTimezoneState();
+        await loadDailyStats();
+
+        showMessage(
+          'timezoneMessage',
+          `Your time zone is confirmed as ${zone}! 🌍💜`,
+          'success'
+        );
+      } catch (error) {
+        showMessage(
+          'timezoneMessage',
+          error.message || 'Could not confirm your time zone.',
+          'error'
+        );
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '🌍 Confirm My Time Zone';
+      }
+    }
+
+    
+async function loadReadingAttempts() {
+  if (!roster?.id) return;
+
+  const select = $('readingAttempt');
+
+  const { data, error } = await db.rpc(
+    'tbb_brl_my_reading_attempts',
+    {
+      p_roster_id: roster.id
+    }
+  );
+
+  if (error) {
+    console.error('Reading attempts error:', error);
+    showMessage(
+      'submissionMessage',
+      'Could not load your reading attempts. ' +
+      'Please refresh before submitting.',
+      'error'
+    );
+    $('submitBookBtn').disabled = true;
+    return;
+  }
+
+  select.replaceChildren();
+
+  const newOption = document.createElement('option');
+  newOption.value = '';
+  newOption.textContent = '📖 New Book / First Reading';
+  select.appendChild(newOption);
+
+  for (const attempt of data || []) {
+    const option = document.createElement('option');
+    option.value = attempt.attempt_id;
+
+    const rereadLabel = attempt.approved_reread
+      ? `🔁 Approved Reread #${attempt.attempt_number}`
+      : '📖 Continuing Book';
+
+    option.textContent =
+      `${rereadLabel} — ${attempt.book_title} ` +
+      `(${attempt.pages_reported} pages reported)`;
+
+    option.dataset.title = attempt.book_title;
+    option.dataset.author = attempt.book_author;
+    option.dataset.format = attempt.book_format;
+    option.dataset.pages = attempt.edition_pages;
+    option.dataset.started = attempt.started_on;
+    option.dataset.reread = String(attempt.approved_reread);
+    option.dataset.reported = String(attempt.pages_reported);
+
+    select.appendChild(option);
+  }
+}
+
+function handleAttemptSelection() {
+  const option = $('readingAttempt').selectedOptions[0];
+
+  if (!option?.value) {
+    $('bookTitle').readOnly = false;
+    $('bookAuthor').readOnly = false;
+    $('editionPages').readOnly = false;
+    $('bookFormat').disabled = false;
+    $('startedOn').readOnly = false;
+    return;
+  }
+
+  $('bookTitle').value = option.dataset.title || '';
+  $('bookAuthor').value = option.dataset.author || '';
+  $('bookFormat').value = option.dataset.format || '';
+  $('editionPages').value = option.dataset.pages || '';
+
+  $('bookTitle').readOnly = true;
+  $('bookAuthor').readOnly = true;
+  $('editionPages').readOnly = true;
+  $('bookFormat').disabled = true;
+
+  const isNewReread =
+    option.dataset.reread === 'true' &&
+    Number(option.dataset.reported) === 0;
+
+  if (!isNewReread) {
+    $('startedOn').value = option.dataset.started || '';
+  } else {
+    $('startedOn').value = '';
+  }
+
+  $('startedOn').readOnly = !isNewReread;
+}
+
+    async function submitBook(event) {
+      event.preventDefault();
+      hideMessage('submissionMessage');
+
+      if (!roster?.confirmed_timezone) {
+        showMessage(
+          'submissionMessage',
+          'Confirm your time zone first.',
+          'error'
+        );
+        return;
+      }
+
+      const btn = $('submitBookBtn');
+      btn.disabled = true;
+      btn.textContent = 'Filing your case report...';
+
+      try {
+        const status = $('readingStatus').value;
+        const finished = $('finishedAt').value;
+
+        const finishISO = status === 'completed'
+          ? wallTimeToISO(
+              finished,
+              roster.confirmed_timezone
+            )
+          : null;
+
+        const payload = {
+          p_roster_id: roster.id,
+          p_title: $('bookTitle').value.trim(),
+          p_author: $('bookAuthor').value.trim(),
+          p_reading_status: status,
+          p_book_format: $('bookFormat').value,
+          p_amazon_edition_pages:
+            Number($('editionPages').value),
+          p_actual_pages_read:
+            Number($('actualPages').value),
+          p_started_on: $('startedOn').value,
+          p_finished_at: finishISO,
+          p_rating: $('bookRating').value === ''
+            ? null
+            : Number($('bookRating').value),
+          p_certification_accepted:
+            $('certifyReport').checked,
+            p_reading_attempt_id:
+            $('readingAttempt').value || null
+            };
+
+        const { data, error } = await db.rpc(
+          'tbb_brl_submit_book',
+          payload
+        );
+
+        if (error) throw error;
+
+        const result = data?.[0];
+
+        if (!result) {
+          throw new Error(
+            'The report returned no scoring confirmation.'
+          );
+        }
+
+        const awarded = Number(result.awarded_pages);
+        const reported = Number(result.newly_reported_pages);
+        const total = Number(result.daily_eligible_total);
+
+        showMessage(
+          'submissionMessage',
+          `CASE FILE ACCEPTED! 🐾🔎 ` +
+          `${reported.toLocaleString()} new pages reported. ` +
+          `${awarded.toLocaleString()} eligible pages awarded! ` +
+          `Your daily total is ${total.toLocaleString()}/1,000.`,
+          'success'
+        );
+
+        $('bookForm').reset();
+        handleAttemptSelection();
+        updateFinishField();
+        await loadReadingAttempts();
+
+        // Show the authoritative totals returned by
+        // the successful scoring transaction.
+        $('dailyAwarded').textContent =
+          total.toLocaleString();
+
+        $('dailyRemaining').textContent =
+          Math.max(0, 1000 - total).toLocaleString();
+
+        $('scoringDate').textContent =
+          `Local scoring date: ${result.local_scoring_date}`;
+
+      } catch (error) {
+        showMessage(
+          'submissionMessage',
+          error.message || 'Could not submit your report.',
+          'error'
+        );
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '🔎 Submit Official Reading Report';
+      }
+    }
+
+    async function init() {
+      try {
+        access = await requireAccess();
+
+        if (!access) return;
+
+        // Only linked, active roster members may submit.
+        const { data: rosterRows, error: rosterError } =
+          await db
+            .from('tbb_brl_roster')
+            .select(
+              'id, season_id, team_id, user_id, ' +
+              'discord_username, participation_status, ' +
+              'confirmed_timezone, timezone_confirmed_at'
+            )
+            .eq('user_id', access.user.id)
+            .eq('participation_status', 'active');
+
+        if (rosterError) throw rosterError;
+
+        if (!rosterRows?.length) {
+          showMessage(
+            'pageMessage',
+            '🔎 No linked Reading League roster found yet. ' +
+            'Your admin must confirm your Discord roster ' +
+            'assignment before you can submit official reports.'
+          );
+          return;
+        }
+
+        // Season 3 is the current official season.
+        const { data: seasonRows, error: seasonError } =
+          await db
+            .from('tbb_brl_seasons')
+            .select(
+              'id, season_number, title, status, ' +
+              'starts_on, ends_on'
+            )
+            .eq('season_number', 3)
+            .limit(1);
+
+        if (seasonError) throw seasonError;
+
+        season = seasonRows?.[0];
+
+        if (!season) {
+          throw new Error('Season 3 was not found.');
+        }
+
+        roster = rosterRows.find(
+          row => row.season_id === season.id
+        );
+
+        if (!roster) {
+          showMessage(
+            'pageMessage',
+            'You are not currently assigned to Season 3.'
+          );
+          return;
+        }
+
+        const { data: teamData, error: teamError } =
+          await db
+            .from('tbb_brl_teams')
+            .select('id, name, emoji')
+            .eq('id', roster.team_id)
+            .single();
+
+        if (teamError) throw teamError;
+
+        team = teamData;
+
+        $('discordUsername').value =
+          roster.discord_username;
+
+        $('assignedCrew').value =
+          `${team.emoji || '🐾'} ${team.name}`;
+
+        $('crewName').textContent =
+          `${team.emoji || '🐾'} ${team.name}`;
+
+        $('memberName').textContent =
+          `Detective @${roster.discord_username}`;
+
+        $('pageContent').classList.remove('hidden');
+        $('pageMessage').classList.add('hidden');
+
+        setupTimezoneOptions();
+        setTimezoneState();
+        updateFinishField();
+
+        $('readingAttempt').addEventListener(
+        'change',
+        handleAttemptSelection
+        );
+
+await loadReadingAttempts();
+
+        $('timezoneSelect').addEventListener(
+          'change',
+          updateTimezonePreview
+        );
+
+        $('timezoneForm').addEventListener(
+          'submit',
+          confirmTimezone
+        );
+
+        $('readingStatus').addEventListener(
+          'change',
+          updateFinishField
+        );
+
+        $('bookForm').addEventListener(
+          'submit',
+          submitBook
+        );
+
+        await loadDailyStats();
+
+      } catch (error) {
+        showMessage(
+          'pageMessage',
+          error.message || 'Unable to load Reading Reports.',
+          'error'
+        );
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>

@@ -1,0 +1,3030 @@
+
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fred's Mission Control™ | TBB</title>
+
+  <link rel="stylesheet" href="css/auth.css">
+
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0c101d;
+      --panel: #1c1930;
+      --panel2: #29223f;
+      --pink: #ff75c7;
+      --purple: #ba9aff;
+      --cream: #fff0dc;
+      --muted: #cbbddc;
+      --line: #65517f;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 10% 0%, #47306a 0%, transparent 40%),
+        radial-gradient(circle at 90% 20%, #443052 0%, transparent 40%),
+        var(--bg);
+      color: var(--cream);
+      font-family: system-ui, -apple-system, Segoe UI, sans-serif;
+    }
+
+    [hidden] { display: none !important; }
+
+    .shell {
+      max-width: 1100px;
+      margin: auto;
+      padding: 28px 18px 80px;
+    }
+
+    .hero, .panel {
+      background: linear-gradient(145deg, #29213e, #171525);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 25px;
+      margin-bottom: 20px;
+      box-shadow: 0 12px 35px #0005;
+    }
+
+    .hero {
+      border-color: var(--purple);
+      text-align: center;
+    }
+
+    .eyebrow {
+      color: var(--pink);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 5vw, 3.4rem);
+      margin: 12px 0;
+    }
+
+    h2 { color: #f5b5e7; }
+    h3 { color: #dec4ff; }
+
+    p { line-height: 1.6; }
+
+    .muted { color: var(--muted); }
+
+    .nav {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 18px;
+    }
+
+    .nav a {
+      color: var(--cream);
+      background: #45345c;
+      border: 1px solid #9776b7;
+      border-radius: 12px;
+      padding: 10px 14px;
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+    }
+
+    .metric {
+      background: var(--panel2);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 17px;
+      text-align: center;
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 30px;
+      color: var(--pink);
+      margin: 7px 0;
+    }
+
+    label {
+      display: block;
+      margin: 14px 0;
+      font-weight: 700;
+    }
+
+    input, select {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      margin-top: 7px;
+      border: 1px solid #987bb0;
+      border-radius: 12px;
+      background: #120f21;
+      color: white;
+      font: inherit;
+    }
+
+    button {
+      background: linear-gradient(135deg, #ef59b6, #9e55d0);
+      color: white;
+      border: 0;
+      border-radius: 12px;
+      padding: 12px 18px;
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: .5;
+      cursor: wait;
+    }
+
+    button:focus-visible, a:focus-visible,
+    input:focus-visible, select:focus-visible {
+      outline: 3px solid #ffb5e2;
+      outline-offset: 3px;
+    }
+
+    .roster-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      background: #251d38;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 15px;
+      margin: 10px 0;
+    }
+
+    .roster-row strong {
+      overflow-wrap: anywhere;
+    }
+
+    .roster-row small {
+      display: block;
+      color: var(--muted);
+      margin-top: 5px;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .actions button {
+      font-size: 13px;
+      padding: 9px 12px;
+    }
+
+    .status {
+      min-height: 24px;
+      color: #bdf2ce;
+      overflow-wrap: anywhere;
+    }
+
+    .error { color: #ff9bb0; }
+
+    .hint {
+      border-left: 3px solid var(--purple);
+      background: #29213d;
+      padding: 13px;
+      border-radius: 8px;
+      color: var(--muted);
+    }
+
+    
+/* ==========================================
+   FRED'S MISSION CONTROL™
+   DESKTOP DASHBOARD GRID
+   ========================================== */
+
+/* Make the dashboard wider */
+.shell {
+  max-width: 1440px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 28px 24px 70px;
+
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+  align-items: start;
+}
+
+/* Header spans the entire dashboard */
+.shell > .hero {
+  grid-column: 1 / -1;
+  margin-bottom: 0;
+}
+
+/* Dashboard cards occupy the grid */
+.shell > .panel {
+  min-width: 0;
+  width: 100%;
+  margin-bottom: 0;
+  padding: 26px;
+}
+
+/* Keep forms and fields inside their cards */
+.shell > .panel form,
+.shell > .panel input,
+.shell > .panel select {
+  max-width: 100%;
+  min-width: 0;
+}
+
+/* Season overview: four stats across */
+.shell > .panel:first-of-type .grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+/* Allow long usernames and labels to wrap */
+.roster-row {
+  min-width: 0;
+}
+
+.roster-row > * {
+  max-width: 100%;
+}
+
+/* Tablet and phone layout */
+@media (max-width: 850px) {
+  .shell {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+    padding: 18px 14px 48px;
+  }
+
+  .shell > .hero,
+  .shell > .panel {
+    grid-column: 1 / -1;
+  }
+
+  .shell > .panel {
+    padding: 20px;
+  }
+}
+
+/* Very small screens */
+@media (max-width: 420px) {
+  .shell > .panel:first-of-type .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 9px;
+  }
+
+  .metric {
+    padding: 12px 8px;
+  }
+
+  .metric strong {
+    font-size: 25px;
+  }
+
+  .hero h1 {
+    overflow-wrap: anywhere;
+  }
+}
+
+  </style>
+</head>
+
+<body>
+  <main class="shell" id="app" hidden>
+
+    <header class="hero">
+      <div class="eyebrow">
+        TBB · Baddie Reading League · Season 3
+      </div>
+
+      <h1>🐾 Fred's Mission Control™ 🔎</h1>
+
+      <p>
+        Welcome to Mystery Inc. Headquarters, Baddie!
+        Every great mystery needs a crew.
+        Time to assemble yours.
+      </p>
+
+      <nav class="nav">
+        <a href="admin.html">👑 Admin HQ</a>
+        <a href="member.html">💋 My Vanity™</a>
+        <a href="brl-reading-reports.html">🔎 Reading Reports™</a>
+        <a href="brl-scoreleader.html">🏆 Live Scoreleader™</a>
+      </nav>
+    </header>
+
+    <section class="panel">
+      <h2>🚐 The Cozy Case Files</h2>
+
+      <p class="muted">
+        November 1 – December 30, 2026
+        · Two Crews. One Mystery. Every Page Counts.
+      </p>
+
+      <div class="grid">
+        <div class="metric">
+          Total Baddies
+          <strong id="totalBaddies">—</strong>
+        </div>
+
+        <div class="metric">
+          Crew A
+          <strong id="teamOneCount">—</strong>
+        </div>
+
+        <div class="metric">
+          Crew B
+          <strong id="teamTwoCount">—</strong>
+        </div>
+
+        <div class="metric">
+          Accounts Linked
+          <strong id="linkedCount">—</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>🔎 Add a Baddie to the Case</h2>
+
+      <p class="muted">
+        Add one Discord username at a time.
+        Baddies do not need a TBB account yet.
+      </p>
+
+      <form id="rosterForm">
+        <label for="discordUsername">
+          Discord username
+          <input
+            id="discordUsername"
+            type="text"
+            maxlength="100"
+            placeholder="bookish.baddie"
+            autocomplete="off"
+            required
+          >
+        </label>
+
+        <label for="teamSelect">
+          Assign to a crew
+          <select id="teamSelect" required>
+            <option value="">Choose a crew</option>
+          </select>
+        </label>
+
+        <button type="submit" id="addButton">
+          🐾 Add to the Case Files
+        </button>
+      </form>
+
+      <p id="formStatus" class="status" role="status"></p>
+
+      <p class="hint">
+        🔐 Account linking is admin-confirmed.
+        Entering a Discord username never automatically
+        grants access to official Reading League logging.
+      </p>
+    </section>
+
+    
+<!-- ==========================================
+     PHASE 11.3 — REREAD APPROVAL DESK
+     ========================================== -->
+
+     
+<!-- ==========================================
+     PHASE 11.4 — SCORELEADER™
+     FRED'S SCORING DESK
+     ========================================== -->
+
+<section class="panel" id="brlScoringDesk">
+  <h2>🏆 Fred's Scoring Desk™</h2>
+  <p class="muted">
+    Official challenge awards and score adjustments.
+    Reading pages are calculated separately from book reports.
+  </p>
+
+  <div class="panel">
+    <h3>🐾 Team Challenge Awards</h3>
+    <p class="muted">
+      First crew: +300 points. Second crew: +150 points.
+    </p>
+
+    <form id="brlTeamAwardForm">
+      <label for="brlTeamChallengeName">Challenge Name</label>
+      <input
+        id="brlTeamChallengeName"
+        maxlength="160"
+        required
+        placeholder="Case File #1"
+      >
+
+      <label for="brlTeamAwardTeam">Award To</label>
+      <select id="brlTeamAwardTeam" required>
+        <option value="">Select a crew</option>
+      </select>
+
+      <label for="brlTeamPlacement">Placement</label>
+      <select id="brlTeamPlacement" required>
+        <option value="">Select placement</option>
+        <option value="1">🥇 First — 300 points</option>
+        <option value="2">🥈 Second — 150 points</option>
+      </select>
+
+      <label for="brlTeamAwardNotes">Notes (optional)</label>
+      <textarea
+        id="brlTeamAwardNotes"
+        rows="2"
+        placeholder="Completion details..."
+      ></textarea>
+
+      <button class="btn primary" type="submit">
+        Award Team Points 🏆
+      </button>
+    </form>
+  </div>
+
+  <div class="panel">
+    <h3>🔎 Individual Challenge Awards</h3>
+    <p class="muted">
+      Award +50 points to the selected Baddie's crew.
+    </p>
+
+    <form id="brlIndividualAwardForm">
+      <label for="brlIndividualChallengeName">Challenge Name</label>
+      <input
+        id="brlIndividualChallengeName"
+        maxlength="160"
+        required
+        placeholder="Individual Case File #1"
+      >
+
+      <label for="brlIndividualAwardRoster">Baddie</label>
+      <select id="brlIndividualAwardRoster" required>
+        <option value="">Select a Baddie</option>
+      </select>
+
+      <label for="brlIndividualAwardNotes">Notes (optional)</label>
+      <textarea
+        id="brlIndividualAwardNotes"
+        rows="2"
+        placeholder="Completion details..."
+      ></textarea>
+
+      <button class="btn primary" type="submit">
+        Award 50 Points 🔎
+      </button>
+    </form>
+  </div>
+
+  <div class="panel">
+    <h3>⚖️ Admin Score Adjustment</h3>
+    <p class="muted">
+      Add or deduct points with a recorded explanation.
+    </p>
+
+    <form id="brlScoreAdjustmentForm">
+      <label for="brlAdjustmentTeam">Crew</label>
+      <select id="brlAdjustmentTeam" required>
+        <option value="">Select a crew</option>
+      </select>
+
+      <label for="brlAdjustmentPoints">Points (+ or −)</label>
+      <input
+        id="brlAdjustmentPoints"
+        type="number"
+        step="1"
+        required
+        placeholder="Example: -100"
+      >
+
+      <label for="brlAdjustmentReason">Reason</label>
+      <textarea
+        id="brlAdjustmentReason"
+        rows="3"
+        minlength="10"
+        required
+        placeholder="Explain the adjustment (at least 10 characters)"
+      ></textarea>
+
+      <button class="btn primary" type="submit">
+        Record Adjustment ⚖️
+      </button>
+    </form>
+  </div>
+
+  <p
+    id="brlScoringDeskStatus"
+    class="notice"
+    role="status"
+    aria-live="polite"
+  ></p>
+</section>
+
+<!-- END FRED'S SCORING DESK™ -->
+
+<!-- ==========================================
+     PHASE 11.3 — VELMA'S EVIDENCE REVIEW™
+     ========================================== -->
+
+     
+<section class="panel" id="bookEvidenceDesk">
+  <h2>🔎 Velma's Evidence Review™</h2>
+
+  <p class="muted">
+    Every page tells a story, Baddie!
+    Review official Reading League book reports,
+    inspect scoring, and void incorrect submissions
+    with a documented reason.
+  </p>
+
+  <div class="grid">
+    <label for="evidenceSearch">
+      Search the case files
+      <input
+        id="evidenceSearch"
+        type="search"
+        placeholder="Discord username, book, author..."
+        autocomplete="off"
+      >
+    </label>
+
+    <label for="evidenceStatusFilter">
+      Report status
+      <select id="evidenceStatusFilter">
+        <option value="all">All Reports</option>
+        <option value="accepted">Accepted</option>
+        <option value="voided">Voided</option>
+        <option value="pending">Pending</option>
+        <option value="rejected">Rejected</option>
+      </select>
+    </label>
+  </div>
+
+  <div class="actions">
+    <button type="button" id="refreshBookEvidence">
+      ↻ Refresh Book Reports
+    </button>
+  </div>
+
+  <p
+    id="bookEvidenceStatus"
+    class="status"
+    role="status"
+    aria-live="polite"
+  ></p>
+
+  <div id="bookEvidenceList"></div>
+
+  <p class="hint">
+    🐾 Voiding keeps the original report and creates
+    an audit record. Only eligible accepted reports
+    can be voided. Previously awarded pages are
+    deducted from the daily ledger.
+  </p>
+</section>
+
+
+
+<!-- ==========================================
+     PHASE 11.3 — VELMA'S AUDIT TRAIL™
+     ========================================== -->
+
+<section class="panel" id="bookAuditDesk">
+  <h2>🗂️ Velma's Audit Trail™</h2>
+
+  <p class="muted">
+    The evidence never disappears, Baddie!
+    Every official book-report correction and void
+    is documented here for admin review.
+  </p>
+
+  <div class="grid">
+    <label for="auditSearch">
+      Search audit history
+      <input
+        id="auditSearch"
+        type="search"
+        placeholder="Baddie, book, admin, reason..."
+        autocomplete="off"
+      >
+    </label>
+
+    <label for="auditActionFilter">
+      Action
+      <select id="auditActionFilter">
+        <option value="all">All Actions</option>
+        <option value="correction">Page Corrections</option>
+        <option value="void">Voided Reports</option>
+        <option value="restore">Restorations</option>
+        <option value="review">Reviews</option>
+      </select>
+    </label>
+  </div>
+
+  <div class="actions">
+    <button type="button" id="refreshBookAudit">
+      ↻ Refresh Audit History
+    </button>
+  </div>
+
+  <p
+    id="bookAuditStatus"
+    class="status"
+    role="status"
+    aria-live="polite"
+  ></p>
+
+  <div id="bookAuditList"></div>
+
+  <p class="hint">
+    🔐 Audit records are read-only. Corrections and
+    voids must be performed through their authorized
+    admin controls, never by editing audit history.
+  </p>
+</section>
+
+<section class="panel" id="rereadApprovalDesk">
+  <h2>🔁 Velma's Reread Authorization™</h2>
+
+  <p class="muted">
+    Every reread needs a fresh case file!
+    Approve a new reading attempt for a Baddie
+    who has finished or DNF'd their previous one.
+    The original report and pages remain intact.
+  </p>
+
+  <form id="rereadApprovalForm">
+    <label for="rereadCandidate">
+      Select a completed reading attempt
+      <select id="rereadCandidate" required>
+        <option value="">Loading case files...</option>
+      </select>
+    </label>
+
+    <label for="rereadReason">
+      Reason for approval
+      <input
+        id="rereadReason"
+        type="text"
+        minlength="5"
+        maxlength="500"
+        placeholder="Example: Confirmed genuine reread"
+        required
+      >
+    </label>
+
+    <button type="submit" id="approveRereadButton">
+      🔎 Authorize New Reading Attempt
+    </button>
+  </form>
+
+  <p
+    id="rereadApprovalStatus"
+    class="status"
+    role="status"
+  ></p>
+
+  <button type="button" id="refreshRereadCandidates">
+    ↻ Refresh Eligible Case Files
+  </button>
+
+  <p class="hint">
+    🐾 Only linked, active Baddies with an eligible
+    closed attempt appear here. Each authorization
+    creates a new attempt; it does not award pages.
+  </p>
+</section>
+
+
+    <section class="panel">
+      <h2>📂 The Crew Case Files</h2>
+
+      <p class="muted">
+        View your assignments, move Baddies between crews,
+        or remove someone from the active roster.
+        Removed records are retained for history.
+      </p>
+
+      <button id="refreshButton" type="button">
+        ↻ Refresh Rosters
+      </button>
+
+      <p id="rosterStatus" class="status" role="status"></p>
+
+      <div id="teamRosters"></div>
+    </section>
+
+    
+<!-- ==========================================
+     PHASE 11.2D — CREW IDENTITY STUDIO
+     ========================================== -->
+
+<section class="panel">
+  <h2>🏷️ Crew Identity Studio™</h2>
+
+  <p class="muted">
+    The Baddies have spoken! Give each crew its official
+    name without changing its permanent team ID.
+  </p>
+
+  <div id="crewIdentityForms"></div>
+
+  <p id="crewIdentityStatus"
+     class="status"
+     role="status"></p>
+</section>
+
+
+<!-- ==========================================
+     PHASE 11.2D — ROSTER IDENTITY EDITOR
+     ========================================== -->
+
+<section class="panel">
+  <h2>📂 Case File Corrections</h2>
+
+  <p class="muted">
+    Correct a Discord username without deleting the
+    Baddie's original roster entry or team assignment.
+  </p>
+
+  <form id="rosterIdentityForm">
+
+    <label for="identityRosterId">
+      Select a Baddie
+      <select id="identityRosterId" required>
+        <option value="">Choose a case file</option>
+      </select>
+    </label>
+
+    <label for="identityUsername">
+      Correct Discord username
+      <input
+        id="identityUsername"
+        type="text"
+        maxlength="100"
+        autocomplete="off"
+        required
+      >
+    </label>
+
+    <button type="submit" id="identitySaveButton">
+      💗 Save Username Correction
+    </button>
+
+  </form>
+
+  <p id="identityStatus"
+     class="status"
+     role="status"></p>
+</section>
+
+
+<!-- ==========================================
+     PHASE 11.2D — ACCOUNT MATCH DETECTIVE
+     ========================================== -->
+
+<section class="panel">
+  <h2>🔐 Account Match Detective™</h2>
+
+  <p class="muted">
+    Search for an approved TBB account, compare its
+    Library Card username with the Discord case file,
+    and personally confirm the correct Baddie.
+  </p>
+
+  <form id="accountMatchForm">
+
+    <label for="matchRosterId">
+      Discord case file
+      <select id="matchRosterId" required>
+        <option value="">Choose an unlinked Baddie</option>
+      </select>
+    </label>
+
+    <label for="matchSearch">
+      Search Library Card username
+      <input
+        id="matchSearch"
+        type="search"
+        maxlength="100"
+        placeholder="Search an approved Baddie"
+        autocomplete="off"
+        required
+      >
+    </label>
+
+    <button type="submit" id="matchSearchButton">
+      🔎 Search Approved Accounts
+    </button>
+
+  </form>
+
+  <p id="matchStatus"
+     class="status"
+     role="status"></p>
+
+  <div id="matchResults"></div>
+
+  <h3>🔗 Linked Case Files</h3>
+
+  <div id="linkedCaseFiles"></div>
+
+  <p class="hint">
+    🔐 A matching username is only a suggestion.
+    Account links require your explicit confirmation.
+    Only approved TBB accounts are eligible.
+  </p>
+</section>
+
+
+  </main>
+
+  
+/* ==========================================
+   PHASE 11.4 — FRED'S SCORING DESK™
+   ========================================== */
+
+let brlScoringSeasonId = null;
+
+function brlScoringStatus(message, error = false) {
+  const element = document.getElementById("brlScoringDeskStatus");
+  if (!element) return;
+
+  element.textContent = message;
+  element.style.color = error ? "#ffaaaa" : "";
+}
+
+function brlScoringFillSelect(id, items, placeholder) {
+  const select = document.getElementById(id);
+  if (!select) return;
+
+  select.replaceChildren(new Option(placeholder, ""));
+
+  for (const item of items) {
+    select.add(new Option(item.label, item.value));
+  }
+}
+
+async function loadBrlScoringDesk() {
+  const status = document.getElementById("brlScoringDeskStatus");
+  if (!status) return;
+
+  brlScoringStatus("Loading official scoring controls...");
+
+  try {
+    const { data: seasons, error: seasonError } = await db
+      .from("tbb_brl_seasons")
+      .select("id,season_number,status")
+      .in("status", ["upcoming", "active", "completed"])
+      .order("season_number", { ascending: false });
+
+    if (seasonError) throw seasonError;
+
+    const season = seasons?.[0];
+
+    if (!season) {
+      throw new Error("No available Reading League season found.");
+    }
+
+    brlScoringSeasonId = season.id;
+
+    const [teamsResult, rosterResult] = await Promise.all([
+      db
+        .from("tbb_brl_teams")
+        .select("id,name,emoji,team_number")
+        .eq("season_id", brlScoringSeasonId)
+        .order("team_number"),
+
+      db
+        .from("tbb_brl_roster")
+        .select("id,discord_username,team_id,participation_status")
+        .eq("season_id", brlScoringSeasonId)
+        .eq("participation_status", "active")
+        .order("discord_username")
+    ]);
+
+    if (teamsResult.error) throw teamsResult.error;
+    if (rosterResult.error) throw rosterResult.error;
+
+    const teams = teamsResult.data || [];
+    const roster = rosterResult.data || [];
+
+    const teamOptions = teams.map(team => ({
+      value: team.id,
+      label: `${team.emoji || "🐾"} ${team.name}`
+    }));
+
+    brlScoringFillSelect(
+      "brlTeamAwardTeam",
+      teamOptions,
+      "Select a crew"
+    );
+
+    brlScoringFillSelect(
+      "brlAdjustmentTeam",
+      teamOptions,
+      "Select a crew"
+    );
+
+    const teamNames = new Map(
+      teams.map(team => [team.id, team.name])
+    );
+
+    brlScoringFillSelect(
+      "brlIndividualAwardRoster",
+      roster.map(member => ({
+        value: member.id,
+        label:
+          `${member.discord_username} — ` +
+          `${teamNames.get(member.team_id) || "Unassigned"}`
+      })),
+      "Select a Baddie"
+    );
+
+    brlScoringStatus(
+      `Scoring Desk ready for Season ${season.season_number}. ` +
+      `Awards require an active or completed season.`
+    );
+
+  } catch (error) {
+    console.error("BRL Scoring Desk load failed:", error);
+    brlScoringStatus(error.message, true);
+  }
+}
+
+async function submitBrlTeamAward(event) {
+  event.preventDefault();
+
+  const form = event.currentTarget;
+  const button = form.querySelector('button[type="submit"]');
+
+  const challenge = document
+    .getElementById("brlTeamChallengeName").value.trim();
+
+  const teamId = document
+    .getElementById("brlTeamAwardTeam").value;
+
+  const placement = Number(
+    document.getElementById("brlTeamPlacement").value
+  );
+
+  const notes = document
+    .getElementById("brlTeamAwardNotes").value.trim();
+
+  const points = placement === 1 ? 300 : 150;
+
+  if (!brlScoringSeasonId || !teamId || ![1, 2].includes(placement)) {
+    brlScoringStatus("Select a crew and placement.", true);
+    return;
+  }
+
+  if (!confirm(
+    `Award ${points} points to this crew for "${challenge}"?`
+  )) return;
+
+  button.disabled = true;
+
+  try {
+    const { error } = await db.rpc(
+      "tbb_brl_admin_award_team_challenge",
+      {
+        p_season_id: brlScoringSeasonId,
+        p_team_id: teamId,
+        p_challenge_name: challenge,
+        p_placement: placement,
+        p_notes: notes || null
+      }
+    );
+
+    if (error) throw error;
+
+    form.reset();
+    brlScoringStatus(`🏆 Award recorded: +${points} points!`);
+
+  } catch (error) {
+    brlScoringStatus(error.message, true);
+  } finally {
+    button.disabled = false;
+  }
+}
+
+async function submitBrlIndividualAward(event) {
+  event.preventDefault();
+
+  const form = event.currentTarget;
+  const button = form.querySelector('button[type="submit"]');
+
+  const challenge = document
+    .getElementById("brlIndividualChallengeName").value.trim();
+
+  const rosterId = document
+    .getElementById("brlIndividualAwardRoster").value;
+
+  const notes = document
+    .getElementById("brlIndividualAwardNotes").value.trim();
+
+  if (!brlScoringSeasonId || !rosterId) {
+    brlScoringStatus("Select a Baddie.", true);
+    return;
+  }
+
+  if (!confirm(
+    `Award 50 individual challenge points for "${challenge}"?`
+  )) return;
+
+  button.disabled = true;
+
+  try {
+    const { error } = await db.rpc(
+      "tbb_brl_admin_award_individual_challenge",
+      {
+        p_season_id: brlScoringSeasonId,
+        p_roster_id: rosterId,
+        p_challenge_name: challenge,
+        p_notes: notes || null
+      }
+    );
+
+    if (error) throw error;
+
+    form.reset();
+    brlScoringStatus("🔎 Individual challenge award recorded: +50!");
+
+  } catch (error) {
+    brlScoringStatus(error.message, true);
+  } finally {
+    button.disabled = false;
+  }
+}
+
+async function submitBrlScoreAdjustment(event) {
+  event.preventDefault();
+
+  const form = event.currentTarget;
+  const button = form.querySelector('button[type="submit"]');
+
+  const teamId = document
+    .getElementById("brlAdjustmentTeam").value;
+
+  const points = Number(
+    document.getElementById("brlAdjustmentPoints").value
+  );
+
+  const reason = document
+    .getElementById("brlAdjustmentReason").value.trim();
+
+  if (!Number.isSafeInteger(points) || points === 0) {
+    brlScoringStatus("Enter a valid nonzero whole number.", true);
+    return;
+  }
+
+  if (reason.length < 10) {
+    brlScoringStatus("Reason must be at least 10 characters.", true);
+    return;
+  }
+
+  if (!confirm(
+    `Record a ${points > 0 ? "+" : ""}${points}-point adjustment?`
+  )) return;
+
+  button.disabled = true;
+
+  try {
+    const { error } = await db.rpc(
+      "tbb_brl_admin_adjust_score",
+      {
+        p_season_id: brlScoringSeasonId,
+        p_team_id: teamId,
+        p_points: points,
+        p_reason: reason
+      }
+    );
+
+    if (error) throw error;
+
+    form.reset();
+    brlScoringStatus(
+      `⚖️ Score adjustment recorded: ` +
+      `${points > 0 ? "+" : ""}${points} points.`
+    );
+
+  } catch (error) {
+    brlScoringStatus(error.message, true);
+  } finally {
+    button.disabled = false;
+  }
+}
+
+function initializeBrlScoringDesk() {
+  document
+    .getElementById("brlTeamAwardForm")
+    ?.addEventListener("submit", submitBrlTeamAward);
+
+  document
+    .getElementById("brlIndividualAwardForm")
+    ?.addEventListener("submit", submitBrlIndividualAward);
+
+  document
+    .getElementById("brlScoreAdjustmentForm")
+    ?.addEventListener("submit", submitBrlScoreAdjustment);
+
+  return loadBrlScoringDesk();
+}
+
+/* END FRED'S SCORING DESK™ */
+
+  <script type="module">
+    import { db, requireAccess } from './js/auth.js';
+
+    const $ = id => document.getElementById(id);
+
+    let season = null;
+    let teams = [];
+    let roster = [];
+
+    function showStatus(id, text, error = false) {
+      const el = $(id);
+      el.textContent = text;
+      el.classList.toggle('error', error);
+    }
+
+    function getTeam(teamId) {
+      return teams.find(t => t.id === teamId);
+    }
+
+    async function loadFoundation() {
+      const { data: seasonData, error: seasonError } = await db
+        .from('tbb_brl_seasons')
+        .select('id,season_number,title,status')
+        .eq('season_number', 3)
+        .single();
+
+      if (seasonError) throw seasonError;
+
+      season = seasonData;
+
+      const { data: teamData, error: teamError } = await db
+        .from('tbb_brl_teams')
+        .select('id,season_id,team_number,name')
+        .eq('season_id', season.id)
+        .order('team_number');
+
+      if (teamError) throw teamError;
+
+      teams = teamData || [];
+
+      const select = $('teamSelect');
+      select.replaceChildren();
+
+      const placeholder = new Option('Choose a crew', '');
+      select.add(placeholder);
+
+      for (const team of teams) {
+        select.add(new Option(team.name, team.id));
+      }
+    }
+
+    async function loadRoster() {
+      showStatus('rosterStatus', 'Loading case files…');
+
+      const { data, error } = await db
+        .from('tbb_brl_roster')
+        .select(
+          'id,season_id,team_id,discord_username,' +
+          'user_id,participation_status,created_at'
+        )
+        .eq('season_id', season.id)
+        .order('created_at', { ascending: true });
+
+      if (error) {
+        showStatus('rosterStatus', error.message, true);
+        return;
+      }
+
+      roster = data || [];
+
+      const active = roster.filter(
+        r => r.participation_status === 'active'
+      );
+
+      $('totalBaddies').textContent = active.length;
+
+      $('linkedCount').textContent = active.filter(
+        r => r.user_id !== null
+      ).length;
+
+      $('teamOneCount').textContent = active.filter(
+        r => r.team_id === teams[0]?.id
+      ).length;
+
+      $('teamTwoCount').textContent = active.filter(
+        r => r.team_id === teams[1]?.id
+      ).length;
+
+      renderRoster();
+      populateIdentitySelectors();
+        renderLinkedCaseFiles();
+        clearMatchResults();
+
+      showStatus(
+        'rosterStatus',
+        `${roster.length} case file(s) loaded.`
+      );
+    }
+
+    function renderRoster() {
+      const container = $('teamRosters');
+      container.replaceChildren();
+
+      for (const team of teams) {
+        const section = document.createElement('section');
+
+        const heading = document.createElement('h3');
+        heading.textContent = `🐾 ${team.name}`;
+        section.append(heading);
+
+        const members = roster.filter(
+          r => r.team_id === team.id
+        );
+
+        if (!members.length) {
+          const empty = document.createElement('p');
+          empty.className = 'muted';
+          empty.textContent = 'No Baddies assigned yet.';
+          section.append(empty);
+        }
+
+        for (const member of members) {
+          const row = document.createElement('div');
+          row.className = 'roster-row';
+
+          const info = document.createElement('div');
+
+          const name = document.createElement('strong');
+          name.textContent = `@${member.discord_username}`;
+
+          const detail = document.createElement('small');
+          detail.textContent =
+            `${member.participation_status === 'active'
+              ? 'Active'
+              : 'Removed'} · ${member.user_id
+              ? 'Account linked'
+              : 'Account unlinked'}`;
+
+          info.append(name, detail);
+
+          const actions = document.createElement('div');
+          actions.className = 'actions';
+
+          if (member.participation_status === 'active') {
+            const otherTeams = teams.filter(
+              t => t.id !== team.id
+            );
+
+            for (const destination of otherTeams) {
+              const move = document.createElement('button');
+              move.type = 'button';
+              move.textContent = `Move to ${destination.name}`;
+
+              move.onclick = () => updateMember(
+                member,
+                { team_id: destination.id },
+                `Move @${member.discord_username} to ${destination.name}?`
+              );
+
+              actions.append(move);
+            }
+          }
+
+          const toggle = document.createElement('button');
+          toggle.type = 'button';
+
+          const removed =
+            member.participation_status === 'removed';
+
+          toggle.textContent = removed
+            ? '↩ Restore'
+            : '✕ Remove';
+
+          toggle.onclick = () => updateMember(
+            member,
+            {
+              participation_status: removed
+                ? 'active'
+                : 'removed'
+            },
+            `${removed ? 'Restore' : 'Remove'} @${member.discord_username}?`
+          );
+
+          actions.append(toggle);
+
+          row.append(info, actions);
+          section.append(row);
+        }
+
+        container.append(section);
+      }
+    }
+
+    async function updateMember(member, changes, question) {
+      if (!confirm(question)) return;
+
+      showStatus('rosterStatus', 'Updating case file…');
+
+      const { error } = await db
+        .from('tbb_brl_roster')
+        .update(changes)
+        .eq('id', member.id)
+        .eq('season_id', season.id);
+
+      if (error) {
+        showStatus('rosterStatus', error.message, true);
+        return;
+      }
+
+      await loadRoster();
+    }
+
+    async function addMember(event) {
+      event.preventDefault();
+
+      const username = $('discordUsername').value.trim();
+      const teamId = $('teamSelect').value;
+
+      if (!username || !getTeam(teamId)) {
+        showStatus(
+          'formStatus',
+          'Enter a username and choose a valid crew.',
+          true
+        );
+        return;
+      }
+
+      const existing = roster.find(
+        r => r.discord_username.trim().toLowerCase()
+          === username.toLowerCase()
+      );
+
+      if (existing) {
+        showStatus(
+          'formStatus',
+          'This Discord username already has a Season 3 case file. Edit or restore that entry instead.',
+          true
+        );
+        return;
+      }
+
+      const button = $('addButton');
+      button.disabled = true;
+
+      showStatus('formStatus', 'Saving Baddie assignment…');
+
+      try {
+        const { error } = await db
+          .from('tbb_brl_roster')
+          .insert({
+            season_id: season.id,
+            team_id: teamId,
+            discord_username: username,
+            participation_status: 'active'
+          });
+
+        if (error) throw error;
+
+        $('discordUsername').value = '';
+
+        showStatus(
+          'formStatus',
+          `@${username} has been added to the case files! 🐾`
+        );
+
+        await loadRoster();
+
+      } catch (error) {
+        showStatus('formStatus', error.message, true);
+      } finally {
+        button.disabled = false;
+      }
+    }
+
+    
+    /* ==========================================
+       PHASE 11.2D — CREW IDENTITY STUDIO™
+       ========================================== */
+
+    function renderCrewIdentity() {
+      const container = $('crewIdentityForms');
+      container.replaceChildren();
+
+      for (const team of teams) {
+        const form = document.createElement('form');
+        form.className = 'roster-row';
+
+        const label = document.createElement('label');
+        label.style.flex = '1';
+        label.style.minWidth = '200px';
+        label.textContent = `Crew ${team.team_number} — Official Name`;
+
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.required = true;
+        input.maxLength = 100;
+        input.value = team.name;
+
+        label.append(input);
+
+        const button = document.createElement('button');
+        button.type = 'submit';
+        button.textContent = '💗 Save Crew Name';
+
+        form.append(label, button);
+
+        form.addEventListener('submit', async event => {
+          event.preventDefault();
+
+          const name = input.value.trim();
+
+          if (!name) {
+            showStatus(
+              'crewIdentityStatus',
+              'Enter a crew name.',
+              true
+            );
+            return;
+          }
+
+          if (name === team.name) {
+            showStatus(
+              'crewIdentityStatus',
+              'This crew already has that name.'
+            );
+            return;
+          }
+
+          button.disabled = true;
+
+          try {
+            const { error } = await db
+              .from('tbb_brl_teams')
+              .update({ name })
+              .eq('id', team.id)
+              .eq('season_id', season.id);
+
+            if (error) throw error;
+
+            showStatus(
+              'crewIdentityStatus',
+              `${team.name} is now ${name}! 🐾`
+            );
+
+            await loadFoundation();
+            renderCrewIdentity();
+            await loadRoster();
+
+          } catch (error) {
+            showStatus(
+              'crewIdentityStatus',
+              error.message,
+              true
+            );
+          } finally {
+            button.disabled = false;
+          }
+        });
+
+        container.append(form);
+      }
+    }
+
+
+    /* ==========================================
+       PHASE 11.2D — CASE FILE CORRECTIONS
+       ========================================== */
+
+    function populateIdentitySelectors() {
+      const identitySelect = $('identityRosterId');
+      const matchSelect = $('matchRosterId');
+
+      const previousIdentity = identitySelect.value;
+      const previousMatch = matchSelect.value;
+
+      identitySelect.replaceChildren(
+        new Option('Choose a case file', '')
+      );
+
+      matchSelect.replaceChildren(
+        new Option('Choose an unlinked Baddie', '')
+      );
+
+      for (const member of roster) {
+        const team = getTeam(member.team_id);
+
+        const label =
+          `@${member.discord_username} — ` +
+          `${team?.name || 'Unknown crew'}` +
+          (member.participation_status === 'removed'
+            ? ' (Removed)'
+            : '');
+
+        identitySelect.add(
+          new Option(label, member.id)
+        );
+
+        if (
+          member.user_id === null &&
+          member.participation_status === 'active'
+        ) {
+          matchSelect.add(
+            new Option(label, member.id)
+          );
+        }
+      }
+
+      if (
+        [...identitySelect.options].some(
+          option => option.value === previousIdentity
+        )
+      ) {
+        identitySelect.value = previousIdentity;
+      }
+
+      if (
+        [...matchSelect.options].some(
+          option => option.value === previousMatch
+        )
+      ) {
+        matchSelect.value = previousMatch;
+      }
+
+      syncIdentityUsername();
+    }
+
+    function syncIdentityUsername() {
+      const member = roster.find(
+        row => row.id === $('identityRosterId').value
+      );
+
+      $('identityUsername').value =
+        member?.discord_username || '';
+    }
+
+    async function saveIdentityCorrection(event) {
+      event.preventDefault();
+
+      const member = roster.find(
+        row => row.id === $('identityRosterId').value
+      );
+
+      const username =
+        $('identityUsername').value.trim();
+
+      if (!member || !username) {
+        showStatus(
+          'identityStatus',
+          'Choose a Baddie and enter a username.',
+          true
+        );
+        return;
+      }
+
+      if (
+        member.discord_username.toLowerCase() ===
+        username.toLowerCase()
+      ) {
+        showStatus(
+          'identityStatus',
+          'No username change is needed.'
+        );
+        return;
+      }
+
+      const duplicate = roster.some(
+        row =>
+          row.id !== member.id &&
+          row.discord_username.trim().toLowerCase() ===
+          username.toLowerCase()
+      );
+
+      if (duplicate) {
+        showStatus(
+          'identityStatus',
+          'That Discord username already exists in this season.',
+          true
+        );
+        return;
+      }
+
+      if (
+        !confirm(
+          `Change @${member.discord_username} to @${username}?`
+        )
+      ) return;
+
+      const button = $('identitySaveButton');
+      button.disabled = true;
+
+      try {
+        const { error } = await db
+          .from('tbb_brl_roster')
+          .update({ discord_username: username })
+          .eq('id', member.id)
+          .eq('season_id', season.id);
+
+        if (error) throw error;
+
+        showStatus(
+          'identityStatus',
+          `Case file corrected: @${username} 💗`
+        );
+
+        await loadRoster();
+
+      } catch (error) {
+        showStatus(
+          'identityStatus',
+          error.message,
+          true
+        );
+      } finally {
+        button.disabled = false;
+      }
+    }
+
+
+    /* ==========================================
+       PHASE 11.2D — ACCOUNT MATCH DETECTIVE™
+       ========================================== */
+
+    function clearMatchResults() {
+      $('matchResults').replaceChildren();
+    }
+
+    function makeMatchCard(profile, member) {
+      const card = document.createElement('div');
+      card.className = 'roster-row';
+
+      const info = document.createElement('div');
+
+      const name = document.createElement('strong');
+      name.textContent =
+        profile.display_name || 'TBB Baddie';
+
+      const username = document.createElement('small');
+      username.textContent =
+        `Library Card: @${profile.username || 'not set'}`;
+
+      const comparison = document.createElement('small');
+
+      const exactMatch =
+        String(profile.username || '')
+          .trim()
+          .toLowerCase() ===
+        member.discord_username.trim().toLowerCase();
+
+      comparison.textContent = exactMatch
+        ? '🔎 Username match — verify identity before linking'
+        : '⚠️ Different usernames — verify carefully';
+
+      info.append(name, username, comparison);
+
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.textContent = '🔗 Confirm Account Link';
+
+      button.addEventListener('click', async () => {
+        const currentMember = roster.find(
+          row => row.id === member.id
+        );
+
+        if (
+          !currentMember ||
+          currentMember.user_id !== null ||
+          currentMember.participation_status !== 'active'
+        ) {
+          showStatus(
+            'matchStatus',
+            'This case file is no longer eligible for linking. Refresh the roster.',
+            true
+          );
+          return;
+        }
+
+        const accountAlreadyLinked = roster.some(
+          row =>
+            row.id !== currentMember.id &&
+            row.user_id === profile.user_id
+        );
+
+        if (accountAlreadyLinked) {
+          showStatus(
+            'matchStatus',
+            'This account is already linked to another Season 3 case file.',
+            true
+          );
+          return;
+        }
+
+        const approved = await db
+          .from('tbb_memberships')
+          .select('user_id')
+          .eq('user_id', profile.user_id)
+          .eq('status', 'approved')
+          .maybeSingle();
+
+        if (approved.error) {
+          showStatus(
+            'matchStatus',
+            approved.error.message,
+            true
+          );
+          return;
+        }
+
+        if (!approved.data) {
+          showStatus(
+            'matchStatus',
+            'This account is not currently approved.',
+            true
+          );
+          return;
+        }
+
+        const confirmed = confirm(
+          `CONFIRM IDENTITY\n\n` +
+          `Discord: @${currentMember.discord_username}\n` +
+          `TBB Library Card: @${profile.username}\n` +
+          `Display name: ${profile.display_name || 'Not set'}\n\n` +
+          `Have you independently verified that these belong to the SAME Baddie?\n\n` +
+          `OK = Confirm link\nCancel = Do not link`
+        );
+
+        if (!confirmed) return;
+
+        button.disabled = true;
+
+        try {
+          const { data, error } = await db
+            .from('tbb_brl_roster')
+            .update({ user_id: profile.user_id })
+            .eq('id', currentMember.id)
+            .eq('season_id', season.id)
+            .eq('participation_status', 'active')
+            .is('user_id', null)
+            .select('id')
+            .maybeSingle();
+
+          if (error) throw error;
+
+          if (!data) {
+            throw new Error(
+              'The roster entry changed before linking. Refresh and try again.'
+            );
+          }
+
+          showStatus(
+            'matchStatus',
+            `@${currentMember.discord_username} is now linked to an approved TBB account! 🔗`
+          );
+
+          clearMatchResults();
+          await loadRoster();
+
+        } catch (error) {
+          showStatus(
+            'matchStatus',
+            error.message,
+            true
+          );
+        } finally {
+          button.disabled = false;
+        }
+      });
+
+      card.append(info, button);
+
+      return card;
+    }
+
+    async function searchAccountMatches(event) {
+      event.preventDefault();
+
+      const member = roster.find(
+        row => row.id === $('matchRosterId').value
+      );
+
+      const search =
+        $('matchSearch').value.trim().toLowerCase();
+
+      clearMatchResults();
+
+      if (
+        !member ||
+        member.user_id !== null ||
+        member.participation_status !== 'active' ||
+        !search
+      ) {
+        showStatus(
+          'matchStatus',
+          'Choose an active, unlinked case file and enter a username.',
+          true
+        );
+        return;
+      }
+
+      const button = $('matchSearchButton');
+      button.disabled = true;
+
+      showStatus(
+        'matchStatus',
+        'Searching approved Library Cards…'
+      );
+
+      try {
+        const { data: profiles, error: profileError } =
+          await db
+            .from('tbb_profiles')
+            .select('user_id,username,display_name')
+            .ilike('username', `%${search.replace(/[%_\\]/g, '\\$&')}%`)
+            .limit(20);
+
+        if (profileError) throw profileError;
+
+        if (!profiles?.length) {
+          showStatus(
+            'matchStatus',
+            'No matching Library Card usernames found.'
+          );
+          return;
+        }
+
+        const ids = profiles.map(p => p.user_id);
+
+        const { data: memberships, error: membershipError } =
+          await db
+            .from('tbb_memberships')
+            .select('user_id')
+            .in('user_id', ids)
+            .eq('status', 'approved');
+
+        if (membershipError) throw membershipError;
+
+        const approvedIds = new Set(
+          (memberships || []).map(m => m.user_id)
+        );
+
+        const eligible = profiles.filter(
+          profile => approvedIds.has(profile.user_id)
+        );
+
+        if (!eligible.length) {
+          showStatus(
+            'matchStatus',
+            'Matching profiles were found, but none are approved TBB members.'
+          );
+          return;
+        }
+
+        const results = $('matchResults');
+
+        for (const profile of eligible) {
+          results.append(
+            makeMatchCard(profile, member)
+          );
+        }
+
+        showStatus(
+          'matchStatus',
+          `${eligible.length} approved account candidate(s) found. Verify identity before confirming.`
+        );
+
+      } catch (error) {
+        showStatus(
+          'matchStatus',
+          error.message,
+          true
+        );
+      } finally {
+        button.disabled = false;
+      }
+    }
+
+    async function unlinkAccount(member) {
+      if (
+        !confirm(
+          `Unlink the TBB account from @${member.discord_username}?\n\n` +
+          `This will not delete the Discord roster entry.`
+        )
+      ) return;
+
+      showStatus(
+        'matchStatus',
+        'Removing account link…'
+      );
+
+      const { error } = await db
+        .from('tbb_brl_roster')
+        .update({ user_id: null })
+        .eq('id', member.id)
+        .eq('season_id', season.id);
+
+      if (error) {
+        showStatus(
+          'matchStatus',
+          error.message,
+          true
+        );
+        return;
+      }
+
+      showStatus(
+        'matchStatus',
+        `Account unlinked from @${member.discord_username}.`
+      );
+
+      await loadRoster();
+    }
+
+    function renderLinkedCaseFiles() {
+      const container = $('linkedCaseFiles');
+      container.replaceChildren();
+
+      const linked = roster.filter(
+        member => member.user_id !== null
+      );
+
+      if (!linked.length) {
+        const empty = document.createElement('p');
+        empty.className = 'muted';
+        empty.textContent =
+          'No accounts linked yet. Your Discord-first roster is ready!';
+        container.append(empty);
+        return;
+      }
+
+      for (const member of linked) {
+        const row = document.createElement('div');
+        row.className = 'roster-row';
+
+        const info = document.createElement('div');
+
+        const name = document.createElement('strong');
+        name.textContent =
+          `@${member.discord_username}`;
+
+        const detail = document.createElement('small');
+        detail.textContent =
+          `${getTeam(member.team_id)?.name || 'Unknown crew'} · ` +
+          `${member.participation_status} · Linked account`;
+
+        info.append(name, detail);
+
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.textContent = 'Unlink Account';
+
+        button.addEventListener('click', () => {
+          unlinkAccount(member);
+        });
+
+        row.append(info, button);
+        container.append(row);
+      }
+    }
+    
+/* ==========================================
+   PHASE 11.3 — REREAD APPROVAL DESK
+   ========================================== */
+
+let rereadCandidates = [];
+
+async function loadRereadCandidates() {
+  const select = document.getElementById(
+    'rereadCandidate'
+  );
+
+  const status = document.getElementById(
+    'rereadApprovalStatus'
+  );
+
+  select.replaceChildren();
+
+  const placeholder = document.createElement('option');
+  placeholder.value = '';
+  placeholder.textContent = 'Loading eligible attempts...';
+  select.appendChild(placeholder);
+
+  const { data, error } = await db.rpc(
+    'tbb_brl_admin_reread_candidates',
+    { p_season_id: season.id }
+  );
+
+  if (error) {
+    placeholder.textContent = 'Unable to load attempts';
+    status.textContent = error.message;
+    status.classList.add('error');
+    return;
+  }
+
+  rereadCandidates = data || [];
+
+  placeholder.textContent = rereadCandidates.length
+    ? 'Choose a Baddie and book'
+    : 'No eligible completed attempts yet';
+
+  for (const candidate of rereadCandidates) {
+    const option = document.createElement('option');
+
+    option.value = candidate.attempt_id;
+
+    option.textContent =
+      `@${candidate.discord_username} — ` +
+      `${candidate.book_title} by ${candidate.book_author} ` +
+      `(Attempt ${candidate.attempt_number}, ` +
+      `${candidate.cumulative_pages} pages)`;
+
+    select.appendChild(option);
+  }
+
+  status.classList.remove('error');
+  status.textContent =
+    `${rereadCandidates.length} eligible case file(s) found.`;
+}
+
+async function approveReread(event) {
+  event.preventDefault();
+
+  const select = document.getElementById(
+    'rereadCandidate'
+  );
+
+  const reasonInput = document.getElementById(
+    'rereadReason'
+  );
+
+  const button = document.getElementById(
+    'approveRereadButton'
+  );
+
+  const status = document.getElementById(
+    'rereadApprovalStatus'
+  );
+
+  const candidate = rereadCandidates.find(
+    item => item.attempt_id === select.value
+  );
+
+  const reason = reasonInput.value.trim();
+
+  if (!candidate || reason.length < 5) {
+    status.classList.add('error');
+    status.textContent =
+      'Select an eligible attempt and enter a valid reason.';
+    return;
+  }
+
+  const confirmed = confirm(
+    `Authorize a reread for @${candidate.discord_username}?\n\n` +
+    `Book: ${candidate.book_title}\n` +
+    `Previous attempt: #${candidate.attempt_number}\n` +
+    `Reason: ${reason}\n\n` +
+    `This creates a new reading attempt but awards no pages.`
+  );
+
+  if (!confirmed) return;
+
+  button.disabled = true;
+  status.classList.remove('error');
+  status.textContent = 'Authorizing reread...';
+
+  try {
+    const { data, error } = await db.rpc(
+      'tbb_brl_admin_approve_reread',
+      {
+        p_roster_id: candidate.roster_id,
+        p_previous_attempt_id: candidate.attempt_id,
+        p_reason: reason
+      }
+    );
+
+    if (error) throw error;
+
+    const approved = data?.[0];
+
+    status.textContent =
+      `🐾 Reread approved for @${candidate.discord_username}! ` +
+      `Attempt #${approved?.new_attempt_number ?? '?'} ` +
+      `is now available in their reading reports.`;
+
+    reasonInput.value = '';
+
+    await loadRereadCandidates();
+
+    // Preserve the success message after refreshing.
+    status.textContent =
+      `🐾 Approved: @${candidate.discord_username} — ` +
+      `${candidate.book_title}. ` +
+      `New attempt #${approved?.new_attempt_number ?? '?'}.`;
+
+  } catch (error) {
+    console.error('Reread approval:', error);
+    status.classList.add('error');
+    status.textContent = error.message;
+  } finally {
+    button.disabled = false;
+  }
+}
+
+    
+/* ==========================================
+   TBB • PHASE 11.3B.5D.5
+   VELMA'S EVIDENCE REVIEW™
+   ========================================== */
+
+let bookEvidenceReports = [];
+let bookEvidenceLoading = false;
+
+function evidenceElement(id) {
+  return document.getElementById(id);
+}
+
+function evidenceDate(value, timezone = 'UTC') {
+  if (!value) return 'Not provided';
+
+  try {
+    return new Intl.DateTimeFormat('en-US', {
+      timeZone: timezone || 'UTC',
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+      timeZoneName: 'short'
+    }).format(new Date(value));
+  } catch {
+    return new Date(value).toLocaleString();
+  }
+}
+
+function evidenceText(tag, value, className = '') {
+  const element = document.createElement(tag);
+  element.textContent = value;
+
+  if (className) {
+    element.className = className;
+  }
+
+  return element;
+}
+
+function evidenceCanVoid(report) {
+  return (
+    report.scoring_status === 'accepted' &&
+    Boolean(report.reading_attempt_id) &&
+    !report.has_later_attempt &&
+    !report.has_later_accepted_report
+  );
+}
+
+async function loadBookEvidence() {
+  if (!season?.id || bookEvidenceLoading) return;
+
+  bookEvidenceLoading = true;
+
+  const status = evidenceElement('bookEvidenceStatus');
+  const refresh = evidenceElement('refreshBookEvidence');
+
+  refresh.disabled = true;
+  status.classList.remove('error');
+  status.textContent = '🔎 Gathering official case files...';
+
+  try {
+    const { data, error } = await db.rpc(
+      'tbb_brl_admin_book_reports',
+      {
+        p_season_id: season.id
+      }
+    );
+
+    if (error) throw error;
+
+    bookEvidenceReports = data || [];
+
+    renderBookEvidence();
+
+  } catch (error) {
+    console.error('Evidence Review loading:', error);
+
+    bookEvidenceReports = [];
+    evidenceElement('bookEvidenceList').replaceChildren();
+
+    status.classList.add('error');
+    status.textContent =
+      `Unable to load reports: ${error.message}`;
+
+  } finally {
+    bookEvidenceLoading = false;
+    refresh.disabled = false;
+  }
+}
+
+function renderBookEvidence() {
+  const container = evidenceElement('bookEvidenceList');
+  const status = evidenceElement('bookEvidenceStatus');
+
+  const query = evidenceElement('evidenceSearch')
+    .value.trim().toLowerCase();
+
+  const filter = evidenceElement('evidenceStatusFilter').value;
+
+  container.replaceChildren();
+
+  const filtered = bookEvidenceReports.filter(report => {
+    const searchable = [
+      report.discord_username,
+      report.book_title,
+      report.book_author,
+      report.reading_status,
+      report.scoring_status
+    ].join(' ').toLowerCase();
+
+    const matchesSearch = searchable.includes(query);
+
+    const matchesStatus =
+      filter === 'all' ||
+      report.scoring_status === filter;
+
+    return matchesSearch && matchesStatus;
+  });
+
+  status.classList.remove('error');
+
+  status.textContent =
+    `📂 Showing ${filtered.length} of ` +
+    `${bookEvidenceReports.length} official book reports.`;
+
+  if (!filtered.length) {
+    container.appendChild(
+      evidenceText(
+        'p',
+        bookEvidenceReports.length
+          ? 'No reports match your search.'
+          : 'No official book reports have been submitted yet.',
+        'muted'
+      )
+    );
+
+    return;
+  }
+
+  for (const report of filtered) {
+    const card = document.createElement('article');
+    card.className = 'roster-row';
+
+    // Full-width layout inside existing roster-row styling.
+    card.style.display = 'block';
+
+    const heading = evidenceText(
+      'h3',
+      `📖 ${report.book_title}`
+    );
+
+    heading.style.marginTop = '0';
+
+    const member = evidenceText(
+      'p',
+      `🐾 @${report.discord_username} · ` +
+      `by ${report.book_author}`,
+      'muted'
+    );
+
+    const details = document.createElement('div');
+    details.className = 'grid';
+
+    const fields = [
+      [
+        'Official eligible pages',
+        `${report.eligible_pages ?? 0} pages`
+      ],
+      [
+        'Cumulative pages reported',
+        `${report.actual_pages_read ?? 0} pages`
+      ],
+      [
+        'Amazon edition',
+        `${report.amazon_edition_pages ?? 0} pages`
+      ],
+      [
+        'Reading status',
+        report.reading_status || 'Unknown'
+      ],
+      [
+        'Scoring status',
+        report.scoring_status || 'Unknown'
+      ],
+      [
+        'Reading attempt',
+        report.attempt_number
+          ? `#${report.attempt_number}`
+          : 'Unlinked'
+      ],
+      [
+        'Book format',
+        report.book_format || 'Unknown'
+      ],
+      [
+        'Started',
+        report.started_on || 'Not provided'
+      ],
+      [
+        'Submitted',
+        evidenceDate(
+          report.submitted_at,
+          report.submission_timezone
+        )
+      ],
+      [
+        'Submission scoring date',
+        report.submission_local_date || 'Unknown'
+      ],
+      [
+        'Finished',
+        evidenceDate(
+          report.finished_at,
+          report.submission_timezone
+        )
+      ],
+      [
+        'Rating',
+        report.rating == null
+          ? 'Not rated'
+          : `${report.rating}/5`
+      ]
+    ];
+
+    for (const [label, value] of fields) {
+      const metric = document.createElement('div');
+      metric.className = 'metric';
+
+      const caption = evidenceText('small', label);
+      const strong = evidenceText('strong', value);
+
+      strong.style.fontSize = '16px';
+      strong.style.overflowWrap = 'anywhere';
+
+      metric.append(caption, strong);
+      details.appendChild(metric);
+    }
+
+    card.append(heading, member, details);
+
+    const actions = document.createElement('div');
+    actions.className = 'actions';
+    actions.style.marginTop = '15px';
+
+    
+if (evidenceCanVoid(report)) {
+
+  // ========================================
+  // CORRECT PAGE COUNT
+  // ========================================
+
+  const correctButton = document.createElement('button');
+  correctButton.type = 'button';
+  correctButton.textContent = '✏️ Correct Page Count';
+
+  correctButton.addEventListener('click', () => {
+    correctBookEvidencePages(report, correctButton);
+  });
+
+  actions.appendChild(correctButton);
+
+  // ========================================
+  // VOID BOOK REPORT
+  // ========================================
+
+  const voidButton = document.createElement('button');
+  voidButton.type = 'button';
+  voidButton.textContent = '🚫 Void This Report';
+
+  voidButton.addEventListener('click', () => {
+    voidBookEvidenceReport(report, voidButton);
+  });
+
+  actions.appendChild(voidButton);
+
+} else {
+
+      let explanation = 'This report cannot be voided.';
+
+      if (report.scoring_status !== 'accepted') {
+        explanation =
+          `Report status: ${report.scoring_status}.`;
+
+      } else if (report.has_later_attempt) {
+        explanation =
+          'A later approved reread exists for this book.';
+
+      } else if (report.has_later_accepted_report) {
+        explanation =
+          'A newer accepted report exists for this attempt.';
+
+      } else if (!report.reading_attempt_id) {
+        explanation =
+          'This report has no linked reading attempt.';
+      }
+
+      actions.appendChild(
+        evidenceText('p', `🔒 ${explanation}`, 'muted')
+      );
+    }
+
+    card.appendChild(actions);
+    container.appendChild(card);
+  }
+}
+
+    
+/* ==========================================
+   PHASE 11.3B.5D.7
+   VELMA'S PAGE CORRECTIONS™
+   ========================================== */
+
+async function correctBookEvidencePages(report, button) {
+  if (!evidenceCanVoid(report)) return;
+
+  const currentPages = Number(report.actual_pages_read);
+
+  const enteredPages = prompt(
+    `✏️ VELMA'S PAGE CORRECTIONS™\n\n` +
+    `Baddie: @${report.discord_username}\n` +
+    `Book: ${report.book_title}\n` +
+    `Currently reported: ${currentPages} pages\n` +
+    `Official eligible: ${report.eligible_pages} pages\n\n` +
+    `Enter the CORRECT cumulative pages read.\n` +
+    `This correction can only LOWER the page count:`,
+    String(currentPages)
+  );
+
+  if (enteredPages === null) return;
+
+  const trimmedPages = enteredPages.trim();
+  const correctedPages = Number(trimmedPages);
+
+  if (
+    trimmedPages === '' ||
+    !Number.isSafeInteger(correctedPages) ||
+    correctedPages < 0 ||
+    correctedPages >= currentPages
+  ) {
+    alert(
+      'Enter a valid whole number that is lower ' +
+      'than the currently reported page count.'
+    );
+    return;
+  }
+
+  const reason = prompt(
+    `🔎 CORRECTION AUDIT REASON\n\n` +
+    `Book: ${report.book_title}\n` +
+    `Original: ${currentPages} pages\n` +
+    `Corrected: ${correctedPages} pages\n\n` +
+    `Explain why this correction is necessary ` +
+    `(minimum 10 characters):`
+  );
+
+  if (reason === null) return;
+
+  const cleanedReason = reason.trim();
+
+  if (cleanedReason.length < 10) {
+    alert(
+      'Please provide a correction reason ' +
+      'containing at least 10 characters.'
+    );
+    return;
+  }
+
+  const confirmed = confirm(
+    `🚨 CONFIRM OFFICIAL PAGE CORRECTION\n\n` +
+    `Baddie: @${report.discord_username}\n` +
+    `Book: ${report.book_title}\n\n` +
+    `Original cumulative pages: ${currentPages}\n` +
+    `Corrected cumulative pages: ${correctedPages}\n\n` +
+    `Reason: ${cleanedReason}\n\n` +
+    `The database will recalculate eligible pages, ` +
+    `adjust the original submission-day ledger, ` +
+    `and save an audit record.\n\n` +
+    `Continue?`
+  );
+
+  if (!confirmed) return;
+
+  button.disabled = true;
+
+  const status = evidenceElement('bookEvidenceStatus');
+
+  status.classList.remove('error');
+  status.textContent =
+    '🔎 Correcting the official page count...';
+
+  try {
+    const { data, error } = await db.rpc(
+      'tbb_brl_admin_correct_book_pages',
+      {
+        p_log_id: report.log_id,
+        p_corrected_actual_pages: correctedPages,
+        p_reason: cleanedReason
+      }
+    );
+
+    if (error) throw error;
+
+    const result = data?.[0];
+
+    await loadBookEvidence();
+    await loadBookAudit();
+
+    status.classList.remove('error');
+
+    status.textContent =
+      `✅ Corrected @${report.discord_username}'s ` +
+      `report for ${report.book_title}. ` +
+      `Cumulative pages: ` +
+      `${result?.previous_actual_pages ?? currentPages} → ` +
+      `${result?.corrected_actual_pages ?? correctedPages}. ` +
+      `Eligible pages removed: ` +
+      `${result?.removed_eligible_pages ?? 0}. ` +
+      `Audit record saved.`;
+
+  } catch (error) {
+    console.error('Book page correction:', error);
+
+    status.classList.add('error');
+    status.textContent =
+      `Unable to correct report: ${error.message}`;
+
+    button.disabled = false;
+  }
+}
+
+
+async function voidBookEvidenceReport(report, button) {
+  if (!evidenceCanVoid(report)) return;
+
+  const reason = prompt(
+    `🔎 VELMA'S EVIDENCE REVIEW™\n\n` +
+    `Baddie: @${report.discord_username}\n` +
+    `Book: ${report.book_title}\n` +
+    `Awarded: ${report.eligible_pages} pages\n\n` +
+    `Explain why this report must be voided ` +
+    `(minimum 10 characters):`
+  );
+
+  if (reason === null) return;
+
+  const cleanedReason = reason.trim();
+
+  if (cleanedReason.length < 10) {
+    alert(
+      'A void reason must contain at least 10 characters.'
+    );
+    return;
+  }
+
+  const confirmed = confirm(
+    `🚨 CONFIRM REPORT VOID\n\n` +
+    `Baddie: @${report.discord_username}\n` +
+    `Book: ${report.book_title}\n` +
+    `Eligible pages to remove: ` +
+    `${report.eligible_pages}\n\n` +
+    `Reason: ${cleanedReason}\n\n` +
+    `The original report will remain in the audit ` +
+    `history. Continue?`
+  );
+
+  if (!confirmed) return;
+
+  button.disabled = true;
+
+  const status = evidenceElement('bookEvidenceStatus');
+
+  status.classList.remove('error');
+  status.textContent = '🔎 Voiding report securely...';
+
+  try {
+    const { data, error } = await db.rpc(
+      'tbb_brl_admin_void_book_log',
+      {
+        p_log_id: report.log_id,
+        p_reason: cleanedReason
+      }
+    );
+
+    if (error) throw error;
+
+    const result = data?.[0];
+
+    await loadBookEvidence();
+    await loadBookAudit();
+
+    status.classList.remove('error');
+    status.textContent =
+      `✅ Report voided for ` +
+      `@${report.discord_username}. ` +
+      `${result?.removed_eligible_pages ?? 0} ` +
+      `eligible pages removed. ` +
+      `The action was recorded in the audit trail.`;
+
+  } catch (error) {
+    console.error('Evidence Review void:', error);
+
+    status.classList.add('error');
+    status.textContent =
+      `Unable to void report: ${error.message}`;
+
+    button.disabled = false;
+  }
+}
+
+    
+/* ==========================================
+   TBB • PHASE 11.3
+   VELMA'S AUDIT TRAIL™
+   ========================================== */
+
+let bookAuditRecords = [];
+let bookAuditLoading = false;
+
+function auditElement(id) {
+  return document.getElementById(id);
+}
+
+function auditFormatValue(value) {
+  return value === null || value === undefined
+    ? '—'
+    : String(value);
+}
+
+function auditCreateText(tag, value, className = '') {
+  const element = document.createElement(tag);
+  element.textContent = value;
+
+  if (className) {
+    element.className = className;
+  }
+
+  return element;
+}
+
+function auditFormatDate(value) {
+  if (!value) return 'Unknown date';
+
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return 'Invalid date';
+  }
+
+  return new Intl.DateTimeFormat('en-US', {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+    timeZoneName: 'short'
+  }).format(date);
+}
+
+function auditActionLabel(action) {
+  const labels = {
+    correction: '✏️ Page Correction',
+    void: '🚫 Report Voided',
+    restore: '↩️ Report Restored',
+    review: '🔎 Admin Review'
+  };
+
+  return labels[action] || action || 'Unknown action';
+}
+
+function auditAddMetric(container, label, value) {
+  const metric = document.createElement('div');
+  metric.className = 'metric';
+
+  const caption = auditCreateText('small', label);
+  const strong = auditCreateText(
+    'strong',
+    auditFormatValue(value)
+  );
+
+  strong.style.fontSize = '15px';
+  strong.style.overflowWrap = 'anywhere';
+
+  metric.append(caption, strong);
+  container.appendChild(metric);
+}
+
+async function loadBookAudit() {
+  if (!season?.id || bookAuditLoading) return;
+
+  bookAuditLoading = true;
+
+  const status = auditElement('bookAuditStatus');
+  const refresh = auditElement('refreshBookAudit');
+
+  refresh.disabled = true;
+  status.classList.remove('error');
+  status.textContent = '🗂️ Retrieving official audit history...';
+
+  try {
+    const { data, error } = await db.rpc(
+      'tbb_brl_admin_book_log_audit',
+      {
+        p_season_id: season.id
+      }
+    );
+
+    if (error) throw error;
+
+    bookAuditRecords = data || [];
+
+    renderBookAudit();
+
+  } catch (error) {
+    console.error('BRL audit history:', error);
+
+    bookAuditRecords = [];
+    auditElement('bookAuditList').replaceChildren();
+
+    status.classList.add('error');
+    status.textContent =
+      `Unable to load audit history: ${error.message}`;
+
+  } finally {
+    bookAuditLoading = false;
+    refresh.disabled = false;
+  }
+}
+
+function renderBookAudit() {
+  const container = auditElement('bookAuditList');
+  const status = auditElement('bookAuditStatus');
+
+  const search = auditElement('auditSearch')
+    .value.trim().toLowerCase();
+
+  const actionFilter =
+    auditElement('auditActionFilter').value;
+
+  container.replaceChildren();
+
+  const filtered = bookAuditRecords.filter(record => {
+    const searchable = [
+      record.discord_username,
+      record.book_title,
+      record.book_author,
+      record.actor_username,
+      record.audit_action,
+      record.audit_reason
+    ]
+      .map(value => String(value ?? ''))
+      .join(' ')
+      .toLowerCase();
+
+    return (
+      searchable.includes(search) &&
+      (
+        actionFilter === 'all' ||
+        record.audit_action === actionFilter
+      )
+    );
+  });
+
+  status.classList.remove('error');
+
+  status.textContent =
+    `🗂️ Showing ${filtered.length} of ` +
+    `${bookAuditRecords.length} audit records.`;
+
+  if (!filtered.length) {
+    container.appendChild(
+      auditCreateText(
+        'p',
+        bookAuditRecords.length
+          ? 'No audit records match your filters.'
+          : 'No book-report corrections or voids have been recorded yet.',
+        'muted'
+      )
+    );
+    return;
+  }
+
+  for (const record of filtered) {
+    const card = document.createElement('article');
+    card.className = 'roster-row';
+    card.style.display = 'block';
+
+    const heading = auditCreateText(
+      'h3',
+      auditActionLabel(record.audit_action)
+    );
+
+    heading.style.marginTop = '0';
+
+    const book = auditCreateText(
+      'p',
+      `📖 ${record.book_title || 'Unknown book'} ` +
+      `by ${record.book_author || 'Unknown author'}`
+    );
+
+    const member = auditCreateText(
+      'p',
+      `🐾 Baddie: @${record.discord_username || 'Unknown'}`,
+      'muted'
+    );
+
+    const admin = auditCreateText(
+      'p',
+      `👑 Admin: @${record.actor_username || 'Unknown'}`
+    );
+
+    const date = auditCreateText(
+      'p',
+      `🕒 ${auditFormatDate(record.audit_created_at)}`,
+      'muted'
+    );
+
+    const metrics = document.createElement('div');
+    metrics.className = 'grid';
+
+    auditAddMetric(
+      metrics,
+      'Reported pages',
+      `${auditFormatValue(record.previous_actual_pages)} → ` +
+      `${auditFormatValue(record.updated_actual_pages)}`
+    );
+
+    auditAddMetric(
+      metrics,
+      'Eligible pages',
+      `${auditFormatValue(record.previous_eligible_pages)} → ` +
+      `${auditFormatValue(record.updated_eligible_pages)}`
+    );
+
+    auditAddMetric(
+      metrics,
+      'Scoring status',
+      `${auditFormatValue(record.previous_scoring_status)} → ` +
+      `${auditFormatValue(record.updated_scoring_status)}`
+    );
+
+    const reason = document.createElement('div');
+    reason.className = 'hint';
+    reason.style.marginTop = '15px';
+
+    const reasonTitle = auditCreateText(
+      'strong',
+      '🔎 Official Admin Reason'
+    );
+
+    const reasonBody = auditCreateText(
+      'p',
+      record.audit_reason || 'No reason recorded.'
+    );
+
+    reason.append(reasonTitle, reasonBody);
+
+    card.append(
+      heading,
+      book,
+      member,
+      admin,
+      date,
+      metrics,
+      reason
+    );
+
+    container.appendChild(card);
+  }
+}
+
+
+    async function init() {
+      try {
+        const access = await requireAccess(true);
+        if (!access) return;
+
+        await loadFoundation();
+
+        if (teams.length !== 2) {
+          throw new Error(
+            'Season 3 must have exactly two teams.'
+          );
+        }
+
+        $('app').hidden = false;
+
+        $('rosterForm').addEventListener('submit', addMember);
+
+        $('refreshButton').addEventListener(
+  'click',
+  loadRoster
+);
+
+// PHASE 11.2D — INITIALIZE NEW ADMIN FEATURES
+renderCrewIdentity();
+
+$('identityRosterId').addEventListener(
+  'change',
+  syncIdentityUsername
+);
+
+$('rosterIdentityForm').addEventListener(
+  'submit',
+  saveIdentityCorrection
+);
+
+$('accountMatchForm').addEventListener(
+  'submit',
+  searchAccountMatches
+);
+
+await loadRoster();
+
+
+/* ==========================================
+   VELMA'S EVIDENCE REVIEW™
+   ========================================== */
+
+evidenceElement('evidenceSearch')
+  .addEventListener('input', renderBookEvidence);
+
+evidenceElement('evidenceStatusFilter')
+  .addEventListener('change', renderBookEvidence);
+
+evidenceElement('refreshBookEvidence')
+  .addEventListener('click', loadBookEvidence);
+
+
+await loadBookEvidence();
+
+
+/* ==========================================
+   VELMA'S AUDIT TRAIL™ INITIALIZATION
+   ========================================== */
+
+auditElement('auditSearch')
+  .addEventListener('input', renderBookAudit);
+
+auditElement('auditActionFilter')
+  .addEventListener('change', renderBookAudit);
+
+auditElement('refreshBookAudit')
+  .addEventListener('click', loadBookAudit);
+
+await loadBookAudit();
+
+
+
+/* ==========================================
+   VELMA'S REREAD AUTHORIZATION™
+   ========================================== */
+
+document.getElementById('rereadApprovalForm')
+  .addEventListener('submit', approveReread);
+
+document.getElementById('refreshRereadCandidates')
+  .addEventListener('click', loadRereadCandidates);
+
+await loadRereadCandidates();
+
+/* ==========================================
+   PHASE 11.4 — FRED'S SCORING DESK™
+   ========================================== */
+
+await initializeBrlScoringDesk();
+
+      } catch (error) {
+        console.error('BRL Mission Control:', error);
+        document.body.textContent =
+          `Unable to open Fred's Mission Control: ${error.message}`;
+      }
+    }
+
+    init();
+
+
+
+  </script>
+</body>
+</html>
