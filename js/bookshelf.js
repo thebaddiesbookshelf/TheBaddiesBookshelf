@@ -194,6 +194,14 @@ async function fetchBooks(source, ids) {
 }
 
 async function loadCollection() {
+  // Personal books can be edited independently.
+  // Clear their cached details before reloading.
+  for (const catalogKey of catalog.keys()) {
+    if (catalogKey.startsWith('personal:')) {
+      catalog.delete(catalogKey);
+    }
+  }
+
   const all = [];
 
   for(let from=0;;from+=500) {
@@ -366,6 +374,19 @@ if (book.source === 'personal') {
 
   
   info.append(btn);
+
+  if (entry && book.source === 'personal') {
+  const personalEditButton = element(
+    'button',
+    '',
+    '📸 Edit Personal Book'
+  );
+
+  personalEditButton.type = 'button';
+  personalEditButton.dataset.personalEditId = book.id;
+
+  info.append(personalEditButton);
+}
 
   if (entry) {
     info.append(makeReadingEntryTags(entry.id));
@@ -793,6 +814,16 @@ async function removeBookFromLibrary() {
   }
 }
 function actions(ev) {
+    const personalEditButton = ev.target.closest(
+    'button[data-personal-edit-id]'
+  );
+
+  if (personalEditButton) {
+    openPersonalBookEditor(
+      personalEditButton.dataset.personalEditId
+    );
+    return;
+  }
   const tagButton = ev.target.closest(
     'button[data-tag-entry-id]'
   );
@@ -819,6 +850,437 @@ function actions(ev) {
 /* ==========================================
    ADD MY OWN BOOK™ — COVER UPLOADS
    ========================================== */
+   /* ==========================================
+   TBB 2.0 — EDIT PERSONAL BOOK™
+   ========================================== */
+
+const PERSONAL_COVER_BUCKET = 'tbb-personal-book-covers';
+
+let personalEditBusy = false;
+let personalPreviewUrl = null;
+
+function releasePersonalPreview() {
+  if (personalPreviewUrl) {
+    URL.revokeObjectURL(personalPreviewUrl);
+    personalPreviewUrl = null;
+  }
+}
+
+function setupPersonalBookEditor() {
+  if ($('personalBookDialog')) return;
+
+  const dialog = document.createElement('dialog');
+  dialog.id = 'personalBookDialog';
+  dialog.className = 'library-dialog';
+
+  dialog.innerHTML = `
+    <form id="personalBookForm">
+      <h3>💗 Edit Personal Book™</h3>
+
+      <p class="library-helper">
+        Your personal book details belong to you.
+        Changes won't affect the community catalog.
+      </p>
+
+      <input type="hidden" id="personalEditingId">
+
+      <div class="library-form-grid">
+        <label>
+          Book Title *
+          <input
+            id="personalEditTitle"
+            type="text"
+            maxlength="250"
+            required
+          >
+        </label>
+
+        <label>
+          Author *
+          <input
+            id="personalEditAuthor"
+            type="text"
+            maxlength="200"
+            required
+          >
+        </label>
+
+        <label>
+          Series Name
+          <input
+            id="personalEditSeries"
+            type="text"
+            maxlength="200"
+          >
+        </label>
+
+        <label>
+          Book Number
+          <input
+            id="personalEditNumber"
+            type="text"
+            maxlength="30"
+          >
+        </label>
+      </div>
+
+      <div style="margin-top:20px;">
+        <h4>📸 My Book Cover™</h4>
+
+        <p class="library-helper">
+          Upload JPG, PNG, or WebP up to 5 MB,
+          or paste a cover URL.
+        </p>
+
+        <label for="personalCoverFile">
+          Upload Cover
+        </label>
+
+        <input
+          id="personalCoverFile"
+          type="file"
+          accept="image/jpeg,image/png,image/webp"
+          style="display:block;width:100%;margin:10px 0;"
+        >
+
+        <label for="personalCoverUrl">
+          Cover Image URL
+        </label>
+
+        <input
+          id="personalCoverUrl"
+          type="url"
+          maxlength="2000"
+          placeholder="https://..."
+          style="display:block;width:100%;margin:10px 0;"
+        >
+
+        <div
+          id="personalCoverPreview"
+          style="text-align:center;margin:16px 0;"
+          hidden
+        >
+          <img
+            id="personalCoverPreviewImage"
+            alt="Personal book cover preview"
+            style="
+              width:130px;
+              height:190px;
+              object-fit:cover;
+              border-radius:12px;
+            "
+          >
+        </div>
+
+        <label style="display:flex;gap:8px;align-items:center;">
+          <input id="personalRemoveCover" type="checkbox">
+          Remove current cover
+        </label>
+      </div>
+
+      <div class="library-dialog-actions">
+        <button
+          type="button"
+          id="cancelPersonalBook"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="submit"
+          id="savePersonalBook"
+        >
+          Save My Book 💗
+        </button>
+      </div>
+    </form>
+  `;
+
+  document.body.append(dialog);
+
+  $('personalBookForm').addEventListener(
+    'submit',
+    savePersonalBook
+  );
+
+  $('cancelPersonalBook').addEventListener(
+    'click',
+    () => {
+      if (!personalEditBusy) dialog.close();
+    }
+  );
+
+  $('personalCoverFile').addEventListener(
+    'change',
+    updatePersonalPreview
+  );
+
+  $('personalCoverUrl').addEventListener(
+    'input',
+    updatePersonalPreview
+  );
+
+  $('personalRemoveCover').addEventListener(
+    'change',
+    updatePersonalPreview
+  );
+
+  dialog.addEventListener('close', releasePersonalPreview);
+
+  dialog.addEventListener('cancel', event => {
+    if (personalEditBusy) event.preventDefault();
+  });
+}
+
+function openPersonalBookEditor(id) {
+  if (!user || personalEditBusy) return;
+
+  const book = catalog.get(key('personal', id));
+
+  if (!book || book.user_id !== user.id) {
+    notify('Personal book not found.', true);
+    return;
+  }
+
+  setupPersonalBookEditor();
+
+  $('personalBookForm').reset();
+
+  $('personalEditingId').value = book.id;
+  $('personalEditTitle').value = book.title || '';
+  $('personalEditAuthor').value = book.author || '';
+  $('personalEditSeries').value = book.series_name || '';
+  $('personalEditNumber').value = book.book_number || '';
+  $('personalCoverUrl').value = book.cover_url || '';
+
+  $('personalRemoveCover').checked = false;
+
+  updatePersonalPreview();
+
+  $('personalBookDialog').showModal();
+}
+
+function validatePersonalCover(file) {
+  if (!file) return;
+
+  const types = {
+    'image/jpeg': 'jpg',
+    'image/png': 'png',
+    'image/webp': 'webp'
+  };
+
+  if (!Object.hasOwn(types, file.type)) {
+    throw Error('Choose a JPG, PNG, or WebP image.');
+  }
+
+  if (file.size <= 0 || file.size > 5 * 1024 * 1024) {
+    throw Error('Book covers must be 5 MB or smaller.');
+  }
+
+  return types[file.type];
+}
+
+function updatePersonalPreview() {
+  releasePersonalPreview();
+
+  const file = $('personalCoverFile').files[0];
+  const remove = $('personalRemoveCover').checked;
+  const image = $('personalCoverPreviewImage');
+  const preview = $('personalCoverPreview');
+
+  if (remove) {
+    preview.hidden = true;
+    image.removeAttribute('src');
+    return;
+  }
+
+  if (file) {
+    try {
+      validatePersonalCover(file);
+
+      personalPreviewUrl = URL.createObjectURL(file);
+      image.src = personalPreviewUrl;
+      preview.hidden = false;
+      return;
+    } catch (error) {
+      $('personalCoverFile').value = '';
+      notify(error.message, true);
+    }
+  }
+
+  const url = coverUrl($('personalCoverUrl').value.trim());
+
+  if (url) {
+    image.src = url;
+    preview.hidden = false;
+  } else {
+    image.removeAttribute('src');
+    preview.hidden = true;
+  }
+}
+
+async function uploadPersonalCover(file) {
+  const extension = validatePersonalCover(file);
+
+  if (!user) {
+    throw Error('Please sign in to upload a cover.');
+  }
+
+  const path =
+    `${user.id}/${crypto.randomUUID()}.${extension}`;
+
+  const { error } = await db.storage
+    .from(PERSONAL_COVER_BUCKET)
+    .upload(path, file, {
+      contentType: file.type,
+      cacheControl: '3600',
+      upsert: false
+    });
+
+  if (error) throw error;
+
+  const { data } = db.storage
+    .from(PERSONAL_COVER_BUCKET)
+    .getPublicUrl(path);
+
+  if (!data?.publicUrl) {
+    throw Error('Uploaded cover URL was unavailable.');
+  }
+
+  return {
+    url: data.publicUrl,
+    path
+  };
+}
+
+async function savePersonalBook(event) {
+  event.preventDefault();
+
+  if (!user || personalEditBusy) return;
+
+  const id = $('personalEditingId').value;
+  const book = catalog.get(key('personal', id));
+
+  if (!book || book.user_id !== user.id) {
+    notify('Personal book not found.', true);
+    return;
+  }
+
+  const title = $('personalEditTitle').value.trim();
+  const author = $('personalEditAuthor').value.trim();
+
+  if (!title || !author) {
+    notify('Title and author are required.', true);
+    return;
+  }
+
+  const file = $('personalCoverFile').files[0] || null;
+  const removeCover = $('personalRemoveCover').checked;
+
+  const urlInput = $('personalCoverUrl').value.trim();
+
+  try {
+    if (!removeCover) {
+      validatePersonalCover(file);
+
+      if (!file && urlInput && !coverUrl(urlInput)) {
+        throw Error('Enter a valid HTTP or HTTPS cover URL.');
+      }
+    }
+  } catch (error) {
+    notify(error.message, true);
+    return;
+  }
+
+  personalEditBusy = true;
+
+  const button = $('savePersonalBook');
+  const cancelButton = $('cancelPersonalBook');
+
+  button.disabled = true;
+  cancelButton.disabled = true;
+
+  let uploadedPath = null;
+
+  try {
+    const changes = {
+      title,
+      author,
+      series_name:
+        $('personalEditSeries').value.trim() || null,
+      book_number:
+        $('personalEditNumber').value.trim() || null
+    };
+
+    if (removeCover) {
+      changes.cover_url = null;
+      changes.cover_storage_path = null;
+    } else if (file) {
+      button.textContent = 'Uploading Cover...';
+
+      const uploaded = await uploadPersonalCover(file);
+
+      uploadedPath = uploaded.path;
+      changes.cover_url = uploaded.url;
+      changes.cover_storage_path = uploaded.path;
+    } else if (urlInput !== (book.cover_url || '')) {
+      changes.cover_url = urlInput || null;
+      changes.cover_storage_path = null;
+    }
+
+    button.textContent = 'Saving Book...';
+
+    const { data, error } = await db
+      .from('tbb_personal_books')
+      .update(changes)
+      .eq('id', id)
+      .eq('user_id', user.id)
+      .select('id')
+      .single();
+
+    if (error) throw error;
+
+    if (!data?.id) {
+      throw Error('Personal book was not updated.');
+    }
+
+    // Refresh the cached book immediately.
+    catalog.set(
+      key('personal', id),
+      { ...book, ...changes }
+    );
+
+    $('personalBookDialog').close();
+
+    renderCollection();
+
+    if (activeShelfId) renderShelfDetail();
+    if ($('shelfBooksDialog')?.open) renderShelfChoices();
+
+    notify(`“${title}” was updated! 💗`);
+
+  } catch (error) {
+    console.error('Personal book update:', error);
+
+    // A failed save can leave an unused uploaded image.
+    // We don't delete it here because this bucket
+    // intentionally has no client DELETE permission.
+    if (uploadedPath) {
+      console.warn(
+        'Unused personal cover upload:',
+        uploadedPath
+      );
+    }
+
+    notify(error.message || 'Could not save book.', true);
+
+  } finally {
+    personalEditBusy = false;
+    button.disabled = false;
+    cancelButton.disabled = false;
+    button.textContent = 'Save My Book 💗';
+  }
+}
 
 const COMMUNITY_COVER_BUCKET = 'tbb-community-book-covers';
 const COMMUNITY_COVER_MAX_BYTES = 5 * 1024 * 1024;
@@ -2780,6 +3242,128 @@ function cleanGoodreadsIsbn(value) {
   return isbn || null;
 }
 
+/* ==========================================
+   GOODREADS — METADATA HELPERS
+   ========================================== */
+
+function goodreadsInteger(value) {
+  const raw = goodreadsText(value);
+
+  if (!/^\d+$/.test(raw)) return null;
+
+  const number = Number(raw);
+
+  return Number.isSafeInteger(number)
+    ? number
+    : null;
+}
+
+function goodreadsYear(value) {
+  const year = goodreadsInteger(value);
+
+  return year !== null && year >= 1 && year <= 9999
+    ? year
+    : null;
+}
+
+function goodreadsOptionalText(value) {
+  return goodreadsText(value) || null;
+}
+
+function goodreadsShelfNames(value) {
+  const raw = goodreadsText(value);
+
+  if (!raw) return [];
+
+  return [...new Set(
+    raw.split(',')
+      .map(name => name.trim())
+      .filter(Boolean)
+  )];
+}
+
+function goodreadsBookFormat(value) {
+  const binding = goodreadsText(value).toLowerCase();
+
+  if (!binding) return null;
+
+  if (
+    binding.includes('kindle') ||
+    binding.includes('ebook') ||
+    binding.includes('e-book') ||
+    binding.includes('nook') ||
+    binding.includes('digital')
+  ) {
+    return 'ebook';
+  }
+
+  if (
+    binding.includes('audio') ||
+    binding.includes('audible')
+  ) {
+    return 'audiobook';
+  }
+
+  if (
+    binding.includes('paperback') ||
+    binding.includes('hardcover') ||
+    binding.includes('hardback') ||
+    binding.includes('mass market') ||
+    binding.includes('library binding')
+  ) {
+    return 'physical';
+  }
+
+  return null;
+}
+
+function goodreadsMetadata(book) {
+  return {
+    goodreads_additional_authors:
+      goodreadsOptionalText(book['Additional Authors']),
+
+    goodreads_publisher:
+      goodreadsOptionalText(book.Publisher),
+
+    goodreads_binding:
+      goodreadsOptionalText(book.Binding),
+
+    goodreads_year_published:
+      goodreadsYear(book['Year Published']),
+
+    goodreads_original_publication_year:
+      goodreadsYear(book['Original Publication Year']),
+
+    goodreads_date_added:
+      goodreadsDate(book['Date Added']),
+
+    goodreads_shelves:
+      goodreadsShelfNames(book.Bookshelves),
+
+    goodreads_shelves_with_positions:
+      goodreadsOptionalText(
+        book['Bookshelves with positions']
+      ),
+
+    goodreads_review:
+      goodreadsOptionalText(book['My Review']),
+
+    goodreads_private_notes:
+      goodreadsOptionalText(book['Private Notes']),
+
+    goodreads_spoiler:
+      goodreadsOptionalText(book.Spoiler),
+
+    goodreads_read_count:
+      goodreadsInteger(book['Read Count']),
+
+    goodreads_owned_copies:
+      goodreadsInteger(book['Owned Copies']),
+
+    goodreads_original_data: { ...book }
+  };
+}
+
 function goodreadsRecord(book) {
   const title = goodreadsText(book.Title);
   const author =
@@ -2822,12 +3406,14 @@ function goodreadsRecord(book) {
 
       isbn: cleanGoodreadsIsbn(book.ISBN),
 
-      isbn13: cleanGoodreadsIsbn(book.ISBN13)
+      isbn13: cleanGoodreadsIsbn(book.ISBN13),
+
+...goodreadsMetadata(book)
     },
 
     reading: {
       reading_status: status,
-      book_format: null,
+      book_format: goodreadsBookFormat(book.Binding),
       total_pages: pages,
 
       current_page:
@@ -2867,7 +3453,8 @@ async function loadExistingGoodreadsBooks() {
     const { data, error } = await db
       .from('tbb_personal_books')
       .select(
-        'id,title,author,goodreads_book_id'
+      'id,title,author,goodreads_book_id,' +
+      'goodreads_original_data'
       )
       .eq('user_id', user.id)
       .order('id')
@@ -2915,6 +3502,7 @@ async function importGoodreadsBooks() {
   fileInput.disabled = true;
 
   let imported = 0;
+  let updated = 0;
   let skipped = 0;
   let failed = 0;
 
@@ -2922,6 +3510,15 @@ async function importGoodreadsBooks() {
 
   try {
     const existing = await loadExistingGoodreadsBooks();
+
+    const existingByGoodreadsId = new Map(
+  existing
+    .filter(book => book.goodreads_book_id)
+    .map(book => [
+      goodreadsText(book.goodreads_book_id),
+      book
+    ])
+);
 
     const existingIds = new Set(
       existing
@@ -2943,7 +3540,7 @@ async function importGoodreadsBooks() {
 
     for (
   let index = 0;
-  index < Math.min(5, goodreadsPreviewRows.length);
+  index < goodreadsPreviewRows.length;
   index++
 ) {
       const csvBook = goodreadsPreviewRows[index];
@@ -2979,9 +3576,41 @@ async function importGoodreadsBooks() {
           (!goodreadsId && existingNames.has(nameKey));
 
         if (alreadyImported) {
-          skipped++;
-          continue;
-        }
+  const previous = goodreadsId
+    ? existingByGoodreadsId.get(goodreadsId)
+    : null;
+
+  // Backfill metadata only once for books imported
+  // before the metadata upgrade.
+  // Do not overwrite title, author, cover, status,
+  // ratings, reading dates, or page progress.
+
+  if (
+    previous &&
+    previous.goodreads_original_data == null &&
+    !processed.has(identity)
+  ) {
+    const { error: updateError } = await db
+      .from('tbb_personal_books')
+      .update(goodreadsMetadata(csvBook))
+      .eq('id', previous.id)
+      .eq('user_id', user.id)
+      .is('goodreads_original_data', null);
+
+    if (updateError) throw updateError;
+
+    previous.goodreads_original_data = {
+      ...csvBook
+    };
+
+    updated++;
+  } else {
+    skipped++;
+  }
+
+  processed.add(identity);
+  continue;
+}
 
         processed.add(identity);
 
@@ -3092,10 +3721,11 @@ async function importGoodreadsBooks() {
     ]);
 
     const message =
-      `💗 Goodreads import complete! ` +
-      `${imported} imported, ` +
-      `${skipped} skipped, ` +
-      `${failed} failed.`;
+  `💗 Goodreads import complete! ` +
+  `${imported} imported, ` +
+  `${updated} metadata updated, ` +
+  `${skipped} skipped, ` +
+  `${failed} failed.`;
 
     summary.textContent = message;
 
