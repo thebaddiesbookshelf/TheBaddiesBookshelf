@@ -299,6 +299,65 @@
   }
 }
 
+/* ==========================================
+   TBB — BADDIE AUTOCOMPLETE
+   ========================================== */
+
+.baddie-suggestions {
+  margin-top: -5px;
+  margin-bottom: 16px;
+  background: #21182f;
+  border: 1px solid #a67bd0;
+  border-radius: 14px;
+  overflow: hidden;
+  max-height: 300px;
+  overflow-y: auto;
+  box-shadow: 0 12px 28px #0006;
+}
+
+.baddie-suggestions[hidden] {
+  display: none !important;
+}
+
+.baddie-suggestion {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid #ffffff18;
+  border-radius: 0;
+  padding: 13px 15px;
+  cursor: pointer;
+}
+
+.baddie-suggestion:last-child {
+  border-bottom: 0;
+}
+
+.baddie-suggestion:hover,
+.baddie-suggestion:focus-visible {
+  background: #503765;
+}
+
+.baddie-suggestion strong {
+  display: block;
+  color: #ffc2e7;
+  font-size: 14px;
+}
+
+.baddie-suggestion small {
+  display: block;
+  margin-top: 3px;
+  color: #d5c2ed;
+  font-size: 12px;
+}
+
+.baddie-suggestion-note {
+  padding: 13px 15px;
+  color: #d5c2ed;
+  font-size: 13px;
+}
   </style>
 </head>
 
@@ -367,16 +426,32 @@
 
       <form id="rosterForm">
         <label for="discordUsername">
-          Discord username
-          <input
-            id="discordUsername"
-            type="text"
-            maxlength="100"
-            placeholder="bookish.baddie"
-            autocomplete="off"
-            required
-          >
-        </label>
+  🔎 Search Baddie by Name or Username
+  <input
+    id="discordUsername"
+    type="text"
+    maxlength="100"
+    placeholder="Type at least 2 letters..."
+    autocomplete="off"
+    aria-controls="baddieSuggestions"
+    aria-expanded="false"
+    required
+  >
+</label>
+
+<div
+  id="baddieSuggestions"
+  class="baddie-suggestions"
+  role="listbox"
+  aria-label="Matching Baddies"
+  hidden
+></div>
+
+<p class="muted" style="font-size:13px;margin-top:6px;">
+  Search existing TBB Library Cards by name or username.
+  Confirm the Discord username before adding.
+  Baddies without an account can still be entered manually.
+</p>
 
         <label for="teamSelect">
           Assign to a crew
@@ -851,14 +926,107 @@
 </section>
 
 
+<!-- ==========================================
+     PHASE 11.6 — VELMA'S SCORING LEDGER™
+     ========================================== -->
+
+<section class="panel" id="brlScoringLedger">
+  <div class="section-heading">
+    <h2>📜 Velma's Scoring Ledger™</h2>
+    <p>
+      Every bonus has a paper trail, Baddie! 🔎🐾
+      Review team challenge awards, individual
+      challenge bonuses, and official score
+      adjustments for this season.
+    </p>
+  </div>
+
+  <div
+    style="
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+      gap:12px;
+      margin:18px 0;
+    "
+  >
+    <label class="field">
+      <span>🔎 Search the Evidence</span>
+      <input
+        id="scoringLedgerSearch"
+        type="search"
+        placeholder="Challenge, crew, Baddie, reason..."
+      >
+    </label>
+
+    <label class="field">
+      <span>🐾 Crew</span>
+      <select id="scoringLedgerTeam">
+        <option value="all">All Crews</option>
+      </select>
+    </label>
+
+    <label class="field">
+      <span>📂 Entry Type</span>
+      <select id="scoringLedgerType">
+        <option value="all">All Entries</option>
+        <option value="team">Team Challenges</option>
+        <option value="individual">Individual Challenges</option>
+        <option value="adjustment">Admin Adjustments</option>
+      </select>
+    </label>
+  </div>
+
+  <button
+    type="button"
+    id="refreshScoringLedger"
+  >
+    ↻ Refresh Scoring Ledger
+  </button>
+
+  <p
+    id="scoringLedgerStatus"
+    role="status"
+    aria-live="polite"
+    style="margin:15px 0;"
+  ></p>
+
+  <div
+    id="scoringLedgerList"
+    style="display:grid;gap:14px;"
+  ></div>
+</section>
+
+<!-- END VELMA'S SCORING LEDGER™ -->
+
   </main>
 
-  
+/* END FRED'S SCORING DESK™ */
+
+  <script type="module">
+    import { db, requireAccess } from './js/auth.js';
+
+ 
 /* ==========================================
    PHASE 11.4 — FRED'S SCORING DESK™
    ========================================== */
 
 let brlScoringSeasonId = null;
+
+function initializeBrlScoringDesk() {
+  document
+    .getElementById("brlTeamAwardForm")
+    ?.addEventListener("submit", submitBrlTeamAward);
+
+  document
+    .getElementById("brlIndividualAwardForm")
+    ?.addEventListener("submit", submitBrlIndividualAward);
+
+  document
+    .getElementById("brlScoreAdjustmentForm")
+    ?.addEventListener("submit", submitBrlScoreAdjustment);
+
+  return loadBrlScoringDesk();
+}
 
 function brlScoringStatus(message, error = false) {
   const element = document.getElementById("brlScoringDeskStatus");
@@ -878,6 +1046,7 @@ function brlScoringFillSelect(id, items, placeholder) {
     select.add(new Option(item.label, item.value));
   }
 }
+
 
 async function loadBrlScoringDesk() {
   const status = document.getElementById("brlScoringDeskStatus");
@@ -1126,29 +1295,8 @@ async function submitBrlScoreAdjustment(event) {
     brlScoringStatus(error.message, true);
   } finally {
     button.disabled = false;
-  }
+ }
 }
-
-function initializeBrlScoringDesk() {
-  document
-    .getElementById("brlTeamAwardForm")
-    ?.addEventListener("submit", submitBrlTeamAward);
-
-  document
-    .getElementById("brlIndividualAwardForm")
-    ?.addEventListener("submit", submitBrlIndividualAward);
-
-  document
-    .getElementById("brlScoreAdjustmentForm")
-    ?.addEventListener("submit", submitBrlScoreAdjustment);
-
-  return loadBrlScoringDesk();
-}
-
-/* END FRED'S SCORING DESK™ */
-
-  <script type="module">
-    import { db, requireAccess } from './js/auth.js';
 
     const $ = id => document.getElementById(id);
 
@@ -1358,6 +1506,237 @@ function initializeBrlScoringDesk() {
 
       await loadRoster();
     }
+
+    /* ==========================================
+   PHASE 11.8 — BADDIE AUTOCOMPLETE
+   Search by Library Card name or username
+   ========================================== */
+
+let baddieSearchTimer = null;
+let baddieSearchVersion = 0;
+
+function hideBaddieSuggestions() {
+  const suggestions = $('baddieSuggestions');
+
+  suggestions.hidden = true;
+  suggestions.replaceChildren();
+
+  $('discordUsername').setAttribute(
+    'aria-expanded',
+    'false'
+  );
+}
+
+function showBaddieSuggestions() {
+  $('baddieSuggestions').hidden = false;
+
+  $('discordUsername').setAttribute(
+    'aria-expanded',
+    'true'
+  );
+}
+
+function baddieSearchMessage(message) {
+  const suggestions = $('baddieSuggestions');
+
+  suggestions.replaceChildren();
+
+  const note = document.createElement('div');
+  note.className = 'baddie-suggestion-note';
+  note.textContent = message;
+
+  suggestions.append(note);
+  showBaddieSuggestions();
+}
+
+function escapeBaddieSearch(value) {
+  return value.replace(/[%_\\]/g, '\\$&');
+}
+
+async function searchBaddieSuggestions() {
+  const search = $('discordUsername').value.trim();
+
+  const version = ++baddieSearchVersion;
+
+  if (search.length < 2) {
+    hideBaddieSuggestions();
+    return;
+  }
+
+  baddieSearchMessage('🔎 Searching Library Cards...');
+
+  try {
+    const term = `%${escapeBaddieSearch(search)}%`;
+
+    const [usernameResult, nameResult] =
+      await Promise.all([
+        db
+          .from('tbb_profiles')
+          .select('user_id,username,display_name')
+          .ilike('username', term)
+          .limit(20),
+
+        db
+          .from('tbb_profiles')
+          .select('user_id,username,display_name')
+          .ilike('display_name', term)
+          .limit(20)
+      ]);
+
+    if (usernameResult.error) {
+      throw usernameResult.error;
+    }
+
+    if (nameResult.error) {
+      throw nameResult.error;
+    }
+
+    if (version !== baddieSearchVersion) return;
+
+    const uniqueProfiles = new Map();
+
+    for (const profile of [
+      ...(usernameResult.data || []),
+      ...(nameResult.data || [])
+    ]) {
+      if (profile.user_id) {
+        uniqueProfiles.set(profile.user_id, profile);
+      }
+    }
+
+    const profiles = [...uniqueProfiles.values()];
+
+    if (!profiles.length) {
+      baddieSearchMessage(
+        'No matching Library Cards. You can enter a Discord username manually.'
+      );
+      return;
+    }
+
+    const { data: memberships, error: membershipError } =
+      await db
+        .from('tbb_memberships')
+        .select('user_id')
+        .in(
+          'user_id',
+          profiles.map(profile => profile.user_id)
+        )
+        .eq('status', 'approved');
+
+    if (membershipError) throw membershipError;
+
+    if (version !== baddieSearchVersion) return;
+
+    const approvedIds = new Set(
+      (memberships || []).map(member => member.user_id)
+    );
+
+    const approvedProfiles = profiles
+      .filter(profile => approvedIds.has(profile.user_id))
+      .sort((a, b) =>
+        String(a.display_name || a.username || '')
+          .localeCompare(
+            String(b.display_name || b.username || '')
+          )
+      );
+
+    const suggestions = $('baddieSuggestions');
+    suggestions.replaceChildren();
+
+    if (!approvedProfiles.length) {
+      baddieSearchMessage(
+        'No approved Library Cards matched. You can enter a Discord username manually.'
+      );
+      return;
+    }
+
+    for (const profile of approvedProfiles) {
+      const button = document.createElement('button');
+
+      button.type = 'button';
+      button.className = 'baddie-suggestion';
+      button.setAttribute('role', 'option');
+
+      const name = document.createElement('strong');
+      name.textContent =
+        profile.display_name || 'TBB Baddie';
+
+      const username = document.createElement('small');
+      username.textContent =
+        `Library Card: @${profile.username || 'Not set'}`;
+
+      button.append(name, username);
+
+      button.addEventListener('click', () => {
+        ++baddieSearchVersion;
+
+        $('discordUsername').value =
+          profile.username || '';
+
+        hideBaddieSuggestions();
+
+        $('discordUsername').focus();
+
+        showStatus(
+          'formStatus',
+          `Selected ${profile.display_name || 'Baddie'}. ` +
+          'Confirm or correct their Discord username, then choose a crew.'
+        );
+      });
+
+      suggestions.append(button);
+    }
+
+    showBaddieSuggestions();
+
+  } catch (error) {
+    if (version !== baddieSearchVersion) return;
+
+    console.error('Baddie autocomplete:', error);
+
+    baddieSearchMessage(
+      'Suggestions are unavailable. You can still enter a Discord username manually.'
+    );
+  }
+}
+
+function initializeBaddieAutocomplete() {
+  const input = $('discordUsername');
+
+  input.addEventListener('input', () => {
+    clearTimeout(baddieSearchTimer);
+
+    ++baddieSearchVersion;
+
+    if (input.value.trim().length < 2) {
+      hideBaddieSuggestions();
+      return;
+    }
+
+    baddieSearchTimer = setTimeout(() => {
+      void searchBaddieSuggestions();
+    }, 250);
+  });
+
+  input.addEventListener('keydown', event => {
+    if (event.key === 'Escape') {
+      clearTimeout(baddieSearchTimer);
+      ++baddieSearchVersion;
+      hideBaddieSuggestions();
+    }
+  });
+
+  document.addEventListener('click', event => {
+    if (
+      !input.contains(event.target) &&
+      !$('baddieSuggestions').contains(event.target)
+    ) {
+      clearTimeout(baddieSearchTimer);
+      ++baddieSearchVersion;
+      hideBaddieSuggestions();
+    }
+  });
+}
 
     async function addMember(event) {
       event.preventDefault();
@@ -2918,6 +3297,486 @@ function renderBookAudit() {
   }
 }
 
+    
+/* ==========================================
+   PHASE 11.6 — VELMA'S SCORING LEDGER™
+   ========================================== */
+
+let brlScoringLedgerEntries = [];
+
+function scoringLedgerElement(tag, className, text) {
+  const node = document.createElement(tag);
+
+  if (className) {
+    node.className = className;
+  }
+
+  if (text !== undefined) {
+    node.textContent = String(text);
+  }
+
+  return node;
+}
+
+function scoringLedgerStatus(message, isError = false) {
+  const target = document.getElementById(
+    "scoringLedgerStatus"
+  );
+
+  if (!target) return;
+
+  target.textContent = message;
+  target.style.color = isError
+    ? "#ff9aaa"
+    : "#b9f0d8";
+}
+
+function scoringLedgerDate(value) {
+  if (!value) return "Unknown date";
+
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return String(value);
+  }
+
+  return date.toLocaleString(undefined, {
+    dateStyle: "medium",
+    timeStyle: "short"
+  });
+}
+
+function scoringLedgerPoints(value) {
+  const points = Number(value) || 0;
+
+  return (
+    (points > 0 ? "+" : "") +
+    new Intl.NumberFormat("en-US").format(points)
+  );
+}
+
+function scoringLedgerCategory(entry) {
+  if (entry.entry_type === "admin_adjustment") {
+    return "adjustment";
+  }
+
+  return entry.challenge_type === "individual"
+    ? "individual"
+    : "team";
+}
+
+function scoringLedgerDescription(entry) {
+  const category = scoringLedgerCategory(entry);
+
+  if (category === "adjustment") {
+    return "⚖️ Official Admin Adjustment";
+  }
+
+  if (category === "individual") {
+    return "🔎 Individual Challenge Bonus";
+  }
+
+  return entry.placement === 1
+    ? "🥇 First-Place Team Challenge"
+    : "🥈 Second-Place Team Challenge";
+}
+
+function populateScoringLedgerTeams() {
+  const select = document.getElementById(
+    "scoringLedgerTeam"
+  );
+
+  if (!select) return;
+
+  const previousValue = select.value;
+
+  select.replaceChildren(
+    new Option("All Crews", "all")
+  );
+
+  const uniqueTeams = new Map();
+
+  for (const entry of brlScoringLedgerEntries) {
+    if (!uniqueTeams.has(entry.team_id)) {
+      uniqueTeams.set(
+        entry.team_id,
+        entry.team_name || "Unnamed Crew"
+      );
+    }
+  }
+
+  const sortedTeams = [...uniqueTeams.entries()]
+    .sort((a, b) => a[1].localeCompare(b[1]));
+
+  for (const [teamId, teamName] of sortedTeams) {
+    select.add(new Option(teamName, teamId));
+  }
+
+  if (
+    previousValue === "all" ||
+    uniqueTeams.has(previousValue)
+  ) {
+    select.value = previousValue;
+  }
+}
+
+
+/* ==========================================
+   PHASE 11.6D — CHALLENGE AWARD REVERSALS
+   ========================================== */
+
+let brlReversedAwardIds = new Set();
+
+async function loadBrlReversedAwards() {
+  const seasonId = season?.id || null;
+
+  if (!seasonId) {
+    throw new Error("BRL season is not loaded.");
+  }
+
+  const { data, error } = await db.rpc(
+    "tbb_brl_admin_reversed_awards",
+    { p_season_id: seasonId }
+  );
+
+  if (error) throw error;
+
+  brlReversedAwardIds = new Set(
+    (data || []).map(row => row.original_award_id)
+  );
+}
+
+async function reverseBrlChallengeAward(entry) {
+  if (entry.entry_type !== "challenge_bonus") return;
+
+  if (brlReversedAwardIds.has(entry.entry_id)) {
+    scoringLedgerStatus(
+      "This challenge award has already been reversed.",
+      true
+    );
+    return;
+  }
+
+  const reason = window.prompt(
+    `Reverse ${scoringLedgerPoints(entry.points)} points ` +
+    `from ${entry.team_name}?\n\n` +
+    `Challenge: ${entry.challenge_name}\n\n` +
+    `Enter the reason (at least 10 characters):`
+  );
+
+  if (reason === null) return;
+
+  if (reason.trim().length < 10) {
+    scoringLedgerStatus(
+      "A reversal reason must contain at least 10 characters.",
+      true
+    );
+    return;
+  }
+
+  const confirmed = window.confirm(
+    `CONFIRM CHALLENGE AWARD REVERSAL\n\n` +
+    `Crew: ${entry.team_name}\n` +
+    `Challenge: ${entry.challenge_name}\n` +
+    `Original award: ${scoringLedgerPoints(entry.points)}\n` +
+    `Reversal: ${scoringLedgerPoints(-Number(entry.points))}\n\n` +
+    `The original award will remain in the audit history.\n` +
+    `This action cannot be undone.\n\n` +
+    `Proceed?`
+  );
+
+  if (!confirmed) return;
+
+  scoringLedgerStatus(
+    "🔎 Recording the official award reversal..."
+  );
+
+  const { error } = await db.rpc(
+    "tbb_brl_admin_reverse_challenge_award",
+    {
+      p_award_id: entry.entry_id,
+      p_reason: reason.trim()
+    }
+  );
+
+  if (error) {
+    console.error("BRL award reversal:", error);
+    scoringLedgerStatus(error.message, true);
+    return;
+  }
+
+  await loadScoringLedger();
+
+  scoringLedgerStatus(
+    "🐾 Award reversed successfully! " +
+    "The offsetting adjustment is now in the scoring ledger."
+  );
+}
+
+/* END CHALLENGE AWARD REVERSALS */
+
+function renderScoringLedger() {
+  const container = document.getElementById(
+    "scoringLedgerList"
+  );
+
+  if (!container) return;
+
+  container.replaceChildren();
+
+  const search = (
+    document.getElementById("scoringLedgerSearch")
+      ?.value || ""
+  ).trim().toLowerCase();
+
+  const teamFilter = document.getElementById(
+    "scoringLedgerTeam"
+  )?.value || "all";
+
+  const typeFilter = document.getElementById(
+    "scoringLedgerType"
+  )?.value || "all";
+
+  const filtered = brlScoringLedgerEntries.filter(
+    entry => {
+      const category = scoringLedgerCategory(entry);
+
+      if (
+        teamFilter !== "all" &&
+        entry.team_id !== teamFilter
+      ) {
+        return false;
+      }
+
+      if (
+        typeFilter !== "all" &&
+        category !== typeFilter
+      ) {
+        return false;
+      }
+
+      const searchable = [
+        entry.team_name,
+        entry.discord_username,
+        entry.challenge_name,
+        entry.challenge_type,
+        entry.reason_or_notes,
+        scoringLedgerDescription(entry)
+      ].join(" ").toLowerCase();
+
+      return searchable.includes(search);
+    }
+  );
+
+  scoringLedgerStatus(
+    `📜 Showing ${filtered.length} of ` +
+    `${brlScoringLedgerEntries.length} scoring entries.`
+  );
+
+  if (!filtered.length) {
+    container.append(
+      scoringLedgerElement(
+        "p",
+        "",
+        "🔎 No scoring entries match these filters."
+      )
+    );
+    return;
+  }
+
+  for (const entry of filtered) {
+    const card = scoringLedgerElement(
+      "article",
+      "panel"
+    );
+
+    card.style.padding = "18px";
+    card.style.margin = "0";
+
+    const heading = scoringLedgerElement(
+      "div",
+      "",
+      scoringLedgerDescription(entry)
+    );
+
+    heading.style.fontWeight = "900";
+    heading.style.color = "#ffb8e6";
+
+    const crew = scoringLedgerElement(
+      "h3",
+      "",
+      `🐾 ${entry.team_name || "Unknown Crew"}`
+    );
+
+    crew.style.margin = "10px 0";
+
+    const points = scoringLedgerElement(
+      "div",
+      "",
+      scoringLedgerPoints(entry.points) + " points"
+    );
+
+    points.style.fontSize = "1.5rem";
+    points.style.fontWeight = "900";
+    points.style.color =
+      Number(entry.points) < 0
+        ? "#ffadbc"
+        : "#ffdb94";
+
+    const details = [];
+
+    if (entry.challenge_name) {
+      details.push(
+        `📂 Challenge: ${entry.challenge_name}`
+      );
+    }
+
+    if (entry.discord_username) {
+      details.push(
+        `🔎 Baddie: @${entry.discord_username}`
+      );
+    }
+
+    if (
+      entry.placement !== null &&
+      entry.placement !== undefined
+    ) {
+      details.push(
+        `🏅 Placement: ${entry.placement}`
+      );
+    }
+
+    if (entry.reason_or_notes) {
+      details.push(
+        `📝 Notes / Reason: ${entry.reason_or_notes}`
+      );
+    }
+
+    details.push(
+      `🕰️ Recorded: ${scoringLedgerDate(entry.created_at)}`
+    );
+
+    details.push(
+      `🔐 Recorded by user ID: ${
+        entry.actor_user_id || "Unknown"
+      }`
+    );
+
+    const meta = scoringLedgerElement(
+      "p",
+      "",
+      details.join("\n")
+    );
+
+    meta.style.whiteSpace = "pre-line";
+    meta.style.lineHeight = "1.8";
+    meta.style.overflowWrap = "anywhere";
+
+    
+card.append(
+  heading,
+  crew,
+  points,
+  meta
+);
+
+if (entry.entry_type === "challenge_bonus") {
+  const alreadyReversed =
+    brlReversedAwardIds.has(entry.entry_id);
+
+  const reversalButton = document.createElement("button");
+
+  reversalButton.type = "button";
+
+  reversalButton.textContent = alreadyReversed
+    ? "✓ Award Already Reversed"
+    : "↩ Reverse Challenge Award";
+
+  reversalButton.disabled = alreadyReversed;
+
+  reversalButton.style.marginTop = "12px";
+  reversalButton.style.background = alreadyReversed
+    ? "#51475c"
+    : "#803c67";
+
+  reversalButton.addEventListener("click", async () => {
+    reversalButton.disabled = true;
+
+    try {
+      await reverseBrlChallengeAward(entry);
+    } finally {
+      reversalButton.disabled =
+        brlReversedAwardIds.has(entry.entry_id);
+    }
+  });
+
+  card.append(reversalButton);
+}
+
+
+    container.append(card);
+  }
+}
+
+async function loadScoringLedger() {
+  const seasonId = season?.id || null;
+
+  if (!seasonId) {
+    scoringLedgerStatus(
+      "Season information is not loaded.",
+      true
+    );
+    return;
+  }
+
+  scoringLedgerStatus(
+    "🔎 Velma is collecting the scoring evidence..."
+  );
+
+  const { data, error } = await db.rpc(
+    "tbb_brl_admin_scoring_ledger",
+    { p_season_id: seasonId }
+  );
+
+  if (error) {
+    console.error("Scoring ledger:", error);
+    scoringLedgerStatus(error.message, true);
+    return;
+  }
+
+  
+brlScoringLedgerEntries = data || [];
+
+try {
+  await loadBrlReversedAwards();
+} catch (error) {
+  console.error("BRL reversal history:", error);
+  scoringLedgerStatus(error.message, true);
+  return;
+}
+
+populateScoringLedgerTeams();
+renderScoringLedger();
+
+}
+
+function initializeScoringLedger() {
+  document.getElementById("scoringLedgerSearch")
+    ?.addEventListener("input", renderScoringLedger);
+
+  document.getElementById("scoringLedgerTeam")
+    ?.addEventListener("change", renderScoringLedger);
+
+  document.getElementById("scoringLedgerType")
+    ?.addEventListener("change", renderScoringLedger);
+  document.getElementById("refreshScoringLedger")
+    ?.addEventListener("click", loadScoringLedger);
+
+  return loadScoringLedger();
+}
+
+/* END VELMA'S SCORING LEDGER™ */
+
 
     async function init() {
       try {
@@ -2935,6 +3794,9 @@ function renderBookAudit() {
         $('app').hidden = false;
 
         $('rosterForm').addEventListener('submit', addMember);
+
+// PHASE 11.8 — BADDIE AUTOCOMPLETE
+initializeBaddieAutocomplete();
 
         $('refreshButton').addEventListener(
   'click',
@@ -3013,6 +3875,12 @@ await loadRereadCandidates();
    ========================================== */
 
 await initializeBrlScoringDesk();
+
+/* ==========================================
+   PHASE 11.6 — SCORING LEDGER
+   ========================================== */
+await initializeScoringLedger();
+
 
       } catch (error) {
         console.error('BRL Mission Control:', error);

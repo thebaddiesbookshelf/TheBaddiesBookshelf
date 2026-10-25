@@ -530,6 +530,9 @@
     let currentSeason = null;
     let loading = false;
 
+    let scoreleaderChannel = null;
+    let scoreRefreshPending = false;
+
     function formatNumber(value) {
       return numberFormat.format(Number(value) || 0);
     }
@@ -790,53 +793,103 @@
     }
 
     async function loadScores() {
-      if (loading || !currentSeason) return;
+  if (!currentSeason) return;
 
-      loading = true;
-      $("refreshScores").disabled = true;
-      setStatus("🔎 Velma is reviewing the latest case files...");
+  if (loading) {
+    scoreRefreshPending = true;
+    return;
+  }
 
-      try {
-        const [totalsResult, baddiesResult] =
-          await Promise.all([
-            db.rpc("tbb_brl_scoreleader_totals", {
-              p_season_id: currentSeason.id
-            }),
+  loading = true;
+  $("refreshScores").disabled = true;
+  setStatus("🔎 Velma is reviewing the latest case files...");
 
-            db.rpc("tbb_brl_scoreleader_baddie_pages", {
-              p_season_id: currentSeason.id
-            })
-          ]);
+  try {
+    const [totalsResult, baddiesResult] =
+      await Promise.all([
+        db.rpc("tbb_brl_scoreleader_totals", {
+          p_season_id: currentSeason.id
+        }),
 
-        if (totalsResult.error) {
-          throw totalsResult.error;
-        }
+        db.rpc("tbb_brl_scoreleader_baddie_pages", {
+          p_season_id: currentSeason.id
+        })
+      ]);
 
-        if (baddiesResult.error) {
-          throw baddiesResult.error;
-        }
-
-        const totals = totalsResult.data || [];
-        const baddies = baddiesResult.data || [];
-
-        renderCrewStandings(totals);
-        renderMostWanted(totals, baddies);
-
-        const refreshed = new Date().toLocaleTimeString(
-          undefined,
-          { hour: "numeric", minute: "2-digit" }
-        );
-
-        setStatus(`🐾 Case files updated at ${refreshed}.`);
-
-      } catch (error) {
-        console.error("Scoreleader load error:", error);
-        setStatus(error.message, true);
-      } finally {
-        loading = false;
-        $("refreshScores").disabled = false;
-      }
+    if (totalsResult.error) {
+      throw totalsResult.error;
     }
+
+    if (baddiesResult.error) {
+      throw baddiesResult.error;
+    }
+
+    const totals = totalsResult.data || [];
+    const baddies = baddiesResult.data || [];
+
+    renderCrewStandings(totals);
+    renderMostWanted(totals, baddies);
+
+    const refreshed = new Date().toLocaleTimeString(
+      undefined,
+      { hour: "numeric", minute: "2-digit" }
+    );
+
+    setStatus(`🐾 Case files updated at ${refreshed}.`);
+
+  } catch (error) {
+    console.error("Scoreleader load error:", error);
+    setStatus(error.message, true);
+
+  } finally {
+    loading = false;
+    $("refreshScores").disabled = false;
+
+    if (scoreRefreshPending) {
+      scoreRefreshPending = false;
+      void loadScores();
+    }
+  }
+}
+
+/* ==========================================
+   PHASE 11.7C — LIVE SCORELEADER™
+   ========================================== */
+
+function initializeScoreleaderRealtime() {
+  if (!currentSeason || scoreleaderChannel) return;
+
+  scoreleaderChannel = db
+    .channel(`brl-scoreleader-${currentSeason.id}`)
+    .on(
+      "postgres_changes",
+      {
+        event: "INSERT",
+        schema: "public",
+        table: "tbb_brl_scoreleader_events",
+        filter: `season_id=eq.${currentSeason.id}`
+      },
+      () => {
+        void loadScores();
+      }
+    )
+    .subscribe((status) => {
+      if (status === "SUBSCRIBED") {
+        console.info("Live Scoreleader™ connected.");
+      }
+
+      if (status === "CHANNEL_ERROR" || status === "TIMED_OUT") {
+        console.warn("Live Scoreleader™ connection issue:", status);
+      }
+    });
+}
+
+window.addEventListener("pagehide", () => {
+  if (scoreleaderChannel) {
+    void db.removeChannel(scoreleaderChannel);
+    scoreleaderChannel = null;
+  }
+});
 
     async function init() {
       try {
@@ -870,7 +923,9 @@
 
         await loadScores();
 
-      } catch (error) {
+        initializeScoreleaderRealtime();
+
+        } catch (error) {
         console.error("Scoreleader initialization:", error);
 
         $("app").hidden = false;
