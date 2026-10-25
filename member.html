@@ -615,6 +615,7 @@ input:focus,textarea:focus,button:focus-visible {
   <div class="actions">
     <a class="btn" href="home.html">Library Home</a>
     <a class="btn" id="adminHqLink" href="admin.html" hidden>👑 Back to Admin HQ</a>
+     <a class="btn" href="baddie-profile.html">💋 My Baddie Profile™</a>
     <a class="btn" href="bookshelf.html">📚 My Bookshelf™</a>
     
 <a class="btn" href="friends.html">
@@ -1256,6 +1257,18 @@ input:focus,textarea:focus,button:focus-visible {
 
     </div>
 
+    
+<div class="theme-actions">
+  <button
+    class="btn primary"
+    id="saveProfilePrivacy"
+    type="button"
+    disabled
+  >
+    🔐 Save My Privacy Preferences 💗
+  </button>
+</div>
+
     <p id="profilePrivacyStatus"
        class="notice"
        role="status"
@@ -1378,7 +1391,12 @@ import {
   saveFriendPreference
 } from "./js/friend-preferences.js";
 
-import { loadProfilePrivacy } from "./js/profile-privacy.js";
+
+import {
+  loadProfilePrivacy,
+  saveProfilePrivacy
+} from "./js/profile-privacy.js";
+
 
 const $ = id => document.getElementById(id);
 const bucket = "tbb-avatars";
@@ -1738,6 +1756,7 @@ async function loadProfile() {
   await loadAvatar(savedAvatarPath);
 }
 
+
 async function saveProfile(event) {
   event.preventDefault();
 
@@ -1770,16 +1789,22 @@ async function saveProfile(event) {
       );
     }
 
+    // General profile fields remain in tbb_profiles.
     const updates = {
       display_name: displayName,
       username: username || null,
-      bio: $("bio").value.trim() || null,
-      favorite_genres: textToList($("genres").value),
-      favorite_books: textToList($("books").value),
-      favorite_authors: textToList($("authors").value),
-      current_read: $("currentRead").value.trim() || null
+      bio: $("bio").value.trim() || null
     };
 
+    // Favorites are saved separately in protected storage.
+    const favoriteUpdates = {
+      p_favorite_genres: textToList($("genres").value),
+      p_favorite_books: textToList($("books").value),
+      p_favorite_authors: textToList($("authors").value),
+      p_current_read: $("currentRead").value.trim() || null
+    };
+
+    // STEP 1: Save general Library Card information.
     const { data, error } = await db
       .from("tbb_profiles")
       .update(updates)
@@ -1793,6 +1818,13 @@ async function saveProfile(event) {
       throw new Error("Supabase did not confirm your profile update.");
     }
 
+    // STEP 2: Save favorites through the owner-only RPC.
+    const { error: saveFavoritesError } = await db
+      .rpc("tbb_save_profile_favorites", favoriteUpdates);
+
+    if (saveFavoritesError) throw saveFavoritesError;
+
+    // STEP 3: Read favorites back to verify the save.
     const { data: favorites, error: favoritesError } = await db
       .rpc("tbb_get_profile_favorites", {
         target_user_id: currentUser.id
@@ -1813,10 +1845,19 @@ async function saveProfile(event) {
       data.display_name === updates.display_name &&
       data.username === updates.username &&
       data.bio === updates.bio &&
-      savedFavorites.current_read === updates.current_read &&
-      sameList(savedFavorites.favorite_genres, updates.favorite_genres) &&
-      sameList(savedFavorites.favorite_books, updates.favorite_books) &&
-      sameList(savedFavorites.favorite_authors, updates.favorite_authors);
+      savedFavorites.current_read === favoriteUpdates.p_current_read &&
+      sameList(
+        savedFavorites.favorite_genres,
+        favoriteUpdates.p_favorite_genres
+      ) &&
+      sameList(
+        savedFavorites.favorite_books,
+        favoriteUpdates.p_favorite_books
+      ) &&
+      sameList(
+        savedFavorites.favorite_authors,
+        favoriteUpdates.p_favorite_authors
+      );
 
     if (!matches) {
       throw new Error(
@@ -1851,6 +1892,7 @@ async function saveProfile(event) {
     button.disabled = false;
   }
 }
+
 
 async function saveTheme() {
   if (!currentUser) return;
@@ -2038,6 +2080,19 @@ try {
 $("logout").addEventListener("click",logout);
 $("profileForm").addEventListener("submit", saveProfile);
 $("saveTheme").addEventListener("click",saveTheme);
+
+$("saveProfilePrivacy").addEventListener("click", async () => {
+  const button = $("saveProfilePrivacy");
+
+  if (button.disabled) return;
+
+  try {
+    await saveProfilePrivacy();
+  } catch (error) {
+    console.error("Profile privacy save failed:", error);
+  }
+});
+
   
 $("friendRequestsEnabled").addEventListener(
   "change",

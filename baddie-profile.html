@@ -954,7 +954,7 @@
       <a href="cover-story.html">Cover Story™</a>
       <a href="baddie-directory.html">Directory</a>
       <a href="friends.html">Friends™</a>
-      <a href="member.html">The Vanity™</a>
+      <a href="member.html">My Vanity™</a>
     </nav>
   </header>
 
@@ -1590,6 +1590,7 @@ function loadReadingTab(profile, isOwner) {
   );
 }
 
+
 async function loadProfileTimeline(append = false) {
   if (!profile?.user_id || timelineLoading) return;
 
@@ -1597,15 +1598,39 @@ async function loadProfileTimeline(append = false) {
 
   const refresh = $("timelineRefresh");
   const more = $("timelineMore");
+  const feed = $("timelineFeed");
 
   refresh.disabled = true;
   more.disabled = true;
 
   try {
+    // Check the profile owner's activity privacy before
+    // requesting any posts for this profile timeline.
+    const { data: canView, error: privacyError } = await db
+      .rpc("tbb_can_view_profile_activity", {
+        target_user_id: profile.user_id
+      });
+
+    if (privacyError) throw privacyError;
+
+    if (canView !== true) {
+      timelinePage = 0;
+      timelinePosts = [];
+
+      feed.textContent =
+        "🔒 This Baddie's Cover Story™ timeline is private to her Besties. 💗";
+
+      more.hidden = true;
+      refresh.hidden = true;
+      return;
+    }
+
+    refresh.hidden = false;
+
     const requestedPage = append ? timelinePage + 1 : 0;
 
     if (!append) {
-      $("timelineFeed").textContent =
+      feed.textContent =
         "Loading this Baddie's stories… 💗";
     }
 
@@ -1630,14 +1655,17 @@ async function loadProfileTimeline(append = false) {
     console.error("Profile timeline:", error);
 
     if (!append) {
-      $("timelineFeed").textContent =
+      feed.textContent =
         "Could not load this Baddie's Cover Story™.";
     }
+
+    more.hidden = true;
 
     alert(
       error.message ||
       "The timeline could not be loaded."
     );
+
   } finally {
     timelineLoading = false;
     refresh.disabled = false;
