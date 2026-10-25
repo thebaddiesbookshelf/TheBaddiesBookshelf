@@ -20,11 +20,16 @@ const statuses = {
 };
 
 const entryCols =
-  'id,user_id,book_id,community_book_id,reading_status,book_format,total_pages,current_page,rating,started_at,finished_at';
+  'id,user_id,book_id,community_book_id,personal_book_id,reading_status,book_format,total_pages,current_page,rating,started_at,finished_at';
 
-const officialCols = 'id,title,author,cover_url,is_archived';
+const officialCols =
+  'id,title,author,cover_url,is_archived';
+
 const communityCols =
   'id,title,author,cover_url,is_archived,series_name,book_number';
+
+const personalCols =
+  'id,user_id,title,author,cover_url,cover_storage_path,isbn,isbn13,goodreads_book_id,series_name,book_number';
 
 let user = null;
 let entries = [];
@@ -53,10 +58,17 @@ let removeExistingCover = false;
 
 const key = (source,id) => `${source}:${id}`;
 
-const entryKey = e => key(
-  e.community_book_id ? 'community' : 'official',
-  e.community_book_id || e.book_id
-);
+const entryKey = e => {
+  if (e.personal_book_id) {
+    return key('personal', e.personal_book_id);
+  }
+
+  if (e.community_book_id) {
+    return key('community', e.community_book_id);
+  }
+
+  return key('official', e.book_id);
+};
 
 const element = (tag,cls='',txt) => {
   const n = document.createElement(tag);
@@ -127,23 +139,56 @@ async function stats() {
   $('customShelfCount').textContent = shelvesCount;
 }
 
-async function fetchBooks(source,ids) {
+async function fetchBooks(source, ids) {
   const missing = [...new Set(ids.filter(Boolean))]
-    .filter(id => !catalog.has(key(source,id)));
+    .filter(id => !catalog.has(key(source, id)));
 
-  const table = source === 'official'
-    ? 'tbb_books'
-    : 'tbb_community_books';
+  const configurations = {
+    official: {
+      table: 'tbb_books',
+      columns: officialCols
+    },
+    community: {
+      table: 'tbb_community_books',
+      columns: communityCols
+    },
+    personal: {
+      table: 'tbb_personal_books',
+      columns: personalCols
+    }
+  };
 
-  for(let i=0;i<missing.length;i+=100) {
-    const {data,error} = await db.from(table)
-      .select(source === 'official' ? officialCols : communityCols)
-      .in('id',missing.slice(i,i+100));
+  const config = configurations[source];
 
-    if(error) throw error;
+  if (!config) {
+    throw Error(`Unknown book source: ${source}`);
+  }
 
-    for(const b of data || []) {
-      catalog.set(key(source,b.id),{...b,source});
+  for (let i = 0; i < missing.length; i += 100) {
+    let query = db
+      .from(config.table)
+      .select(config.columns)
+      .in('id', missing.slice(i, i + 100));
+
+    if (source === 'personal') {
+      query = query.eq('user_id', user.id);
+    }
+
+    const { data, error } = await query;
+
+    if (error) throw error;
+
+    for (const book of data || []) {
+      catalog.set(
+        key(source, book.id),
+        {
+          ...book,
+          source,
+          is_archived: source === 'personal'
+            ? false
+            : book.is_archived
+        }
+      );
     }
   }
 }
@@ -167,10 +212,20 @@ async function loadCollection() {
 
   entries = all;
 
-  await Promise.all([
-    fetchBooks('official',entries.map(e=>e.book_id)),
-    fetchBooks('community',entries.map(e=>e.community_book_id))
-  ]);
+ await Promise.all([
+  fetchBooks(
+    'official',
+    entries.map(e => e.book_id)
+  ),
+  fetchBooks(
+    'community',
+    entries.map(e => e.community_book_id)
+  ),
+  fetchBooks(
+    'personal',
+    entries.map(e => e.personal_book_id)
+  )
+]);
 
   renderCollection();
   renderResults();
@@ -190,11 +245,26 @@ function coverUrl(value) {
 }
 
 function bookForEntry(e) {
-  return catalog.get(entryKey(e)) || {
-    id:e.community_book_id || e.book_id,
-    title:'Catalog Book Unavailable',
-    author:'Reading record retained',
-    source:e.community_book_id ? 'community' : 'official'
+  const source = e.personal_book_id
+    ? 'personal'
+    : e.community_book_id
+      ? 'community'
+      : 'official';
+
+  const id =
+    e.personal_book_id ||
+    e.community_book_id ||
+    e.book_id;
+
+  return catalog.get(key(source, id)) || {
+    id,
+    title: source === 'personal'
+      ? 'Personal Book Unavailable'
+      : 'Catalog Book Unavailable',
+    author: 'Reading record retained',
+    cover_url: null,
+    source,
+    is_archived: false
   };
 }
 
@@ -229,11 +299,25 @@ function card(book,entry=null) {
     element('p','library-book-author',book.author || 'Unknown Author')
   );
 
-  if(book.source === 'community') {
-    info.append(
-      element('span','library-book-status','🎀 Community Book')
-    );
-  }
+  if (book.source === 'community') {
+  info.append(
+    element(
+      'span',
+      'library-book-status',
+      '🎀 Community Book'
+    )
+  );
+}
+
+if (book.source === 'personal') {
+  info.append(
+    element(
+      'span',
+      'library-book-status',
+      '💗 Personal Book'
+    )
+  );
+}
 
   if(entry) {
     info.append(
@@ -626,13 +710,18 @@ async function removeBookFromLibrary() {
   const book = bookForEntry(entry);
   const title = book.title || 'this book';
 
-  const confirmed = window.confirm(
+    const confirmed = window.confirm(
     `Remove “${title}” from My Library™?\n\n` +
     'This will delete your personal reading record, ' +
     'including its reading status, page progress, ' +
     'rating, and reading dates.\n\n' +
-    'The book will remain in the shared catalog ' +
-    'for other Baddies.\n\n' +
+    (
+      entry.personal_book_id
+        ? 'Your private book information will remain saved, ' +
+          'but the book will be removed from My Library.\n\n'
+        : 'The book will remain in the shared catalog ' +
+          'for other Baddies.\n\n'
+    ) +
     'This action cannot be undone.'
   );
 
@@ -727,61 +816,221 @@ function actions(ev) {
   if (action === 'edit') openEditor(source, bookId);
 }
 
+/* ==========================================
+   ADD MY OWN BOOK™ — COVER UPLOADS
+   ========================================== */
+
+const COMMUNITY_COVER_BUCKET = 'tbb-community-book-covers';
+const COMMUNITY_COVER_MAX_BYTES = 5 * 1024 * 1024;
+
+const COMMUNITY_COVER_TYPES = {
+  'image/jpeg': 'jpg',
+  'image/png': 'png',
+  'image/webp': 'webp'
+};
+
+let communityCoverPreviewUrl = null;
+
+function releaseCommunityCoverPreview() {
+  if (communityCoverPreviewUrl) {
+    URL.revokeObjectURL(communityCoverPreviewUrl);
+    communityCoverPreviewUrl = null;
+  }
+}
+
+function validateCommunityCover(file) {
+  if (!file) return;
+
+  if (!Object.hasOwn(COMMUNITY_COVER_TYPES, file.type)) {
+    throw Error('Please choose a JPG, PNG, or WebP cover.');
+  }
+
+  if (file.size <= 0 || file.size > COMMUNITY_COVER_MAX_BYTES) {
+    throw Error('Book covers must be 5 MB or smaller.');
+  }
+}
+
+function updateCommunityCoverPreview() {
+  const file = $('communityBookCoverFile')?.files?.[0];
+  const url = $('communityBookCover')?.value.trim();
+
+  const preview = $('communityBookCoverPreview');
+  const image = $('communityBookCoverPreviewImage');
+
+  if (!preview || !image) return;
+
+  releaseCommunityCoverPreview();
+
+  if (file) {
+    try {
+      validateCommunityCover(file);
+
+      communityCoverPreviewUrl = URL.createObjectURL(file);
+      image.src = communityCoverPreviewUrl;
+      preview.hidden = false;
+      return;
+    } catch (error) {
+      $('communityBookCoverFile').value = '';
+      notify(error.message, true);
+    }
+  }
+
+  const validUrl = coverUrl(url);
+
+  if (validUrl) {
+    image.src = validUrl;
+    preview.hidden = false;
+  } else {
+    image.removeAttribute('src');
+    preview.hidden = true;
+  }
+}
+
+async function uploadCommunityCover(file) {
+  validateCommunityCover(file);
+
+  if (!user) {
+    throw Error('Please sign in before uploading a cover.');
+  }
+
+  const extension = COMMUNITY_COVER_TYPES[file.type];
+
+  const filename = `${crypto.randomUUID()}.${extension}`;
+  const path = `${user.id}/${filename}`;
+
+  const { error } = await db.storage
+    .from(COMMUNITY_COVER_BUCKET)
+    .upload(path, file, {
+      contentType: file.type,
+      cacheControl: '3600',
+      upsert: false
+    });
+
+  if (error) throw error;
+
+  const { data } = db.storage
+    .from(COMMUNITY_COVER_BUCKET)
+    .getPublicUrl(path);
+
+  if (!data?.publicUrl) {
+    throw Error('Cover uploaded, but its public URL was unavailable.');
+  }
+
+  return data.publicUrl;
+}
 function openCommunity() {
-  if(!user) return;
+  if (!user) return;
+
   $('communityBookForm').reset();
+
+  releaseCommunityCoverPreview();
+
+  const preview = $('communityBookCoverPreview');
+  const image = $('communityBookCoverPreviewImage');
+
+  if (preview) preview.hidden = true;
+  if (image) image.removeAttribute('src');
+
   $('communityBookDialog').showModal();
 }
 
 async function submitCommunity(ev) {
   ev.preventDefault();
-  if(!user || submitBusy) return;
+
+  if (!user || submitBusy) return;
 
   const title = $('communityBookTitle').value.trim();
   const author = $('communityBookAuthor').value.trim();
 
-  if(!title || !author) {
-    notify('Title and author are required.',true);
+  if (!title || !author) {
+    notify('Title and author are required.', true);
+    return;
+  }
+
+  const file = $('communityBookCoverFile')?.files?.[0] || null;
+
+  let cover = $('communityBookCover').value.trim() || null;
+
+  try {
+    validateCommunityCover(file);
+
+    if (!file && cover && !coverUrl(cover)) {
+      throw Error('Please enter a valid HTTP or HTTPS cover URL.');
+    }
+  } catch (error) {
+    notify(error.message, true);
     return;
   }
 
   submitBusy = true;
+
   const btn = $('submitCommunityBook');
   btn.disabled = true;
   btn.textContent = 'Adding...';
 
+  let uploadedCover = false;
+
   try {
-    const {data,error} = await db.rpc(
+    // Uploaded files take priority over pasted URLs.
+    if (file) {
+      btn.textContent = 'Uploading Cover...';
+
+      cover = await uploadCommunityCover(file);
+      uploadedCover = true;
+    }
+
+    btn.textContent = 'Adding Book...';
+
+    // Preserve the existing shared community submission.
+    const { data, error } = await db.rpc(
       'tbb_submit_community_book',
       {
-        p_title:title,
-        p_author:author,
-        p_cover_url:$('communityBookCover').value.trim() || null,
-        p_series_name:$('communityBookSeries').value.trim() || null,
-        p_book_number:$('communityBookNumber').value.trim() || null
+        p_title: title,
+        p_author: author,
+        p_cover_url: cover,
+        p_series_name:
+          $('communityBookSeries').value.trim() || null,
+        p_book_number:
+          $('communityBookNumber').value.trim() || null
       }
     );
 
-    if(error) throw error;
-    if(!data) {
-      throw Error('Community book submission returned no book ID.');
+    if (error) throw error;
+
+    if (!data) {
+      throw Error(
+        'Community book submission returned no book ID.'
+      );
     }
 
     $('communityBookDialog').close();
-    await Promise.all([loadCollection(),stats()]);
+
+    releaseCommunityCoverPreview();
+
+    await Promise.all([
+      loadCollection(),
+      stats()
+    ]);
 
     notify(
       `“${title}” is in your Library and the shared community catalog! 🎀`
     );
 
-    if($('bookSearch').value.trim().length >= 2) {
+    if ($('bookSearch').value.trim().length >= 2) {
       await search();
     }
-  } catch(e) {
-    console.error('Community book submission:',e);
+
+  } catch (error) {
+    console.error('Community book submission:', error);
+
     notify(
-      e.message || 'Could not add this community book.',true
+      (error.message || 'Could not add this community book.') +
+      (uploadedCover
+        ? ' If the book was not created, the uploaded image may remain in Storage.'
+        : ''),
+      true
     );
+
   } finally {
     submitBusy = false;
     btn.disabled = false;
@@ -2203,6 +2452,751 @@ $('bookTagAssignmentDialog')?.addEventListener('cancel', event => {
    INITIALIZATION
    ========================================== */
 
+   /* ==========================================
+   THE BOOKSHELF™
+   GOODREADS CSV IMPORT — PART 1
+   FILE READING + PREVIEW
+   ========================================== */
+
+let goodreadsPreviewRows = [];
+
+function parseGoodreadsCsv(text) {
+  const rows = [];
+  let row = [];
+  let field = '';
+  let quoted = false;
+
+  text = text.replace(/^\uFEFF/, '');
+
+  for (let i = 0; i < text.length; i++) {
+    const char = text[i];
+
+    if (char === '"') {
+      if (quoted && text[i + 1] === '"') {
+        field += '"';
+        i++;
+      } else {
+        quoted = !quoted;
+      }
+    } else if (char === ',' && !quoted) {
+      row.push(field);
+      field = '';
+    } else if (
+      (char === '\n' || char === '\r') &&
+      !quoted
+    ) {
+      if (char === '\r' && text[i + 1] === '\n') {
+        i++;
+      }
+
+      row.push(field);
+      field = '';
+
+      if (row.some(value => value.trim())) {
+        rows.push(row);
+      }
+
+      row = [];
+    } else {
+      field += char;
+    }
+  }
+
+  if (quoted) {
+    throw Error('CSV contains an unclosed quoted field.');
+  }
+
+  row.push(field);
+
+  if (row.some(value => value.trim())) {
+    rows.push(row);
+  }
+
+  if (rows.length < 2) {
+    throw Error('No Goodreads book records were found.');
+  }
+
+  const headers = rows.shift().map(
+    header => header.trim()
+  );
+
+  if (
+    !headers.includes('Title') ||
+    !headers.includes('Author')
+  ) {
+    throw Error(
+      'This CSV does not appear to be a Goodreads export. ' +
+      'Title and Author columns are required.'
+    );
+  }
+
+  return rows.map(values => {
+    const book = {};
+
+    headers.forEach((header, index) => {
+      book[header] = (values[index] || '').trim();
+    });
+
+    return book;
+  }).filter(book => book.Title);
+}
+
+function openGoodreadsImportDialog() {
+  goodreadsPreviewRows = [];
+
+  $('goodreadsCsvFile').value = '';
+
+  $('goodreadsImportSummary').textContent =
+    'No file selected yet.';
+
+  $('goodreadsImportPreview').replaceChildren();
+
+  $('goodreadsConfirmImport').disabled = true;
+
+  $('goodreadsImportDialog').showModal();
+}
+
+async function previewGoodreadsFile() {
+  const file = $('goodreadsCsvFile').files?.[0];
+
+  goodreadsPreviewRows = [];
+
+  const target = $('goodreadsImportPreview');
+  target.replaceChildren();
+
+  $('goodreadsConfirmImport').disabled = true;
+
+  if (!file) {
+    $('goodreadsImportSummary').textContent =
+      'No file selected yet.';
+    return;
+  }
+
+  try {
+    if (file.size > 10 * 1024 * 1024) {
+      throw Error('CSV files must be 10 MB or smaller.');
+    }
+
+    const text = await file.text();
+
+    const books = parseGoodreadsCsv(text);
+
+    goodreadsPreviewRows = books;
+
+    $('goodreadsImportSummary').textContent =
+      `💗 ${books.length} books found! ` +
+      'Review your preview below.';
+
+    const previewCount = Math.min(books.length, 20);
+
+    for (const book of books.slice(0, previewCount)) {
+      const item = element(
+        'article',
+        'library-book-card'
+      );
+
+      const info = element(
+        'div',
+        'library-book-info'
+      );
+
+      info.append(
+        element(
+          'h4',
+          '',
+          book.Title || 'Untitled'
+        ),
+        element(
+          'p',
+          '',
+          book.Author || 'Unknown Author'
+        ),
+        element(
+          'p',
+          'library-helper',
+          `📖 Shelf: ${book['Exclusive Shelf'] || 'Unknown'}`
+        ),
+        element(
+          'p',
+          'library-helper',
+          `⭐ Rating: ${book['My Rating'] || 'Not rated'}`
+        )
+      );
+
+      item.append(info);
+      target.append(item);
+    }
+
+    if (books.length > previewCount) {
+      target.append(
+        element(
+          'p',
+          'library-helper',
+          `Showing the first ${previewCount} of ` +
+          `${books.length} books.`
+        )
+      );
+    }
+
+   $('goodreadsConfirmImport').disabled =
+   goodreadsPreviewRows.length === 0;
+
+  } catch (error) {
+    console.error('Goodreads CSV preview:', error);
+
+    goodreadsPreviewRows = [];
+
+    $('goodreadsImportSummary').textContent =
+      error.message;
+
+    notify(error.message, true);
+  }
+}
+
+/* ==========================================
+   THE BOOKSHELF™
+   GOODREADS CSV IMPORT — PART 2
+   PRIVATE BOOKS + READING HISTORY
+   ========================================== */
+
+let goodreadsImportBusy = false;
+
+function goodreadsText(value) {
+  return String(value ?? '').trim();
+}
+
+function goodreadsDate(value) {
+  const raw = goodreadsText(value);
+
+  if (!raw) return null;
+
+  const match = raw.match(
+    /^(\d{4})[-/](\d{1,2})[-/](\d{1,2})$/
+  );
+
+  if (!match) return null;
+
+  const year = Number(match[1]);
+  const month = Number(match[2]);
+  const day = Number(match[3]);
+
+  const date = new Date(Date.UTC(
+    year,
+    month - 1,
+    day
+  ));
+
+  if (
+    date.getUTCFullYear() !== year ||
+    date.getUTCMonth() !== month - 1 ||
+    date.getUTCDate() !== day
+  ) {
+    return null;
+  }
+
+  return [
+    String(year).padStart(4, '0'),
+    String(month).padStart(2, '0'),
+    String(day).padStart(2, '0')
+  ].join('-');
+}
+
+function goodreadsPages(value) {
+  const raw = goodreadsText(value);
+
+  if (!/^\d+$/.test(raw)) return null;
+
+  const number = Number(raw);
+
+  return Number.isSafeInteger(number) && number > 0
+    ? number
+    : null;
+}
+
+function goodreadsRating(value) {
+  const raw = goodreadsText(value);
+
+  if (!raw || raw === '0') return null;
+
+  const number = Number(raw);
+
+  if (
+    !Number.isFinite(number) ||
+    number < 0.5 ||
+    number > 5 ||
+    !Number.isInteger(number * 2)
+  ) {
+    return null;
+  }
+
+  return number;
+}
+
+function goodreadsStatus(book) {
+  const shelf = goodreadsText(
+    book['Exclusive Shelf']
+  ).toLowerCase();
+
+  const normalized = shelf
+    .replace(/[_\s]+/g, '-');
+
+  switch (normalized) {
+    case 'read':
+    case 'finished':
+      return 'finished';
+
+    case 'currently-reading':
+      return 'currently_reading';
+
+    case 'to-read':
+    case 'want-to-read':
+      return 'want_to_read';
+
+    case 'on-hold':
+      return 'on_hold';
+
+    case 'did-not-finish':
+    case 'dnf':
+      return 'dnf';
+
+    default:
+      return 'want_to_read';
+  }
+}
+function cleanGoodreadsIsbn(value) {
+  let isbn = goodreadsText(value);
+
+  if (!isbn || isbn === '=""') {
+    return null;
+  }
+
+  // Goodreads may export ISBNs as ="1234567890"
+  const formula = isbn.match(/^="([^"]*)"$/);
+
+  if (formula) {
+    isbn = formula[1].trim();
+  }
+
+  return isbn || null;
+}
+
+function goodreadsRecord(book) {
+  const title = goodreadsText(book.Title);
+  const author =
+    goodreadsText(book.Author) || 'Unknown Author';
+
+  if (!title) {
+    throw Error('A book is missing its title.');
+  }
+
+  const status = goodreadsStatus(book);
+
+  const pages = goodreadsPages(
+    book['Number of Pages']
+  );
+
+  const started = goodreadsDate(
+    book['Date Started']
+  );
+
+  let finished = goodreadsDate(
+    book['Date Read']
+  );
+
+  // Only finished books receive a completion date.
+  if (status !== 'finished') {
+    finished = null;
+  }
+
+  // Protect the existing reading-date constraint.
+  if (started && finished && finished < started) {
+    finished = null;
+  }
+
+  return {
+    personal: {
+      title,
+      author,
+      goodreads_book_id:
+        goodreadsText(book['Book Id']) || null,
+
+      isbn: cleanGoodreadsIsbn(book.ISBN),
+
+      isbn13: cleanGoodreadsIsbn(book.ISBN13)
+    },
+
+    reading: {
+      reading_status: status,
+      book_format: null,
+      total_pages: pages,
+
+      current_page:
+        status === 'finished' && pages
+          ? pages
+          : 0,
+
+      rating: goodreadsRating(
+        book['My Rating']
+      ),
+
+      started_at: started,
+      finished_at: finished
+    }
+  };
+}
+
+function goodreadsIdentity(book) {
+  const id = goodreadsText(
+    book.goodreads_book_id
+  );
+
+  if (id) return `id:${id}`;
+
+  return (
+    'title:' +
+    goodreadsText(book.title).toLowerCase() +
+    '|author:' +
+    goodreadsText(book.author).toLowerCase()
+  );
+}
+
+async function loadExistingGoodreadsBooks() {
+  const existing = [];
+
+  for (let from = 0; ; from += 500) {
+    const { data, error } = await db
+      .from('tbb_personal_books')
+      .select(
+        'id,title,author,goodreads_book_id'
+      )
+      .eq('user_id', user.id)
+      .order('id')
+      .range(from, from + 499);
+
+    if (error) throw error;
+
+    existing.push(...(data || []));
+
+    if (!data || data.length < 500) break;
+  }
+
+  return existing;
+}
+
+async function importGoodreadsBooks() {
+  if (
+    !user ||
+    goodreadsImportBusy ||
+    !goodreadsPreviewRows.length
+  ) {
+    return;
+  }
+
+  const confirmed = window.confirm(
+    `Import ${goodreadsPreviewRows.length} books ` +
+    'into your personal My Library™?\n\n' +
+    'Books already imported will be skipped. ' +
+    'Existing reading records will not be overwritten.\n\n' +
+    'These books will NOT be added to the ' +
+    'shared community catalog.'
+  );
+
+  if (!confirmed) return;
+
+  goodreadsImportBusy = true;
+
+  const button = $('goodreadsConfirmImport');
+  const closeButton = $('closeGoodreadsImport');
+  const fileInput = $('goodreadsCsvFile');
+  const summary = $('goodreadsImportSummary');
+
+  button.disabled = true;
+  closeButton.disabled = true;
+  fileInput.disabled = true;
+
+  let imported = 0;
+  let skipped = 0;
+  let failed = 0;
+
+  const errors = [];
+
+  try {
+    const existing = await loadExistingGoodreadsBooks();
+
+    const existingIds = new Set(
+      existing
+        .map(book => goodreadsText(
+          book.goodreads_book_id
+        ))
+        .filter(Boolean)
+    );
+
+    const existingNames = new Set(
+      existing.map(book =>
+        goodreadsText(book.title).toLowerCase() +
+        '|' +
+        goodreadsText(book.author).toLowerCase()
+      )
+    );
+
+    const processed = new Set();
+
+    for (
+  let index = 0;
+  index < Math.min(5, goodreadsPreviewRows.length);
+  index++
+) {
+      const csvBook = goodreadsPreviewRows[index];
+
+      button.textContent =
+        `Importing ${index + 1}/${goodreadsPreviewRows.length}...`;
+
+      summary.textContent =
+        `📚 Processing ${index + 1} of ` +
+        `${goodreadsPreviewRows.length} books. ` +
+        `Imported: ${imported} | Skipped: ${skipped} | Failed: ${failed}`;
+
+      let personalBookId = null;
+
+      try {
+        const record = goodreadsRecord(csvBook);
+
+        const identity = goodreadsIdentity(
+          record.personal
+        );
+
+        const nameKey =
+          record.personal.title.toLowerCase() +
+          '|' +
+          record.personal.author.toLowerCase();
+
+        const goodreadsId =
+          record.personal.goodreads_book_id;
+
+        const alreadyImported =
+          processed.has(identity) ||
+          (goodreadsId && existingIds.has(goodreadsId)) ||
+          (!goodreadsId && existingNames.has(nameKey));
+
+        if (alreadyImported) {
+          skipped++;
+          continue;
+        }
+
+        processed.add(identity);
+
+        // Step A: Create a private personal book.
+        // No community catalog RPC is used.
+
+        const { data: personal, error: bookError } =
+          await db
+            .from('tbb_personal_books')
+            .insert({
+              user_id: user.id,
+              ...record.personal
+            })
+            .select('id')
+            .single();
+
+        if (bookError) {
+          if (bookError.code === '23505') {
+            skipped++;
+            continue;
+          }
+
+          throw bookError;
+        }
+
+        if (!personal?.id) {
+          throw Error(
+            'The personal book could not be created.'
+          );
+        }
+
+        personalBookId = personal.id;
+
+        // Step B: Create its personal reading record.
+
+        const { data: reading, error: entryError } =
+          await db
+            .from('tbb_bookshelf_entries')
+            .insert({
+              user_id: user.id,
+              book_id: null,
+              community_book_id: null,
+              personal_book_id: personalBookId,
+              ...record.reading
+            })
+            .select('id')
+            .single();
+
+        if (entryError) throw entryError;
+
+        if (!reading?.id) {
+          throw Error(
+            'The reading record could not be created.'
+          );
+        }
+
+        imported++;
+
+        if (goodreadsId) {
+          existingIds.add(goodreadsId);
+        }
+
+        existingNames.add(nameKey);
+
+      } catch (error) {
+        console.error(
+          'Goodreads import row:',
+          index + 1,
+          error
+        );
+
+        failed++;
+
+        errors.push(
+          `Row ${index + 1}: ` +
+          (error.message || 'Unknown error')
+        );
+
+        // If the book was created but its reading
+        // record failed, try to remove that unused
+        // private book. Never touch existing books.
+
+        if (personalBookId) {
+          const { error: cleanupError } = await db
+            .from('tbb_personal_books')
+            .delete()
+            .eq('id', personalBookId)
+            .eq('user_id', user.id);
+
+          if (cleanupError) {
+            console.error(
+              'Goodreads import cleanup:',
+              cleanupError
+            );
+
+            errors.push(
+              `Row ${index + 1}: ` +
+              'Unused personal book cleanup failed.'
+            );
+          }
+        }
+      }
+    }
+
+    await Promise.all([
+      loadCollection(),
+      stats()
+    ]);
+
+    const message =
+      `💗 Goodreads import complete! ` +
+      `${imported} imported, ` +
+      `${skipped} skipped, ` +
+      `${failed} failed.`;
+
+    summary.textContent = message;
+
+    notify(message, failed > 0);
+
+    if (errors.length) {
+      console.warn(
+        'Goodreads import issues:',
+        errors
+      );
+
+      const preview = $('goodreadsImportPreview');
+
+      const heading = element(
+        'h3',
+        '',
+        '⚠️ Import Issues'
+      );
+
+      const list = element('ul');
+
+      for (const error of errors.slice(0, 30)) {
+        list.append(
+          element('li', '', error)
+        );
+      }
+
+      if (errors.length > 30) {
+        list.append(
+          element(
+            'li',
+            '',
+            `${errors.length - 30} additional messages.`
+          )
+        );
+      }
+
+      preview.replaceChildren(heading, list);
+    }
+
+    if (failed === 0) {
+      goodreadsPreviewRows = [];
+      fileInput.value = '';
+    }
+
+  } catch (error) {
+    console.error(
+      'Goodreads import:',
+      error
+    );
+
+    notify(
+      error.message || 'The import could not finish.',
+      true
+    );
+
+    summary.textContent =
+      'Import interrupted. Please review the error ' +
+      'before trying again.';
+
+  } finally {
+    goodreadsImportBusy = false;
+
+    button.disabled =
+      goodreadsPreviewRows.length === 0;
+
+    button.textContent = 'Import My Books 💗';
+
+    closeButton.disabled = false;
+    fileInput.disabled = false;
+  }
+}
+$('goodreadsConfirmImport')?.addEventListener(
+  'click',
+  importGoodreadsBooks
+);
+
+$('goodreadsImportDialog')?.addEventListener(
+  'cancel',
+  event => {
+    if (goodreadsImportBusy) {
+      event.preventDefault();
+    }
+  }
+);
+
+$('openGoodreadsImport')?.addEventListener(
+  'click',
+  openGoodreadsImportDialog
+);
+
+$('goodreadsCsvFile')?.addEventListener(
+  'change',
+  previewGoodreadsFile
+);
+
+$('closeGoodreadsImport')?.addEventListener(
+  'click',
+  () => $('goodreadsImportDialog').close()
+);
+
 async function init() {
   try {
     const access = await requireAccess();
@@ -2301,6 +3295,20 @@ $('openCommunityBookForm')?.addEventListener(
 
 $('communityBookForm')?.addEventListener(
   'submit',submitCommunity
+);
+$('communityBookCoverFile')?.addEventListener(
+  'change',
+  updateCommunityCoverPreview
+);
+
+$('communityBookCover')?.addEventListener(
+  'input',
+  updateCommunityCoverPreview
+);
+
+$('communityBookDialog')?.addEventListener(
+  'close',
+  releaseCommunityCoverPreview
 );
 
 $('cancelCommunityBook')?.addEventListener('click',()=>{

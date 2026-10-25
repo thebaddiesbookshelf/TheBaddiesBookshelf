@@ -146,6 +146,74 @@
                 id="openCommunityBookForm" type="button">
           Add My Own Book 🎀
         </button>
+        <div
+  id="goodreadsImportSection"
+  style="margin-top:16px;"
+>
+  <button
+    id="openGoodreadsImport"
+    type="button"
+  >
+    📚 Import from Goodreads™
+  </button>
+</div>
+
+<dialog id="goodreadsImportDialog">
+  <div style="padding:24px;max-width:680px;">
+    <h2>📚 Goodreads Import™</h2>
+
+    <p class="library-helper">
+      Bring your reading history to My Bookshelf™!
+      Your imported books stay personal and will
+      not be added to the community catalog.
+    </p>
+
+    <label for="goodreadsCsvFile">
+      💗 Choose Your Goodreads CSV
+    </label>
+
+    <input
+      id="goodreadsCsvFile"
+      type="file"
+      accept=".csv,text/csv"
+      style="display:block;width:100%;margin:12px 0;"
+    >
+
+    <p
+      id="goodreadsImportSummary"
+      class="library-helper"
+      aria-live="polite"
+    >
+      No file selected yet.
+    </p>
+
+    <div
+      id="goodreadsImportPreview"
+      style="
+        max-height:350px;
+        overflow:auto;
+        margin:16px 0;
+      "
+    ></div>
+
+    <div style="display:flex;gap:12px;flex-wrap:wrap;">
+      <button
+        id="goodreadsConfirmImport"
+        type="button"
+        disabled
+      >
+        Import My Books 💗
+      </button>
+
+      <button
+        id="closeGoodreadsImport"
+        type="button"
+      >
+        Cancel
+      </button>
+    </div>
+  </div>
+</dialog>
       </div>
     </div>
 
@@ -199,11 +267,59 @@
             <input id="communityBookAuthor" type="text" maxlength="200"
                    required placeholder="Enter author">
           </label>
-          <label>
-            Cover Image URL
-            <input id="communityBookCover" type="url" maxlength="2000"
-                   placeholder="https://...">
-          </label>
+          <div style="grid-column: 1 / -1;">
+  <label for="communityBookCoverFile">
+    📸 Upload Book Cover
+  </label>
+
+  <input
+    id="communityBookCoverFile"
+    type="file"
+    accept="image/jpeg,image/png,image/webp"
+    style="display:block;width:100%;margin-top:8px;"
+  >
+
+  <p class="library-helper">
+    Choose a JPG, PNG, or WebP image, up to 5 MB.
+    Or paste an image URL below.
+  </p>
+
+  <label for="communityBookCover">
+    🔗 Cover Image URL (Optional)
+  </label>
+
+  <input
+    id="communityBookCover"
+    type="url"
+    maxlength="2000"
+    placeholder="https://..."
+    style="width:100%;margin-top:8px;"
+  >
+
+  <div
+    id="communityBookCoverPreview"
+    style="margin-top:16px;text-align:center;"
+    hidden
+  >
+    <img
+      id="communityBookCoverPreviewImage"
+      alt="Selected book cover preview"
+      style="
+        display:block;
+        width:130px;
+        max-width:100%;
+        height:190px;
+        object-fit:cover;
+        border-radius:12px;
+        margin:0 auto;
+      "
+    >
+
+    <p class="library-helper">
+      💗 Your future book cover!
+    </p>
+  </div>
+</div>
           <label>
             Series Name
             <input id="communityBookSeries" type="text" maxlength="200"
