@@ -881,12 +881,10 @@ async function loadDirectory(){
   setStatus("Loading the Baddie Directory™...");
 
   try{
-    const {data,error} = await db
-      .from("tbb_profiles")
-      .select(
-        "user_id,display_name,username,avatar_path,"+
-        "bio,reader_type,favorite_genres"
-      )
+    const {data,error} = await db.from("tbb_profiles").select(
+  "user_id,display_name,username,avatar_path," +
+  "bio,reader_type"
+)
       .neq("user_id",currentUser.id)
       .order("display_name",{ascending:true})
       .limit(500);
@@ -1066,7 +1064,7 @@ async function refreshConversationStatus(member,token){
   }
 }
 
-function openProfile(member){
+async function openProfile(member){
   selectedMember = member;
   lastFocused = document.activeElement;
 
@@ -1086,6 +1084,18 @@ function openProfile(member){
   const genres = $("modalGenres");
   genres.replaceChildren();
 
+  const { data: favorites, error: favoritesError } = await db
+  .rpc("tbb_get_profile_favorites", {
+    target_user_id: member.user_id
+  });
+
+if (favoritesError) {
+  console.error("Could not load protected favorites:", favoritesError);
+}
+
+member.favorite_genres = favoritesError
+  ? []
+  : (favorites?.[0]?.favorite_genres ?? []);
   if(Array.isArray(member.favorite_genres)
       && member.favorite_genres.length){
     for(const genre of member.favorite_genres.slice(0,15)){

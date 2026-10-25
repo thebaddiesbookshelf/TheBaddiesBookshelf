@@ -1193,7 +1193,78 @@ input:focus,textarea:focus,button:focus-visible {
 </section>
 
 <!-- END FRIENDSHIP PREFERENCES™ -->
+<!-- ==========================================
+     BADDIE PROFILES™ — PRIVACY SETTINGS
+     ========================================== -->
 
+<section class="section" id="profilePrivacy">
+  <div class="section-head">
+    <h2>🔐 Profile Privacy™</h2>
+    <span class="pill">My Boundaries</span>
+  </div>
+
+  <div class="panel">
+    <h3>💗 My Profile, My Rules</h3>
+
+    <p class="muted">
+      Decide what other Baddies can see when
+      visiting your profile. Your space,
+      your boundaries, your Baddie Era! 💋
+    </p>
+
+    <div class="form-grid">
+
+      <div class="field">
+        <label for="profileVisibility">
+          💗 Profile Visibility
+        </label>
+        <select id="profileVisibility" disabled>
+          <option value="members">All Approved Baddies</option>
+          <option value="friends">My Besties Only</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="bookshelfVisibility">
+          📚 Bookshelf Visibility
+        </label>
+        <select id="bookshelfVisibility" disabled>
+          <option value="members">All Approved Baddies</option>
+          <option value="friends">My Besties Only</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="activityVisibility">
+          💌 Activity Visibility
+        </label>
+        <select id="activityVisibility" disabled>
+          <option value="members">All Approved Baddies</option>
+          <option value="friends">My Besties Only</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="favoritesVisibility">
+          🎀 Favorites Visibility
+        </label>
+        <select id="favoritesVisibility" disabled>
+          <option value="members">All Approved Baddies</option>
+          <option value="friends">My Besties Only</option>
+        </select>
+      </div>
+
+    </div>
+
+    <p id="profilePrivacyStatus"
+       class="notice"
+       role="status"
+       aria-live="polite"></p>
+
+  </div>
+</section>
+
+<!-- END BADDIE PROFILES™ PRIVACY SETTINGS -->
 
 <section class="section" id="vanityDiarySection">
   <div class="section-head">
@@ -1306,6 +1377,8 @@ import {
   loadFriendPreferences,
   saveFriendPreference
 } from "./js/friend-preferences.js";
+
+import { loadProfilePrivacy } from "./js/profile-privacy.js";
 
 const $ = id => document.getElementById(id);
 const bucket = "tbb-avatars";
@@ -1611,25 +1684,40 @@ async function removeAvatar() {
   }
 }
 
+
+
 async function loadProfile() {
-  const { data,error } = await db
+  const { data, error } = await db
     .from("tbb_profiles")
     .select(`
       display_name,
       username,
       bio,
-      favorite_genres,
-      favorite_books,
-      favorite_authors,
-      current_read,
       vanity_theme,
       avatar_path
     `)
-    .eq("user_id",currentUser.id)
+    .eq("user_id", currentUser.id)
     .maybeSingle();
 
   if (error) throw error;
-  if (!data) throw new Error("Your profile record was not found.");
+
+  if (!data) {
+    throw new Error("Your profile record was not found.");
+  }
+
+  const { data: favorites, error: favoritesError } = await db
+    .rpc("tbb_get_profile_favorites", {
+      target_user_id: currentUser.id
+    });
+
+  if (favoritesError) throw favoritesError;
+
+  const ownFavorites = favorites?.[0] || {};
+
+  data.favorite_genres = ownFavorites.favorite_genres ?? [];
+  data.favorite_books = ownFavorites.favorite_books ?? [];
+  data.favorite_authors = ownFavorites.favorite_authors ?? [];
+  data.current_read = ownFavorites.current_read ?? null;
 
   $("displayName").value = data.display_name || "";
   $("username").value = data.username || "";
@@ -1650,8 +1738,6 @@ async function loadProfile() {
   await loadAvatar(savedAvatarPath);
 }
 
-
-
 async function saveProfile(event) {
   event.preventDefault();
 
@@ -1659,7 +1745,7 @@ async function saveProfile(event) {
   const button = $("saveProfile");
 
   if (!currentUser) {
-    status.textContent = "Please sign in before saving.";
+    status.textContent = "Please sign in to save your Library Card.";
     status.className = "notice error";
     return;
   }
@@ -1680,10 +1766,9 @@ async function saveProfile(event) {
 
     if (username && !/^[a-z0-9_]{3,30}$/.test(username)) {
       throw new Error(
-        "Username must be 3–30 characters and contain only lowercase letters, numbers, or underscores."
+        "Username must be 3–30 characters using lowercase letters, numbers, or underscores."
       );
     }
-
 
     const updates = {
       display_name: displayName,
@@ -1699,22 +1784,26 @@ async function saveProfile(event) {
       .from("tbb_profiles")
       .update(updates)
       .eq("user_id", currentUser.id)
-      .select(`
-        user_id,
-        display_name,
-        username,
-        bio,
-        favorite_genres,
-        favorite_books,
-        favorite_authors,
-        current_read
-      `)
+      .select("user_id,display_name,username,bio")
       .single();
 
     if (error) throw error;
 
     if (!data || data.user_id !== currentUser.id) {
       throw new Error("Supabase did not confirm your profile update.");
+    }
+
+    const { data: favorites, error: favoritesError } = await db
+      .rpc("tbb_get_profile_favorites", {
+        target_user_id: currentUser.id
+      });
+
+    if (favoritesError) throw favoritesError;
+
+    const savedFavorites = favorites?.[0];
+
+    if (!savedFavorites) {
+      throw new Error("Could not verify your saved favorites.");
     }
 
     const sameList = (a, b) =>
@@ -1724,10 +1813,10 @@ async function saveProfile(event) {
       data.display_name === updates.display_name &&
       data.username === updates.username &&
       data.bio === updates.bio &&
-      data.current_read === updates.current_read &&
-      sameList(data.favorite_genres, updates.favorite_genres) &&
-      sameList(data.favorite_books, updates.favorite_books) &&
-      sameList(data.favorite_authors, updates.favorite_authors);
+      savedFavorites.current_read === updates.current_read &&
+      sameList(savedFavorites.favorite_genres, updates.favorite_genres) &&
+      sameList(savedFavorites.favorite_books, updates.favorite_books) &&
+      sameList(savedFavorites.favorite_authors, updates.favorite_authors);
 
     if (!matches) {
       throw new Error(
@@ -1739,7 +1828,10 @@ async function saveProfile(event) {
 
     status.textContent = "💗 Your Library Card was saved successfully!";
     status.style.display = "block";
-    status.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    status.scrollIntoView({
+      behavior: "smooth",
+      block: "nearest"
+    });
     status.className = "notice";
 
     notify("Your Library Card was saved! 💗");
@@ -1759,7 +1851,6 @@ async function saveProfile(event) {
     button.disabled = false;
   }
 }
-
 
 async function saveTheme() {
   if (!currentUser) return;
@@ -1919,6 +2010,7 @@ try {
 
     
     await loadFriendPreferences(currentUser.id);
+    await loadProfilePrivacy(currentUser.id);
     
     void initializeFriendBadge(currentUser.id);
 

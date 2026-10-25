@@ -1,0 +1,1941 @@
+
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#160b19">
+
+  <title>Baddie Profile™ | The Baddies Bookshelf</title>
+
+  <link rel="icon" href="favicon.ico">
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap"
+    rel="stylesheet"
+  >
+  <link rel="stylesheet" href="css/writing-reader.css">
+
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #100912;
+      --panel: #201224;
+      --panel2: #301c35;
+      --pink: #ff3ba9;
+      --light: #ffd4ef;
+      --text: #fff5fc;
+      --muted: #bda7bd;
+      --line: #6b3b62;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(ellipse at 15% 0, #48203f 0, transparent 34%),
+        radial-gradient(ellipse at 100% 30%, #351039 0, transparent 32%),
+        var(--bg);
+      color: var(--text);
+      font: 15px/1.5 "DM Sans", sans-serif;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    a:hover { color: var(--pink); }
+
+    button {
+      font: inherit;
+      cursor: pointer;
+    }
+
+    [hidden] { display: none !important; }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 15px;
+      padding: 16px clamp(16px, 4vw, 55px);
+      background: #110916e8;
+      border-bottom: 1px solid #ffffff1e;
+    }
+
+    .brand {
+      font-family: "Bebas Neue", sans-serif;
+      font-size: 27px;
+      letter-spacing: 1px;
+    }
+
+    .brand span { color: var(--pink); }
+
+    .nav {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .page {
+      max-width: 1050px;
+      margin: auto;
+      padding: 25px 16px 80px;
+    }
+
+    .profile {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      overflow: hidden;
+    }
+
+    .banner {
+      height: 245px;
+      background:
+        linear-gradient(135deg, #a32672, #38183c 65%, #22112c);
+      background-size: cover;
+      background-position: center;
+    }
+
+    .profile-info {
+      padding: 0 28px 28px;
+    }
+
+    .avatar {
+      position: relative;
+      width: 130px;
+      height: 130px;
+      margin-top: -65px;
+      border: 5px solid var(--panel);
+      border-radius: 50%;
+      background: var(--panel2);
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      color: var(--light);
+      font-size: 42px;
+      font-weight: 800;
+    }
+
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .profile-name {
+      margin: 15px 0 2px;
+      font-family: "Playfair Display", serif;
+      font-size: clamp(28px, 5vw, 40px);
+      overflow-wrap: anywhere;
+    }
+
+    .username {
+      color: var(--pink);
+      font-weight: 700;
+    }
+
+    .bio {
+      margin: 15px 0;
+      max-width: 700px;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .details {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      margin: 18px 0;
+    }
+
+    .pill {
+      padding: 8px 13px;
+      border: 1px solid var(--line);
+      background: var(--panel2);
+      border-radius: 30px;
+      font-size: 12px;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 11px 17px;
+      background: var(--pink);
+      border: 1px solid var(--pink);
+      border-radius: 12px;
+      color: white;
+      font-weight: 800;
+    }
+
+    .btn.secondary {
+      background: var(--panel2);
+      border-color: var(--line);
+    }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      margin: 25px 0 18px;
+      padding-bottom: 5px;
+    }
+
+    .tab {
+      flex: 1;
+      min-width: 110px;
+      padding: 13px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel);
+      color: white;
+      font-weight: 800;
+    }
+
+    .tab.active {
+      background: #673052;
+      border-color: var(--pink);
+    }
+
+    .panel {
+      padding: 25px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: var(--panel);
+    }
+
+    .panel h2 {
+      margin: 0 0 12px;
+      font-family: "Playfair Display", serif;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .notice {
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--panel);
+      margin-bottom: 18px;
+    }
+
+    .notice.error {
+      border-color: #e4778e;
+      color: #ffb0b0;
+    }
+
+    @media(max-width:600px) {
+      .topbar { justify-content: center; }
+      .banner { height: 170px; }
+      .profile-info { padding: 0 18px 22px; }
+      .avatar {
+        width: 105px;
+        height: 105px;
+        margin-top: -52px;
+      }
+      .panel { padding: 18px; }
+    }
+    
+/* ============================================
+   TBB — BADDIE PROFILE™
+   COVER STORY™ TIMELINE
+   ============================================ */
+
+.timeline-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.timeline-heading h2 {
+  margin: 0;
+}
+
+.timeline-feed .post {
+  margin-bottom: 18px;
+  padding: 20px;
+}
+
+.timeline-feed .posthead {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.timeline-feed .story-member {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.timeline-feed .story-avatar {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 2px solid #b7659d;
+  background: #44263f;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  color: #ffe1f3;
+  font-weight: 800;
+}
+
+.timeline-feed .story-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.timeline-feed .story-member-info {
+  min-width: 0;
+}
+
+.timeline-feed .story-member-link {
+  color: #ffb1dd;
+  font-weight: 800;
+}
+
+.timeline-feed .story-handle,
+.timeline-feed .muted {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.timeline-feed .posttype {
+  color: #f3c77c;
+  font-size: 11px;
+  font-weight: 800;
+  margin-top: 7px;
+}
+
+.timeline-feed .postbody {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  margin: 15px 0;
+}
+
+.timeline-feed .postactions,
+.timeline-feed .row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.timeline-feed .between {
+  justify-content: space-between;
+}
+
+.timeline-feed .btn.ghost {
+  background: #3a2440;
+  border: 1px solid #9c5a8b;
+}
+
+.timeline-feed .btn.small {
+  padding: 7px 11px;
+  font-size: 12px;
+}
+
+.timeline-feed .story-gallery {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+  margin: 14px 0;
+}
+
+.timeline-feed .story-gallery img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.timeline-feed .story-gallery:has(img:only-child) {
+  grid-template-columns: 1fr;
+}
+
+.timeline-feed .story-gallery:has(img:only-child) img {
+  aspect-ratio: auto;
+  max-height: 600px;
+  object-fit: contain;
+}
+
+.timeline-feed .pollbar {
+  height: 7px;
+  background: #39253d;
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 7px 0;
+}
+
+.timeline-feed .pollfill {
+  height: 100%;
+  background: var(--pink);
+}
+
+.timeline-feed .comments {
+  border-top: 1px solid var(--line);
+  margin-top: 15px;
+  padding-top: 12px;
+}
+
+.timeline-feed .comment {
+  padding: 12px 0;
+  border-bottom: 1px solid #ffffff17;
+}
+
+.timeline-feed textarea {
+  width: 100%;
+  min-height: 70px;
+  margin: 10px 0;
+  padding: 12px;
+  background: #120b16;
+  color: white;
+  border: 1px solid #805275;
+  border-radius: 12px;
+  font: inherit;
+  resize: vertical;
+}
+
+.timeline-feed .empty {
+  text-align: center;
+  padding: 25px;
+  color: var(--muted);
+}
+
+.timeline-load-more {
+  display: block;
+  margin: 20px auto;
+}
+
+@media (max-width: 600px) {
+  .timeline-feed .post {
+    padding: 15px;
+  }
+
+  .timeline-feed .story-gallery {
+    gap: 6px;
+  }
+}
+
+/* ============================================
+   TBB — PROFILE COVER STORY™ COMPOSER
+   ============================================ */
+
+.profile-composer {
+  margin-bottom: 25px;
+  padding: 22px;
+  border: 1px solid #9c5685;
+  border-radius: 17px;
+  background: #2a1830;
+}
+
+.profile-composer h2 {
+  margin: 0 0 6px;
+  font-family: "Playfair Display", serif;
+}
+
+.profile-compose-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin: 20px 0;
+}
+
+.profile-compose-tabs button {
+  padding: 10px 17px;
+  border-radius: 30px;
+  border: 1px solid #805075;
+  background: #301c35;
+  color: white;
+  font-weight: 800;
+}
+
+.profile-compose-tabs button.active {
+  background: #673052;
+  border-color: #ff61bc;
+}
+
+.profile-compose-label {
+  display: block;
+  margin: 15px 0 8px;
+  font-weight: 800;
+}
+
+.profile-composer textarea,
+.profile-composer input,
+.profile-composer select {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  background: #120b16;
+  border: 1px solid #805275;
+  border-radius: 12px;
+  color: white;
+  font: inherit;
+}
+
+.profile-composer textarea {
+  min-height: 115px;
+  resize: vertical;
+}
+
+.profile-composer input:focus,
+.profile-composer select:focus,
+.profile-composer textarea:focus {
+  outline: 2px solid var(--pink);
+}
+
+.profile-composer button:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+}
+
+.profile-poll-option {
+  margin-bottom: 9px;
+}
+
+.profile-photo-preview {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 13px;
+}
+
+.profile-photo-preview img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.profile-compose-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+#profileComposeMessage {
+  margin-top: 15px;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 600px) {
+  .profile-composer {
+    padding: 15px;
+  }
+}
+/* ============================================
+   TBB — BADDIE PROFILE™ READING TAB
+   ============================================ */
+
+.reading-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 20px;
+}
+
+.reading-card {
+  padding: 22px;
+  background: #301c35;
+  border: 1px solid #805075;
+  border-radius: 16px;
+  min-width: 0;
+}
+
+.reading-card-icon {
+  font-size: 30px;
+  margin-bottom: 10px;
+}
+
+.reading-card h3 {
+  margin: 0 0 13px;
+  color: #ffd4ef;
+  font-family: "Playfair Display", serif;
+  font-size: 19px;
+}
+
+.reading-card-content {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 9px;
+  overflow-wrap: anywhere;
+}
+
+.reading-item {
+  padding: 9px 13px;
+  border-radius: 12px;
+  background: #44263f;
+  border: 1px solid #965c87;
+  color: #fff5fc;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.reading-empty {
+  color: var(--muted);
+  font-size: 13px;
+  font-style: italic;
+}
+
+@media (max-width: 650px) {
+  .reading-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .reading-card {
+    padding: 17px;
+  }
+}
+
+/* ============================================
+   TBB — BADDIE PROFILE™ SHARED PAGES
+   ============================================ */
+
+.shared-pages-heading {
+  margin-bottom: 24px;
+}
+
+.shared-pages-heading h2 {
+  margin: 0 0 9px;
+}
+
+.shared-pages-heading p {
+  margin: 0;
+  line-height: 1.6;
+}
+
+.shared-pages-section {
+  padding: 22px;
+  margin-bottom: 22px;
+  border: 1px solid var(--border, #805075);
+  border-radius: 18px;
+  background: var(--surface, #241727);
+  min-width: 0;
+}
+
+.shared-pages-section-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+  margin-bottom: 20px;
+}
+
+.shared-pages-icon {
+  font-size: 30px;
+  line-height: 1.2;
+}
+
+.shared-pages-section-head h3 {
+  margin: 0 0 6px;
+  color: var(--light, #ffb5da);
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 21px;
+}
+
+.shared-pages-section-head p {
+  margin: 0;
+  color: var(--muted, #d6bccc);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.vanity-diary-list,
+.vanity-quote-list,
+.vanity-writing-list {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
+  min-width: 0;
+}
+
+.vanity-diary-entry,
+.quote-vault-card,
+.writing-piece-card {
+  padding: 18px;
+  border: 1px solid var(--border, #805075);
+  border-radius: 15px;
+  background: var(--alt, #332036);
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.vanity-diary-entry-header,
+.quote-vault-card-top,
+.writing-piece-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 10px;
+  color: var(--light, #ffb5da);
+  font-size: 12px;
+}
+
+.vanity-diary-entry-title,
+.writing-piece-title {
+  margin: 12px 0;
+  color: var(--text, #fff5fb);
+  font-size: 19px;
+  line-height: 1.4;
+}
+
+.vanity-diary-entry-date,
+.vanity-diary-book,
+.quote-vault-page,
+.quote-vault-date,
+.writing-piece-meta {
+  color: var(--muted, #d6bccc);
+  font-size: 12px;
+}
+
+.vanity-diary-entry-content {
+  line-height: 1.75;
+  overflow-wrap: anywhere;
+}
+
+.vanity-diary-entry-content p {
+  margin: 0 0 10px;
+}
+
+.vanity-diary-gallery {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(min(160px, 100%), 1fr)
+  );
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.vanity-diary-gallery img {
+  display: block;
+  width: 100%;
+  max-height: 350px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.quote-vault-card-icon {
+  color: var(--accent, #ff4da6);
+  font-family: Georgia, serif;
+  font-size: 38px;
+  line-height: 1;
+}
+
+.quote-vault-text {
+  margin: 15px 0;
+  color: var(--text, #fff5fb);
+  font-family: Georgia, serif;
+  font-size: 16px;
+  font-style: italic;
+  line-height: 1.8;
+  white-space: pre-wrap;
+}
+
+.quote-vault-book {
+  color: var(--light, #ffb5da);
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.quote-vault-note {
+  margin: 12px 0;
+  padding: 12px;
+  border-left: 3px solid var(--accent, #ff4da6);
+  background: var(--surface, #241727);
+  border-radius: 0 10px 10px 0;
+  white-space: pre-wrap;
+  line-height: 1.7;
+}
+
+.writing-piece-preview {
+  color: var(--muted, #d6bccc);
+  font-size: 13px;
+  line-height: 1.75;
+  white-space: pre-wrap;
+}
+
+.writing-piece-category,
+.writing-piece-visibility,
+.quote-vault-visibility {
+  color: var(--light, #ffb5da);
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.writing-piece-actions {
+  margin-top: 15px;
+}
+
+.writing-piece-actions button {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid var(--accent, #ff4da6);
+  border-radius: 11px;
+  background: var(--accent, #ff4da6);
+  color: #180b14;
+  font: inherit;
+  font-size: 13px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.writing-piece-actions button:hover {
+  filter: brightness(1.1);
+}
+
+.vanity-diary-empty,
+.vanity-diary-loading,
+.library-empty-message {
+  color: var(--muted, #d6bccc);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+@media (max-width: 650px) {
+  .shared-pages-section {
+    padding: 15px;
+  }
+
+  .shared-pages-section-head h3 {
+    font-size: 18px;
+  }
+}
+
+/* ============================================
+   TBB — BADDIE PROFILE™ ABOUT ME
+   ============================================ */
+
+.about-heading {
+  margin-bottom: 24px;
+}
+
+.about-heading h2 {
+  margin: 0 0 8px;
+}
+
+.about-heading p {
+  margin: 0;
+  line-height: 1.6;
+}
+
+.about-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.about-card {
+  padding: 24px;
+  background: #301c35;
+  border: 1px solid #805075;
+  border-radius: 17px;
+  min-width: 0;
+}
+
+.about-card-wide {
+  grid-column: 1 / -1;
+}
+
+.about-card-icon {
+  font-size: 30px;
+  margin-bottom: 12px;
+}
+
+.about-card h3 {
+  margin: 0 0 12px;
+  color: #ffd4ef;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 20px;
+}
+
+.about-card-text {
+  margin: 0;
+  color: #fff5fc;
+  line-height: 1.8;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.about-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+
+.about-tag {
+  display: inline-flex;
+  padding: 8px 12px;
+  border: 1px solid #965c87;
+  border-radius: 30px;
+  background: #44263f;
+  color: #fff5fc;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.about-footer {
+  margin-top: 24px;
+  padding: 18px;
+  border: 1px solid #805075;
+  border-radius: 15px;
+  background: #261629;
+  text-align: center;
+}
+
+.about-footer p {
+  margin: 0 0 14px;
+  color: #ffd4ef;
+  font-family: "Playfair Display", Georgia, serif;
+  font-style: italic;
+}
+
+.about-footer .btn {
+  margin-top: 4px;
+}
+
+@media (max-width: 650px) {
+  .about-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .about-card-wide {
+    grid-column: auto;
+  }
+
+  .about-card {
+    padding: 18px;
+  }
+}
+
+
+  </style>
+</head>
+
+<body>
+
+  <header class="topbar">
+    <a class="brand" href="home.html">
+      THE BADDIES <span>BOOKSHELF</span> ♕
+    </a>
+
+    <nav class="nav" aria-label="Site navigation">
+      <a href="home.html">Home</a>
+      <a href="cover-story.html">Cover Story™</a>
+      <a href="baddie-directory.html">Directory</a>
+      <a href="friends.html">Friends™</a>
+      <a href="member.html">The Vanity™</a>
+    </nav>
+  </header>
+
+  <main class="page">
+
+    <div id="notice" class="notice" role="status">
+      Opening this Baddie's profile... 💗
+    </div>
+
+    <div id="profileApp" hidden>
+
+      <section class="profile">
+
+        <div class="banner" id="profileBanner"></div>
+
+        <div class="profile-info">
+
+          <div class="avatar" id="profileAvatar">💗</div>
+
+          <h1 class="profile-name" id="profileName">
+            TBB Baddie
+          </h1>
+
+          <div class="username" id="profileUsername"></div>
+
+          <p class="bio" id="profileBio"></p>
+
+          <div class="details" id="profileDetails"></div>
+
+          <div class="actions" id="profileActions"></div>
+
+        </div>
+      </section>
+
+      <nav class="tabs" aria-label="Profile sections">
+        <button class="tab active" data-tab="timeline" type="button">
+          💌 Timeline
+        </button>
+        <button class="tab" data-tab="reading" type="button">
+          📚 Reading
+        </button>
+        <button class="tab" data-tab="shared" type="button">
+          ✍🏾 Shared Pages
+        </button>
+        <button class="tab" data-tab="about" type="button">
+          💗 About
+        </button>
+      </nav>
+
+      
+<section class="panel" data-panel="timeline">
+    
+<!-- OWNER-ONLY COVER STORY™ COMPOSER -->
+<form id="profileComposer" class="profile-composer" hidden>
+
+  <h2>💌 What's Your Cover Story?</h2>
+  <p class="muted">
+    Share your latest chapter with the Baddies. 💋
+  </p>
+
+  <div class="profile-compose-tabs">
+    <button type="button" class="active" data-compose-type="text">
+      ✍🏾 Post
+    </button>
+    <button type="button" data-compose-type="poll">
+      📊 Poll
+    </button>
+    <button type="button" data-compose-type="image">
+      📸 Photo
+    </button>
+  </div>
+
+  <label class="profile-compose-label" for="profilePostBody">
+    Your story
+  </label>
+
+  <textarea
+    id="profilePostBody"
+    maxlength="5000"
+    placeholder="What's happening in your bookish world, Baddie?"
+  ></textarea>
+
+  <div id="profilePollFields" hidden>
+    <label class="profile-compose-label">
+      Poll options
+    </label>
+
+    <div id="profilePollOptions"></div>
+
+    <button
+      id="profileAddOption"
+      class="btn secondary"
+      type="button"
+    >
+      + Add Option
+    </button>
+
+    <label class="profile-compose-label" for="profilePollCloses">
+      Poll closing date (optional)
+    </label>
+
+    <input id="profilePollCloses" type="datetime-local">
+  </div>
+
+  <div id="profilePhotoFields" hidden>
+    <label class="profile-compose-label" for="profilePostPhotos">
+      📸 Add Your Photos
+    </label>
+
+    <input
+      id="profilePostPhotos"
+      type="file"
+      accept="image/jpeg,image/png,image/webp"
+      multiple
+    >
+
+    <p class="muted">
+      Up to 4 photos, 5 MB each. JPEG, PNG, or WebP.
+    </p>
+
+    <div id="profilePhotoPreview" class="profile-photo-preview"></div>
+  </div>
+
+  <label class="profile-compose-label" for="profileVisibility">
+    Who can see your story?
+  </label>
+
+  <select id="profileVisibility">
+    <option value="all_baddies">💗 All Baddies</option>
+    <option value="besties_only">🎀 Besties Only</option>
+  </select>
+
+  <div class="profile-compose-footer">
+    <span class="muted">
+      Your story will also appear in the main Cover Story™ feed.
+    </span>
+
+    <button
+      id="profilePublish"
+      class="btn"
+      type="submit"
+    >
+      Publish Story ✦
+    </button>
+  </div>
+
+  <p
+    id="profileComposeMessage"
+    class="muted"
+    role="status"
+    aria-live="polite"
+    hidden
+  ></p>
+
+</form>
+<!-- END PROFILE COMPOSER -->
+
+
+  <div class="timeline-heading">
+    <h2 id="timelineTitle">💌 Her Cover Story™</h2>
+
+    <button
+      id="timelineRefresh"
+      class="btn secondary"
+      type="button"
+    >
+      🔄 Refresh
+    </button>
+  </div>
+
+  <div
+    id="timelineFeed"
+    class="timeline-feed"
+    aria-live="polite"
+  >
+    <p class="muted">Loading Cover Story™ posts…</p>
+  </div>
+
+  <button
+    id="timelineMore"
+    class="btn secondary timeline-load-more"
+    type="button"
+    hidden
+  >
+    Load More Stories 💗
+  </button>
+
+</section>
+
+      <section class="panel" data-panel="reading" hidden>
+  <h2 id="readingTitle">📚 Her Reading Era</h2>
+
+  <div class="reading-grid">
+    <article class="reading-card">
+      <div class="reading-card-icon">📖</div>
+      <h3>Currently Reading</h3>
+      <div id="readingCurrent" class="reading-card-content"></div>
+    </article>
+
+    <article class="reading-card">
+      <div class="reading-card-icon">💗</div>
+      <h3>Favorite Books</h3>
+      <div id="readingBooks" class="reading-card-content"></div>
+    </article>
+
+    <article class="reading-card">
+      <div class="reading-card-icon">✍🏾</div>
+      <h3>Favorite Authors</h3>
+      <div id="readingAuthors" class="reading-card-content"></div>
+    </article>
+
+    <article class="reading-card">
+      <div class="reading-card-icon">🎀</div>
+      <h3>Favorite Genres</h3>
+      <div id="readingGenres" class="reading-card-content"></div>
+    </article>
+  </div>
+</section>
+
+      
+<section class="panel" data-panel="shared" hidden>
+
+  <div class="shared-pages-heading">
+    <div>
+      <h2 id="sharedPagesTitle">💌 Her Shared Pages™</h2>
+      <p class="muted">
+        A little look inside the books, words, and stories
+        this Baddie has chosen to share. 💗
+      </p>
+    </div>
+  </div>
+
+  <section class="shared-pages-section">
+    <div class="shared-pages-section-head">
+      <span class="shared-pages-icon">📖</span>
+      <div>
+        <h3>Between Her Pages™</h3>
+        <p>Diary entries she's chosen to share.</p>
+      </div>
+    </div>
+
+    <div
+      id="vanityDiaryEntries"
+      class="vanity-diary-list"
+      aria-live="polite"
+    >
+      Opening her diary... 💌
+    </div>
+  </section>
+
+  <section class="shared-pages-section">
+    <div class="shared-pages-section-head">
+      <span class="shared-pages-icon">💬</span>
+      <div>
+        <h3>Words Worth Keeping™</h3>
+        <p>Favorite lines that deserve their own spotlight.</p>
+      </div>
+    </div>
+
+    <div
+      id="vanityQuoteEntries"
+      class="vanity-quote-list"
+      aria-live="polite"
+    >
+      Opening her favorite lines... 💗
+    </div>
+  </section>
+
+  <section class="shared-pages-section">
+    <div class="shared-pages-section-head">
+      <span class="shared-pages-icon">🖋️</span>
+      <div>
+        <h3>Her Written World™</h3>
+        <p>Stories, poetry, letters, and creative little masterpieces.</p>
+      </div>
+    </div>
+
+    <div
+      id="vanityWritingEntries"
+      class="vanity-writing-list"
+      aria-live="polite"
+    >
+      Opening her masterpieces... 💌
+    </div>
+  </section>
+
+</section>
+
+<!-- ============================================
+     TBB — BADDIE PROFILE™ ABOUT ME
+     ============================================ -->
+
+<section class="panel" data-panel="about" hidden>
+
+  <div class="about-heading">
+    <h2 id="aboutTitle">💗 Meet This Baddie</h2>
+    <p class="muted">
+      A little more about the reader behind the bookshelf. ✨
+    </p>
+  </div>
+
+  <div class="about-grid">
+
+    <article class="about-card about-card-wide">
+      <div class="about-card-icon">💌</div>
+      <h3>Her Story</h3>
+      <p id="aboutBio" class="about-card-text">
+        Getting to know this Baddie... 💗
+      </p>
+    </article>
+
+    <article class="about-card">
+      <div class="about-card-icon">📖</div>
+      <h3>Reader Personality</h3>
+      <p id="aboutReaderType" class="about-card-text">
+        A certified book lover.
+      </p>
+    </article>
+
+    <article class="about-card">
+      <div class="about-card-icon">🎀</div>
+      <h3>Bookish Interests</h3>
+      <div id="aboutGenres" class="about-tags"></div>
+    </article>
+
+  </div>
+
+  <div class="about-footer">
+    <p>
+      ✦ Every Baddie has a story worth telling. ✦
+    </p>
+    <a
+      id="aboutEditLink"
+      class="btn secondary"
+      href="member.html"
+      hidden
+    >
+      💋 Edit My Vanity™
+    </a>
+  </div>
+
+</section>
+
+<!-- END ABOUT ME -->
+
+    </div>
+  </main>
+
+  <script type="module">
+    import { db, requireAccess } from "./js/auth.js";
+    
+    import {
+    fetchCoverStoryPosts
+    } from "./js/cover-story-shared.js";
+
+    import {
+    createCoverStoryRenderer
+    } from "./js/cover-story-renderer.js";
+
+    
+    import {
+    publishCoverStory,
+    validateCoverStoryPhotos
+    } from "./js/cover-story-shared.js";
+
+    import {loadVanityDiary} from "./js/vanity-diary.js";
+    import {loadVanityQuotes} from "./js/vanity-quotes.js";
+    import {loadVanityWriting} from "./js/vanity-writing.js";
+
+
+    const $ = id => document.getElementById(id);
+
+    let currentUser = null;
+    let profile = null;
+    
+    
+/* ============================================
+   TBB — PROFILE COVER STORY™ COMPOSER
+   ============================================ */
+
+let profilePostType = "text";
+
+function profileComposeMessage(message, isError = false) {
+  const element = $("profileComposeMessage");
+  element.textContent = message;
+  element.style.color = isError ? "#ffaaaa" : "#ffd4ef";
+  element.hidden = !message;
+}
+
+function setProfilePostType(type) {
+  if (!["text", "poll", "image"].includes(type)) return;
+
+  profilePostType = type;
+
+  document.querySelectorAll("[data-compose-type]").forEach(tab => {
+    tab.classList.toggle(
+      "active",
+      tab.dataset.composeType === type
+    );
+  });
+
+  $("profilePollFields").hidden = type !== "poll";
+  $("profilePhotoFields").hidden = type !== "image";
+
+  $("profilePostBody").required = type === "text";
+
+  $("profilePollOptions").querySelectorAll("input").forEach(input => {
+    input.required = type === "poll";
+  });
+
+  $("profilePostBody").placeholder =
+    type === "image"
+      ? "Give your photos a little caption, Baddie… 💋"
+      : type === "poll"
+        ? "Ask the Baddies a question…"
+        : "What's happening in your bookish world, Baddie?";
+}
+
+function addProfilePollOption(value = "") {
+  const holder = $("profilePollOptions");
+
+  if (holder.children.length >= 6) return;
+
+  const input = document.createElement("input");
+  input.type = "text";
+  input.maxLength = 200;
+  input.required = profilePostType === "poll";
+  input.className = "profile-poll-option";
+  input.placeholder = "Option " + (holder.children.length + 1);
+  input.value = value;
+
+  holder.append(input);
+}
+
+function resetProfileComposer() {
+  $("profileComposer").reset();
+  $("profilePollOptions").replaceChildren();
+  $("profilePhotoPreview").replaceChildren();
+
+  addProfilePollOption();
+  addProfilePollOption();
+
+  setProfilePostType("text");
+}
+
+document.querySelectorAll("[data-compose-type]").forEach(tab => {
+  tab.addEventListener("click", () => {
+    setProfilePostType(tab.dataset.composeType);
+  });
+});
+
+$("profileAddOption").addEventListener("click", () => {
+  addProfilePollOption();
+});
+
+$("profilePostPhotos").addEventListener("change", () => {
+  const preview = $("profilePhotoPreview");
+  preview.replaceChildren();
+
+  const files = Array.from($("profilePostPhotos").files || []);
+
+  if (!files.length) return;
+
+  try {
+    validateCoverStoryPhotos(files);
+  } catch (error) {
+    profileComposeMessage(error.message, true);
+    $("profilePostPhotos").value = "";
+    return;
+  }
+
+  profileComposeMessage("");
+
+  for (const file of files) {
+    const image = document.createElement("img");
+    const url = URL.createObjectURL(file);
+
+    image.src = url;
+    image.alt = "Selected photo: " + file.name;
+
+    const release = () => URL.revokeObjectURL(url);
+
+    image.addEventListener("load", release, { once: true });
+    image.addEventListener("error", release, { once: true });
+
+    preview.append(image);
+  }
+});
+
+$("profileComposer").addEventListener("submit", async event => {
+  event.preventDefault();
+
+  // Only the authenticated owner can use this composer.
+  if (!currentUser?.id ||
+      !profile?.user_id ||
+      profile.user_id !== currentUser.id) {
+    profileComposeMessage(
+      "You can only publish from your own profile.",
+      true
+    );
+    return;
+  }
+
+  const submit = $("profilePublish");
+  submit.disabled = true;
+
+  profileComposeMessage("Publishing your story… 💗");
+
+  try {
+    const body = $("profilePostBody").value.trim();
+    const visibility = $("profileVisibility").value;
+
+    const pollOptions = Array.from(
+      $("profilePollOptions").querySelectorAll("input")
+    ).map(input => input.value.trim());
+
+    const pollClosesAt = $("profilePollCloses").value || null;
+
+    const photos = Array.from(
+      $("profilePostPhotos").files || []
+    );
+
+    await publishCoverStory({
+      db,
+      user: currentUser,
+      type: profilePostType,
+      body,
+      visibility,
+      pollOptions,
+      pollClosesAt,
+      photos
+    });
+
+    resetProfileComposer();
+
+    profileComposeMessage(
+      "Your Cover Story™ is published, Baddie! 💋"
+    );
+
+    await loadProfileTimeline(false);
+
+  } catch (error) {
+    console.error("Profile publishing:", error);
+
+    profileComposeMessage(
+      error.message || "Your story could not be published.",
+      true
+    );
+  } finally {
+    submit.disabled = false;
+  }
+});
+
+/* ============================================
+   COVER STORY™ PROFILE TIMELINE
+   ============================================ */
+
+let timelinePage = 0;
+let timelinePosts = [];
+let timelineRenderer = null;
+let timelineLoading = false;
+
+/* ============================================
+   TBB — BADDIE PROFILE™ READING TAB
+   ============================================ */
+
+function normalizeReadingItems(value) {
+  if (Array.isArray(value)) {
+    return value
+      .map(item => String(item ?? "").trim())
+      .filter(Boolean);
+  }
+
+  if (typeof value === "string") {
+    return value
+      .split(/\r?\n|,/)
+      .map(item => item.trim())
+      .filter(Boolean);
+  }
+
+  return [];
+}
+
+function renderReadingItems(containerId, value, emptyMessage) {
+  const container = $(containerId);
+  container.replaceChildren();
+
+  const items = normalizeReadingItems(value);
+
+  if (!items.length) {
+    const empty = document.createElement("span");
+    empty.className = "reading-empty";
+    empty.textContent = emptyMessage;
+    container.append(empty);
+    return;
+  }
+
+  for (const item of items) {
+    const element = document.createElement("span");
+    element.className = "reading-item";
+    element.textContent = item;
+    container.append(element);
+  }
+}
+
+function loadReadingTab(profile, isOwner) {
+  $("readingTitle").textContent = isOwner
+    ? "📚 My Reading Era"
+    : "📚 Her Reading Era";
+
+  renderReadingItems(
+    "readingCurrent",
+    profile.current_read,
+    "No current read shared yet."
+  );
+
+  renderReadingItems(
+    "readingBooks",
+    profile.favorite_books,
+    "Favorite books haven't been added yet."
+  );
+
+  renderReadingItems(
+    "readingAuthors",
+    profile.favorite_authors,
+    "Favorite authors haven't been added yet."
+  );
+
+  renderReadingItems(
+    "readingGenres",
+    profile.favorite_genres,
+    "Favorite genres haven't been added yet."
+  );
+}
+
+async function loadProfileTimeline(append = false) {
+  if (!profile?.user_id || timelineLoading) return;
+
+  timelineLoading = true;
+
+  const refresh = $("timelineRefresh");
+  const more = $("timelineMore");
+
+  refresh.disabled = true;
+  more.disabled = true;
+
+  try {
+    const requestedPage = append ? timelinePage + 1 : 0;
+
+    if (!append) {
+      $("timelineFeed").textContent =
+        "Loading this Baddie's stories… 💗";
+    }
+
+    const result = await fetchCoverStoryPosts({
+      db,
+      authorId: profile.user_id,
+      page: requestedPage,
+      limit: 12
+    });
+
+    timelinePage = requestedPage;
+
+    timelinePosts = append
+      ? [...timelinePosts, ...result.posts]
+      : result.posts;
+
+    await timelineRenderer.render(timelinePosts);
+
+    more.hidden = !result.hasMore;
+
+  } catch (error) {
+    console.error("Profile timeline:", error);
+
+    if (!append) {
+      $("timelineFeed").textContent =
+        "Could not load this Baddie's Cover Story™.";
+    }
+
+    alert(
+      error.message ||
+      "The timeline could not be loaded."
+    );
+  } finally {
+    timelineLoading = false;
+    refresh.disabled = false;
+    more.disabled = false;
+  }
+}
+
+$("timelineRefresh").addEventListener("click", () => {
+  loadProfileTimeline(false);
+});
+
+$("timelineMore").addEventListener("click", () => {
+  loadProfileTimeline(true);
+});
+
+
+    function showError(message) {
+      $("notice").textContent = message;
+      $("notice").classList.add("error");
+      $("notice").hidden = false;
+      $("profileApp").hidden = true;
+    }
+
+    function initials(name) {
+      return String(name || "Baddie")
+        .trim()
+        .split(/\s+/)
+        .slice(0, 2)
+        .map(part => part.charAt(0))
+        .join("")
+        .toUpperCase();
+    }
+
+    async function signedUrl(bucket, path) {
+      if (!path || typeof path !== "string") return null;
+
+      const { data, error } = await db.storage
+        .from(bucket)
+        .createSignedUrl(path, 3600);
+
+      if (error) {
+        console.warn("Profile image unavailable:", error.message);
+        return null;
+      }
+
+      return data?.signedUrl || null;
+    }
+
+    
+/* ============================================
+   TBB — BADDIE PROFILE™ ABOUT ME
+   ============================================ */
+
+function loadAboutTab(profile, isOwner) {
+  $("aboutTitle").textContent = isOwner
+    ? "💗 A Little About Me"
+    : "💗 Meet This Baddie";
+
+  $("aboutBio").textContent =
+    profile.bio?.trim() ||
+    "This Baddie hasn't written her story yet. 💗";
+
+  $("aboutReaderType").textContent =
+    profile.reader_type?.trim() ||
+    "A certified book lover. 📚";
+
+  const genres = $("aboutGenres");
+  genres.replaceChildren();
+
+  const items = normalizeReadingItems(profile.favorite_genres);
+
+  if (!items.length) {
+    const empty = document.createElement("span");
+    empty.className = "reading-empty";
+    empty.textContent = "Her bookish interests are coming soon. 💗";
+    genres.append(empty);
+  } else {
+    for (const genre of items.slice(0, 15)) {
+      const tag = document.createElement("span");
+      tag.className = "about-tag";
+      tag.textContent = genre;
+      genres.append(tag);
+    }
+  }
+
+  $("aboutEditLink").hidden = !isOwner;
+}
+
+/* ============================================
+   TBB — BADDIE PROFILE™ SHARED PAGES
+   ============================================ */
+
+async function loadSharedPages(profileUserId, isOwner) {
+  $("sharedPagesTitle").textContent = isOwner
+    ? "💌 My Shared Pages™"
+    : "💌 Her Shared Pages™";
+
+  await Promise.all([
+    loadVanityDiary(profileUserId),
+    loadVanityQuotes(profileUserId),
+    loadVanityWriting(profileUserId)
+  ]);
+}
+
+    async function loadProfile() {
+      const params = new URLSearchParams(location.search);
+      const requestedId = params.get("user") || currentUser.id;
+
+      const { data, error } = await db
+        .from("tbb_profiles")
+        .select(
+            "user_id,display_name,username,bio,avatar_path," +
+            "banner_path,reader_type"
+        )
+        .eq("user_id", requestedId)
+        .maybeSingle();
+
+      if (error) throw error;
+
+      if (!data) {
+        throw new Error("This Baddie's profile is unavailable.");
+      }
+
+      profile = data;
+
+        const { data: favorites, error: favoritesError } = await db
+        .rpc("tbb_get_profile_favorites", {
+            target_user_id: profile.user_id
+        });
+
+        if (favoritesError) {
+        throw favoritesError;
+        }
+
+        const allowedFavorites = favorites?.[0] || {};
+
+        profile = {
+        ...profile,
+        favorite_genres: allowedFavorites.favorite_genres ?? [],
+        favorite_books: allowedFavorites.favorite_books ?? [],
+        favorite_authors: allowedFavorites.favorite_authors ?? [],
+        current_read: allowedFavorites.current_read ?? null
+        };
+
+      
+        const isOwner = profile.user_id === currentUser.id;
+
+        loadReadingTab(profile, isOwner);
+        loadAboutTab(profile, isOwner);
+
+        await loadSharedPages(profile.user_id, isOwner);
+
+      
+        $("profileComposer").hidden = !isOwner;
+
+        if (isOwner) {
+        resetProfileComposer();
+        }
+
+      const name = profile.display_name?.trim() || "TBB Baddie";
+
+      $("profileName").textContent = name;
+
+      $("profileUsername").textContent = profile.username
+        ? "@" + profile.username.replace(/^@/, "")
+        : "TBB Member";
+
+      $("profileBio").textContent =
+        profile.bio?.trim() ||
+        "This Baddie hasn't added a bio yet. 💗";
+
+      const details = $("profileDetails");
+      details.replaceChildren();
+
+      if (profile.reader_type) {
+        const item = document.createElement("span");
+        item.className = "pill";
+        item.textContent = "📖 " + profile.reader_type;
+        details.append(item);
+      }
+
+      if (Array.isArray(profile.favorite_genres)) {
+        for (const genre of profile.favorite_genres.slice(0, 15)) {
+          const item = document.createElement("span");
+          item.className = "pill";
+          item.textContent = "💗 " + genre;
+          details.append(item);
+        }
+      }
+
+      const avatar = $("profileAvatar");
+      avatar.textContent = initials(name);
+
+      const avatarUrl = await signedUrl(
+        "tbb-avatars",
+        profile.avatar_path
+      );
+
+      if (avatarUrl) {
+        const image = document.createElement("img");
+        image.src = avatarUrl;
+        image.alt = name + "'s avatar";
+        image.onerror = () => {
+          avatar.textContent = initials(name);
+        };
+        avatar.replaceChildren(image);
+      }
+
+      const bannerUrl = await signedUrl(
+        "tbb-avatars",
+        profile.banner_path
+      );
+
+      if (bannerUrl) {
+        $("profileBanner").style.backgroundImage =
+          `url("${bannerUrl}")`;
+      }
+
+      const actions = $("profileActions");
+      actions.replaceChildren();
+
+      const vanityLink = document.createElement("a");
+      vanityLink.className = "btn secondary";
+      vanityLink.href = isOwner
+        ? "member.html"
+        : "baddie-directory.html?profile=" +
+          encodeURIComponent(profile.user_id);
+
+      vanityLink.textContent = isOwner
+        ? "💋 Edit in The Vanity™"
+        : "💗 View Connections";
+
+      actions.append(vanityLink);
+
+      
+document.title = name + " | TBB Baddie Profile™";
+
+$("timelineTitle").textContent = isOwner
+  ? "💌 My Cover Story™"
+  : "💌 Her Cover Story™";
+
+timelineRenderer = createCoverStoryRenderer({
+  db,
+  user: currentUser,
+  container: $("timelineFeed"),
+
+  onError(error) {
+    alert(
+      error?.message ||
+      "Something went wrong with Cover Story™."
+    );
+  },
+
+  onChanged: async () => {
+    await loadProfileTimeline(false);
+  }
+});
+
+$("notice").hidden = true;
+$("profileApp").hidden = false;
+
+await loadProfileTimeline(false);
+
+} // Closes loadProfile()
+
+document.querySelectorAll("[data-tab]").forEach(button => {
+      button.addEventListener("click", () => {
+        const selected = button.dataset.tab;
+
+        document.querySelectorAll("[data-tab]").forEach(tab => {
+          tab.classList.toggle(
+            "active",
+            tab.dataset.tab === selected
+          );
+        });
+
+        document.querySelectorAll("[data-panel]").forEach(panel => {
+          panel.hidden = panel.dataset.panel !== selected;
+        });
+      });
+    });
+
+    async function init() {
+      try {
+        const access = await requireAccess();
+        if (!access?.user) return;
+
+        currentUser = access.user;
+
+        await loadProfile();
+      } catch (error) {
+        console.error("Baddie Profile:", error);
+        showError(error.message || "Could not load this profile.");
+      }
+    }
+
+    init();
+  </script>
+<script type="module" src="js/writing-reader-bootstrap.js"></script>
+</body>
+</html>
