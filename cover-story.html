@@ -1,0 +1,1738 @@
+
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#160b19">
+  <title>Cover Story™ | The Baddies Bookshelf</title>
+  <link rel="icon" href="favicon.ico">
+
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #100912;
+      --panel: #201224;
+      --panel2: #301c35;
+      --pink: #ff3ba9;
+      --light: #ffd4ef;
+      --text: #fff5fc;
+      --muted: #bda7bd;
+      --line: #6b3b62;
+      --gold: #f3c77c;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      font: 15px/1.5 "DM Sans", sans-serif;
+      background:
+        radial-gradient(ellipse at 15% 0, #48203f 0, transparent 34%),
+        radial-gradient(ellipse at 100% 30%, #351039 0, transparent 32%),
+        var(--bg);
+    }
+
+    button, input, textarea, select { font: inherit; }
+    button { cursor: pointer; }
+    button:disabled { opacity: .55; cursor: not-allowed; }
+    a { color: inherit; text-decoration: none; }
+    a:hover { color: #ff8acc; }
+    [hidden] { display: none !important; }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 14px;
+      padding: 15px clamp(16px, 4vw, 55px);
+      border-bottom: 1px solid #ffffff1e;
+      background: #110916e8;
+    }
+
+    .brand {
+      font-family: "Bebas Neue", sans-serif;
+      letter-spacing: 1.2px;
+      font-size: 27px;
+    }
+
+    .brand span { color: var(--pink); }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 17px;
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .nav button {
+      background: none;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 8px 13px;
+      color: white;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: auto;
+      padding: 30px 18px 80px;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 25px 10px 32px;
+    }
+
+    .eyebrow {
+      color: #ff91d0;
+      font-weight: 800;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-size: 12px;
+    }
+
+    .hero h1 {
+      font-family: "Playfair Display", serif;
+      font-size: clamp(40px, 7vw, 72px);
+      margin: 8px 0;
+    }
+
+    .hero h1 em {
+      color: var(--pink);
+      font-style: normal;
+    }
+
+    .hero p {
+      color: var(--muted);
+      max-width: 630px;
+      margin: auto;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 260px;
+      align-items: start;
+      gap: 22px;
+    }
+
+    .panel {
+      background: #201224ed;
+      border: 1px solid #673d64;
+      border-radius: 20px;
+      box-shadow: 0 10px 35px #0003;
+    }
+
+    .composer, .post, .sidebar, .empty {
+      padding: 20px;
+      margin-bottom: 18px;
+    }
+
+    .composer h2, .sidebar h2 {
+      font-family: "Playfair Display", serif;
+      font-size: 23px;
+      margin: 0 0 15px;
+    }
+
+    .field {
+      display: block;
+      margin: 13px 0;
+      font-weight: 700;
+    }
+
+    textarea, select, input {
+      width: 100%;
+      background: #120b16;
+      border: 1px solid #805275;
+      border-radius: 12px;
+      padding: 12px;
+      color: white;
+    }
+
+    textarea {
+      min-height: 110px;
+      resize: vertical;
+    }
+
+    textarea:focus, input:focus, select:focus {
+      outline: 2px solid #ff58b6;
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .between { justify-content: space-between; }
+
+    .btn {
+      border: 0;
+      border-radius: 11px;
+      background: var(--pink);
+      color: white;
+      padding: 10px 16px;
+      font-weight: 800;
+    }
+
+    .btn.ghost {
+      background: #3a2440;
+      border: 1px solid #9c5a8b;
+    }
+
+    .btn.small {
+      padding: 7px 11px;
+      font-size: 12px;
+    }
+
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 14px 0;
+    }
+
+    .tab {
+      background: #301c35;
+      border: 1px solid #805075;
+      border-radius: 30px;
+      color: white;
+      padding: 8px 15px;
+      font-weight: 700;
+    }
+
+    .tab.active {
+      background: #673052;
+      border-color: #ff61bc;
+    }
+
+    .muted {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .notice {
+      border: 1px solid #ac5d93;
+      background: #30162c;
+      border-radius: 15px;
+      padding: 14px 17px;
+      margin: 15px 0;
+    }
+
+    .notice.error {
+      border-color: #e4778e;
+      background: #471d2a;
+    }
+
+    .posthead {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .author {
+      font-weight: 800;
+      color: #ffb1dd;
+    }
+
+    .postbody {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      margin: 15px 0;
+    }
+
+    .posttype {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: var(--gold);
+      margin-top: 7px;
+    }
+
+    .postactions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 15px;
+    }
+
+    .polloption {
+      display: block;
+      width: 100%;
+      text-align: left;
+      margin: 8px 0;
+      background: #301c35;
+      border: 1px solid #805075;
+      color: white;
+      border-radius: 12px;
+      padding: 12px;
+    }
+
+    .polloption:hover {
+      border-color: var(--pink);
+    }
+
+    .pollbar {
+      height: 7px;
+      background: #39253d;
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 7px 0;
+    }
+
+    .pollfill {
+      height: 100%;
+      background: var(--pink);
+    }
+
+    .comment {
+      padding: 11px 0;
+      border-bottom: 1px solid #ffffff17;
+    }
+
+    .comment p {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .comments {
+      border-top: 1px solid #573653;
+      margin-top: 15px;
+      padding-top: 12px;
+    }
+
+    .comments textarea { min-height: 65px; }
+
+    .sidebar {
+      position: sticky;
+      top: 15px;
+    }
+
+    .sidebar p {
+      color: #dcc4d8;
+      font-size: 13px;
+    }
+
+    .sidebar a {
+      display: block;
+      padding: 11px 0;
+      border-bottom: 1px solid #ffffff17;
+      font-weight: 700;
+    }
+
+    .empty {
+      text-align: center;
+      color: #e7c9e0;
+    }
+
+    .empty i {
+      font-size: 35px;
+      color: var(--pink);
+    }
+
+    footer {
+      text-align: center;
+      color: #9d819e;
+      padding: 25px;
+      font-size: 12px;
+    }
+
+    @media(max-width: 800px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+      .topbar { justify-content: center; }
+      .composer, .post { padding: 16px; }
+    }
+    
+/* =========================================
+   COVER STORY™ — PHOTO PUBLISHING
+   ========================================= */
+
+.photo-preview {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.photo-preview img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 14px;
+  border: 1px solid #805275;
+}
+
+.story-gallery {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+  margin: 14px 0;
+}
+
+.story-gallery img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 12px;
+  background: #301c35;
+}
+
+.story-gallery:has(img:only-child) {
+  grid-template-columns: 1fr;
+}
+
+.story-gallery:has(img:only-child) img {
+  aspect-ratio: auto;
+  max-height: 600px;
+  object-fit: contain;
+}
+
+.photo-preview:empty,
+.story-gallery:empty {
+  display: none;
+}
+
+@media (max-width: 500px) {
+  .photo-preview,
+  .story-gallery {
+    gap: 6px;
+  }
+}
+
+  </style>
+</head>
+
+<body>
+
+  <header class="topbar">
+    <a class="brand" href="home.html">
+      THE BADDIES <span>BOOKSHELF</span> ♕
+    </a>
+
+    <nav class="nav" aria-label="Site navigation">
+      <a href="home.html">Home</a>
+      <a href="library.html">Bookshelf</a>
+      <a href="commons.html">Commons</a>
+      <a href="friends.html">Friends</a>
+      <a href="login.html">My Account</a>
+      <button id="signout" type="button" hidden>Sign Out</button>
+    </nav>
+  </header>
+
+  <main class="page">
+
+    <section class="hero">
+      <div class="eyebrow">✦ The Baddie Social Edit ✦</div>
+      <h1>Cover <em>Story™</em></h1>
+      <p>
+        Every Baddie has a story worth sharing.
+        Post your latest bookish obsession, spill the tea,
+        and make your next chapter unforgettable. 💋
+      </p>
+    </section>
+
+    <div id="notice" class="notice" role="status" aria-live="polite">
+      Checking your Baddie access…
+    </div>
+
+    <div id="app" class="layout" hidden>
+
+      <section>
+
+        <form id="composer" class="composer panel">
+
+          <h2>💌 What's Your Cover Story?</h2>
+
+          <div class="tabs">
+            <button class="tab active" type="button" data-type="text">
+              ✍🏾 Post
+            </button>
+            <button class="tab" type="button" data-type="poll">
+              📊 Poll
+            </button>
+            <button class="tab" type="button" data-type="image">
+            📸 Photo
+            </button>
+          </div>
+
+          <label class="field" for="postBody">
+            Your story
+          </label>
+
+          <textarea
+            id="postBody"
+            maxlength="5000"
+            placeholder="What's happening in your bookish world, bestie?"
+          ></textarea>
+
+          <div id="photoFields" hidden>
+        <label class="field" for="postPhotos">
+            📸 Add Your Photos
+        </label>
+
+        <input
+            id="postPhotos"
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            multiple
+        >
+
+        <p class="muted">
+            Choose up to 4 photos. Maximum 5 MB each.
+            JPEG, PNG, and WebP only.
+        </p>
+
+        <div id="photoPreview" class="photo-preview"></div>
+        </div>
+          <div id="pollFields" hidden>
+            <label class="field">Poll options</label>
+            <div id="pollOptions"></div>
+
+            <button id="addOption" class="btn ghost small" type="button">
+              + Add Option
+            </button>
+
+            <label class="field" for="pollCloses">
+              Poll closing date (optional)
+            </label>
+
+            <input id="pollCloses" type="datetime-local">
+          </div>
+
+          <label class="field" for="visibility">
+            Who can see your story?
+          </label>
+
+          <select id="visibility">
+            <option value="all_baddies">
+              💗 All Baddies
+            </option>
+            <option value="besties_only">
+              🎀 Besties Only
+            </option>
+          </select>
+
+          <div class="row between" style="margin-top:16px">
+            <span class="muted">
+              Be cute. Be kind. Protect everyone's privacy. ♡
+            </span>
+
+            <button id="publish" class="btn" type="submit">
+              Publish Story ✦
+            </button>
+          </div>
+
+        </form>
+
+        <div class="row between" style="margin:22px 0 13px">
+          <h2 style="margin:0;font-family:'Playfair Display',serif">
+            ✦ The Latest Stories
+          </h2>
+
+          <button id="refresh" class="btn ghost small" type="button">
+            <i class="fa-solid fa-rotate"></i> Refresh
+          </button>
+        </div>
+
+        <div id="feed" aria-live="polite"></div>
+
+        <button id="more" class="btn ghost" type="button" hidden>
+          Load More Stories
+        </button>
+
+      </section>
+
+      <aside class="sidebar panel">
+
+        <h2>🎀 The Baddie Edit</h2>
+
+        <p>
+          Your little corner of the internet,
+          where the best stories belong to the Baddies.
+        </p>
+
+        <a href="friends.html">💞 My Besties</a>
+        <a href="commons.html">💬 The Commons™</a>
+        <a href="bookshelf.html">📚 My Bookshelf</a>
+        <a href="home.html">🏠 Baddie Home</a>
+
+        <p class="muted" style="margin-top:20px">
+          Besties Only stories are intended for accepted friends.
+          Your account's privacy and blocking rules still apply.
+        </p>
+
+      </aside>
+
+    </div>
+
+  </main>
+
+  <footer>
+    ✦ The Baddies Bookshelf · For readers, by readers ✦
+  </footer>
+
+  <script type="module">
+
+    import { createClient } from
+      'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+    // Reuses the existing TBB Supabase project.
+    const db = createClient(
+      'https://rmfmdetdykwfxxfzamhj.supabase.co',
+      'sb_publishable_6UBKZvkvkyPNACqDDNRjNQ_wlgy-Jr2'
+    );
+
+    const $ = id => document.getElementById(id);
+
+    let user = null;
+    let postType = 'text';
+    let posts = [];
+    let page = 0;
+    let hasMore = false;
+
+    const LIMIT = 12;
+
+    const REACTIONS = {
+      like: '👍',
+      love: '💗',
+      laugh: '😂',
+      wow: '😮',
+      support: '🥹'
+    };
+
+    function el(tag, cls = '', text) {
+      const node = document.createElement(tag);
+      if (cls) node.className = cls;
+      if (text !== undefined) node.textContent = text;
+      return node;
+    }
+
+    function button(text, cls, action) {
+      const node = el('button', cls, text);
+      node.type = 'button';
+      node.addEventListener('click', action);
+      return node;
+    }
+
+    function notice(message, error = false) {
+      $('notice').textContent = message;
+      $('notice').className = 'notice' + (error ? ' error' : '');
+      $('notice').hidden = false;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function clearNotice() {
+      $('notice').hidden = true;
+    }
+
+    function showError(error) {
+      console.error(error);
+      notice(error?.message || 'Something went wrong, bestie.', true);
+    }
+
+    function time(value) {
+      return new Date(value).toLocaleString(undefined, {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit'
+      });
+    }
+
+    
+// =========================================
+// COVER STORY™ — PHOTO SELECTION
+// =========================================
+
+const MAX_PHOTOS = 4;
+const MAX_PHOTO_BYTES = 5 * 1024 * 1024;
+
+const PHOTO_TYPES = new Map([
+  ['image/jpeg', 'jpg'],
+  ['image/png', 'png'],
+  ['image/webp', 'webp']
+]);
+
+function validatePhotos(files) {
+  if (!files.length || files.length > MAX_PHOTOS) {
+    throw new Error('Choose between 1 and 4 photos.');
+  }
+
+  for (const file of files) {
+    if (!PHOTO_TYPES.has(file.type)) {
+      throw new Error(
+        'Only JPEG, PNG, and WebP photos are supported.'
+      );
+    }
+
+    if (file.size > MAX_PHOTO_BYTES) {
+      throw new Error(
+        `${file.name} is larger than 5 MB.`
+      );
+    }
+
+    if (file.size === 0) {
+      throw new Error('Empty image files cannot be uploaded.');
+    }
+  }
+}
+
+$('postPhotos').addEventListener('change', () => {
+  const preview = $('photoPreview');
+  preview.replaceChildren();
+
+  const files = Array.from($('postPhotos').files || []);
+
+  try {
+    validatePhotos(files);
+  } catch (error) {
+    if (files.length) showError(error);
+    $('postPhotos').value = '';
+    return;
+  }
+
+  for (const file of files) {
+    const url = URL.createObjectURL(file);
+    const img = el('img');
+
+    img.src = url;
+    img.alt = `Selected photo: ${file.name}`;
+
+    img.addEventListener('load', () => {
+      URL.revokeObjectURL(url);
+    }, { once: true });
+
+    img.addEventListener('error', () => {
+      URL.revokeObjectURL(url);
+    }, { once: true });
+
+    preview.append(img);
+  }
+});
+
+// =========================================
+// CONTROLLED PHOTO PUBLISHING
+// =========================================
+
+async function publishPhotoStory(body, visibility) {
+  const files = Array.from($('postPhotos').files || []);
+
+  validatePhotos(files);
+
+  const filenames = files.map(file => {
+    const extension = PHOTO_TYPES.get(file.type);
+    return `${crypto.randomUUID()}.${extension}`;
+  });
+
+  // First create the pending post and register
+  // its image paths through our secure RPC.
+
+  const { data: postId, error: prepareError } =
+    await db.rpc('tbb_prepare_image_post', {
+      p_body: body,
+      p_visibility: visibility,
+      p_filenames: filenames
+    });
+
+  if (prepareError) throw prepareError;
+
+  // Upload each registered file into the
+  // private tbb-post-media storage bucket.
+
+  for (let i = 0; i < files.length; i++) {
+    const path = `${user.id}/${postId}/${filenames[i]}`;
+
+    const { error: uploadError } = await db.storage
+      .from('tbb-post-media')
+      .upload(path, files[i], {
+        contentType: files[i].type,
+        cacheControl: '3600',
+        upsert: false
+      });
+
+    if (uploadError) {
+      throw new Error(
+        `Photo ${i + 1} could not be uploaded: ` +
+        uploadError.message +
+        '. Your unfinished post is still pending.'
+      );
+    }
+  }
+
+  // Publish only after all files exist.
+
+  const { data: completed, error: completeError } =
+    await db.rpc('tbb_complete_image_post', {
+      p_post_id: postId
+    });
+
+  if (completeError) throw completeError;
+
+  if (!completed) {
+    throw new Error(
+      'Your photos uploaded, but the story could not be published.'
+    );
+  }
+
+  return postId;
+}
+
+    // -------------------------------------------------
+    // COMPOSER
+    // -------------------------------------------------
+
+    
+function setPostType(type) {
+  postType = type;
+
+  for (const tab of document.querySelectorAll('[data-type]')) {
+    tab.classList.toggle(
+      'active',
+      tab.dataset.type === type
+    );
+  }
+
+  $('pollFields').hidden = type !== 'poll';
+  $('photoFields').hidden = type !== 'image';
+
+  $('postBody').required = type === 'text';
+
+  // Hidden poll inputs must not block photo/text publishing.
+  for (const input of $('pollOptions').querySelectorAll('input')) {
+    input.required = type === 'poll';
+  }
+
+  $('postBody').placeholder =
+    type === 'image'
+      ? 'Give your photos a little caption, bestie… 💋'
+      : type === 'poll'
+        ? 'Ask the Baddies a question…'
+        : "What's happening in your bookish world, bestie?";
+}
+
+
+    function addPollOption(value = '') {
+      const holder = $('pollOptions');
+
+      if (holder.children.length >= 6) return;
+
+      const input = el('input');
+      input.type = 'text';
+      input.maxLength = 200;
+      input.required = postType === 'poll';
+      input.placeholder =
+        'Option ' + (holder.children.length + 1);
+      input.value = value;
+      input.style.marginBottom = '8px';
+
+      holder.append(input);
+    }
+
+    
+    function resetComposer() {
+    $('composer').reset();
+
+    $('pollOptions').replaceChildren();
+    $('photoPreview').replaceChildren();
+
+    addPollOption();
+    addPollOption();
+
+    setPostType('text');
+    }
+
+
+    document.querySelectorAll('[data-type]').forEach(tab => {
+      tab.addEventListener('click', () => {
+        setPostType(tab.dataset.type);
+      });
+    });
+
+    $('addOption').addEventListener('click', () => {
+      addPollOption();
+    });
+
+    $('composer').addEventListener('submit', async event => {
+      event.preventDefault();
+
+      const body = $('postBody').value.trim();
+      const visibility = $('visibility').value;
+
+      const payload = {
+        p_type: postType,
+        p_body: body,
+        p_visibility: visibility
+      };
+
+      if (postType === 'text' && !body) {
+        return notice('Write something first, bestie! 💗', true);
+      }
+
+      if (postType === 'poll') {
+        const options = [
+          ...$('pollOptions').querySelectorAll('input')
+        ].map(input => input.value.trim());
+
+        if (options.length < 2 ||
+            options.some(option => !option)) {
+          return notice(
+            'Your poll needs at least two filled-in options.',
+            true
+          );
+        }
+
+        if (new Set(options.map(x => x.toLowerCase())).size
+            !== options.length) {
+          return notice(
+            'Poll options must be different.',
+            true
+          );
+        }
+
+        payload.p_poll_options = options;
+
+        const closes = $('pollCloses').value;
+
+        if (closes) {
+          payload.p_poll_closes_at =
+            new Date(closes).toISOString();
+        }
+      }
+
+      const submit = $('publish');
+      submit.disabled = true;
+
+      try {
+        
+        if (postType === 'image') {
+        await publishPhotoStory(body, visibility);
+        } else {
+        const { error } = await db.rpc(
+            'tbb_publish_post',
+            payload
+        );
+
+        if (error) throw error;
+        }
+
+        resetComposer();
+        clearNotice();
+        await loadPosts(false);
+
+      } catch (error) {
+        showError(error);
+      } finally {
+        submit.disabled = false;
+      }
+    });
+
+    // -------------------------------------------------
+    // FEED
+    // -------------------------------------------------
+
+    async function getProfiles(ids) {
+      if (!ids.length) return {};
+
+      const { data, error } = await db
+        .from('tbb_profiles')
+        .select('user_id,display_name,username')
+        .in('user_id', [...new Set(ids)]);
+
+      if (error) {
+        console.warn('Profiles unavailable:', error.message);
+        return {};
+      }
+
+      return Object.fromEntries(
+        (data || []).map(profile => [
+          profile.user_id,
+          profile
+        ])
+      );
+    }
+
+    async function loadPosts(append = false) {
+      const offset = append ? page * LIMIT : 0;
+
+      if (!append) {
+        $('feed').replaceChildren(
+          el('div', 'empty panel', 'Loading the latest stories…')
+        );
+      }
+
+      const { data, error } = await db
+        .from('tbb_posts')
+        .select(
+          'id,author_id,post_type,body,visibility,' +
+          'created_at,poll_closes_at'
+        )
+        .eq('moderation_status', 'active')
+        .eq('media_status', 'ready')
+        .order('created_at', { ascending: false })
+        .range(offset, offset + LIMIT - 1);
+
+      if (error) {
+        showError(error);
+        return;
+      }
+
+      if (append) {
+        posts.push(...(data || []));
+      } else {
+        posts = data || [];
+      }
+
+      hasMore = (data || []).length === LIMIT;
+      $('more').hidden = !hasMore;
+
+      await renderPosts();
+    }
+
+    async function renderPosts() {
+      const feed = $('feed');
+      feed.replaceChildren();
+
+      if (!posts.length) {
+        const empty = el('div', 'empty panel');
+        empty.append(
+          el('i', 'fa-solid fa-book-open'),
+          el('h3', '', 'The first page is waiting…'),
+          el('p', '',
+            'Be the first Baddie to share a Cover Story! 💗')
+        );
+        feed.append(empty);
+        return;
+      }
+
+      const profiles = await getProfiles(
+        posts.map(post => post.author_id)
+      );
+
+      for (const post of posts) {
+        const card = el('article', 'post panel');
+
+        const head = el('div', 'posthead');
+        const identity = el('div');
+
+        const profile = profiles[post.author_id];
+
+        identity.append(
+          el('div', 'author',
+            profile?.display_name || 'TBB Baddie'),
+          el('div', 'muted', time(post.created_at)),
+          el('div', 'posttype',
+            post.post_type === 'poll'
+              ? '📊 BADDIE POLL'
+              : post.post_type === 'image'
+                ? '📸 PHOTO STORY'
+                : '💌 COVER STORY')
+        );
+
+        const privacy = el(
+          'span',
+          'muted',
+          post.visibility === 'besties_only'
+            ? '🔒 Besties Only'
+            : '🌎 All Baddies'
+        );
+
+        head.append(identity, privacy);
+        card.append(head);
+
+        if (post.body) {
+          card.append(el('div', 'postbody', post.body));
+        }
+
+        if (post.post_type === 'poll') {
+          const poll = el('div');
+          card.append(poll);
+          await renderPoll(post, poll);
+        }
+
+        if (post.post_type === 'image') {
+          const media = el('div');
+          card.append(media);
+          await renderMedia(post.id, media);
+        }
+
+        const actions = el('div', 'postactions');
+
+        const reactionArea = el('div', 'row');
+        actions.append(reactionArea);
+
+        await renderReactions(post.id, reactionArea);
+
+        const commentSection = el('div', 'comments');
+        commentSection.hidden = true;
+
+        const commentButton = button(
+          '💬 Comments',
+          'btn ghost small',
+          async () => {
+            if (!commentSection.hidden) {
+              commentSection.hidden = true;
+              return;
+            }
+
+            commentSection.hidden = false;
+            await loadComments(post.id, commentSection);
+          }
+        );
+
+        actions.append(commentButton);
+
+        if (post.author_id === user.id) {
+
+            if (post.post_type === 'text') {
+  actions.append(
+    button('✏️ Edit', 'btn ghost small', async () => {
+      const updated = prompt(
+        'Edit your Cover Story:',
+        post.body
+      );
+
+      if (updated === null) return;
+
+      const body = updated.trim();
+
+      if (!body || body.length > 5000) {
+        return notice(
+          'Your edited story must contain 1–5000 characters.',
+          true
+        );
+      }
+
+      const { data, error } = await db
+        .from('tbb_posts')
+        .update({ body })
+        .eq('id', post.id)
+        .eq('author_id', user.id)
+        .eq('post_type', 'text')
+        .select('id');
+
+      if (error) return showError(error);
+
+      if (!data?.length) {
+        return notice('Your story could not be edited.', true);
+      }
+
+      await loadPosts(false);
+    })
+  );
+}
+          actions.append(
+            button('🗑️ Remove', 'btn ghost small', async () => {
+              if (!confirm('Remove this Cover Story?')) return;
+
+              const { data, error } = await db.rpc(
+                'tbb_remove_own_post',
+                { p_post_id: post.id }
+              );
+
+              if (error) return showError(error);
+              if (!data) return notice(
+                'This story could not be removed.',
+                true
+              );
+
+              await loadPosts(false);
+            })
+          );
+        } else {
+          actions.append(
+            button('⚑ Report', 'btn ghost small', () => {
+              reportContent('post', post.id);
+            })
+          );
+        }
+
+        card.append(actions, commentSection);
+        feed.append(card);
+      }
+    }
+
+    // -------------------------------------------------
+    // POLLS
+    // -------------------------------------------------
+
+    async function renderPoll(post, container) {
+      const { data: options, error } = await db
+        .from('tbb_post_poll_options')
+        .select('id,option_text,position')
+        .eq('post_id', post.id)
+        .order('position');
+
+      if (error) {
+        container.append(
+          el('p', 'muted', 'Poll options unavailable.')
+        );
+        return;
+      }
+
+      const { data: myVote, error: voteError } = await db
+        .from('tbb_post_poll_votes')
+        .select('option_id')
+        .eq('post_id', post.id)
+        .eq('voter_id', user.id)
+        .maybeSingle();
+
+      if (voteError) {
+        container.append(
+          el('p', 'muted', 'Poll voting unavailable.')
+        );
+        return;
+      }
+
+      const closed = post.poll_closes_at &&
+        new Date(post.poll_closes_at) <= new Date();
+
+      if (post.poll_closes_at) {
+        container.append(
+          el('p', 'muted',
+            'Closes: ' + time(post.poll_closes_at))
+        );
+      }
+
+      if (myVote || closed) {
+        const { data: results, error: resultError } =
+          await db.rpc('tbb_poll_results', {
+            p_post_id: post.id
+          });
+
+        if (resultError) {
+          container.append(
+            el('p', 'muted', resultError.message)
+          );
+          return;
+        }
+
+        const total = (results || []).reduce(
+          (sum, option) => sum + Number(option.vote_count),
+          0
+        );
+
+        for (const option of results || []) {
+          const count = Number(option.vote_count);
+          const percentage = total
+            ? Math.round(count / total * 100)
+            : 0;
+
+          const line = el('div');
+          line.style.margin = '12px 0';
+
+          line.append(
+            el('div', 'row between',
+              option.option_text +
+              (myVote?.option_id === option.option_id
+                ? ' ✓' : ''))
+          );
+
+          line.append(
+            el('div', 'muted',
+              count + ' votes · ' + percentage + '%')
+          );
+
+          const bar = el('div', 'pollbar');
+          const fill = el('div', 'pollfill');
+          fill.style.width = percentage + '%';
+
+          bar.append(fill);
+          line.append(bar);
+          container.append(line);
+        }
+
+        return;
+      }
+
+      for (const option of options || []) {
+        const choice = button(
+          option.option_text,
+          'polloption',
+          async () => {
+            choice.disabled = true;
+
+            const { error: votingError } = await db.rpc(
+              'tbb_cast_poll_vote',
+              {
+                p_post_id: post.id,
+                p_option_id: option.id
+              }
+            );
+
+            if (votingError) {
+              choice.disabled = false;
+              return showError(votingError);
+            }
+
+            await renderPollFresh(post, container);
+          }
+        );
+
+        container.append(choice);
+      }
+    }
+
+    async function renderPollFresh(post, container) {
+      container.replaceChildren();
+      await renderPoll(post, container);
+    }
+
+    // -------------------------------------------------
+    // IMAGE DISPLAY
+    // -------------------------------------------------
+
+    
+async function renderMedia(postId, container) {
+  container.replaceChildren();
+
+  const { data: mediaRows, error } = await db
+    .from('tbb_post_media')
+    .select('storage_path,position')
+    .eq('post_id', postId)
+    .order('position');
+
+  if (error) {
+    container.append(
+      el('p', 'muted', 'Photos are unavailable.')
+    );
+    return;
+  }
+
+  const gallery = el('div', 'story-gallery');
+
+  for (const media of mediaRows || []) {
+    const { data, error: signedError } =
+      await db.storage
+        .from('tbb-post-media')
+        .createSignedUrl(media.storage_path, 300);
+
+    if (signedError || !data?.signedUrl) {
+      console.warn(
+        'Could not load private photo:',
+        signedError?.message
+      );
+      continue;
+    }
+
+    const image = el('img');
+
+    image.src = data.signedUrl;
+    image.alt = 'Baddie Cover Story photo';
+    image.loading = 'lazy';
+
+    gallery.append(image);
+  }
+
+  if (gallery.children.length) {
+    container.append(gallery);
+  } else {
+    container.append(
+      el('p', 'muted', 'Photos could not be loaded.')
+    );
+  }
+}
+
+
+    // -------------------------------------------------
+    // REACTIONS
+    // -------------------------------------------------
+
+    async function renderReactions(postId, container) {
+      const { data, error } = await db
+        .from('tbb_post_reactions')
+        .select('id,user_id,reaction_type')
+        .eq('post_id', postId);
+
+      if (error) return;
+
+      const reactions = data || [];
+      const mine = reactions.find(
+        reaction => reaction.user_id === user.id
+      );
+
+      for (const [type, emoji] of Object.entries(REACTIONS)) {
+        const count = reactions.filter(
+          reaction => reaction.reaction_type === type
+        ).length;
+
+        const selected = mine?.reaction_type === type;
+
+        const reactionButton = button(
+          emoji + ' ' + count,
+          'btn ghost small',
+          async () => {
+            let result;
+
+            if (selected) {
+              result = await db
+                .from('tbb_post_reactions')
+                .delete()
+                .eq('id', mine.id)
+                .eq('user_id', user.id);
+
+            } else if (mine) {
+              result = await db
+                .from('tbb_post_reactions')
+                .update({ reaction_type: type })
+                .eq('id', mine.id)
+                .eq('user_id', user.id);
+
+            } else {
+              result = await db
+                .from('tbb_post_reactions')
+                .insert({
+                  post_id: postId,
+                  user_id: user.id,
+                  reaction_type: type
+                });
+            }
+
+            if (result.error) {
+              return showError(result.error);
+            }
+
+            container.replaceChildren();
+            await renderReactions(postId, container);
+          }
+        );
+
+        if (selected) {
+          reactionButton.style.borderColor = '#ff61bc';
+          reactionButton.style.background = '#673052';
+        }
+
+        reactionButton.title = type;
+        container.append(reactionButton);
+      }
+    }
+
+    // -------------------------------------------------
+    // COMMENTS
+    // -------------------------------------------------
+
+    async function loadComments(postId, container) {
+      container.replaceChildren(
+        el('p', 'muted', 'Loading comments…')
+      );
+
+      const { data, error } = await db
+        .from('tbb_post_comments')
+        .select('id,author_id,parent_comment_id,body,created_at')
+        .eq('post_id', postId)
+        .eq('moderation_status', 'active')
+        .order('created_at', { ascending: true })
+        .limit(100);
+
+      if (error) {
+        return showError(error);
+      }
+
+      container.replaceChildren();
+
+      const comments = data || [];
+
+      const profiles = await getProfiles(
+        comments.map(comment => comment.author_id)
+      );
+
+      if (!comments.length) {
+        container.append(
+          el('p', 'muted',
+            'No comments yet. Start the conversation! 💗')
+        );
+      }
+
+      for (const comment of comments) {
+        const item = el('div', 'comment');
+
+        const header = el('div', 'row between');
+
+        header.append(
+          el('span', 'author',
+            (profiles[comment.author_id]?.display_name ||
+              'TBB Baddie') +
+            ' · ' + time(comment.created_at))
+        );
+
+        if (comment.author_id === user.id) {
+          header.append(
+            button('Remove', 'btn ghost small', async () => {
+              if (!confirm('Remove your comment?')) return;
+
+              const { error: removeError } = await db.rpc(
+                'tbb_remove_own_comment',
+                { p_comment_id: comment.id }
+              );
+
+              if (removeError) return showError(removeError);
+
+              await loadComments(postId, container);
+            })
+          );
+        } else {
+          header.append(
+            button('⚑', 'btn ghost small', () => {
+              reportContent('comment', comment.id);
+            })
+          );
+        }
+
+        item.append(header, el('p', '', comment.body));
+
+if (comment.parent_comment_id) {
+  item.style.marginLeft = '22px';
+  item.style.paddingLeft = '12px';
+  item.style.borderLeft = '2px solid #ff61bc';
+}
+
+const replyButton = button(
+  '↩️ Reply',
+  'btn ghost small',
+  () => {
+    const existing = item.querySelector('.inline-reply');
+
+    if (existing) {
+      existing.remove();
+      return;
+    }
+
+    const replyForm = el('form', 'inline-reply');
+    replyForm.style.marginTop = '10px';
+
+    const replyText = el('textarea');
+    replyText.placeholder = 'Write your reply, bestie… 💗';
+    replyText.maxLength = 2000;
+    replyText.required = true;
+
+    const send = el('button', 'btn small', 'Send Reply');
+    send.type = 'submit';
+
+    replyForm.append(replyText, send);
+
+    replyForm.addEventListener('submit', async event => {
+      event.preventDefault();
+
+      const body = replyText.value.trim();
+      if (!body) return;
+
+      send.disabled = true;
+
+      const { error } = await db
+        .from('tbb_post_comments')
+        .insert({
+          post_id: postId,
+          parent_comment_id: comment.id,
+          author_id: user.id,
+          body
+        });
+
+      send.disabled = false;
+
+      if (error) {
+        return showError(error);
+      }
+
+      await loadComments(postId, container);
+    });
+
+    item.append(replyForm);
+    replyText.focus();
+  }
+);
+
+item.append(replyButton);
+        container.append(item);
+      }
+
+      const form = el('form');
+      form.style.marginTop = '15px';
+
+      const text = el('textarea');
+      text.maxLength = 2000;
+      text.required = true;
+      text.placeholder = 'Reply to your bestie…';
+      text.setAttribute('aria-label', 'Write a comment');
+
+      const submit = el('button', 'btn small', 'Post Comment');
+      submit.type = 'submit';
+
+      form.append(text, submit);
+
+      form.addEventListener('submit', async event => {
+        event.preventDefault();
+
+        const body = text.value.trim();
+        if (!body) return;
+
+        submit.disabled = true;
+
+        const { error: insertError } = await db
+          .from('tbb_post_comments')
+          .insert({
+            post_id: postId,
+            author_id: user.id,
+            body
+          });
+
+        submit.disabled = false;
+
+        if (insertError) {
+          return showError(insertError);
+        }
+
+        await loadComments(postId, container);
+      });
+
+      container.append(form);
+    }
+
+    // -------------------------------------------------
+    // REPORTS
+    // -------------------------------------------------
+
+    async function reportContent(type, id) {
+      const allowed = [
+        'harassment',
+        'bullying',
+        'hate_speech',
+        'sexual_content',
+        'spam',
+        'spoilers',
+        'privacy',
+        'other'
+      ];
+
+      const answer = prompt(
+        'Report reason: ' + allowed.join(', '),
+        'other'
+      );
+
+      if (answer === null) return;
+
+      const reason = answer.trim().toLowerCase();
+
+      if (!allowed.includes(reason)) {
+        return notice('Please select a listed reason.', true);
+      }
+
+      const details = prompt(
+        'Optional details for the moderation team:',
+        ''
+      );
+
+      if (details === null) return;
+
+      const payload = {
+        reporter_id: user.id,
+        reason,
+        details: details.trim() || null,
+        post_id: type === 'post' ? id : null,
+        comment_id: type === 'comment' ? id : null
+      };
+
+      const { error } = await db
+        .from('tbb_post_reports')
+        .insert(payload);
+
+      if (error) return showError(error);
+
+      notice(
+        'Your report was sent privately to the TBB team. 💗'
+      );
+    }
+
+    // -------------------------------------------------
+    // AUTHENTICATION + INITIALIZATION
+    // -------------------------------------------------
+
+    $('refresh').addEventListener('click', () => {
+      page = 0;
+      loadPosts(false);
+    });
+
+    $('more').addEventListener('click', async () => {
+      if (!hasMore) return;
+
+      page++;
+      await loadPosts(true);
+    });
+
+    $('signout').addEventListener('click', async () => {
+      await db.auth.signOut();
+      location.href = 'login.html';
+    });
+
+    async function init() {
+      try {
+        const {
+          data: { user: currentUser },
+          error: authError
+        } = await db.auth.getUser();
+
+        if (authError || !currentUser) {
+          notice('Please sign in to view Cover Story™.');
+
+          const link = el('a', '', ' Go to Baddie Login →');
+          link.href = 'login.html';
+          $('notice').append(link);
+
+          return;
+        }
+
+        user = currentUser;
+
+        const { data: membership, error: memberError } =
+          await db
+            .from('tbb_memberships')
+            .select('status')
+            .eq('user_id', user.id)
+            .maybeSingle();
+
+        if (memberError) throw memberError;
+
+        if (membership?.status !== 'approved') {
+          notice(
+            'Your TBB membership must be approved before ' +
+            'you can access Cover Story™.'
+          );
+          return;
+        }
+
+        $('signout').hidden = false;
+        $('app').hidden = false;
+
+        resetComposer();
+        clearNotice();
+
+        await loadPosts(false);
+
+      } catch (error) {
+        showError(error);
+      }
+    }
+
+    await init();
+
+  </script>
+
+  <script src="js/back-to-top.js" defer></script>
+
+</body>
+</html>

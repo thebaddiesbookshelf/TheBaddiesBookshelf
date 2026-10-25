@@ -1,0 +1,388 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#160b19">
+<meta name="description" content="Pink Press™ — The official digital publication of The Baddies Bookshelf.">
+<title>Pink Press™ | The Baddies Bookshelf</title>
+<link rel="icon" href="favicon.ico">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@400;600;700;800&family=Libre+Baskerville:wght@400;700&family=Montserrat:wght@400;600;700&family=Poppins:wght@400;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet">
+<style>
+:root{color-scheme:dark;--bg:#100912;--pink:#ff3ba9;--light:#ffd4ef;--muted:#bda7bd;--gold:#f3c77c}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 15% 0,#48203f 0,transparent 34%),radial-gradient(ellipse at 100% 30%,#351039 0,transparent 32%),var(--bg);color:#fff5fc;font:15px/1.6 "DM Sans",sans-serif}
+[hidden]{display:none!important}
+a{color:inherit;text-decoration:none}
+a:hover{color:#ff8acc}
+button{font:inherit;cursor:pointer}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;padding:16px clamp(16px,4vw,55px);border-bottom:1px solid #ffffff1e;background:#110916e8}
+.brand{font:27px "Bebas Neue",sans-serif;letter-spacing:1px}
+.brand span{color:var(--pink)}
+.nav{display:flex;align-items:center;gap:17px;flex-wrap:wrap;font-weight:700;font-size:13px}
+.page{max-width:1200px;margin:auto;padding:35px 18px 80px}
+.masthead{text-align:center;padding:48px 10px;border-top:1px solid var(--gold);border-bottom:1px solid var(--gold);background:radial-gradient(circle at 50% 50%,#4b203e55,transparent 70%)}
+.edition{color:var(--gold);font-weight:800;letter-spacing:3px;text-transform:uppercase;font-size:11px}
+.masthead h1{font-family:"Bebas Neue",sans-serif;font-size:clamp(75px,14vw,155px);line-height:.95;letter-spacing:3px;margin:18px 0 8px}
+.masthead h1 span{color:var(--pink)}
+.tagline{font-family:"Playfair Display",serif;font-style:italic;font-size:clamp(15px,2.5vw,22px);color:var(--light)}
+.issuebar{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;border-bottom:1px solid #ffffff35;padding:13px 0;margin-bottom:30px;color:var(--muted);font-size:12px;font-weight:700;letter-spacing:1px}
+.notice{border:1px solid #ac5d93;background:#30162c;border-radius:14px;padding:15px;margin:20px 0}
+.notice.error{background:#471d2a;border-color:#e4778e}
+.categories{display:flex;gap:9px;flex-wrap:wrap;justify-content:center;margin:30px 0}
+.category{background:#301c35;border:1px solid #805075;border-radius:30px;padding:9px 15px;color:white;font-weight:800;font-size:12px}
+.category.active{background:#673052;border-color:var(--pink)}
+.sectiontitle{font-family:"Playfair Display",serif;font-size:30px;margin:30px 0 18px}
+.featured{display:grid;grid-template-columns:1.1fr 1fr;gap:25px;align-items:center;background:linear-gradient(125deg,#4b203e,#201224 75%);border:1px solid #935b83;border-radius:22px;padding:25px;margin-bottom:35px}
+.featured h2{font-family:"Playfair Display",serif;font-size:clamp(30px,4vw,53px);line-height:1.16;margin:15px 0;overflow-wrap:anywhere}
+.featured p{color:#e9d0e2}
+.featured-image{width:100%;height:380px;object-fit:cover;border-radius:15px;background:#381c37}
+.featured-fallback{display:grid;place-items:center;height:380px;border-radius:15px;background:linear-gradient(130deg,#7a335d,#2b1932);font:35px "Playfair Display",serif;text-align:center;padding:25px;color:#ffe1f2}
+.eyebrow{color:var(--gold);font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.articlecard{display:flex;flex-direction:column;background:#201224;border:1px solid #673d64;border-radius:18px;overflow:hidden;min-width:0}
+.card-image{width:100%;height:210px;object-fit:cover;background:#381c37}
+.card-fallback{display:grid;place-items:center;height:210px;background:linear-gradient(135deg,#79345f,#2b1932);font:25px "Playfair Display",serif;color:#ffe1f2;text-align:center;padding:20px}
+.card-content{padding:22px;display:flex;flex-direction:column;flex:1}
+.articlecard h3{font-family:"Playfair Display",serif;font-size:23px;line-height:1.3;margin:13px 0;overflow-wrap:anywhere}
+.articlecard p{color:#d9bdd4;flex:1;overflow-wrap:anywhere}
+.meta{color:var(--muted);font-size:12px}
+.btn{border:0;border-radius:10px;background:var(--pink);color:white;padding:11px 17px;font-weight:800}
+.btn.ghost{background:#3a2440;border:1px solid #9c5a8b}
+.empty{text-align:center;background:#201224;border:1px solid #673d64;border-radius:18px;padding:45px 20px}
+.empty h2{font-family:"Playfair Display",serif;color:var(--light)}
+.reader{max-width:850px;margin:35px auto;background:#201224;border:1px solid #673d64;border-radius:22px;padding:clamp(22px,5vw,55px)}
+.reader h1{font-family:"Playfair Display",serif;font-size:clamp(32px,5vw,55px);line-height:1.2;overflow-wrap:anywhere}
+.reader .excerpt{font-size:19px;color:var(--light);font-style:italic}
+.reader-cover{width:100%;max-height:500px;object-fit:cover;border-radius:15px;margin:25px 0}
+.reader-divider{height:1px;background:linear-gradient(90deg,transparent,#b06b9d,transparent);margin:28px 0}
+.readerbody.ql-container{border:0;font-size:17px;color:#fff5fc}
+.readerbody .ql-editor{padding:0;min-height:0;line-height:1.9;overflow-wrap:anywhere}
+.readerbody .ql-editor p{margin-bottom:15px}
+.readerbody .ql-editor a{color:#ff8acc;text-decoration:underline}
+.readerbody .ql-editor blockquote{border-left:4px solid var(--pink);padding-left:18px;color:#ffd4ef;font-style:italic;margin:22px 0}
+.ql-font-playfair{font-family:"Playfair Display",serif}
+.ql-font-poppins{font-family:"Poppins",sans-serif}
+.ql-font-montserrat{font-family:"Montserrat",sans-serif}
+.ql-font-baskerville{font-family:"Libre Baskerville",serif}
+.ql-font-georgia{font-family:Georgia,serif}
+.ql-font-greatvibes{font-family:"Great Vibes",cursive}
+.ql-font-dmsans{font-family:"DM Sans",sans-serif}
+footer{text-align:center;padding:35px;color:#9d819e;font-size:12px}
+@media(max-width:850px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.featured{grid-template-columns:1fr}.featured-image,.featured-fallback{height:300px}}
+@media(max-width:550px){.grid{grid-template-columns:1fr}.topbar{justify-content:center}.masthead{padding:30px 0}.card-content{padding:18px}.reader{padding:22px 17px}.readerbody.ql-container{font-size:16px}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="home.html">THE BADDIES <span>BOOKSHELF</span> ♕</a>
+  <nav class="nav">
+    <a href="home.html">Home</a>
+    <a href="cover-story.html">Cover Story™</a>
+    <a href="commons.html">Commons™</a>
+    <a href="login.html">My Account</a>
+  </nav>
+</header>
+
+<main class="page">
+  <header class="masthead">
+    <div class="edition">✦ THE OFFICIAL TBB PUBLICATION ✦</div>
+    <h1>PINK <span>PRESS™</span></h1>
+    <p class="tagline">The stories. The spotlights. The Baddies.</p>
+    <div class="edition">WHERE EVERY BADDIE IS HEADLINE-WORTHY</div>
+  </header>
+
+  <div class="issuebar">
+    <span>THE BADDIES BOOKSHELF</span>
+    <span>THE DIGITAL EDITION</span>
+    <span id="issueDate"></span>
+  </div>
+
+  <div id="notice" class="notice" role="status" aria-live="polite">Opening the latest edition…</div>
+
+  <div id="app" hidden>
+    <div id="magazine">
+      <div class="categories" id="categories"></div>
+      <section id="featuredSection" hidden>
+        <h2 class="sectiontitle">💋 The Cover Feature</h2>
+        <div id="featured"></div>
+      </section>
+      <section>
+        <h2 id="sectionTitle" class="sectiontitle">✦ Fresh Off the Press</h2>
+        <div id="articles" class="grid"></div>
+      </section>
+    </div>
+
+    <section id="reader" class="reader" hidden>
+      <button id="back" class="btn ghost" type="button">← Back to Pink Press</button>
+      <div id="readerContent"></div>
+      <div class="reader-divider"></div>
+      <button id="backBottom" class="btn ghost" type="button">← More Pink Press Stories</button>
+    </section>
+  </div>
+</main>
+
+<footer>✦ PINK PRESS™ · A TBB ORIGINAL PUBLICATION ✦</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+<script type="module">
+import {createClient} from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+const db=createClient(
+  'https://rmfmdetdykwfxxfzamhj.supabase.co',
+  'sb_publishable_6UBKZvkvkyPNACqDDNRjNQ_wlgy-Jr2'
+);
+
+const $=id=>document.getElementById(id);
+const BUCKET='tbb-press-covers';
+
+const CATEGORIES={
+  all:'✦ All Stories',
+  features:'💋 Features',
+  baddie_spotlights:'👑 Baddie Spotlights',
+  interviews:'🎤 Interviews',
+  bookish_buzz:'📚 Bookish Buzz',
+  community_news:'💌 Community News',
+  editors_picks:"🎀 Editor's Picks"
+};
+
+let articles=[];
+let activeCategory='all';
+const coverUrls=new Map();
+
+const Font=Quill.import('formats/font');
+Font.whitelist=['dmsans','playfair','poppins','montserrat','baskerville','georgia','greatvibes'];
+Quill.register(Font,true);
+
+const Size=Quill.import('attributors/style/size');
+Size.whitelist=['12px','14px','18px','24px','32px'];
+Quill.register(Size,true);
+
+function el(tag,cls='',text){
+  const node=document.createElement(tag);
+  if(cls)node.className=cls;
+  if(text!==undefined)node.textContent=text;
+  return node;
+}
+
+function button(label,cls,callback){
+  const b=el('button',cls,label);
+  b.type='button';
+  b.addEventListener('click',callback);
+  return b;
+}
+
+function notice(message,error=false){
+  $('notice').textContent=message;
+  $('notice').className='notice'+(error?' error':'');
+  $('notice').hidden=false;
+}
+
+function formatDate(value){
+  return value?new Date(value).toLocaleDateString(undefined,{
+    month:'long',day:'numeric',year:'numeric'
+  }):'Unpublished';
+}
+
+function categoryName(key){return CATEGORIES[key]||'✦ Pink Press'}
+
+async function getCoverUrl(path){
+  if(!path)return null;
+  if(coverUrls.has(path))return coverUrls.get(path);
+  const {data,error}=await db.storage.from(BUCKET).createSignedUrl(path,300);
+  if(error||!data?.signedUrl)return null;
+  coverUrls.set(path,data.signedUrl);
+  return data.signedUrl;
+}
+
+function makeCover(url,featured=false){
+  if(url){
+    const img=el('img',featured?'featured-image':'card-image');
+    img.src=url;
+    img.alt='Article cover image';
+    img.loading='lazy';
+    return img;
+  }
+  return el('div',featured?'featured-fallback':'card-fallback','PINK PRESS™ 💋');
+}
+
+function makeCard(article,featured=false){
+  const card=el('article',featured?'featured':'articlecard');
+  const cover=makeCover(coverUrls.get(article.cover_image_path),featured);
+  const content=el('div',featured?'featured-content':'card-content');
+
+  content.append(
+    el('div','eyebrow',categoryName(article.category)),
+    el(featured?'h2':'h3','',article.title),
+    el('p','',article.excerpt),
+    el('p','meta',formatDate(article.published_at)),
+    button('Read the Story →','btn',()=>openArticle(article))
+  );
+
+  card.append(cover,content);
+  return card;
+}
+
+function renderCategories(){
+  const root=$('categories');
+  root.replaceChildren();
+  for(const [key,label] of Object.entries(CATEGORIES)){
+    root.append(button(
+      label,
+      'category'+(key===activeCategory?' active':''),
+      ()=>{
+        activeCategory=key;
+        renderCategories();
+        renderMagazine();
+      }
+    ));
+  }
+}
+
+function renderMagazine(){
+  const root=$('articles');
+  root.replaceChildren();
+
+  const filtered=articles.filter(a=>activeCategory==='all'||a.category===activeCategory);
+  $('sectionTitle').textContent=activeCategory==='all'?'✦ Fresh Off the Press':categoryName(activeCategory);
+
+  const feature=activeCategory==='all'?filtered.find(a=>a.is_featured):null;
+  $('featuredSection').hidden=!feature;
+  $('featured').replaceChildren();
+  if(feature)$('featured').append(makeCard(feature,true));
+
+  const regular=feature?filtered.filter(a=>a.id!==feature.id):filtered;
+
+  if(!regular.length){
+    const empty=el('div','empty');
+    empty.style.gridColumn='1/-1';
+    empty.append(
+      el('h2','',filtered.length?'More stories are on the way! 💗':'The newsroom is getting ready…'),
+      el('p','','Fresh headlines and Baddie features will appear here once published.')
+    );
+    root.append(empty);
+    return;
+  }
+
+  for(const article of regular)root.append(makeCard(article));
+}
+
+function renderRichBody(container,body){
+  const reader=new Quill(container,{
+    theme:'snow',
+    readOnly:true,
+    modules:{toolbar:false}
+  });
+  try{
+    const saved=JSON.parse(body||'');
+    if(saved&&Array.isArray(saved.ops))reader.setContents(saved,'silent');
+    else reader.setText(body||'','silent');
+  }catch{
+    reader.setText(body||'','silent');
+  }
+}
+
+function openArticle(article){
+  const root=$('readerContent');
+  root.replaceChildren();
+
+  root.append(
+    el('p','eyebrow',categoryName(article.category)),
+    el('h1','',article.title),
+    el('p','excerpt',article.excerpt),
+    el('p','meta',formatDate(article.published_at))
+  );
+
+  const url=coverUrls.get(article.cover_image_path);
+  if(url){
+    const img=el('img','reader-cover');
+    img.src=url;
+    img.alt=article.title+' cover image';
+    root.append(img);
+  }
+
+  root.append(el('div','reader-divider'));
+
+  const body=el('div','readerbody');
+  root.append(body);
+  renderRichBody(body,article.body);
+
+  $('magazine').hidden=true;
+  $('reader').hidden=false;
+  history.replaceState(null,'','#'+encodeURIComponent(article.slug));
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function closeArticle(){
+  $('reader').hidden=true;
+  $('magazine').hidden=false;
+  history.replaceState(null,'',location.pathname+location.search);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+$('back').addEventListener('click',closeArticle);
+$('backBottom').addEventListener('click',closeArticle);
+
+async function init(){
+  try{
+    $('issueDate').textContent=new Date().toLocaleDateString(undefined,{
+      month:'long',year:'numeric'
+    }).toUpperCase();
+
+    const {data:{user},error:authError}=await db.auth.getUser();
+    if(authError||!user){
+      notice('Please sign in to read Pink Press™.');
+      const link=el('a','',' Go to Baddie Login →');
+      link.href='login.html';
+      $('notice').append(link);
+      return;
+    }
+
+    const {data:membership,error:memberError}=await db.from('tbb_memberships')
+      .select('status').eq('user_id',user.id).maybeSingle();
+    if(memberError)throw memberError;
+    if(membership?.status!=='approved'){
+      notice('Pink Press™ is available to approved TBB members.');
+      return;
+    }
+
+    const {data,error}=await db.from('tbb_press_articles')
+      .select('id,title,slug,excerpt,body,category,is_featured,cover_image_path,published_at')
+      .eq('status','published')
+      .order('published_at',{ascending:false})
+      .limit(100);
+    if(error)throw error;
+
+    articles=data||[];
+
+    await Promise.all(
+      [...new Set(articles.map(a=>a.cover_image_path).filter(Boolean))]
+        .map(async path=>{
+          await getCoverUrl(path);
+        })
+    );
+
+    $('app').hidden=false;
+    $('notice').hidden=true;
+    renderCategories();
+    renderMagazine();
+
+    if(location.hash.length>1){
+      let slug='';
+      try{slug=decodeURIComponent(location.hash.slice(1))}catch{}
+      const article=articles.find(a=>a.slug===slug);
+      if(article)openArticle(article);
+    }
+  }catch(error){
+    console.error(error);
+    notice(error?.message||'Could not load Pink Press™.',true);
+  }
+}
+
+await init();
+</script>
+<script src="js/back-to-top.js" defer></script>
+</body>
+</html>

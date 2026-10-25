@@ -1,0 +1,693 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#160b19">
+<title>Pink Press™ Editorial Studio | TBB</title>
+<link rel="icon" href="favicon.ico">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@400;600;700;800&family=Libre+Baskerville:wght@400;700&family=Montserrat:wght@400;600;700&family=Poppins:wght@400;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet">
+<style>
+:root{color-scheme:dark;--bg:#100912;--panel:#201224;--pink:#ff3ba9;--light:#ffd4ef;--muted:#bda7bd;--gold:#f3c77c}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;color:#fff5fc;font:15px/1.5 "DM Sans",sans-serif;background:radial-gradient(ellipse at 15% 0,#48203f 0,transparent 34%),radial-gradient(ellipse at 100% 30%,#351039 0,transparent 32%),var(--bg)}
+[hidden]{display:none!important}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+button:disabled{opacity:.5;cursor:not-allowed}
+a{color:inherit;text-decoration:none}
+a:hover{color:#ff8acc}
+.topbar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;padding:16px clamp(16px,4vw,55px);border-bottom:1px solid #ffffff1e;background:#110916e8}
+.brand{font:27px "Bebas Neue",sans-serif;letter-spacing:1px}
+.brand span{color:var(--pink)}
+.nav{display:flex;align-items:center;flex-wrap:wrap;gap:17px;font-weight:700;font-size:13px}
+.page{max-width:1350px;margin:auto;padding:35px 18px 80px}
+.hero{text-align:center;padding:20px 0 35px}
+.eyebrow{color:var(--gold);font-weight:800;font-size:12px;letter-spacing:3px;text-transform:uppercase}
+h1,h2,h3{font-family:"Playfair Display",serif}
+.hero h1{font-size:clamp(38px,6vw,65px);margin:8px 0}
+.hero h1 em{color:var(--pink);font-style:normal}
+.muted{color:var(--muted);font-size:12px}
+.layout{display:grid;grid-template-columns:330px minmax(0,1fr);gap:22px;align-items:start}
+.panel{background:#201224ed;border:1px solid #673d64;border-radius:20px;padding:20px;box-shadow:0 10px 35px #0003;min-width:0}
+.sidebar{position:sticky;top:15px}
+.sidebar h2{font-size:23px;margin:0 0 15px}
+.article-list{display:grid;gap:9px;max-height:65vh;overflow-y:auto;margin-top:15px}
+.article-item{display:block;width:100%;text-align:left;color:white;background:#301c35;border:1px solid #805075;border-radius:13px;padding:13px}
+.article-item.active{background:#673052;border-color:#ff61bc}
+.article-item strong{display:block;margin-bottom:5px;overflow-wrap:anywhere}
+.row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.between{justify-content:space-between}
+.btn{background:var(--pink);border:0;color:white;border-radius:10px;padding:10px 15px;font-weight:800}
+.btn.ghost{background:#3a2440;border:1px solid #9c5a8b}
+.btn.danger{background:#9d3157}
+.btn.small{padding:7px 11px;font-size:12px}
+.field{display:block;margin:17px 0}
+.field>span{display:block;font-weight:800;margin-bottom:8px}
+input,textarea,select{display:block;width:100%;padding:12px;color:white;background:#120b16;border:1px solid #805275;border-radius:11px}
+textarea{min-height:110px;resize:vertical}
+input:focus,textarea:focus,select:focus{outline:2px solid #ff58b6}
+.checkbox-row{display:flex;align-items:center;gap:10px;margin:20px 0}
+.checkbox-row input{width:auto;accent-color:var(--pink)}
+.notice{background:#30162c;border:1px solid #ac5d93;border-radius:14px;padding:14px;margin:15px 0}
+.notice.error{background:#471d2a;border-color:#e4778e}
+.status{display:inline-block;border:1px solid #805075;border-radius:30px;padding:4px 10px;font-size:11px;font-weight:800;text-transform:uppercase}
+.preview{background:#170d1a;border:1px solid #805275;border-radius:15px;padding:25px;margin-top:20px;overflow-wrap:anywhere}
+.preview h2{font-size:clamp(28px,4vw,43px);line-height:1.2}
+.editor-shell{background:#170d1a;border:1px solid #805275;border-radius:14px;overflow:hidden}
+#pressToolbar{display:flex;flex-wrap:wrap;align-items:center;gap:5px;padding:10px;background:#ffe7f4;border:0}
+#pressToolbar .ql-formats{margin-right:5px}
+#pressToolbar button,#pressToolbar .ql-picker-label{color:#48203f}
+#pressToolbar .ql-stroke{stroke:#48203f}
+#pressToolbar .ql-fill{fill:#48203f}
+#pressToolbar .ql-picker{color:#48203f}
+#pressToolbar .ql-picker-options{background:#fff0f8;color:#351039;z-index:20}
+#pressToolbar .ql-picker.ql-font{width:140px}
+#pressToolbar .ql-picker.ql-size{width:95px}
+#pressToolbar .ql-picker.ql-header{width:115px}
+#pressEditor{min-height:380px;border:0;color:#fff5fc;font-size:16px}
+#pressEditor .ql-editor{min-height:380px;padding:22px;line-height:1.8;overflow-wrap:anywhere}
+#pressEditor .ql-editor.ql-blank::before{color:#bda7bd;left:22px}
+.ql-font-playfair{font-family:"Playfair Display",serif}
+.ql-font-poppins{font-family:"Poppins",sans-serif}
+.ql-font-montserrat{font-family:"Montserrat",sans-serif}
+.ql-font-baskerville{font-family:"Libre Baskerville",serif}
+.ql-font-georgia{font-family:Georgia,serif}
+.ql-font-greatvibes{font-family:"Great Vibes",cursive}
+.ql-font-dmsans{font-family:"DM Sans",sans-serif}
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value="playfair"]::before,.ql-snow .ql-picker.ql-font .ql-picker-item[data-value="playfair"]::before{content:"Playfair"}
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value="poppins"]::before,.ql-snow .ql-picker.ql-font .ql-picker-item[data-value="poppins"]::before{content:"Poppins"}
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value="montserrat"]::before,.ql-snow .ql-picker.ql-font .ql-picker-item[data-value="montserrat"]::before{content:"Montserrat"}
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value="baskerville"]::before,.ql-snow .ql-picker.ql-font .ql-picker-item[data-value="baskerville"]::before{content:"Baskerville"}
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value="georgia"]::before,.ql-snow .ql-picker.ql-font .ql-picker-item[data-value="georgia"]::before{content:"Georgia"}
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value="greatvibes"]::before,.ql-snow .ql-picker.ql-font .ql-picker-item[data-value="greatvibes"]::before{content:"Great Vibes"}
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value="dmsans"]::before,.ql-snow .ql-picker.ql-font .ql-picker-item[data-value="dmsans"]::before{content:"DM Sans"}
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="12px"]::before,.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="12px"]::before{content:"12px"}
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="14px"]::before,.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="14px"]::before{content:"14px"}
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="18px"]::before,.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="18px"]::before{content:"18px"}
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="24px"]::before,.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="24px"]::before{content:"24px"}
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="32px"]::before,.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="32px"]::before{content:"32px"}
+.emoji-panel{display:flex;flex-wrap:wrap;gap:7px;background:#301c35;padding:13px;border:1px solid #805275;border-radius:12px;margin-top:10px;max-height:240px;overflow-y:auto}
+.emoji-panel button{border:0;border-radius:8px;background:#48203f;font-size:22px;padding:7px}
+.emoji-panel button:hover{background:#805275}
+#pressPreview.ql-container{border:0}
+#pressPreview .ql-editor{padding:0;min-height:0;color:#fff5fc;line-height:1.85;overflow-wrap:anywhere}
+#pressPreview .ql-editor a,#pressEditor .ql-editor a{color:#ff8acc;text-decoration:underline}
+.editor-help{color:var(--muted);font-size:12px;margin-top:10px}
+.cover-box{border:1px dashed #ae6598;border-radius:15px;padding:16px;background:#2b1830}
+.cover-box input[type=file]{margin:12px 0}
+.cover-image{width:100%;max-height:380px;object-fit:cover;border-radius:12px;display:block;margin:12px 0}
+.cover-placeholder{padding:45px 20px;text-align:center;border-radius:12px;background:linear-gradient(130deg,#6a2c56,#27162e);font-family:"Playfair Display",serif;color:#ffd4ef}
+.preview-cover{width:100%;max-height:430px;object-fit:cover;border-radius:12px;margin:12px 0 20px}
+@media(max-width:850px){.layout{grid-template-columns:1fr}.sidebar{position:static}.article-list{max-height:280px}}
+@media(max-width:550px){.topbar{justify-content:center}.panel{padding:15px}#pressEditor .ql-editor{padding:14px}.preview{padding:16px}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="home.html">THE BADDIES <span>BOOKSHELF</span> ♕</a>
+  <nav class="nav">
+    <a href="pink-press.html">Pink Press™</a>
+    <a href="cover-story.html">Cover Story™</a>
+    <a href="admin.html">Admin HQ</a>
+    <a href="home.html">Home</a>
+  </nav>
+</header>
+
+<main class="page">
+  <section class="hero">
+    <div class="eyebrow">✦ THE TBB NEWSROOM ✦</div>
+    <h1>Pink Press™ <em>Editorial Studio</em></h1>
+    <p class="muted">Write the headlines. Spotlight the Baddies. Make every edition unforgettable. 💋</p>
+  </section>
+
+  <div id="notice" class="notice" role="status" aria-live="polite">Checking editorial permissions…</div>
+
+  <div id="app" class="layout" hidden>
+    <aside class="sidebar panel">
+      <div class="row between">
+        <h2>📰 Newsroom</h2>
+        <button id="newArticle" class="btn small" type="button">+ New</button>
+      </div>
+      <p class="muted">Drafts, published stories, and archived articles.</p>
+      <div id="articleList" class="article-list"></div>
+      <button id="reload" class="btn ghost small" type="button" style="margin-top:15px">Refresh Articles</button>
+    </aside>
+
+    <section class="panel">
+      <div class="row between">
+        <h2 id="editorHeading">✍🏾 New Article</h2>
+        <span id="statusBadge" class="status">New</span>
+      </div>
+
+      <form id="editor">
+        <label class="field" for="title">
+          <span>Article Headline</span>
+          <input id="title" maxlength="180" required placeholder="Give the Baddies a headline worth reading…">
+        </label>
+
+        <label class="field" for="slug">
+          <span>Article URL Slug</span>
+          <input id="slug" maxlength="180" required pattern="[a-z0-9]+(-[a-z0-9]+)*" placeholder="your-article-headline">
+        </label>
+
+        <label class="field" for="category">
+          <span>Editorial Category</span>
+          <select id="category">
+            <option value="features">💋 Features</option>
+            <option value="baddie_spotlights">👑 Baddie Spotlights</option>
+            <option value="interviews">🎤 Interviews</option>
+            <option value="bookish_buzz">📚 Bookish Buzz</option>
+            <option value="community_news">💌 Community News</option>
+            <option value="editors_picks">🎀 Editor's Picks</option>
+          </select>
+        </label>
+
+        <label class="field" for="excerpt">
+          <span>Story Teaser</span>
+          <textarea id="excerpt" maxlength="500" placeholder="A short introduction that makes Baddies want to read more…"></textarea>
+        </label>
+
+        <div class="field">
+          <span>🖼️ Article Cover Image</span>
+          <div class="cover-box">
+            <div id="coverPlaceholder" class="cover-placeholder">✦ YOUR STORY DESERVES A COVER ✦</div>
+            <img id="coverPreview" class="cover-image" alt="Article cover preview" hidden>
+            <input id="coverFile" type="file" accept="image/jpeg,image/png,image/webp">
+            <div class="row">
+              <button id="removeCover" class="btn ghost small" type="button">Remove Cover</button>
+              <span class="muted">JPG, PNG, or WEBP · Maximum 5 MB</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <span>✍🏾 Full Article</span>
+          <div class="editor-shell">
+            <div id="pressToolbar">
+              <span class="ql-formats">
+                <select class="ql-font">
+                  <option value="dmsans" selected>DM Sans</option>
+                  <option value="playfair">Playfair</option>
+                  <option value="poppins">Poppins</option>
+                  <option value="montserrat">Montserrat</option>
+                  <option value="baskerville">Baskerville</option>
+                  <option value="georgia">Georgia</option>
+                  <option value="greatvibes">Great Vibes</option>
+                </select>
+                <select class="ql-size">
+                  <option selected>Normal</option>
+                  <option value="12px">12px</option>
+                  <option value="14px">14px</option>
+                  <option value="18px">18px</option>
+                  <option value="24px">24px</option>
+                  <option value="32px">32px</option>
+                </select>
+              </span>
+              <span class="ql-formats">
+                <select class="ql-header">
+                  <option selected>Normal</option>
+                  <option value="1">Heading 1</option>
+                  <option value="2">Heading 2</option>
+                  <option value="3">Heading 3</option>
+                </select>
+              </span>
+              <span class="ql-formats">
+                <button class="ql-bold" type="button"></button>
+                <button class="ql-italic" type="button"></button>
+                <button class="ql-underline" type="button"></button>
+                <button class="ql-strike" type="button"></button>
+              </span>
+              <span class="ql-formats">
+                <select class="ql-color"></select>
+                <select class="ql-background"></select>
+              </span>
+              <span class="ql-formats">
+                <select class="ql-align"></select>
+                <button class="ql-blockquote" type="button"></button>
+              </span>
+              <span class="ql-formats">
+                <button class="ql-list" value="ordered" type="button"></button>
+                <button class="ql-list" value="bullet" type="button"></button>
+                <button class="ql-link" type="button"></button>
+              </span>
+              <span class="ql-formats">
+                <button class="ql-clean" type="button"></button>
+              </span>
+            </div>
+            <div id="pressEditor"></div>
+          </div>
+          <button id="emojiToggle" class="btn ghost small" type="button" style="margin-top:12px">💗 Emoji Keyboard</button>
+          <div id="emojiPanel" class="emoji-panel" hidden></div>
+          <p class="editor-help">Highlight text to style it with fonts, colors, headings, and links.</p>
+        </div>
+
+        <label class="checkbox-row">
+          <input id="featured" type="checkbox">
+          <strong>💋 Make this the Cover Feature</strong>
+        </label>
+
+        <p class="muted">The most recently published featured story appears at the top of the magazine.</p>
+
+        <div class="row" style="margin-top:22px">
+          <button id="saveDraft" class="btn ghost" type="button">💾 Save Draft</button>
+          <button id="publish" class="btn" type="button">📰 Publish Story</button>
+          <button id="archive" class="btn danger" type="button" hidden>📦 Archive</button>
+          <button id="previewButton" class="btn ghost" type="button">👁️ Preview</button>
+        </div>
+      </form>
+
+      <div id="preview" class="preview" hidden></div>
+    </section>
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+<script type="module">
+import {createClient} from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+const db=createClient(
+  'https://rmfmdetdykwfxxfzamhj.supabase.co',
+  'sb_publishable_6UBKZvkvkyPNACqDDNRjNQ_wlgy-Jr2'
+);
+
+const $=id=>document.getElementById(id);
+const BUCKET='tbb-press-covers';
+const CATEGORIES={
+  features:'Features',
+  baddie_spotlights:'Baddie Spotlights',
+  interviews:'Interviews',
+  bookish_buzz:'Bookish Buzz',
+  community_news:'Community News',
+  editors_picks:"Editor's Picks"
+};
+
+let user=null;
+let articles=[];
+let selectedId=null;
+let selectedStatus='new';
+let busy=false;
+let coverFile=null;
+let coverPath=null;
+let coverObjectUrl=null;
+let coverRevision=0;
+let lastEditorRange=null;
+
+const Font=Quill.import('formats/font');
+Font.whitelist=['dmsans','playfair','poppins','montserrat','baskerville','georgia','greatvibes'];
+Quill.register(Font,true);
+
+const Size=Quill.import('attributors/style/size');
+Size.whitelist=['12px','14px','18px','24px','32px'];
+Quill.register(Size,true);
+
+const quill=new Quill('#pressEditor',{
+  theme:'snow',
+  placeholder:'Once upon a Baddie… 💋',
+  modules:{
+    toolbar:'#pressToolbar',
+    history:{delay:800,maxStack:100,userOnly:true}
+  }
+});
+
+quill.on('selection-change',range=>{
+  if(range)lastEditorRange=range;
+});
+
+const EMOJIS=[
+  '💗','💋','👑','🎀','✨','💅🏾','💕','💖','📚','📖','📰','✍🏾',
+  '💌','🌸','🦋','💐','🥹','😭','😂','😍','🥰','🤭','👀','🔥',
+  '⭐','🌟','💎','🏆','☕','🍒','🩷','🪩','🧸','🎉','💜','🖤',
+  '🤎','💛','🌷','🫶🏾','💃🏾','💄','🛍️','💫','🌙','☁️','🧁',
+  '🍓','🥂','🫖','🎧','🎶','💞','💘','💝','🪄','🌹','🌺','❄️'
+];
+
+for(const emoji of EMOJIS){
+  const b=document.createElement('button');
+  b.type='button';
+  b.textContent=emoji;
+  b.addEventListener('click',()=>{
+    const range=lastEditorRange||quill.getSelection()||{index:quill.getLength()-1,length:0};
+    const index=Math.min(range.index,quill.getLength()-1);
+    if(range.length)quill.deleteText(index,range.length,'user');
+    quill.insertText(index,emoji,'user');
+    quill.setSelection(index+emoji.length,0,'silent');
+    lastEditorRange={index:index+emoji.length,length:0};
+  });
+  $('emojiPanel').append(b);
+}
+
+$('emojiToggle').addEventListener('click',()=>{
+  $('emojiPanel').hidden=!$('emojiPanel').hidden;
+});
+
+function el(tag,cls='',text){
+  const node=document.createElement(tag);
+  if(cls)node.className=cls;
+  if(text!==undefined)node.textContent=text;
+  return node;
+}
+
+function notice(message,error=false){
+  $('notice').textContent=message;
+  $('notice').className='notice'+(error?' error':'');
+  $('notice').hidden=false;
+}
+
+function clearNotice(){$('notice').hidden=true}
+function fail(error){console.error(error);notice(error?.message||'Something went wrong.',true)}
+
+function makeSlug(value){
+  return value.toLowerCase().normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g,'')
+    .replace(/[^a-z0-9]+/g,'-')
+    .replace(/^-+|-+$/g,'')
+    .slice(0,180).replace(/-+$/g,'');
+}
+
+function getRichBody(){return JSON.stringify(quill.getContents())}
+
+function setRichBody(value){
+  quill.setText('','silent');
+  if(!value)return;
+  try{
+    const parsed=JSON.parse(value);
+    if(parsed&&Array.isArray(parsed.ops)){
+      quill.setContents(parsed,'silent');
+      return;
+    }
+  }catch{}
+  quill.setText(value,'silent');
+}
+
+function formData(){
+  return{
+    title:$('title').value.trim(),
+    slug:$('slug').value.trim().toLowerCase(),
+    category:$('category').value,
+    excerpt:$('excerpt').value.trim(),
+    body:getRichBody(),
+    is_featured:$('featured').checked,
+    cover_image_path:coverPath
+  };
+}
+
+function setBusy(value){
+  busy=value;
+  for(const id of ['newArticle','saveDraft','publish','archive','reload','previewButton','removeCover']){
+    $(id).disabled=value;
+  }
+  $('coverFile').disabled=value;
+}
+
+function releaseObjectUrl(){
+  if(coverObjectUrl){
+    URL.revokeObjectURL(coverObjectUrl);
+    coverObjectUrl=null;
+  }
+}
+
+async function renderCover(){
+  const revision=++coverRevision;
+  const img=$('coverPreview');
+  img.hidden=true;
+  img.removeAttribute('src');
+  $('coverPlaceholder').hidden=false;
+
+  if(coverFile){
+    releaseObjectUrl();
+    coverObjectUrl=URL.createObjectURL(coverFile);
+    img.src=coverObjectUrl;
+    img.hidden=false;
+    $('coverPlaceholder').hidden=true;
+    return;
+  }
+
+  releaseObjectUrl();
+
+  if(coverPath){
+    const {data,error}=await db.storage.from(BUCKET).createSignedUrl(coverPath,300);
+    if(revision!==coverRevision)return;
+    if(!error&&data?.signedUrl){
+      img.src=data.signedUrl;
+      img.hidden=false;
+      $('coverPlaceholder').hidden=true;
+    }
+  }
+}
+
+$('coverFile').addEventListener('change',()=>{
+  const file=$('coverFile').files?.[0]||null;
+  if(!file)return;
+  if(!['image/jpeg','image/png','image/webp'].includes(file.type)||file.size>5*1024*1024){
+    $('coverFile').value='';
+    return notice('Choose a JPG, PNG, or WEBP image under 5 MB.',true);
+  }
+  coverFile=file;
+  renderCover();
+});
+
+$('removeCover').addEventListener('click',()=>{
+  if(busy)return;
+  coverFile=null;
+  coverPath=null;
+  $('coverFile').value='';
+  renderCover();
+});
+
+function resetEditor(){
+  selectedId=null;
+  selectedStatus='new';
+  $('editor').reset();
+  $('slug').dataset.manual='';
+  setRichBody('');
+  lastEditorRange=null;
+  coverFile=null;
+  coverPath=null;
+  $('coverFile').value='';
+  renderCover();
+  $('preview').hidden=true;
+  $('emojiPanel').hidden=true;
+  $('editorHeading').textContent='✍🏾 New Article';
+  $('statusBadge').textContent='New';
+  $('archive').hidden=true;
+  $('publish').textContent='📰 Publish Story';
+  renderList();
+}
+
+function selectArticle(article){
+  selectedId=article.id;
+  selectedStatus=article.status;
+  $('title').value=article.title;
+  $('slug').value=article.slug;
+  $('slug').dataset.manual='true';
+  $('category').value=article.category;
+  $('excerpt').value=article.excerpt||'';
+  $('featured').checked=!!article.is_featured;
+  setRichBody(article.body||'');
+  coverFile=null;
+  coverPath=article.cover_image_path||null;
+  $('coverFile').value='';
+  renderCover();
+  $('editorHeading').textContent='✍🏾 Edit Article';
+  $('statusBadge').textContent=article.status;
+  $('archive').hidden=article.status==='archived';
+  $('publish').textContent=article.status==='published'?'💾 Update Published Story':'📰 Publish Story';
+  $('preview').hidden=true;
+  $('emojiPanel').hidden=true;
+  lastEditorRange=null;
+  renderList();
+}
+
+function renderList(){
+  const root=$('articleList');
+  root.replaceChildren();
+  if(!articles.length){
+    root.append(el('p','muted','The newsroom is empty. Create your first article! 💗'));
+    return;
+  }
+  for(const article of articles){
+    const item=el('button','article-item'+(article.id===selectedId?' active':''));
+    item.type='button';
+    item.append(
+      el('strong','',article.title),
+      el('div','muted',(CATEGORIES[article.category]||article.category)+' · '+article.status+(article.is_featured?' · 💋 Featured':''))
+    );
+    item.addEventListener('click',()=>{
+      if(!busy)selectArticle(article);
+    });
+    root.append(item);
+  }
+}
+
+async function loadArticles(){
+  const {data,error}=await db.from('tbb_press_articles')
+    .select('id,title,slug,excerpt,body,category,status,is_featured,cover_image_path,created_at,published_at')
+    .order('created_at',{ascending:false})
+    .limit(200);
+  if(error)throw error;
+  articles=data||[];
+  if(selectedId){
+    const current=articles.find(a=>a.id===selectedId);
+    if(current)selectArticle(current);
+    else resetEditor();
+  }else renderList();
+}
+
+async function uploadCover(){
+  if(!coverFile)return coverPath;
+
+  const extension=coverFile.type==='image/png'?'png':coverFile.type==='image/webp'?'webp':'jpg';
+  const path=`${user.id}/${crypto.randomUUID()}.${extension}`;
+  const {error}=await db.storage.from(BUCKET).upload(path,coverFile,{
+    contentType:coverFile.type,
+    upsert:false
+  });
+  if(error)throw error;
+  return path;
+}
+
+async function saveArticle(status){
+  if(busy)return;
+  const values=formData();
+
+  if(values.title.length<3||values.title.length>180)
+    return notice('Your headline must be 3–180 characters.',true);
+  if(!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(values.slug))
+    return notice('Use lowercase letters, numbers, and hyphens in the slug.',true);
+  if(values.body.length>50000)
+    return notice('This formatted article exceeds the 50,000-character limit.',true);
+  if(status==='published'&&!quill.getText().trim())
+    return notice('Write your article before publishing, bestie.',true);
+
+  if(status==='draft'&&selectedStatus==='published'){
+    if(!confirm('Move this published article back to drafts?'))return;
+  }
+  if(status==='archived'){
+    if(!selectedId||!confirm('Archive this article?'))return;
+  }
+
+  setBusy(true);
+  try{
+    const uploadedPath=await uploadCover();
+    values.cover_image_path=uploadedPath;
+
+    let result;
+    if(selectedId){
+      result=await db.from('tbb_press_articles')
+        .update({...values,status})
+        .eq('id',selectedId)
+        .select('id')
+        .single();
+    }else{
+      result=await db.from('tbb_press_articles')
+        .insert({...values,status,author_id:user.id})
+        .select('id')
+        .single();
+    }
+
+    if(result.error)throw result.error;
+
+    selectedId=result.data.id;
+    selectedStatus=status;
+    coverPath=uploadedPath;
+    coverFile=null;
+    $('coverFile').value='';
+    await loadArticles();
+
+    notice(status==='published'
+      ?'Your Pink Press™ story is published! 💋'
+      :status==='archived'
+        ?'Article archived successfully.'
+        :'Draft saved successfully. 💗');
+  }catch(error){
+    fail(error);
+  }finally{
+    setBusy(false);
+  }
+}
+
+async function showPreview(){
+  const preview=$('preview');
+  if(!preview.hidden){
+    preview.hidden=true;
+    return;
+  }
+
+  const values=formData();
+  preview.replaceChildren(
+    el('p','eyebrow',CATEGORIES[values.category]||'Pink Press'),
+    el('h2','',values.title||'Untitled Story'),
+    el('p','muted',values.excerpt)
+  );
+
+  const cover=$('coverPreview');
+  if(!cover.hidden&&cover.src){
+    const image=el('img','preview-cover');
+    image.src=cover.src;
+    image.alt='Article cover';
+    preview.append(image);
+  }
+
+  const target=el('div');
+  target.id='pressPreview';
+  preview.append(target);
+
+  const reader=new Quill(target,{
+    theme:'snow',
+    readOnly:true,
+    modules:{toolbar:false}
+  });
+  reader.setContents(quill.getContents(),'silent');
+  preview.hidden=false;
+  preview.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+$('title').addEventListener('input',()=>{
+  if(!selectedId&&!$('slug').dataset.manual)
+    $('slug').value=makeSlug($('title').value);
+});
+$('slug').addEventListener('input',()=>{$('slug').dataset.manual='true'});
+$('newArticle').addEventListener('click',()=>{if(!busy){resetEditor();$('title').focus()}});
+$('saveDraft').addEventListener('click',()=>saveArticle('draft'));
+$('publish').addEventListener('click',()=>saveArticle('published'));
+$('archive').addEventListener('click',()=>saveArticle('archived'));
+$('previewButton').addEventListener('click',showPreview);
+$('reload').addEventListener('click',async()=>{
+  if(busy)return;
+  try{await loadArticles();clearNotice()}catch(error){fail(error)}
+});
+$('editor').addEventListener('submit',event=>{
+  event.preventDefault();
+  saveArticle('draft');
+});
+
+async function init(){
+  try{
+    const {data:{user:me},error:authError}=await db.auth.getUser();
+    if(authError||!me){
+      notice('Please sign in with your authorized TBB staff account.');
+      return;
+    }
+    user=me;
+
+    const {data:allowed,error:roleError}=await db.rpc('tbb_post_is_staff');
+    if(roleError)throw roleError;
+    if(!allowed){
+      notice('Pink Press™ Editorial Studio is restricted to authorized staff.');
+      return;
+    }
+
+    $('app').hidden=false;
+    clearNotice();
+    await loadArticles();
+  }catch(error){fail(error)}
+}
+
+await init();
+</script>
+<script src="js/back-to-top.js" defer></script>
+</body>
+</html>

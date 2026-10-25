@@ -1,0 +1,361 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#160b19">
+  <title>Cover Story™ Moderation | TBB</title>
+  <link rel="icon" href="favicon.ico">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg:#100912;
+      --panel:#201224;
+      --pink:#ff3ba9;
+      --text:#fff5fc;
+      --muted:#bda7bd;
+      --line:#6b3b62;
+    }
+    * {box-sizing:border-box}
+    body {
+      margin:0;min-height:100vh;color:var(--text);
+      font:15px/1.5 "DM Sans",sans-serif;
+      background:radial-gradient(ellipse at 15% 0,#48203f 0,transparent 34%),
+        radial-gradient(ellipse at 100% 30%,#351039 0,transparent 32%),var(--bg);
+    }
+    button,select,textarea {font:inherit}
+    button {cursor:pointer}
+    button:disabled {opacity:.5;cursor:not-allowed}
+    a {color:inherit;text-decoration:none}
+    [hidden] {display:none!important}
+    .topbar {
+      display:flex;justify-content:space-between;align-items:center;
+      flex-wrap:wrap;gap:14px;padding:16px clamp(16px,4vw,55px);
+      border-bottom:1px solid #ffffff1e;background:#110916e8;
+    }
+    .brand {font:27px "Bebas Neue",sans-serif;letter-spacing:1px}
+    .brand span {color:var(--pink)}
+    .nav {display:flex;gap:17px;flex-wrap:wrap;font-weight:700;font-size:13px}
+    .page {max-width:1100px;margin:auto;padding:32px 18px 80px}
+    .hero {text-align:center;margin-bottom:30px}
+    .eyebrow {color:#ff91d0;letter-spacing:3px;font-size:12px;font-weight:800}
+    h1,h2 {font-family:"Playfair Display",serif}
+    h1 {font-size:clamp(35px,6vw,60px);margin:8px 0}
+    h1 em {color:var(--pink);font-style:normal}
+    .muted {color:var(--muted);font-size:13px}
+    .panel {
+      background:var(--panel);border:1px solid var(--line);
+      border-radius:18px;padding:20px;margin-bottom:16px;
+    }
+    .notice {background:#30162c;border:1px solid #ac5d93;border-radius:13px;padding:14px;margin:15px 0}
+    .notice.error {background:#471d2a;border-color:#e4778e}
+    .row {display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .between {justify-content:space-between}
+    .btn {
+      border:0;border-radius:10px;background:var(--pink);
+      color:white;padding:9px 14px;font-weight:800;
+    }
+    .btn.ghost {background:#3a2440;border:1px solid #9c5a8b}
+    .btn.danger {background:#a62d59}
+    .btn.small {font-size:12px;padding:7px 10px}
+    .tabs {display:flex;gap:8px;flex-wrap:wrap;margin:20px 0}
+    .tab {
+      background:#301c35;color:white;border:1px solid #805075;
+      border-radius:30px;padding:9px 15px;font-weight:700;
+    }
+    .tab.active {background:#673052;border-color:#ff61bc}
+    .bodytext {white-space:pre-wrap;overflow-wrap:anywhere;margin:12px 0}
+    .pill {
+      display:inline-block;border:1px solid #805075;
+      border-radius:20px;padding:3px 9px;font-size:12px;
+    }
+    select,textarea {
+      background:#120b16;color:white;border:1px solid #805275;
+      border-radius:10px;padding:10px;width:100%;
+    }
+    textarea {min-height:65px;resize:vertical}
+    .actions {display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}
+    .empty {text-align:center;padding:35px;color:#e7c9e0}
+    @media(max-width:650px) {.panel {padding:15px}.topbar {justify-content:center}}
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="home.html">THE BADDIES <span>BOOKSHELF</span> ♕</a>
+    <nav class="nav">
+      <a href="cover-story.html">Cover Story™</a>
+      <a href="admin.html">Admin HQ</a>
+      <a href="home.html">Home</a>
+    </nav>
+  </header>
+
+  <main class="page">
+    <section class="hero">
+      <div class="eyebrow">✦ TBB STAFF ACCESS ✦</div>
+      <h1>Cover Story™ <em>Moderation</em></h1>
+      <p class="muted">Keeping the Baddie community safe, cute, and respectful. 💗</p>
+    </section>
+
+    <div id="notice" class="notice" role="status" aria-live="polite">
+      Verifying staff permissions…
+    </div>
+
+    <div id="app" hidden>
+      <div class="row between">
+        <h2>📋 Report Queue</h2>
+        <button id="refresh" class="btn ghost" type="button">Refresh Reports</button>
+      </div>
+
+      <div class="tabs">
+        <button class="tab active" type="button" data-status="open">Open</button>
+        <button class="tab" type="button" data-status="reviewed">Reviewed</button>
+        <button class="tab" type="button" data-status="resolved">Resolved</button>
+        <button class="tab" type="button" data-status="dismissed">Dismissed</button>
+      </div>
+
+      <div id="reports" aria-live="polite"></div>
+    </div>
+  </main>
+
+  <script type="module">
+    import {createClient} from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+    const db = createClient(
+      'https://rmfmdetdykwfxxfzamhj.supabase.co',
+      'sb_publishable_6UBKZvkvkyPNACqDDNRjNQ_wlgy-Jr2'
+    );
+
+    const $ = id => document.getElementById(id);
+    let user = null;
+    let activeStatus = 'open';
+
+    function el(tag, cls='', value) {
+      const node = document.createElement(tag);
+      if(cls) node.className = cls;
+      if(value !== undefined) node.textContent = value;
+      return node;
+    }
+
+    function button(label, cls, callback) {
+      const b = el('button',cls,label);
+      b.type='button';
+      b.addEventListener('click',callback);
+      return b;
+    }
+
+    function notice(message,error=false) {
+      $('notice').textContent=message;
+      $('notice').className='notice'+(error?' error':'');
+      $('notice').hidden=false;
+    }
+
+    function clearNotice() {$('notice').hidden=true}
+
+    function fail(error) {
+      console.error(error);
+      notice(error?.message||'Something went wrong.',true);
+    }
+
+    function formatDate(value) {
+      return value?new Date(value).toLocaleString():'—';
+    }
+
+    async function profiles(ids) {
+      if(!ids.length) return {};
+      const {data}=await db.from('tbb_profiles')
+        .select('user_id,display_name')
+        .in('user_id',[...new Set(ids.filter(Boolean))]);
+      return Object.fromEntries((data||[]).map(p=>[p.user_id,p.display_name]));
+    }
+
+    async function loadReports() {
+      const root=$('reports');
+      root.replaceChildren(el('div','panel empty','Loading reports…'));
+
+      const {data,error}=await db.from('tbb_post_reports')
+        .select('id,reporter_id,post_id,comment_id,reason,details,status,created_at,reviewed_at,reviewed_by')
+        .eq('status',activeStatus)
+        .order('created_at',{ascending:false})
+        .limit(100);
+
+      if(error) return fail(error);
+
+      const reports=data||[];
+      root.replaceChildren();
+
+      if(!reports.length) {
+        root.append(el('div','panel empty','No '+activeStatus+' reports right now. 💗'));
+        return;
+      }
+
+      const postIds=[...new Set(reports.map(r=>r.post_id).filter(Boolean))];
+      const commentIds=[...new Set(reports.map(r=>r.comment_id).filter(Boolean))];
+
+      const [postResult,commentResult]=await Promise.all([
+        postIds.length
+          ?db.from('tbb_posts').select('id,author_id,body,moderation_status').in('id',postIds)
+          :Promise.resolve({data:[],error:null}),
+        commentIds.length
+          ?db.from('tbb_post_comments').select('id,post_id,author_id,body,moderation_status').in('id',commentIds)
+          :Promise.resolve({data:[],error:null})
+      ]);
+
+      if(postResult.error||commentResult.error) {
+        return fail(postResult.error||commentResult.error);
+      }
+
+      const posts=Object.fromEntries((postResult.data||[]).map(p=>[p.id,p]));
+      const comments=Object.fromEntries((commentResult.data||[]).map(c=>[c.id,c]));
+
+      const names=await profiles([
+        ...reports.map(r=>r.reporter_id),
+        ...Object.values(posts).map(p=>p.author_id),
+        ...Object.values(comments).map(c=>c.author_id)
+      ]);
+
+      for(const report of reports) {
+        const card=el('article','panel');
+        const isPost=!!report.post_id;
+        const content=isPost?posts[report.post_id]:comments[report.comment_id];
+
+        const title=el('div','row between');
+        title.append(
+          el('strong','',isPost?'💌 Reported Post':'💬 Reported Comment'),
+          el('span','pill',report.status.toUpperCase())
+        );
+
+        card.append(
+          title,
+          el('p','muted','Reported '+formatDate(report.created_at)),
+          el('p','', 'Reason: '+report.reason),
+          el('p','muted','Reported by: '+(names[report.reporter_id]||'TBB member')),
+          el('p','muted','Content author: '+(names[content?.author_id]||'Unavailable')),
+          el('div','bodytext',content?.body||'[Content unavailable or empty]'),
+          el('p','muted','Current moderation: '+(content?.moderation_status||'Unknown'))
+        );
+
+        if(report.details) card.append(el('p','', 'Additional details: '+report.details));
+
+        const actions=el('div','actions');
+
+        if(content) {
+          if(content.moderation_status==='active') {
+            actions.append(button('🗑️ Remove Content','btn danger small',()=>{
+              moderate(isPost?'remove_post':'remove_comment',content.id);
+            }));
+          } else if(content.moderation_status==='removed') {
+            actions.append(button('↩️ Restore Content','btn ghost small',()=>{
+              moderate(isPost?'restore_post':'restore_comment',content.id);
+            }));
+          }
+        }
+
+        if(report.status!=='reviewed') {
+          actions.append(button('Mark Reviewed','btn ghost small',()=>{
+            review(report.id,'reviewed');
+          }));
+        }
+
+        if(report.status!=='resolved') {
+          actions.append(button('Resolve Report','btn small',()=>{
+            review(report.id,'resolved');
+          }));
+        }
+
+        if(report.status!=='dismissed') {
+          actions.append(button('Dismiss Report','btn ghost small',()=>{
+            review(report.id,'dismissed');
+          }));
+        }
+
+        card.append(actions);
+        root.append(card);
+      }
+    }
+
+    async function moderate(action,targetId) {
+      const reason=prompt('Moderation reason (required):');
+      if(reason===null) return;
+      if(!reason.trim()) return notice('A moderation reason is required.',true);
+
+      if(!confirm('Confirm '+action.replaceAll('_',' ')+'?')) return;
+
+      const {data,error}=await db.rpc('tbb_moderate_post_content',{
+        p_action:action,
+        p_target_id:targetId,
+        p_reason:reason.trim()
+      });
+
+      if(error) return fail(error);
+      if(!data) return notice('Moderation action was not completed.',true);
+
+      clearNotice();
+      await loadReports();
+    }
+
+    async function review(reportId,status) {
+      const reason=prompt('Internal review note (optional):','');
+      if(reason===null) return;
+
+      const {data,error}=await db.rpc('tbb_review_post_report',{
+        p_report_id:reportId,
+        p_status:status,
+        p_reason:reason.trim()
+      });
+
+      if(error) return fail(error);
+      if(!data) return notice('Report update was not completed.',true);
+
+      clearNotice();
+      await loadReports();
+    }
+
+    document.querySelectorAll('[data-status]').forEach(tab=>{
+      tab.addEventListener('click',()=>{
+        activeStatus=tab.dataset.status;
+        document.querySelectorAll('[data-status]').forEach(t=>{
+          t.classList.toggle('active',t===tab);
+        });
+        loadReports();
+      });
+    });
+
+    $('refresh').addEventListener('click',loadReports);
+
+    async function init() {
+      try {
+        const {data:{user:me},error:authError}=await db.auth.getUser();
+
+        if(authError||!me) {
+          notice('Please sign in with your authorized TBB staff account.');
+          return;
+        }
+
+        user=me;
+
+        const {data:allowed,error:roleError}=
+          await db.rpc('tbb_post_is_staff');
+
+        if(roleError) throw roleError;
+
+        if(!allowed) {
+          notice('This dashboard is restricted to authorized TBB staff.');
+          return;
+        }
+
+        $('app').hidden=false;
+        clearNotice();
+        await loadReports();
+
+      } catch(error) {
+        fail(error);
+      }
+    }
+
+    await init();
+  </script>
+  <script src="js/back-to-top.js" defer></script>
+</body>
+</html>
