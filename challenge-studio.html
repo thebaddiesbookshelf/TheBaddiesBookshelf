@@ -342,10 +342,13 @@ Visual preview only. Clicking here does not record member progress.
     ↻ Refresh
   </button>
 </div>
+
 <p class="small">
-Archive preserves challenges and their progress.
-Delete is available only for unused drafts.
+  📦 Archive preserves challenges and member progress.
+  🗑️ Admin deletion permanently removes a challenge and all associated participation.
+  Deleted challenges cannot be recovered.
 </p>
+
 <p id="listStatus" class="status" role="status"></p>
 <div id="collection"></div>
 </section>
@@ -1089,7 +1092,12 @@ async function archive(id) {
    SAFE DRAFT / ARCHIVED DELETION
    ========================================== */
 
+
 async function deleteChallenge(id) {
+  if (busy) return;
+
+  busy = true;
+
   try {
     const challengeResult = await db
       .from('tbb_challenges')
@@ -1104,75 +1112,46 @@ async function deleteChallenge(id) {
 
     const challenge = challengeResult.data;
 
-    // Check whether any Baddie has participated.
-    const [progressResult, boardsResult] = await Promise.all([
-      db
-        .from('tbb_challenge_progress')
-        .select('id', { count: 'exact', head: true })
-        .eq('challenge_id', id),
-
-      db
-        .from('tbb_challenge_boards')
-        .select('id', { count: 'exact', head: true })
-        .eq('challenge_id', id)
-    ]);
-
-    if (progressResult.error) {
-      throw progressResult.error;
-    }
-
-    if (boardsResult.error) {
-      throw boardsResult.error;
-    }
-
-    const progressCount = progressResult.count ?? 0;
-    const boardCount = boardsResult.count ?? 0;
-
-    if (progressCount > 0 || boardCount > 0) {
-      throw new Error(
-        'This challenge has member participation and cannot be deleted. ' +
-        'Keep it archived to preserve everyone’s progress.'
-      );
-    }
-
     const confirmed = confirm(
-      `Permanently delete "${challenge.title}"?\n\n` +
-      `Current status: ${challenge.status.toUpperCase()}\n\n` +
-      'Its prompts will also be permanently deleted.\n' +
-      'This action cannot be undone.'
+      `🗑️ PERMANENTLY DELETE THIS CHALLENGE?\n\n` +
+      `${challenge.title}\n\n` +
+      `Status: ${challenge.status.toUpperCase()}\n\n` +
+      `This will permanently delete:\n` +
+      `• The challenge\n` +
+      `• All challenge prompts\n` +
+      `• Every member's Bingo boards\n` +
+      `• All saved Bingo progress\n` +
+      `• Any A–Z claims and completions\n\n` +
+      `This action CANNOT be undone.\n\n` +
+      `Continue with permanent deletion?`
     );
 
     if (!confirmed) return;
 
-    const result = await db
-      .from('tbb_challenges')
-      .delete()
-      .eq('id', id)
-      .in('status', ['draft', 'archived'])
-      .select('id')
-      .maybeSingle();
+    status('listStatus', '🗑️ Permanently deleting challenge…');
+
+    const result = await db.rpc(
+      'tbb_admin_delete_challenge',
+      { p_challenge_id: id }
+    );
 
     if (result.error) {
       throw result.error;
     }
 
-    if (!result.data) {
-      throw new Error(
-        'The challenge could not be deleted. Refresh and try again.'
-      );
+    if (result.data !== true) {
+      throw new Error('Challenge deletion was not confirmed.');
     }
 
-    // Reset the editor if the deleted challenge was open.
     if (currentId === id) {
       reset();
     }
 
-    // Refresh the collection immediately.
     await loadCollection();
 
     status(
       'listStatus',
-      '🗑️ Challenge permanently deleted.'
+      '💗 Challenge and all associated participation permanently deleted!'
     );
 
   } catch (error) {
@@ -1181,8 +1160,11 @@ async function deleteChallenge(id) {
       `Delete failed: ${safeError(error)}`,
       true
     );
+  } finally {
+    busy = false;
   }
 }
+
 
 
 async function asTemplate(id) {
