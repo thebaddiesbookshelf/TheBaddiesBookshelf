@@ -218,6 +218,91 @@
       border: 1px solid #6ad0a2
     }
 
+    /* ==========================================
+   TBB — AGE GROUP SELECTOR 🎀
+   ========================================== */
+
+    .age-group-field {
+      margin-top: 5px;
+    }
+
+    .age-group-field>label {
+      font-size: 14px;
+      color: #ffd4ec;
+    }
+
+    .age-group-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 14px 0 10px;
+    }
+
+    .age-option {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 110px;
+      padding: 16px 10px;
+      border: 2px solid #76516f;
+      border-radius: 18px;
+      background: linear-gradient(145deg, #2a142c, #170d20);
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+
+    .age-option input {
+      position: absolute;
+      opacity: 0;
+      width: 1px;
+      height: 1px;
+    }
+
+    .age-option span {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      color: #ffe3f2;
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .age-option small {
+      color: #cbb6c9;
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    .age-option:hover {
+      border-color: #ff74c6;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px #ff39b022;
+    }
+
+    .age-option:has(input:checked) {
+      border-color: #ff39b0;
+      background: linear-gradient(145deg, #65234e, #2a1536);
+      box-shadow: 0 0 0 2px #ff39b033,
+        0 0 22px #ff39b033;
+    }
+
+    .age-option:has(input:checked) span {
+      color: #ffffff;
+    }
+
+    .age-option:has(input:focus-visible) {
+      outline: 3px solid #a4f0b5;
+      outline-offset: 3px;
+    }
+
+    @media (max-width: 380px) {
+      .age-group-options {
+        grid-template-columns: 1fr;
+      }
+    }
+
     [hidden] {
       display: none !important
     }
@@ -264,6 +349,39 @@
         <div><label for="signupPassword">Password</label><input id="signupPassword" type="password" minlength="8"
             autocomplete="new-password" required>
           <div class="hint">At least 8 characters.</div>
+        </div>
+        <div class="age-group-field">
+          <label>🎂 Which Baddie Era Are You In?</label>
+
+          <div class="hint">
+            Choose your age group so we can keep your TBB experience
+            safe and age-appropriate. ♡
+          </div>
+
+          <div class="age-group-options">
+
+            <label class="age-option">
+              <input type="radio" name="signupAgeGroup" value="junior" required>
+              <span>
+                🧸 Junior Baddie
+                <small>17 years old & younger</small>
+              </span>
+            </label>
+
+            <label class="age-option">
+              <input type="radio" name="signupAgeGroup" value="adult" required>
+              <span>
+                💋 Grown Baddie
+                <small>18 years old & older</small>
+              </span>
+            </label>
+
+          </div>
+
+          <div class="hint">
+            🔐 Your selection is private. Age-group access is
+            subject to TBB admin verification.
+          </div>
         </div>
         <button class="primary" type="submit">Request My Membership ♕</button>
       </form>
@@ -315,17 +433,33 @@
       }
       let status = 'pending'; const { data: membership } = await supabase.from('tbb_memberships').select('status').eq('user_id', user.id).maybeSingle(); if (membership?.status) status = membership.status;
       if (status === 'approved') {
-         $('accountMessage').textContent = 'Membership approved! Opening The Vanity™…';
-         window.location.replace(new URL('member.html', window.location.href).href);
-         return;
-       }
-       $('accountMessage').textContent = 'You are signed in. Your membership status is ' + status + '. An admin must approve your account before you can enter member-only areas.';
+        $('accountMessage').textContent = 'Membership approved! Opening The Vanity™…';
+        window.location.replace(new URL('member.html', window.location.href).href);
+        return;
+      }
+      $('accountMessage').textContent = 'You are signed in. Your membership status is ' + status + '. An admin must approve your account before you can enter member-only areas.';
     }
     signinForm.addEventListener('submit', async e => { e.preventDefault(); busy(signinForm, true); clearMessage(); try { const { error } = await supabase.auth.signInWithPassword({ email: $('signinEmail').value.trim(), password: $('signinPassword').value }); if (error) throw error; message('Welcome back, bestie! ♡'); await showSession() } catch (err) { message(err.message, true) } finally { busy(signinForm, false) } });
     signupForm.addEventListener('submit', async e => {
       e.preventDefault(); busy(signupForm, true); clearMessage(); try {
-        const username = $('discordUsername').value.trim(); if (!/^[a-z0-9_.]{3,30}$/.test(username)) throw Error('Use a valid lowercase Discord username (3–30 characters).');
-        const { data, error } = await supabase.auth.signUp({ email: $('signupEmail').value.trim(), password: $('signupPassword').value, options: { emailRedirectTo: new URL('login.html', location.href).href, data: { display_name: $('displayName').value.trim(), discord_username: username } } }); if (error) throw error;
+        const username = $('discordUsername').value.trim();
+
+        if (!/^[a-z0-9_.]{3,30}$/.test(username)) {
+          throw Error('Use a valid lowercase Discord username (3–30 characters).');
+        }
+
+        const selectedAgeGroup = document.querySelector(
+          'input[name="signupAgeGroup"]:checked'
+        )?.value;
+
+        if (!['junior', 'adult'].includes(selectedAgeGroup)) {
+          throw Error('Please select your age group before joining TBB.');
+        }
+        const { data, error } = await supabase.auth.signUp({ email: $('signupEmail').value.trim(), password: $('signupPassword').value, options: { emailRedirectTo: new URL('login.html', location.href).href, data: {
+  display_name: $('displayName').value.trim(),
+  discord_username: username,
+  declared_age_group: selectedAgeGroup
+} } }); if (error) throw error;
         if (data.session) { message('Account created! Your membership still requires admin approval.'); await showSession() } else { message('Request received! Check your email for a confirmation link, then sign in. Admin approval is still required.') }
       } catch (err) { message(err.message, true) } finally { busy(signupForm, false) }
     });

@@ -1239,7 +1239,48 @@
             `Applied ${safeDate(member.created_at)}`;
           div.append(info);
 
-          for (const [label, status] of [
+// ==========================================
+// TBB — DECLARED AGE GROUP 🎂
+// Admin membership review
+// ==========================================
+
+const { data: ageRecord, error: ageError } = await db
+  .from('tbb_member_age_groups')
+  .select('declared_age_group,age_group')
+  .eq('user_id', member.user_id)
+  .maybeSingle();
+
+const ageInfo = document.createElement('p');
+ageInfo.className = 'hq-small';
+
+if (ageError) {
+  ageInfo.textContent = '🎂 Age-group information unavailable.';
+} else {
+  const declared = ageRecord?.declared_age_group;
+
+  const ageLabel =
+    declared === 'adult'
+      ? '💋 Grown Baddie (18+)'
+      : declared === 'junior'
+        ? '🧸 Junior Baddie (17 & under)'
+        : 'Not provided';
+
+  const verificationLabel =
+    ageRecord?.age_group === 'unverified'
+      ? '🔒 Not yet verified'
+      : ageRecord?.age_group === 'adult'
+        ? '✅ Verified adult'
+        : ageRecord?.age_group === 'junior'
+          ? '✅ Verified junior'
+          : '🔒 Verification pending';
+
+  ageInfo.textContent =
+    `🎂 Declared Age Group: ${ageLabel} · ${verificationLabel}`;
+}
+
+div.append(ageInfo);
+
+for (const [label, status] of [
             ['Approve', 'approved'],
             ['Reject', 'rejected']
           ]) {

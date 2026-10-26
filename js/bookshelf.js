@@ -407,27 +407,59 @@ if (book.source === 'personal') {
   return c;
 }
 
+/* ==========================================
+   TBB — MY BOOK COLLECTION™
+   PERSONAL BOOK SEARCH + STATUS FILTER
+   ========================================== */
+
 function renderCollection() {
   const target = $('myBookCollection');
   target.replaceChildren();
 
-  const filter = $('libraryStatusFilter').value;
-  const matching = entries.filter(
-    e => filter === 'all' || e.reading_status === filter
+  const statusFilter = $('libraryStatusFilter').value;
+  const tagFilter = $('libraryTagFilter')?.value || 'all';
+
+  const searchTerm = (
+    $('myCollectionSearch')?.value || ''
+  ).trim().toLocaleLowerCase();
+
+  const matching = entries.filter(entry => {
+    const matchesStatus =
+      statusFilter === 'all' ||
+      entry.reading_status === statusFilter;
+
+    const book = bookForEntry(entry);
+
+    const title = (book.title || '').toLocaleLowerCase();
+    const author = (book.author || '').toLocaleLowerCase();
+
+    const matchesSearch =
+      !searchTerm ||
+      title.includes(searchTerm) ||
+      author.includes(searchTerm);
+
+    const matchesTag =
+  tagFilter === 'all' ||
+  entryTagAssignments.some(assignment =>
+    assignment.bookshelf_entry_id === entry.id &&
+    assignment.tag_id === tagFilter
   );
 
-  if(!matching.length) {
+return matchesStatus && matchesSearch && matchesTag;
+  });
+
+  if (!matching.length) {
     empty(
       target,
-      filter === 'all'
+      !entries.length
         ? 'Your Library is waiting for its first book! 💗'
-        : 'No books match this reading status yet.'
+        : '🔎 No books match your current filters, Baddie! 💗'
     );
     return;
   }
 
-  for(const e of matching) {
-    target.append(card(bookForEntry(e),e));
+  for (const entry of matching) {
+    target.append(card(bookForEntry(entry), entry));
   }
 }
 
@@ -2395,7 +2427,29 @@ async function loadBookTags() {
     if (!data || data.length < 500) break;
   }
 
-  bookTags = all;
+    bookTags = all;
+
+  const tagSelect = $('libraryTagFilter');
+
+  if (tagSelect) {
+    const previousSelection = tagSelect.value;
+
+    tagSelect.replaceChildren(
+      new Option('All Tags', 'all')
+    );
+
+    for (const tag of bookTags) {
+      tagSelect.add(
+        new Option(tag.name, tag.id)
+      );
+    }
+
+    tagSelect.value = bookTags.some(
+      tag => tag.id === previousSelection
+    )
+      ? previousSelection
+      : 'all';
+  }
 
   renderBookTags();
   renderCollection();
@@ -3873,6 +3927,18 @@ $('myBookCollection')?.addEventListener('click',actions);
 
 $('libraryStatusFilter')?.addEventListener(
   'change',renderCollection
+);
+$('libraryTagFilter')?.addEventListener(
+  'change',
+  renderCollection
+);
+/* ==========================================
+   MY BOOK COLLECTION™ — LIVE SEARCH 🔎
+   ========================================== */
+
+$('myCollectionSearch').addEventListener(
+  'input',
+  renderCollection
 );
 
 $('bookEditorForm')?.addEventListener(

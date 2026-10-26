@@ -25,7 +25,7 @@ body {
   margin:0;
   min-height:100vh;
   background:
-    radial-gradient(circle at top right,
+    radial-gradient(circle at top right, 
       #60204755,transparent 45%),
     var(--bg);
   color:var(--text);
@@ -247,6 +247,88 @@ a { color:var(--pink-light); }
 }
 
 .bubble.theirs { align-self:flex-start; }
+/* ==========================================
+   TBB — VANITY MAIL™
+   EMOJI REACTIONS 💌
+   ========================================== */
+
+.vm-reactions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.vm-reaction {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-height: 30px;
+  padding: 5px 9px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: #ffffff12;
+  color: var(--text);
+  font-size: 13px;
+  cursor: pointer;
+  transition: background .15s, border-color .15s;
+}
+
+.vm-reaction:hover {
+  background: #ff4da62b;
+  border-color: var(--pink);
+}
+
+.vm-reaction.mine {
+  background: #ff4da638;
+  border-color: var(--pink);
+}
+
+.vm-reaction-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 8px;
+}
+
+.vm-reaction-picker button {
+  min-width: 34px;
+  min-height: 34px;
+  padding: 5px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--alt);
+  color: var(--text);
+  font-size: 18px;
+}
+
+.vm-reaction-picker button:hover {
+  border-color: var(--pink);
+  background: #ff4da62b;
+}
+
+.vm-reaction:focus-visible,
+.vm-reaction-picker button:focus-visible {
+  outline: 2px solid var(--pink-light);
+  outline-offset: 2px;
+}
+
+@media (max-width: 480px) {
+  .vm-reactions {
+    gap: 5px;
+  }
+
+  .vm-reaction {
+    min-height: 34px;
+  }
+
+  .vm-reaction-picker button {
+    min-width: 40px;
+    min-height: 40px;
+  }
+}
 
 .bubble time {
   display:block;
@@ -363,6 +445,49 @@ a { color:var(--pink-light); }
 .blocked-feedback{margin-top:10px;color:var(--pink-light)}
 @media(max-width:480px){.blocked-card{align-items:flex-start;flex-wrap:wrap}.blocked-card .btn{margin-left:auto}}
 
+/* VANITY MAIL™ — KEEP EMOJI PICKER CLOSED */
+.vm-reaction-picker[hidden] {
+  display: none !important;
+}
+
+/* VANITY MAIL™ — REACTION BUTTON POLISH */
+
+.bubble .vm-reaction {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  margin-top: 0;
+  padding: 5px 9px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: #ffffff12;
+  color: var(--text);
+  font-size: 13px;
+}
+
+.bubble .vm-reaction.mine {
+  background: #ff4da638;
+  border-color: var(--pink);
+}
+
+.bubble .vm-reaction-picker button {
+  margin-top: 0;
+  min-width: 34px;
+  min-height: 34px;
+  padding: 5px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--alt);
+  color: var(--text);
+  font-size: 18px;
+}
+
+.bubble .vm-reaction:hover,
+.bubble .vm-reaction-picker button:hover {
+  background: #ff4da62b;
+  border-color: var(--pink);
+}
 </style>
 </head>
 
@@ -524,6 +649,17 @@ let memberSearchTimer = null;
 let chatPreviews = new Map();
 let memberAvatarUrls = new Map();
 const readReceiptFlights = new Map();
+/* ==========================================
+   TBB — VANITY MAIL™
+   EMOJI REACTIONS 💌
+   ========================================== */
+
+const VM_REACTION_EMOJIS = [
+  "💗", "😂", "😭", "😍",
+  "🔥", "🥹", "👀", "💀"
+];
+
+let vmReactions = new Map();
 
 function notify(text,error=false) {
   $("message").textContent = text;
@@ -884,6 +1020,195 @@ async function openConversation(conversation) {
   }
 }
 
+/* ==========================================
+   TBB — VANITY MAIL™
+   LOAD MESSAGE EMOJI REACTIONS 💌
+   ========================================== */
+
+async function loadMessageReactions(messages) {
+
+  const messageIds = (messages || []).map(
+    message => message.id
+  );
+
+  const reactionsByMessage = new Map();
+
+  if (!messageIds.length) {
+    return reactionsByMessage;
+  }
+
+  const { data, error } = await db
+    .from("tbb_vm_reactions")
+    .select("message_id,user_id,emoji")
+    .in("message_id", messageIds);
+
+  if (error) {
+    console.warn(
+      "Could not load Vanity Mail reactions:",
+      error.message
+    );
+
+    return null;
+  }
+
+  for (const reaction of data || []) {
+
+    if (!reactionsByMessage.has(reaction.message_id)) {
+      reactionsByMessage.set(reaction.message_id, []);
+    }
+
+    reactionsByMessage
+      .get(reaction.message_id)
+      .push(reaction);
+
+  }
+
+  return reactionsByMessage;
+}
+/* ==========================================
+   TBB — VANITY MAIL™
+   ADD / REMOVE EMOJI REACTIONS 💌
+   ========================================== */
+
+const vmReactionFlights = new Set();
+
+async function toggleMessageReaction(messageId, emoji) {
+
+  // Prevent repeated taps while saving
+  if (vmReactionFlights.has(messageId)) return;
+
+  const conversationId = activeConversation?.id;
+
+  if (!conversationId) return;
+
+  vmReactionFlights.add(messageId);
+
+  try {
+
+    const { error } = await db.rpc(
+      "tbb_vm_toggle_reaction",
+      {
+        p_message: messageId,
+        p_emoji: emoji
+      }
+    );
+
+    if (error) {
+      notify(error.message, true);
+      return;
+    }
+
+    // Refresh reactions only for the conversation
+    // where the action was performed.
+    if (activeConversation?.id === conversationId) {
+      await loadMessages(conversationId);
+    }
+
+  } catch (error) {
+
+    console.error(
+      "Vanity Mail reaction error:",
+      error
+    );
+
+    notify(
+      "Couldn't save your reaction. Please try again.",
+      true
+    );
+
+  } finally {
+
+    vmReactionFlights.delete(messageId);
+
+  }
+}
+/* ==========================================
+   TBB — VANITY MAIL™
+   EMOJI REACTION BUTTONS 💌
+   ========================================== */
+
+function renderMessageReactions(messageId) {
+
+  const wrapper = document.createElement("div");
+  wrapper.className = "vm-reactions";
+
+  const reactions = vmReactions.get(messageId) || [];
+
+  /* Group reactions by emoji */
+
+  for (const emoji of VM_REACTION_EMOJIS) {
+
+    const matching = reactions.filter(
+      reaction => reaction.emoji === emoji
+    );
+
+    if (!matching.length) continue;
+
+    const reactedByMe = matching.some(
+      reaction => reaction.user_id === user.id
+    );
+
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className =
+      "vm-reaction" + (reactedByMe ? " mine" : "");
+
+    button.textContent = `${emoji} ${matching.length}`;
+    button.title = reactedByMe
+      ? "Remove your reaction"
+      : "Add your reaction";
+
+    button.setAttribute(
+      "aria-pressed",
+      String(reactedByMe)
+    );
+
+    button.addEventListener("click", () => {
+      toggleMessageReaction(messageId, emoji);
+    });
+
+    wrapper.append(button);
+  }
+
+  /* Emoji picker */
+
+  const picker = document.createElement("div");
+  picker.className = "vm-reaction-picker";
+  picker.hidden = true;
+
+  for (const emoji of VM_REACTION_EMOJIS) {
+
+    const button = document.createElement("button");
+    button.type = "button";
+    button.textContent = emoji;
+    button.title = `React with ${emoji}`;
+
+    button.addEventListener("click", () => {
+      picker.hidden = true;
+      toggleMessageReaction(messageId, emoji);
+    });
+
+    picker.append(button);
+  }
+
+  const addButton = document.createElement("button");
+  addButton.type = "button";
+  addButton.className = "vm-reaction";
+  addButton.textContent = "＋ 💗";
+  addButton.title = "Add emoji reaction";
+  addButton.setAttribute(
+    "aria-label",
+    "Add emoji reaction"
+  );
+
+  addButton.addEventListener("click", () => {
+    picker.hidden = !picker.hidden;
+  });
+
+  wrapper.append(addButton, picker);
+
+  return wrapper;
+}
 async function loadMessages(conversationId) {
   const {data,error} = await db
     .from("tbb_vm_messages")
@@ -896,10 +1221,18 @@ async function loadMessages(conversationId) {
     notify(error.message,true);
     return;
   }
+if (activeConversation?.id !== conversationId) return;
 
-  if (activeConversation?.id !== conversationId) return;
+/* Load emoji reactions for these messages 💌 */
+const loadedReactions = await loadMessageReactions(data || []);
 
-  const container = $("messages");
+if (activeConversation?.id !== conversationId) return;
+
+if (loadedReactions !== null) {
+  vmReactions = loadedReactions;
+}
+
+const container = $("messages");
   const previousScrollTop = container.scrollTop;
   const previousScrollHeight = container.scrollHeight;
   const nearBottom = previousScrollHeight - previousScrollTop - container.clientHeight < 90;
@@ -932,9 +1265,17 @@ async function loadMessages(conversationId) {
       }
     }
 
-    bubble.append(body,time);
+    bubble.append(body, time);
 
-    if (!mine) {
+/* ==========================================
+   VANITY MAIL™ — DISPLAY REACTIONS 💌
+   ========================================== */
+
+bubble.append(
+  renderMessageReactions(item.id)
+);
+
+if (!mine) {
       const report = document.createElement("button");
       report.type = "button";
       report.textContent = "Report message";
