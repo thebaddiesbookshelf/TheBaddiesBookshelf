@@ -463,8 +463,17 @@
         if (data.session) { message('Account created! Your membership still requires admin approval.'); await showSession() } else { message('Request received! Check your email for a confirmation link, then sign in. Admin approval is still required.') }
       } catch (err) { message(err.message, true) } finally { busy(signupForm, false) }
     });
-    $('resetButton').addEventListener('click', async () => { const email = $('signinEmail').value.trim() || prompt('What email address should receive your password reset link?'); if (!email) return; const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: new URL('login.html', location.href).href }); message(error ? error.message : 'If that email is registered, a reset email will be sent.', !!error) });
-    $('signoutButton').addEventListener('click', async () => { const { error } = await supabase.auth.signOut(); if (error) { message(error.message, true); return } tab('signin'); await showSession(); message('Signed out successfully. ♡') });
+$('resetButton').addEventListener('click', () => {
+  const email = $('signinEmail').value.trim();
+
+  const url = new URL('forgot-password.html', location.href);
+
+  if (email) {
+    url.searchParams.set('email', email);
+  }
+
+  window.location.href = url.href;
+});    $('signoutButton').addEventListener('click', async () => { const { error } = await supabase.auth.signOut(); if (error) { message(error.message, true); return } tab('signin'); await showSession(); message('Signed out successfully. ♡') });
     supabase.auth.onAuthStateChange(() => { setTimeout(showSession, 0) });
     await showSession();
   </script>
