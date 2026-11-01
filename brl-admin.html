@@ -512,6 +512,22 @@
         <option value="">Select a crew</option>
       </select>
 
+      
+      <label for="brlAdjustmentRoster">
+        🔎 Baddie (optional)
+      </label>
+      <select id="brlAdjustmentRoster">
+        <option value="">Entire crew — no individual Baddie</option>
+      </select>
+
+      <p class="muted" style="font-size:13px;">
+        Choose a Baddie to associate the adjustment
+        with their crew. Leave blank for a team-wide
+        adjustment. This changes score points, not
+        official reading pages.
+      </p>
+
+
       <label for="brlTeamPlacement">Placement</label>
       <select id="brlTeamPlacement" required>
         <option value="">Select placement</option>
@@ -1108,6 +1124,35 @@ async function loadBrlScoringDesk() {
       teamOptions,
       "Select a crew"
     );
+    
+const adjustmentTeamSelect =
+  document.getElementById("brlAdjustmentTeam");
+
+const adjustmentRosterSelect =
+  document.getElementById("brlAdjustmentRoster");
+
+function refreshAdjustmentBaddies() {
+  const selectedTeamId = adjustmentTeamSelect.value;
+
+  const matchingBaddies = roster
+    .filter(member => member.team_id === selectedTeamId)
+    .map(member => ({
+      value: member.id,
+      label: `@${member.discord_username}`
+    }));
+
+  brlScoringFillSelect(
+    "brlAdjustmentRoster",
+    matchingBaddies,
+    "Entire crew — no individual Baddie"
+  );
+}
+
+// Replace any previous handler rather than stacking listeners
+adjustmentTeamSelect.onchange = refreshAdjustmentBaddies;
+
+refreshAdjustmentBaddies();
+
 
     const teamNames = new Map(
       teams.map(team => [team.id, team.name])
@@ -1240,6 +1285,7 @@ async function submitBrlIndividualAward(event) {
   }
 }
 
+
 async function submitBrlScoreAdjustment(event) {
   event.preventDefault();
 
@@ -1249,6 +1295,9 @@ async function submitBrlScoreAdjustment(event) {
   const teamId = document
     .getElementById("brlAdjustmentTeam").value;
 
+  const rosterId = document
+    .getElementById("brlAdjustmentRoster").value || null;
+
   const points = Number(
     document.getElementById("brlAdjustmentPoints").value
   );
@@ -1256,21 +1305,49 @@ async function submitBrlScoreAdjustment(event) {
   const reason = document
     .getElementById("brlAdjustmentReason").value.trim();
 
+  if (!brlScoringSeasonId || !teamId) {
+    brlScoringStatus("Select a valid crew.", true);
+    return;
+  }
+
   if (!Number.isSafeInteger(points) || points === 0) {
-    brlScoringStatus("Enter a valid nonzero whole number.", true);
+    brlScoringStatus(
+      "Enter a valid nonzero whole number.",
+      true
+    );
     return;
   }
 
   if (reason.length < 10) {
-    brlScoringStatus("Reason must be at least 10 characters.", true);
+    brlScoringStatus(
+      "Reason must be at least 10 characters.",
+      true
+    );
     return;
   }
 
+  const teamLabel = document
+    .getElementById("brlAdjustmentTeam")
+    .selectedOptions[0]?.textContent || "selected crew";
+
+  const baddieLabel = rosterId
+    ? document.getElementById("brlAdjustmentRoster")
+        .selectedOptions[0]?.textContent
+    : "the entire crew";
+
+  const signedPoints = `${points > 0 ? "+" : ""}${points}`;
+
   if (!confirm(
-    `Record a ${points > 0 ? "+" : ""}${points}-point adjustment?`
-  )) return;
+    `Record ${signedPoints} points for ${baddieLabel}?\n\n` +
+    `Crew: ${teamLabel}\n` +
+    `Reason: ${reason}\n\n` +
+    `This will affect the official crew score.`
+  )) {
+    return;
+  }
 
   button.disabled = true;
+  brlScoringStatus("Recording score adjustment...");
 
   try {
     const { error } = await db.rpc(
@@ -1279,24 +1356,49 @@ async function submitBrlScoreAdjustment(event) {
         p_season_id: brlScoringSeasonId,
         p_team_id: teamId,
         p_points: points,
-        p_reason: reason
+        p_reason: reason,
+        p_roster_id: rosterId
       }
     );
 
     if (error) throw error;
 
     form.reset();
-    brlScoringStatus(
-      `⚖️ Score adjustment recorded: ` +
-      `${points > 0 ? "+" : ""}${points} points.`
+
+    document.getElementById(
+      "brlAdjustmentRoster"
+    ).replaceChildren(
+      new Option(
+        "Entire crew — no individual Baddie",
+        ""
+      )
     );
 
+    brlScoringStatus(
+      `⚖️ ${signedPoints} points recorded successfully ` +
+      `for ${baddieLabel}!`
+    );
+
+    // Refresh existing ledger, if initialized.
+    if (typeof loadScoringLedger === "function") {
+      try {
+        await loadScoringLedger();
+      } catch (refreshError) {
+        console.warn(
+          "Adjustment saved, but ledger refresh failed:",
+          refreshError
+        );
+      }
+    }
+
   } catch (error) {
+    console.error("BRL score adjustment failed:", error);
     brlScoringStatus(error.message, true);
   } finally {
     button.disabled = false;
- }
+  }
 }
+
 
     const $ = id => document.getElementById(id);
 
@@ -2156,15 +2258,23 @@ function initializeBaddieAutocomplete() {
         button.disabled = true;
 
         try {
-          const { data, error } = await db
-            .from('tbb_brl_roster')
-            .update({ user_id: profile.user_id })
-            .eq('id', currentMember.id)
-            .eq('season_id', season.id)
-            .eq('participation_status', 'active')
-            .is('user_id', null)
-            .select('id')
-            .maybeSingle();
+          
+        const { data, error } = await db.rpc(
+          'tbb_brl_admin_link_roster',
+          {
+            p_roster_id: currentMember.id,
+            p_user_id: profile.user_id
+          }
+        );
+
+        if (error) throw error;
+
+        if (!data?.length) {
+          throw new Error(
+            'No roster was linked. Refresh and try again.'
+          );
+        }
+
 
           if (error) throw error;
 
